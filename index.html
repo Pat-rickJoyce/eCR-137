@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCTC-Enhanced eICR Form Generator</title>
+    <title>eICR Form Generator</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
@@ -180,7 +180,7 @@
     <div class="container">
         <div class="header">
             <div>
-                <h1>RCTC-Enhanced eICR Generator</h1>
+                <h1>eICR Generator</h1>
                 <p class="subtitle">Electronic Initial Case Report with Reportable Condition Trigger Codes</p>
             </div>
             <div class="buttons">
@@ -194,14 +194,6 @@
             </div>
         </div>
 
-        <div class="rctc-info">
-            <h3>RCTC Information</h3>
-            <p><strong>RCTC OID:</strong> <span class="code-display">2.16.840.1.114222.4.11.7508</span></p>
-            <p><strong>Definition Version:</strong> <span class="code-display">2.0.1</span></p>
-            <p><strong>Release Date:</strong> <span class="code-display">2025-03-18</span></p>
-            <p><strong>Effective Date:</strong> <span class="code-display">2025-06-01</span></p>
-            <p>This generator uses the official RCTC trigger codes. Load your RCTC file to enable code lookup and validation.</p>
-        </div>
 
         <div class="section">
             <h2 class="section-title">Patient Demographics</h2>
@@ -451,15 +443,6 @@
             </div>
         </div>
 
-        <div class="footer-buttons">
-            <label class="btn btn-secondary">
-                📁 Load Form Data
-                <input type="file" accept=".json" onchange="loadFormData(event)" class="hidden">
-            </label>
-            <button class="btn btn-warning" onclick="loadRCTCFile()">📋 Load RCTC File</button>
-            <button class="btn btn-success" onclick="saveFormData()">💾 Save Form Data</button>
-            <button class="btn btn-primary" onclick="generateAndDownloadCDA()">📄 Generate CDA</button>
-        </div>
     </div>
 
     <script>
@@ -639,8 +622,8 @@
       </addr>
       <telecom use="WP" value="tel:${data.providerPhone}" />
       <assignedAuthoringDevice>
-        <manufacturerModelName>RCTC-Enhanced eICR Generator - Version 1.0</manufacturerModelName>
-        <softwareName>RCTC-Enhanced eICR Generator - Version 1.0</softwareName>
+        <manufacturerModelName>eICR Generator - Version 1.0</manufacturerModelName>
+        <softwareName>eICR Generator - Version 1.0</softwareName>
       </assignedAuthoringDevice>
     </assignedAuthor>
   </author>
@@ -1072,7 +1055,7 @@
 
         // Initialize the form
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('RCTC-Enhanced eICR Generator loaded');
+            console.log('eICR Generator loaded');
             console.log('RCTC Metadata:', rctcData.metadata);
         });
     </script>
