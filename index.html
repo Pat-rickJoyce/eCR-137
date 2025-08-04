@@ -191,6 +191,7 @@
                 <button class="btn btn-warning" onclick="loadRCTCFile()">📋 Load RCTC File</button>
                 <button class="btn btn-success" onclick="saveFormData()">💾 Save Form Data</button>
                 <button class="btn btn-primary" onclick="generateAndDownloadCDA()">📄 Generate CDA</button>
+                <button class="btn btn-success" onclick="generateAndPostCDA()">🚀 Generate & Post CDA to S3</button>
             </div>
         </div>
 
@@ -1010,6 +1011,30 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+        }
+
+        async function generateAndPostCDA() {
+            try {
+                const cdaContent = generateCDA();
+                const s3Url = 'https://eicr-rr-bucket.s3.us-east-2.amazonaws.com/General/test.xml';
+                
+                const response = await fetch(s3Url, {
+                    method: 'PUT',
+                    body: cdaContent,
+                    headers: {
+                        'Content-Type': 'application/xml'
+                    }
+                });
+                
+                if (response.ok) {
+                    alert('CDA successfully posted to S3!');
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Error posting CDA to S3:', error);
+                alert(`Error posting CDA to S3: ${error.message}\n\nNote: This may fail due to CORS policy or authentication requirements.`);
+            }
         }
 
         function saveFormData() {
