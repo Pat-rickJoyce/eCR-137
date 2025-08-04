@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RCTC-Enhanced eICR Form Generator</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9fafb;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        h1 {
+            color: #1f2937;
+            margin: 0;
+            font-size: 2rem;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin: 5px 0 0 0;
+        }
+        .rctc-info {
+            background: #e0f2fe;
+            border: 1px solid #81d4fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .rctc-info h3 {
+            margin: 0 0 10px 0;
+            color: #0277bd;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+        .btn-primary { background: #3b82f6; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-secondary { background: #6b7280; color: white; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn:hover { opacity: 0.9; }
+        .section {
+            margin-bottom: 30px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 20px;
+        }
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0 0 20px 0;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .textarea-group {
+            grid-column: 1 / -1;
+        }
+        label {
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+        input, textarea, select {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .footer-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            flex-wrap: wrap;
+        }
+        .code-search {
+            display: flex;
+            gap: 10px;
+            align-items: end;
+        }
+        .search-results {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            background: #f9fafb;
+            margin-top: 10px;
+            display: none;
+        }
+        .result-item {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .result-item:hover {
+            background-color: #e5e7eb;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .code-display {
+            font-family: monospace;
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .hidden { display: none; }
+        .trigger-indicator {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #92400e;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        @media (max-width: 768px) {
+            .header { flex-direction: column; }
+            .form-grid { grid-template-columns: 1fr; }
+            .container { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>RCTC-Enhanced eICR Generator</h1>
+                <p class="subtitle">Electronic Initial Case Report with Reportable Condition Trigger Codes</p>
+            </div>
+            <div class="buttons">
+                <label class="btn btn-secondary">
+                    📁 Load Form Data
+                    <input type="file" accept=".json" onchange="loadFormData(event)" class="hidden">
+                </label>
+                <button class="btn btn-warning" onclick="loadRCTCFile()">📋 Load RCTC File</button>
+                <button class="btn btn-success" onclick="saveFormData()">💾 Save Form Data</button>
+                <button class="btn btn-primary" onclick="generateAndDownloadCDA()">📄 Generate CDA</button>
+            </div>
+        </div>
+
+        <div class="rctc-info">
+            <h3>RCTC Information</h3>
+            <p><strong>RCTC OID:</strong> <span class="code-display">2.16.840.1.114222.4.11.7508</span></p>
+            <p><strong>Definition Version:</strong> <span class="code-display">2.0.1</span></p>
+            <p><strong>Release Date:</strong> <span class="code-display">2025-03-18</span></p>
+            <p><strong>Effective Date:</strong> <span class="code-display">2025-06-01</span></p>
+            <p>This generator uses the official RCTC trigger codes. Load your RCTC file to enable code lookup and validation.</p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Patient Demographics</h2>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Patient ID</label>
+                    <input type="text" id="patientId" value="MRN-00884455">
+                </div>
+                <div class="input-group">
+                    <label>Patient Name</label>
+                    <input type="text" id="patientName" value="Mon Mothma">
+                </div>
+                <div class="input-group">
+                    <label>Phone</label>
+                    <input type="text" id="patientPhone" value="+1-555-555-9876">
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="patientEmail" value="mon.mothma@senate.gr.example.com">
+                </div>
+                <div class="input-group">
+                    <label>Address</label>
+                    <input type="text" id="patientAddress" value="500 Republica, Suite 400">
+                </div>
+                <div class="input-group">
+                    <label>City</label>
+                    <input type="text" id="patientCity" value="Senate District">
+                </div>
+                <div class="input-group">
+                    <label>State</label>
+                    <input type="text" id="patientState" value="Galactic City">
+                </div>
+                <div class="input-group">
+                    <label>ZIP Code</label>
+                    <input type="text" id="patientZip" value="GC-500">
+                </div>
+                <div class="input-group">
+                    <label>County</label>
+                    <input type="text" id="patientCounty" value="Administrative Core">
+                </div>
+                <div class="input-group">
+                    <label>Country</label>
+                    <input type="text" id="patientCountry" value="Coruscant">
+                </div>
+                <div class="input-group">
+                    <label>Gender (F/M)</label>
+                    <input type="text" id="patientGender" value="F">
+                </div>
+                <div class="input-group">
+                    <label>Birth Date (YYYYMMDD)</label>
+                    <input type="text" id="patientBirthDate" value="19750101">
+                </div>
+                <div class="input-group">
+                    <label>Race Code</label>
+                    <input type="text" id="patientRace" value="2106-3">
+                </div>
+                <div class="input-group">
+                    <label>Ethnicity Code</label>
+                    <input type="text" id="patientEthnicity" value="2186-5">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Provider Information</h2>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Provider ID</label>
+                    <input type="text" id="providerId" value="1234567890">
+                </div>
+                <div class="input-group">
+                    <label>Provider Name</label>
+                    <input type="text" id="providerName" value="Dr Royce Hemlock">
+                </div>
+                <div class="input-group">
+                    <label>Provider Phone</label>
+                    <input type="text" id="providerPhone" value="+1-555-777-0123">
+                </div>
+                <div class="input-group">
+                    <label>Provider Email</label>
+                    <input type="email" id="providerEmail" value="dr.hemlock@grmfc.gc.example.com">
+                </div>
+                <div class="input-group">
+                    <label>Facility Name</label>
+                    <input type="text" id="facilityName" value="Grand Republic Medical Facility Clinic">
+                </div>
+                <div class="input-group">
+                    <label>Facility Address</label>
+                    <input type="text" id="facilityAddress" value="500 Republica Medical Plaza, Suite 1000">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Encounter Information</h2>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Encounter ID</label>
+                    <input type="text" id="encounterId" value="9937015">
+                </div>
+                <div class="input-group">
+                    <label>Encounter Type</label>
+                    <input type="text" id="encounterType" value="AMB">
+                </div>
+                <div class="input-group">
+                    <label>Encounter Date (YYYYMMDD)</label>
+                    <input type="text" id="encounterDate" value="20250216">
+                </div>
+                <div class="input-group textarea-group">
+                    <label>Chief Complaint</label>
+                    <textarea id="chiefComplaint">fever, cough, exposure to COVID-19 hot zone</textarea>
+                </div>
+                <div class="input-group textarea-group">
+                    <label>History of Present Illness</label>
+                    <textarea id="presentIllness">The patient initially presented with difficulty breathing and fever. Patient disclosed recent travel to a known COVID-19 hot zone.</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Diagnoses with RCTC Trigger Codes</h2>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Diagnosis 1 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
+                    <div class="code-search">
+                        <input type="text" id="diagnosis1Code" value="840539006" onblur="validateTriggerCode('diagnosis1Code')">
+                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis1Code')">🔍</button>
+                    </div>
+                    <div id="diagnosis1Code_results" class="search-results"></div>
+                </div>
+                <div class="input-group">
+                    <label>Diagnosis 1 Name</label>
+                    <input type="text" id="diagnosis1Name" value="Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)">
+                </div>
+                <div class="input-group">
+                    <label>Diagnosis 2 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
+                    <div class="code-search">
+                        <input type="text" id="diagnosis2Code" value="719865001" onblur="validateTriggerCode('diagnosis2Code')">
+                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis2Code')">🔍</button>
+                    </div>
+                    <div id="diagnosis2Code_results" class="search-results"></div>
+                </div>
+                <div class="input-group">
+                    <label>Diagnosis 2 Name</label>
+                    <input type="text" id="diagnosis2Name" value="Influenza A virus infection (disorder)">
+                </div>
+                <div class="input-group">
+                    <label>Diagnosis 3 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
+                    <div class="code-search">
+                        <input type="text" id="diagnosis3Code" value="3928002" onblur="validateTriggerCode('diagnosis3Code')">
+                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis3Code')">🔍</button>
+                    </div>
+                    <div id="diagnosis3Code_results" class="search-results"></div>
+                </div>
+                <div class="input-group">
+                    <label>Diagnosis 3 Name</label>
+                    <input type="text" id="diagnosis3Name" value="Zika virus disease (disorder)">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Laboratory Tests with RCTC Trigger Codes</h2>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Lab Test 1 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
+                    <div class="code-search">
+                        <input type="text" id="labTest1Code" value="94310-0" onblur="validateTriggerCode('labTest1Code')">
+                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('labTest1Code')">🔍</button>
+                    </div>
+                    <div id="labTest1Code_results" class="search-results"></div>
+                </div>
+                <div class="input-group">
+                    <label>Lab Test 1 Name</label>
+                    <input type="text" id="labTest1Name" value="SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection">
+                </div>
+                <div class="input-group">
+                    <label>Lab Test 1 Result</label>
+                    <select id="labTest1Result">
+                        <option value="Detected">Detected</option>
+                        <option value="Not Detected">Not Detected</option>
+                        <option value="Positive">Positive</option>
+                        <option value="Negative">Negative</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Lab Test 2 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
+                    <div class="code-search">
+                        <input type="text" id="labTest2Code" value="34487-9" onblur="validateTriggerCode('labTest2Code')">
+                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('labTest2Code')">🔍</button>
+                    </div>
+                    <div id="labTest2Code_results" class="search-results"></div>
+                </div>
+                <div class="input-group">
+                    <label>Lab Test 2 Name</label>
+                    <input type="text" id="labTest2Name" value="Influenza virus A RNA [Presence] in Respiratory specimen by NAA with probe detection">
+                </div>
+                <div class="input-group">
+                    <label>Lab Test 2 Result</label>
+                    <select id="labTest2Result">
+                        <option value="Detected">Detected</option>
+                        <option value="Not Detected">Not Detected</option>
+                        <option value="Positive">Positive</option>
+                        <option value="Negative">Negative</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Travel History</h2>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Travel Start Date (YYYYMMDD)</label>
+                    <input type="text" id="travelStartDate" value="20250208">
+                </div>
+                <div class="input-group">
+                    <label>Travel End Date (YYYYMMDD)</label>
+                    <input type="text" id="travelEndDate" value="20250214">
+                </div>
+                <div class="input-group">
+                    <label>Travel Location</label>
+                    <input type="text" id="travelLocation" value="Chandrila">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Document Information</h2>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Document ID</label>
+                    <input type="text" id="documentId" value="10c13861-86a8-4a9a-aec6-b615921178df">
+                </div>
+                <div class="input-group">
+                    <label>Effective Time</label>
+                    <input type="text" id="effectiveTime" value="20250222150045-0400">
+                </div>
+                <div class="input-group">
+                    <label>Set ID</label>
+                    <input type="text" id="setId" value="8d86218e-0fea-11eb-8216-a80388425cfb">
+                </div>
+                <div class="input-group">
+                    <label>Version Number</label>
+                    <input type="text" id="versionNumber" value="3">
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-buttons">
+            <label class="btn btn-secondary">
+                📁 Load Form Data
+                <input type="file" accept=".json" onchange="loadFormData(event)" class="hidden">
+            </label>
+            <button class="btn btn-warning" onclick="loadRCTCFile()">📋 Load RCTC File</button>
+            <button class="btn btn-success" onclick="saveFormData()">💾 Save Form Data</button>
+            <button class="btn btn-primary" onclick="generateAndDownloadCDA()">📄 Generate CDA</button>
+        </div>
+    </div>
+
+    <script>
+        // Global RCTC data storage
+        let rctcData = {
+            diagnosis: [],
+            labOrder: [],
+            labObs: [],
+            medications: [],
+            organism: [],
+            metadata: {
+                oid: '2.16.840.1.114222.4.11.7508',
+                version: '2.0.1',
+                effectiveDate: '2025-06-01',
+                releaseDate: '2025-03-18'
+            }
+        };
+
+        function getFormData() {
+            const fields = [
+                'patientId', 'patientName', 'patientPhone', 'patientEmail', 'patientAddress',
+                'patientCity', 'patientState', 'patientZip', 'patientCounty', 'patientCountry',
+                'patientGender', 'patientBirthDate', 'patientRace', 'patientEthnicity',
+                'providerId', 'providerName', 'providerPhone', 'providerEmail', 'facilityName', 'facilityAddress',
+                'encounterId', 'encounterType', 'encounterDate', 'chiefComplaint', 'presentIllness',
+                'diagnosis1Code', 'diagnosis1Name', 'diagnosis2Code', 'diagnosis2Name', 'diagnosis3Code', 'diagnosis3Name',
+                'labTest1Code', 'labTest1Name', 'labTest1Result', 'labTest2Code', 'labTest2Name', 'labTest2Result',
+                'travelStartDate', 'travelEndDate', 'travelLocation',
+                'documentId', 'effectiveTime', 'setId', 'versionNumber'
+            ];
+            
+            const data = {};
+            fields.forEach(field => {
+                const element = document.getElementById(field);
+                if (element) {
+                    data[field] = element.value;
+                }
+            });
+            return data;
+        }
+
+        function setFormData(data) {
+            Object.keys(data).forEach(field => {
+                const element = document.getElementById(field);
+                if (element) {
+                    element.value = data[field];
+                }
+            });
+        }
+
+        function loadRCTCFile() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.xlsx,.xls';
+            input.onchange = handleRCTCFile;
+            input.click();
+        }
+
+        function handleRCTCFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            alert('RCTC file processing would require additional libraries in a real implementation. For now, the generator uses hardcoded RCTC OID and version information.');
+            
+            console.log('RCTC file selected:', file.name);
+        }
+
+        function searchRCTCCodes(fieldId) {
+            const resultsDiv = document.getElementById(fieldId + '_results');
+            
+            // Sample RCTC codes for demonstration
+            const sampleCodes = [
+                { code: '840539006', display: 'Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)', system: 'SNOMED-CT' },
+                { code: '719865001', display: 'Influenza A virus infection (disorder)', system: 'SNOMED-CT' },
+                { code: '3928002', display: 'Zika virus disease (disorder)', system: 'SNOMED-CT' },
+                { code: '94310-0', display: 'SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection', system: 'LOINC' },
+                { code: '34487-9', display: 'Influenza virus A RNA [Presence] in Respiratory specimen by NAA with probe detection', system: 'LOINC' }
+            ];
+
+            resultsDiv.innerHTML = '';
+            sampleCodes.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'result-item';
+                div.innerHTML = `<strong>${item.code}</strong> (${item.system})<br><small>${item.display}</small>`;
+                div.onclick = () => {
+                    document.getElementById(fieldId).value = item.code;
+                    const nameField = fieldId.replace('Code', 'Name');
+                    const nameElement = document.getElementById(nameField);
+                    if (nameElement) {
+                        nameElement.value = item.display;
+                    }
+                    resultsDiv.style.display = 'none';
+                };
+                resultsDiv.appendChild(div);
+            });
+            
+            resultsDiv.style.display = 'block';
+        }
+
+        function validateTriggerCode(fieldId) {
+            const code = document.getElementById(fieldId).value;
+            const triggerCodes = ['840539006', '719865001', '3928002', '94310-0', '34487-9'];
+            
+            if (code && !triggerCodes.includes(code)) {
+                console.log('Warning: Code', code, 'may not be a valid RCTC trigger code');
+            }
+        }
+
+        function generateCDA() {
+            const data = getFormData();
+            
+            const cdaTemplate = `<?xml version="1.0" encoding="UTF-8"?>
+<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:cda="urn:hl7-org:v3" xmlns:sdtc="urn:hl7-org:sdtc"
+  xmlns:voc="http://www.lantanagroup.com/voc"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="urn:hl7-org:v3 ../../schema/infrastructure/cda/CDA_SDTC.xsd">
+  <realmCode code="US" />
+  <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3" />
+  <templateId root="2.16.840.1.113883.10.20.22.1.1" />
+  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.1.1" />
+  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2" />
+  <id root="${data.documentId}" />
+  <code code="55751-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+    displayName="Public Health Case Report" />
+  <title>Initial Public Health Case Report</title>
+  <effectiveTime value="${data.effectiveTime}" />
+  <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="Normal" />
+  <languageCode code="en-US" />
+  <setId extension="${data.setId}" root="1.2.840.114350.1.13.380.3.7.1.1" />
+  <versionNumber value="${data.versionNumber}" />
+  
+  <!-- Patient Information -->
+  <recordTarget>
+    <patientRole>
+      <id extension="${data.patientId}" root="2.16.840.1.113883.19.5" />
+      <addr use="H">
+        <streetAddressLine>${data.patientAddress}</streetAddressLine>
+        <city>${data.patientCity}</city>
+        <state>${data.patientState}</state>
+        <postalCode>${data.patientZip}</postalCode>
+        <county>${data.patientCounty}</county>
+        <country>${data.patientCountry}</country>
+      </addr>
+      <telecom use="MC" value="tel:${data.patientPhone}" />
+      <telecom use="WP" value="mailto:${data.patientEmail}" />
+      <patient>
+        <name use="L">
+          <given>${data.patientName.split(' ')[0]}</given>
+          <family>${data.patientName.split(' ').slice(1).join(' ')}</family>
+        </name>
+        <administrativeGenderCode code="${data.patientGender}" codeSystem="2.16.840.1.113883.5.1"
+          displayName="${data.patientGender === 'F' ? 'Female' : 'Male'}" />
+        <birthTime value="${data.patientBirthDate}" />
+        <sdtc:deceasedInd value="false" />
+        <raceCode code="${data.patientRace}" codeSystem="2.16.840.1.113883.6.238"
+          codeSystemName="Race &amp; Ethnicity - CDC" displayName="White" />
+        <ethnicGroupCode code="${data.patientEthnicity}" codeSystem="2.16.840.1.113883.6.238"
+          codeSystemName="Race &amp; Ethnicity - CDC" displayName="Not Hispanic or Latino" />
+        <languageCommunication>
+          <languageCode code="en" />
+          <preferenceInd value="true" />
+        </languageCommunication>
+      </patient>
+    </patientRole>
+  </recordTarget>
+
+  <!-- Provider Information -->
+  <author>
+    <time value="${data.effectiveTime}" />
+    <assignedAuthor>
+      <id root="2.16.840.1.113883.3.72.5.20" />
+      <addr use="WP">
+        <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+        <city>${data.patientCity}</city>
+        <state>${data.patientState}</state>
+        <postalCode>${data.patientZip}</postalCode>
+      </addr>
+      <telecom use="WP" value="tel:${data.providerPhone}" />
+      <assignedAuthoringDevice>
+        <manufacturerModelName>RCTC-Enhanced eICR Generator - Version 1.0</manufacturerModelName>
+        <softwareName>RCTC-Enhanced eICR Generator - Version 1.0</softwareName>
+      </assignedAuthoringDevice>
+    </assignedAuthor>
+  </author>
+
+  <custodian>
+    <assignedCustodian>
+      <representedCustodianOrganization>
+        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6" />
+        <name>${data.facilityName}</name>
+        <telecom use="WP" value="tel:${data.providerPhone}" />
+        <addr use="WP">
+          <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+          <city>${data.patientCity}</city>
+          <state>${data.patientState}</state>
+          <postalCode>${data.patientZip}</postalCode>
+        </addr>
+      </representedCustodianOrganization>
+    </assignedCustodian>
+  </custodian>
+
+  <!-- Encounter Information -->
+  <componentOf>
+    <encompassingEncounter>
+      <id extension="${data.encounterId}" root="2.16.840.1.113883.19" />
+      <code code="${data.encounterType}" codeSystem="2.16.840.1.113883.5.4"
+        codeSystemName="HL7 ActEncounterCode" displayName="Ambulatory" />
+      <effectiveTime>
+        <low value="${data.encounterDate}" />
+        <high value="${data.encounterDate}" />
+      </effectiveTime>
+      <responsibleParty>
+        <assignedEntity>
+          <id extension="${data.providerId}" root="2.16.840.1.113883.4.6" />
+          <addr use="WP">
+            <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+            <city>${data.patientCity}</city>
+            <state>${data.patientState}</state>
+            <postalCode>${data.patientZip}</postalCode>
+          </addr>
+          <telecom use="WP" value="tel:${data.providerPhone}" />
+          <assignedPerson>
+            <name>
+              <given>${data.providerName.split(' ')[1]}</given>
+              <family>${data.providerName.split(' ')[2]}</family>
+            </name>
+          </assignedPerson>
+          <representedOrganization>
+            <name>${data.facilityName}</name>
+            <addr use="WP">
+              <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+              <city>${data.patientCity}</city>
+              <state>${data.patientState}</state>
+              <postalCode>${data.patientZip}</postalCode>
+            </addr>
+          </representedOrganization>
+        </assignedEntity>
+      </responsibleParty>
+      <location>
+        <healthCareFacility>
+          <id extension="${data.providerId}" root="2.16.840.1.113883.4.6" />
+          <code code="OF" codeSystem="2.16.840.1.113883.5.111"
+            codeSystemName="HL7RoleCode" displayName="Outpatient Facility" />
+          <location>
+            <addr use="WP">
+              <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+              <city>${data.patientCity}</city>
+              <state>${data.patientState}</state>
+              <postalCode>${data.patientZip}</postalCode>
+            </addr>
+          </location>
+          <serviceProviderOrganization>
+            <name>${data.facilityName}</name>
+            <telecom use="WP" value="tel:${data.providerPhone}" />
+            <addr use="WP">
+              <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+              <city>${data.patientCity}</city>
+              <state>${data.patientState}</state>
+              <postalCode>${data.patientZip}</postalCode>
+            </addr>
+          </serviceProviderOrganization>
+        </healthCareFacility>
+      </location>
+    </encompassingEncounter>
+  </componentOf>
+
+  <component>
+    <structuredBody>
+      <!-- Encounters Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.22" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.22" extension="2015-08-01" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.22.1" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.22.1" extension="2015-08-01" />
+          <code code="46240-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="History of encounters" />
+          <title>Encounters</title>
+          <text>
+            <table>
+              <thead>
+                <tr><th>Encounter</th><th>Date</th><th>Location</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Office outpatient visit</td><td>${data.encounterDate}</td><td>${data.facilityName}</td></tr>
+              </tbody>
+            </table>
+          </text>
+          <entry typeCode="DRIV">
+            <encounter classCode="ENC" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.49" />
+              <templateId root="2.16.840.1.113883.10.20.22.4.49" extension="2015-08-01" />
+              <id root="2.16.840.1.113883.19.${data.encounterId}" />
+              <code code="99213" codeSystem="2.16.840.1.113883.6.12" codeSystemName="CPT-4"
+                displayName="Office outpatient visit" />
+              <effectiveTime>
+                <low value="${data.encounterDate}" />
+                <high value="${data.encounterDate}" />
+              </effectiveTime>
+            </encounter>
+          </entry>
+        </section>
+      </component>
+
+      <!-- Reason for Visit Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.12" />
+          <code code="29299-5" codeSystem="2.16.840.1.113883.6.1" displayName="Reason for visit" />
+          <title>Reason for visit</title>
+          <text>${data.chiefComplaint}</text>
+        </section>
+      </component>
+
+      <!-- History of Present Illness -->
+      <component>
+        <section>
+          <templateId root="1.3.6.1.4.1.19376.1.5.3.1.3.4" />
+          <code code="10164-2" codeSystem="2.16.840.1.113883.6.1" displayName="History of Present Illness" />
+          <title>History of Present Illness</title>
+          <text>${data.presentIllness}</text>
+        </section>
+      </component>
+
+      <!-- Medications Administered Section -->
+      <component>
+        <section nullFlavor="NI">
+          <templateId root="2.16.840.1.113883.10.20.22.2.38" />
+          <templateId extension="2014-06-09" root="2.16.840.1.113883.10.20.22.2.38" />
+          <code code="29549-3" codeSystem="2.16.840.1.113883.6.1"
+            codeSystemName="LOINC" displayName="Medications Administered" />
+          <title>Medications Administered</title>
+          <text>No medications administered</text>
+        </section>
+      </component>
+
+      <!-- Problems Section with RCTC Trigger Codes -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.5" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.5" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.5.1" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.5.1" />
+          <code code="11450-4" codeSystem="2.16.840.1.113883.6.1" displayName="Problem List" />
+          <title>Problem List</title>
+          <text>
+            <table>
+              <thead>
+                <tr><th>Problem</th><th>Code</th><th>Date</th><th>RCTC Trigger</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>${data.diagnosis1Name}</td><td>${data.diagnosis1Code}</td><td>${data.encounterDate}</td><td>Yes</td></tr>
+                <tr><td>${data.diagnosis2Name}</td><td>${data.diagnosis2Code}</td><td>${data.encounterDate}</td><td>Yes</td></tr>
+                <tr><td>${data.diagnosis3Name}</td><td>${data.diagnosis3Code}</td><td>${data.encounterDate}</td><td>Yes</td></tr>
+              </tbody>
+            </table>
+          </text>
+          <entry typeCode="DRIV">
+            <act classCode="ACT" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.3" />
+              <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.3" />
+              <id root="a1c0c380-eacc-4b40-9207-85164185558d" />
+              <code code="CONC" codeSystem="2.16.840.1.113883.5.6" displayName="Concern" />
+              <statusCode code="active" />
+              <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+              
+              <!-- COVID-19 Diagnosis with RCTC Trigger Code Template -->
+              <entryRelationship typeCode="SUBJ">
+                <observation classCode="OBS" moodCode="EVN" negationInd="false">
+                  <templateId root="2.16.840.1.113883.10.20.22.4.4" />
+                  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.4" />
+                  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.3" />
+                  <id root="5e3c9b57-fa2e-48a2-be29-47d9873e3c13" />
+                  <code code="75323-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                    displayName="Condition">
+                    <translation code="282291009" codeSystem="2.16.840.1.113883.6.96"
+                      codeSystemName="SNOMED CT" displayName="Diagnosis" />
+                  </code>
+                  <statusCode code="completed" />
+                  <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+                  <value xsi:type="CD" code="${data.diagnosis1Code}" codeSystem="2.16.840.1.113883.6.96"
+                    codeSystemName="SNOMED-CT" displayName="${data.diagnosis1Name}"
+                    sdtc:valueSet="${rctcData.metadata.oid}" sdtc:valueSetVersion="${rctcData.metadata.version}" />
+                </observation>
+              </entryRelationship>
+
+              <!-- Influenza Diagnosis with RCTC Trigger Code Template -->
+              <entryRelationship typeCode="SUBJ">
+                <observation classCode="OBS" moodCode="EVN" negationInd="false">
+                  <templateId root="2.16.840.1.113883.10.20.22.4.4" />
+                  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.4" />
+                  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.3" />
+                  <id root="7f32bd91-c5f3-422b-8a9d-3bc24c1e8bc1" />
+                  <code code="75323-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                    displayName="Condition">
+                    <translation code="282291009" codeSystem="2.16.840.1.113883.6.96"
+                      codeSystemName="SNOMED CT" displayName="Diagnosis" />
+                  </code>
+                  <statusCode code="completed" />
+                  <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+                  <value xsi:type="CD" code="${data.diagnosis2Code}" codeSystem="2.16.840.1.113883.6.96"
+                    codeSystemName="SNOMED-CT" displayName="${data.diagnosis2Name}"
+                    sdtc:valueSet="${rctcData.metadata.oid}" sdtc:valueSetVersion="${rctcData.metadata.version}" />
+                </observation>
+              </entryRelationship>
+
+              <!-- Zika Diagnosis with RCTC Trigger Code Template -->
+              <entryRelationship typeCode="SUBJ">
+                <observation classCode="OBS" moodCode="EVN" negationInd="false">
+                  <templateId root="2.16.840.1.113883.10.20.22.4.4" />
+                  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.4" />
+                  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.3" />
+                  <id root="b0ea9e52-4e54-4c22-8dc3-4bd390e10eef" />
+                  <code code="75323-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                    displayName="Condition">
+                    <translation code="282291009" codeSystem="2.16.840.1.113883.6.96"
+                      codeSystemName="SNOMED CT" displayName="Diagnosis" />
+                  </code>
+                  <statusCode code="completed" />
+                  <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+                  <value xsi:type="CD" code="${data.diagnosis3Code}" codeSystem="2.16.840.1.113883.6.96"
+                    codeSystemName="SNOMED-CT" displayName="${data.diagnosis3Name}"
+                    sdtc:valueSet="${rctcData.metadata.oid}" sdtc:valueSetVersion="${rctcData.metadata.version}" />
+                </observation>
+              </entryRelationship>
+            </act>
+          </entry>
+        </section>
+      </component>
+
+      <!-- Results Section with RCTC Trigger Codes -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.3" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.3" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.3.1" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.3.1" />
+          <code code="30954-2" codeSystem="2.16.840.1.113883.6.1" displayName="Relevant diagnostic tests and/or laboratory data" />
+          <title>Results</title>
+          <text>
+            <table>
+              <thead>
+                <tr><th>Test</th><th>Result</th><th>Date</th><th>RCTC Trigger</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>${data.labTest1Name}</td><td>${data.labTest1Result}</td><td>${data.encounterDate}</td><td>Yes</td></tr>
+                <tr><td>${data.labTest2Name}</td><td>${data.labTest2Result}</td><td>${data.encounterDate}</td><td>Yes</td></tr>
+              </tbody>
+            </table>
+          </text>
+          
+          <!-- COVID-19 Test Result with RCTC Trigger Code Template -->
+          <entry typeCode="DRIV">
+            <organizer classCode="BATTERY" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.1" />
+              <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.1" />
+              <id root="2047cca3-559f-45da-8775-406538fa4815" />
+              <code code="${data.labTest1Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                displayName="${data.labTest1Name}" />
+              <statusCode code="completed" />
+              <effectiveTime>
+                <low value="${data.encounterDate}" />
+                <high value="${data.encounterDate}" />
+              </effectiveTime>
+              <component>
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.22.4.2" />
+                  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.2" />
+                  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.2" />
+                  <id root="9890e2c3-019a-4168-8403-a0a069994440" />
+                  <code code="${data.labTest1Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                    displayName="${data.labTest1Name}"
+                    sdtc:valueSet="${rctcData.metadata.oid}" sdtc:valueSetVersion="${rctcData.metadata.version}" />
+                  <statusCode code="completed" />
+                  <effectiveTime value="${data.encounterDate}" />
+                  <value code="260373001" codeSystem="2.16.840.1.113883.6.96"
+                    codeSystemName="SNOMED-CT" displayName="${data.labTest1Result}" xsi:type="CD" />
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+
+          <!-- Influenza Test Result with RCTC Trigger Code Template -->
+          <entry typeCode="DRIV">
+            <organizer classCode="BATTERY" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.1" />
+              <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.1" />
+              <id root="3f4b84f1-d3f6-4731-8e61-7c63d8f39a70" />
+              <code code="${data.labTest2Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                displayName="${data.labTest2Name}" />
+              <statusCode code="completed" />
+              <effectiveTime>
+                <low value="${data.encounterDate}" />
+                <high value="${data.encounterDate}" />
+              </effectiveTime>
+              <component>
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId root="2.16.840.1.113883.10.20.22.4.2" />
+                  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.2" />
+                  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.2" />
+                  <id root="6c53c5ff-42a9-4f3c-a2c0-d412f019c0de" />
+                  <code code="${data.labTest2Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                    displayName="${data.labTest2Name}"
+                    sdtc:valueSet="${rctcData.metadata.oid}" sdtc:valueSetVersion="${rctcData.metadata.version}" />
+                  <statusCode code="completed" />
+                  <effectiveTime value="${data.encounterDate}" />
+                  <value code="260373001" codeSystem="2.16.840.1.113883.6.96"
+                    codeSystemName="SNOMED-CT" displayName="${data.labTest2Result}" xsi:type="CD" />
+                </observation>
+              </component>
+            </organizer>
+          </entry>
+        </section>
+      </component>
+
+      <!-- Social History Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.17" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.17" />
+          <code code="29762-2" codeSystem="2.16.840.1.113883.6.1" displayName="Social History" />
+          <title>Social History</title>
+          <text>
+            <table>
+              <thead>
+                <tr><th>Travel History</th><th>Dates</th><th>Location</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Recent travel</td><td>${data.travelStartDate} - ${data.travelEndDate}</td><td>${data.travelLocation}</td></tr>
+              </tbody>
+            </table>
+          </text>
+          <entry typeCode="DRIV">
+            <act classCode="ACT" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.15.2.3.1" />
+              <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.1" />
+              <id root="79565142-eae0-4213-a3b3-b73cdf474682" />
+              <code code="420008001" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED-CT"
+                displayName="Travel" />
+              <text>Recent travel to ${data.travelLocation}</text>
+              <statusCode code="completed" />
+              <effectiveTime>
+                <low value="${data.travelStartDate}" />
+                <high value="${data.travelEndDate}" />
+              </effectiveTime>
+            </act>
+          </entry>
+        </section>
+      </component>
+    </structuredBody>
+  </component>
+</ClinicalDocument>`;
+            return cdaTemplate;
+        }
+
+        function generateAndDownloadCDA() {
+            const cdaContent = generateCDA();
+            const data = getFormData();
+            const blob = new Blob([cdaContent], { type: 'application/xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `RCTC_eICR_${data.patientId}_${new Date().toISOString().split('T')[0]}.xml`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function saveFormData() {
+            const data = getFormData();
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `RCTC_eICR_form_data_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function loadFormData(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        setFormData(data);
+                        alert('Form data loaded successfully!');
+                    } catch (error) {
+                        alert('Error loading file: Invalid JSON format');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // Hide search results when clicking outside
+        document.addEventListener('click', function(e) {
+            const searchResults = document.querySelectorAll('.search-results');
+            searchResults.forEach(result => {
+                if (!result.parentElement.contains(e.target)) {
+                    result.style.display = 'none';
+                }
+            });
+        });
+
+        // Initialize the form
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('RCTC-Enhanced eICR Generator loaded');
+            console.log('RCTC Metadata:', rctcData.metadata);
+        });
+    </script>
+</body>
+</html>
