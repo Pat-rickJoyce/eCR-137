@@ -699,105 +699,192 @@
             </div>
         </div>
 
-        <div class="section">
-            <h2 class="section-title">Medications</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Administered Medication 1 Code</label>
-                    <input type="text" id="adminMed1Code" value="42946">
-                </div>
-                <div class="input-group">
-                    <label>Administered Medication 1 Name</label>
-                    <input type="text" id="adminMed1Name" value="Folic acid">
-                </div>
-                <div class="input-group">
-                    <label>Administration ID 1</label>
-                    <input type="text" id="adminMed1Id" value="MED-2024-001">
-                </div>
-                <div class="input-group">
-                    <label>Administration Status 1</label>
-                    <select id="adminMed1Status">
-                        <option value="completed">Completed</option>
-                        <option value="active">Active</option>
-                        <option value="suspended">Suspended</option>
-                        <option value="aborted">Aborted</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Administration Time 1 (YYYYMMDDHHMMSS)</label>
-                    <input type="text" id="adminMed1Time" value="20240615120000">
-                </div>
-                <div class="input-group">
-                    <label>Route 1</label>
-                    <select id="adminMed1Route">
-                        <option value="PO">Oral</option>
-                        <option value="IV">Intravenous</option>
-                        <option value="IM">Intramuscular</option>
-                        <option value="SC">Subcutaneous</option>
-                        <option value="SL">Sublingual</option>
-                        <option value="TOP">Topical</option>
-                        <option value="INH">Inhalation</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Dose Quantity 1</label>
-                    <input type="text" id="adminMed1Dose" value="0.4 mg">
-                </div>
-                <div class="input-group">
-                    <label>Administered Medication 2 Code</label>
-                    <input type="text" id="adminMed2Code" value="161">
-                </div>
-                <div class="input-group">
-                    <label>Administered Medication 2 Name</label>
-                    <input type="text" id="adminMed2Name" value="Multivitamin preparation">
-                </div>
-                <div class="input-group">
-                    <label>Administration ID 2</label>
-                    <input type="text" id="adminMed2Id" value="MED-2024-002">
-                </div>
-                <div class="input-group">
-                    <label>Administration Status 2</label>
-                    <select id="adminMed2Status">
-                        <option value="completed">Completed</option>
-                        <option value="active">Active</option>
-                        <option value="suspended">Suspended</option>
-                        <option value="aborted">Aborted</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Administration Time 2 (YYYYMMDDHHMMSS)</label>
-                    <input type="text" id="adminMed2Time" value="20240615130000">
-                </div>
-                <div class="input-group">
-                    <label>Route 2</label>
-                    <select id="adminMed2Route">
-                        <option value="PO">Oral</option>
-                        <option value="IV">Intravenous</option>
-                        <option value="IM">Intramuscular</option>
-                        <option value="SC">Subcutaneous</option>
-                        <option value="SL">Sublingual</option>
-                        <option value="TOP">Topical</option>
-                        <option value="INH">Inhalation</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Dose Quantity 2</label>
-                    <input type="text" id="adminMed2Dose" value="1 tablet">
-                </div>
-                <div class="input-group">
-                    <label>Planned Medication 1 Code</label>
-                    <input type="text" id="plannedMed1Code" value="161">
-                </div>
-                <div class="input-group">
-                    <label>Planned Medication 1 Name</label>
-                    <input type="text" id="plannedMed1Name" value="Multivitamin with iron">
-                </div>
-                <div class="input-group">
-                    <label>Planned Medication 1 Instructions</label>
-                    <textarea id="plannedMed1Instructions">Take 1 tablet daily with food for nutritional support during neural tube defect management</textarea>
-                </div>
-            </div>
-        </div>
+<!-- ░░░  MEDICATIONS  ░░░================================================ -->
+<div class="section">
+  <h2 class="section-title">Medications</h2>
+
+  <div class="form-grid">
+
+    <!-- ───────────── Administered Medication 1 ───────────── -->
+    <div class="input-group">
+      <label>Administered Medication 1 Code</label>
+      <input type="text" id="adminMed1Code" value="42946">
+    </div>
+
+    <div class="input-group">
+      <label>Administered Medication 1 Name</label>
+      <input type="text" id="adminMed1Name" value="Folic acid">
+    </div>
+
+    <div class="input-group">
+      <label>Administration ID 1</label>
+      <input type="text" id="adminMed1Id" value="MED-2024-001">
+    </div>
+
+    <div class="input-group">
+      <label>Administration Status 1</label>
+      <select id="adminMed1Status">
+        <option value="completed">Completed</option>
+        <option value="active">Active</option>
+        <option value="suspended">Suspended</option>
+        <option value="aborted">Aborted</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label>Administration Time 1 (YYYYMMDDHHMMSS)</label>
+      <input type="text" id="adminMed1Time" value="20240615120000">
+    </div>
+
+    <div class="input-group">
+      <label>Route 1</label>
+      <select id="adminMed1Route">
+        <option value="PO">Oral</option>
+        <option value="IV">Intravenous</option>
+        <option value="IM">Intramuscular</option>
+        <option value="SC">Subcutaneous</option>
+        <option value="SL">Sublingual</option>
+        <option value="TOP">Topical</option>
+        <option value="INH">Inhalation</option>
+      </select>
+    </div>
+
+    <!-- — NEW dose widgets — -->
+    <div class="input-group">
+      <label>Dose 1 • Amount</label>
+      <input type="number" step="0.01" id="adminMed1DoseValue" value="0.4">
+    </div>
+
+    <div class="input-group">
+      <label>Dose 1 • Unit</label>
+      <select id="adminMed1DoseUnit">
+        <option value="mg">mg</option>
+        <option value="mcg">mcg</option>
+        <option value="g">g</option>
+        <option value="mL">mL</option>
+        <option value="1">each / tablet</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label>Dose 1 • Volume (opt)</label>
+      <input type="number" step="0.01" id="adminMed1VolValue" placeholder="0.5">
+    </div>
+
+    <div class="input-group">
+      <label>Vol • Unit</label>
+      <select id="adminMed1VolUnit">
+        <option value=""></option>
+        <option value="mL">mL</option>
+        <option value="L">L</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label><input type="checkbox" id="adminMed1Negated"> NOT given</label>
+    </div>
+
+    <!-- ───────────── Administered Medication 2 ───────────── -->
+    <div class="input-group">
+      <label>Administered Medication 2 Code</label>
+      <input type="text" id="adminMed2Code" value="161">
+    </div>
+
+    <div class="input-group">
+      <label>Administered Medication 2 Name</label>
+      <input type="text" id="adminMed2Name" value="Multivitamin preparation">
+    </div>
+
+    <div class="input-group">
+      <label>Administration ID 2</label>
+      <input type="text" id="adminMed2Id" value="MED-2024-002">
+    </div>
+
+    <div class="input-group">
+      <label>Administration Status 2</label>
+      <select id="adminMed2Status">
+        <option value="completed">Completed</option>
+        <option value="active">Active</option>
+        <option value="suspended">Suspended</option>
+        <option value="aborted">Aborted</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label>Administration Time 2 (YYYYMMDDHHMMSS)</label>
+      <input type="text" id="adminMed2Time" value="20240615130000">
+    </div>
+
+    <div class="input-group">
+      <label>Route 2</label>
+      <select id="adminMed2Route">
+        <option value="PO">Oral</option>
+        <option value="IV">Intravenous</option>
+        <option value="IM">Intramuscular</option>
+        <option value="SC">Subcutaneous</option>
+        <option value="SL">Sublingual</option>
+        <option value="TOP">Topical</option>
+        <option value="INH">Inhalation</option>
+      </select>
+    </div>
+
+    <!-- — NEW dose widgets — -->
+    <div class="input-group">
+      <label>Dose 2 • Amount</label>
+      <input type="number" step="0.01" id="adminMed2DoseValue" value="1">
+    </div>
+
+    <div class="input-group">
+      <label>Dose 2 • Unit</label>
+      <select id="adminMed2DoseUnit">
+        <option value="mg">mg</option>
+        <option value="mcg">mcg</option>
+        <option value="g">g</option>
+        <option value="mL">mL</option>
+        <option value="1" selected>each / tablet</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label>Dose 2 • Volume (opt)</label>
+      <input type="number" step="0.01" id="adminMed2VolValue" placeholder="">
+    </div>
+
+    <div class="input-group">
+      <label>Vol • Unit</label>
+      <select id="adminMed2VolUnit">
+        <option value=""></option>
+        <option value="mL">mL</option>
+        <option value="L">L</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label><input type="checkbox" id="adminMed2Negated"> NOT given</label>
+    </div>
+
+    <!-- ───────────── Planned Medication (unchanged) ───────────── -->
+    <div class="input-group">
+      <label>Planned Medication 1 Code</label>
+      <input type="text" id="plannedMed1Code" value="161">
+    </div>
+
+    <div class="input-group">
+      <label>Planned Medication 1 Name</label>
+      <input type="text" id="plannedMed1Name" value="Multivitamin with iron">
+    </div>
+
+    <div class="input-group">
+      <label>Planned Medication 1 Instructions</label>
+      <textarea id="plannedMed1Instructions">
+Take 1 tablet daily with food for nutritional support during neural tube defect management
+      </textarea>
+    </div>
+
+  </div>
+</div>
+<!-- ░░░=============================================================== -->
+
 
         <div class="section">
             <h2 class="section-title">Immunizations</h2>
@@ -843,7 +930,7 @@
                 </div>
                 <div class="input-group">
                     <label>Manufacturer 1</label>
-                    <input type="text" id="vaccine1Manufacturer" placeholder="e.g., Pfizer-BioNTech" value="Merck & Co, Inc.">
+                    <input type="text" id="vaccine1Manufacturer" placeholder="e.g., Pfizer-BioNTech" value="Merck Co, Inc.">
                 </div>
                 <div class="input-group">
                     <label>Immunization 2 Status</label>
@@ -1513,10 +1600,17 @@
                 'labTest2Interpretation', 'labTest2ReferenceRange',
                 
                 // Medications
-                'adminMed1Code', 'adminMed1Name', 'adminMed1Id', 'adminMed1Status', 'adminMed1Time',
-                'adminMed1Route', 'adminMed1Dose', 'adminMed2Code', 'adminMed2Name', 'adminMed2Id',
-                'adminMed2Status', 'adminMed2Time', 'adminMed2Route', 'adminMed2Dose',
-                'plannedMed1Code', 'plannedMed1Name', 'plannedMed1Instructions',
+'adminMed1Code', 'adminMed1Name', 'adminMed1Id', 'adminMed1Status', 'adminMed1Time',
+'adminMed1Route',
+'adminMed1DoseValue', 'adminMed1DoseUnit', 'adminMed1VolValue', 'adminMed1VolUnit', 'adminMed1Negated',
+
+'adminMed2Code', 'adminMed2Name', 'adminMed2Id', 'adminMed2Status', 'adminMed2Time',
+'adminMed2Route',
+'adminMed2DoseValue', 'adminMed2DoseUnit', 'adminMed2VolValue', 'adminMed2VolUnit', 'adminMed2Negated',
+
+// Planned medication stays as-is
+'plannedMed1Code', 'plannedMed1Name', 'plannedMed1Instructions',
+
                 
                 // Immunizations
                 'immunization1Status', 'immunization1Id', 'immunization1Date', 'vaccine1Code', 'vaccine1Name',
@@ -1739,6 +1833,19 @@
         }
 
         // Helper functions for CDA generation
+
+// Helper functions for CDA generation
+function xmlEscape(str = '') {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+
+        
         function generateGUID() {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
                 var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -1746,107 +1853,176 @@
             });
         }
 
-        function generateVitalSignsEntries(data) {
-            if (!data.temperature && !data.bloodPressure && !data.heartRate) return '';
-            
-            return `
-                <entry typeCode="DRIV">
-                    <organizer classCode="CLUSTER" moodCode="EVN">
-                        <templateId root="2.16.840.1.113883.10.20.22.4.26" extension="2015-08-01" />
-                        <id root="${generateGUID()}" />
-                        <code code="46680005" codeSystem="2.16.840.1.113883.6.96" displayName="Vital signs" />
-                        <statusCode code="completed" />
-                        <effectiveTime value="${data.encounterDate}" />
-                        ${data.temperature ? `
-                        <component>
-                            <observation classCode="OBS" moodCode="EVN">
-                                <templateId root="2.16.840.1.113883.10.20.22.4.27" extension="2014-06-09" />
-                                <id root="${generateGUID()}" />
-                                <code code="8310-5" codeSystem="2.16.840.1.113883.6.1" displayName="Body temperature" />
-                                <statusCode code="completed" />
-                                <effectiveTime value="${data.encounterDate}" />
-                                <value xsi:type="PQ" value="${data.temperature}" unit="[degF]" />
-                            </observation>
-                        </component>` : ''}
-                        ${data.heartRate ? `
-                        <component>
-                            <observation classCode="OBS" moodCode="EVN">
-                                <templateId root="2.16.840.1.113883.10.20.22.4.27" extension="2014-06-09" />
-                                <id root="${generateGUID()}" />
-                                <code code="8867-4" codeSystem="2.16.840.1.113883.6.1" displayName="Heart rate" />
-                                <statusCode code="completed" />
-                                <effectiveTime value="${data.encounterDate}" />
-                                <value xsi:type="PQ" value="${data.heartRate}" unit="/min" />
-                            </observation>
-                        </component>` : ''}
-                        ${data.bloodPressure ? `
-                        <component>
-                            <observation classCode="OBS" moodCode="EVN">
-                                <templateId root="2.16.840.1.113883.10.20.22.4.27" extension="2014-06-09" />
-                                <id root="${generateGUID()}" />
-                                <code code="8480-6" codeSystem="2.16.840.1.113883.6.1" displayName="Systolic blood pressure" />
-                                <statusCode code="completed" />
-                                <effectiveTime value="${data.encounterDate}" />
-                                <value xsi:type="PQ" value="${data.bloodPressure.split('/')[0]}" unit="mm[Hg]" />
-                            </observation>
-                        </component>` : ''}
-                    </organizer>
-                </entry>`;
-        }
+        /* ---------- Vital-signs & anthropometrics ---------- */
+function generateVitalSignsEntries(data) {
 
-        function generateMedicationEntries(data) {
-            let entries = '';
-            
-            if (data.adminMed1Code && data.adminMed1Name) {
-                entries += `
-                <entry typeCode="DRIV">
-                    <substanceAdministration classCode="SBADM" moodCode="EVN">
-                        <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09" />
-                        <id root="${generateGUID()}" />
-                        <statusCode code="${data.adminMed1Status || 'completed'}" />
-                        <effectiveTime xsi:type="IVL_TS">
-                            <low value="${data.adminMed1Time}" />
-                        </effectiveTime>
-                        <routeCode code="${data.adminMed1Route || 'PO'}" codeSystem="2.16.840.1.113883.3.26.1.1" />
-                        <doseQuantity value="${data.adminMed1Dose}" />
-                        <consumable>
-                            <manufacturedProduct classCode="MANU">
-                                <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09" />
-                                <manufacturedMaterial>
-                                    <code code="${data.adminMed1Code}" codeSystem="2.16.840.1.113883.6.88" displayName="${data.adminMed1Name}" />
-                                </manufacturedMaterial>
-                            </manufacturedProduct>
-                        </consumable>
-                    </substanceAdministration>
-                </entry>`;
-            }
-            
-            if (data.adminMed2Code && data.adminMed2Name) {
-                entries += `
-                <entry typeCode="DRIV">
-                    <substanceAdministration classCode="SBADM" moodCode="EVN">
-                        <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09" />
-                        <id root="${generateGUID()}" />
-                        <statusCode code="${data.adminMed2Status || 'completed'}" />
-                        <effectiveTime xsi:type="IVL_TS">
-                            <low value="${data.adminMed2Time}" />
-                        </effectiveTime>
-                        <routeCode code="${data.adminMed2Route || 'PO'}" codeSystem="2.16.840.1.113883.3.26.1.1" />
-                        <doseQuantity value="${data.adminMed2Dose}" />
-                        <consumable>
-                            <manufacturedProduct classCode="MANU">
-                                <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09" />
-                                <manufacturedMaterial>
-                                    <code code="${data.adminMed2Code}" codeSystem="2.16.840.1.113883.6.88" displayName="${data.adminMed2Name}" />
-                                </manufacturedMaterial>
-                            </manufacturedProduct>
-                        </consumable>
-                    </substanceAdministration>
-                </entry>`;
-            }
-            
-            return entries;
-        }
+  // nothing to do?
+  if (
+    !data.temperature && !data.bloodPressure && !data.heartRate &&
+    !data.respiratoryRate && !data.oxygenSaturation &&
+    !data.weight && !data.height && !data.bmi
+  ) { return ''; }
+
+  // helper so we don’t repeat the templateId stanza 8 times
+  const vital = (code, display, value, unit) => `
+      <component>
+        <observation classCode="OBS" moodCode="EVN">
+          <templateId root="2.16.840.1.113883.10.20.22.4.27"
+                      extension="2014-06-09"/>
+          <id root="${generateGUID()}"/>
+          <code code="${code}" codeSystem="2.16.840.1.113883.6.1"
+                displayName="${display}"/>
+          <statusCode code="completed"/>
+          <effectiveTime value="${data.encounterDate}"/>
+          <value xsi:type="PQ" value="${value}" unit="${unit}"/>
+        </observation>
+      </component>`;
+
+  return `
+    <entry typeCode="DRIV">
+      <organizer classCode="CLUSTER" moodCode="EVN">
+        <templateId root="2.16.840.1.113883.10.20.22.4.26"
+                    extension="2015-08-01"/>
+        <id root="${generateGUID()}"/>
+        <code code="46680005" codeSystem="2.16.840.1.113883.6.96"
+              displayName="Vital signs"/>
+        <statusCode code="completed"/>
+        <effectiveTime value="${data.encounterDate}"/>
+
+        ${data.temperature         ? vital('8310-5', 'Body temperature',          data.temperature,      '[degF]')     : ''}
+        ${data.bloodPressure       ? vital('8480-6', 'Systolic blood pressure',   data.bloodPressure.split('/')[0], 'mm[Hg]') : ''}
+        ${data.heartRate           ? vital('8867-4', 'Heart rate',                data.heartRate,        '/min')       : ''}
+        ${data.respiratoryRate     ? vital('9279-1', 'Respiratory rate',          data.respiratoryRate,  '/min')       : ''}
+        ${data.oxygenSaturation    ? vital('59408-5','Oxygen saturation (SpO₂)',  data.oxygenSaturation, '%')          : ''}
+        ${data.weight              ? vital('3141-9', 'Body weight',               data.weight,           'kg')         : ''}
+        ${data.height              ? vital('8302-2', 'Body height',               data.height,           'cm')         : ''}
+        ${data.bmi                 ? vital('39156-5','Body Mass Index',           data.bmi,              'kg/m2')      : ''}
+
+      </organizer>
+    </entry>`;
+}
+        /* ---------- Specimen Information (up to two specimens) ---------- */
+function buildSpecimenSection(d) {
+  // bail if the form is blank
+  if (!d.specimen1Id && !d.specimen2Id) return '';
+
+  // ---------- human-readable rows ----------
+  const rows = [];
+  const addRow = (src, type, id, dt) => rows.push(
+    `<tr><td>${xmlEscape(src)}</td><td>${xmlEscape(type)}</td>` +
+    `<td>${xmlEscape(id)}</td><td>${xmlEscape(dt)}</td></tr>`
+  );
+
+  // ---------- machine-readable entries ----------
+  const entries = [];
+  const addEntry = (src, type, id, dt) => entries.push(`
+    <entry typeCode="DRIV">
+      <procedure classCode="PROC" moodCode="EVN">
+        <templateId root="2.16.840.1.113883.10.20.22.4.14" extension="2014-06-09" />
+        <id root="${generateGUID()}" />
+        <code code="33747-0" codeSystem="2.16.840.1.113883.6.1" displayName="General procedure" />
+        <statusCode code="completed" />
+        <effectiveTime value="${xmlEscape(dt)}"/>
+        <targetSiteCode displayName="${xmlEscape(src)}" codeSystem="2.16.840.1.113883.6.96" />
+        <participant typeCode="PRD">
+          <participantRole classCode="SPEC">
+            <templateId root="2.16.840.1.113883.10.20.22.4.410" extension="2019-06-21" />
+            <id root="2.16.840.1.113883.3.72.5.9.1" extension="${xmlEscape(id)}"/>
+            <code displayName="${xmlEscape(type)}" codeSystem="2.16.840.1.113883.6.96"/>
+          </participantRole>
+        </participant>
+      </procedure>
+    </entry>`);
+
+  // specimen 1
+if (d.specimen1Id) {
+  addRow(d.specimen1Source, d.specimen1Type, d.specimen1Id, d.collection1Date);
+  addEntry(d.specimen1Source, d.specimen1Type, d.specimen1Id, d.collection1Date);
+}
+
+// specimen 2
+if (d.specimen2Id) {
+  addRow(d.specimen2Source, d.specimen2Type, d.specimen2Id, d.collection2Date);
+  addEntry(d.specimen2Source, d.specimen2Type, d.specimen2Id, d.collection2Date);
+}
+
+
+  // ---------- wrap it all in a section ----------
+  return `
+    <component>
+      <section>
+        <!-- *Consolidated CDA* Specimen section -->
+        <templateId root="2.16.840.1.113883.10.20.22.2.3"/>
+        <code code="30954-2" codeSystem="2.16.840.1.113883.6.1" displayName="Specimen"/>
+        <title>Specimen Information</title>
+        <text>
+          <table border="1">
+            <thead><tr><th>Source</th><th>Type</th><th>ID</th><th>Collection Date</th></tr></thead>
+            <tbody>${rows.join('')}</tbody>
+          </table>
+        </text>
+        ${entries.join('\n')}
+      </section>
+    </component>`;
+}
+
+/* helper to emit dose + optional rate  ---------------------- */
+function buildDoseXML (dVal, dUnit, vVal, vUnit) {
+  let xml = `          <doseQuantity value="${dVal}" unit="${dUnit}"/>\n`;
+  if (vVal && vUnit) {
+    xml += `          <rateQuantity value="${vVal}" unit="${vUnit}"/>\n`;
+  }
+  return xml;
+}
+
+       /* ---------- Medication entries (schema-compliant) ---------- */
+function generateMedicationEntries (d) {
+
+  const meds = [
+    {
+      code:d.adminMed1Code, name:d.adminMed1Name, id:d.adminMed1Id,
+      status:d.adminMed1Status, time:d.adminMed1Time, route:d.adminMed1Route,
+      dVal:d.adminMed1DoseValue, dUnit:d.adminMed1DoseUnit,
+      vVal:d.adminMed1VolValue, vUnit:d.adminMed1VolUnit,
+      neg:d.adminMed1Negated ? 'true' : 'false'
+    },
+    {
+      code:d.adminMed2Code, name:d.adminMed2Name, id:d.adminMed2Id,
+      status:d.adminMed2Status, time:d.adminMed2Time, route:d.adminMed2Route,
+      dVal:d.adminMed2DoseValue, dUnit:d.adminMed2DoseUnit,
+      vVal:d.adminMed2VolValue, vUnit:d.adminMed2VolUnit,
+      neg:d.adminMed2Negated ? 'true' : 'false'
+    }
+  ];
+
+  return meds.filter(m => m.code && m.name).map(m => `
+        <entry typeCode="DRIV">
+          <substanceAdministration classCode="SBADM" moodCode="EVN"
+                                   negationInd="${m.neg}">
+            <templateId root="2.16.840.1.113883.10.20.22.4.16"
+                        extension="2014-06-09"/>
+            <id root="${generateGUID()}"/>
+            <statusCode code="${m.status}"/>
+            <effectiveTime xsi:type="IVL_TS">
+              <low value="${m.time}"/>
+            </effectiveTime>
+            <routeCode code="${m.route}"
+                       codeSystem="2.16.840.1.113883.3.26.1.1"/>
+${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
+              <manufacturedProduct classCode="MANU">
+                <templateId root="2.16.840.1.113883.10.20.22.4.23"
+                            extension="2014-06-09"/>
+                <manufacturedMaterial>
+                  <code code="${m.code}"
+                        codeSystem="2.16.840.1.113883.6.88"
+                        displayName="${xmlEscape(m.name)}"/>
+                </manufacturedMaterial>
+              </manufacturedProduct>
+            </consumable>
+          </substanceAdministration>
+        </entry>`).join('');
+}
+
 
         function generateImmunizationEntries(data) {
             let entries = '';
@@ -1854,13 +2030,13 @@
             if (data.vaccine1Code && data.vaccine1Name) {
                 entries += `
                 <entry typeCode="DRIV">
-                    <substanceAdministration classCode="SBADM" moodCode="EVN">
+                    <substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="false">
                         <templateId root="2.16.840.1.113883.10.20.22.4.52" extension="2015-08-01" />
                         <id root="${generateGUID()}" />
                         <statusCode code="${data.immunization1Status || 'completed'}" />
                         <effectiveTime value="${data.immunization1Date}" />
                         <routeCode code="${data.vaccine1Route || 'IM'}" codeSystem="2.16.840.1.113883.3.26.1.1" />
-                        <doseQuantity value="${data.vaccine1Dose}" />
+                        <doseQuantity value="${data.vaccine1Dose ? data.vaccine1Dose.split(' ')[0] : ''}" unit="${data.vaccine1Dose ? data.vaccine1Dose.split(' ')[1] || 'mL' : 'mL'}" />
                         <consumable>
                             <manufacturedProduct classCode="MANU">
                                 <templateId root="2.16.840.1.113883.10.20.22.4.54" extension="2014-06-09" />
@@ -1879,13 +2055,13 @@
             if (data.vaccine2Code && data.vaccine2Name) {
                 entries += `
                 <entry typeCode="DRIV">
-                    <substanceAdministration classCode="SBADM" moodCode="EVN">
+                    <substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="false">
                         <templateId root="2.16.840.1.113883.10.20.22.4.52" extension="2015-08-01" />
                         <id root="${generateGUID()}" />
                         <statusCode code="${data.immunization2Status || 'completed'}" />
                         <effectiveTime value="${data.immunization2Date}" />
                         <routeCode code="${data.vaccine2Route || 'IM'}" codeSystem="2.16.840.1.113883.3.26.1.1" />
-                        <doseQuantity value="${data.vaccine2Dose}" />
+                        <doseQuantity value="${data.vaccine2Dose ? data.vaccine2Dose.split(' ')[0] : ''}" unit="${data.vaccine2Dose ? data.vaccine2Dose.split(' ')[1] || 'mL' : 'mL'}" />
                         <consumable>
                             <manufacturedProduct classCode="MANU">
                                 <templateId root="2.16.840.1.113883.10.20.22.4.54" extension="2014-06-09" />
@@ -1929,6 +2105,49 @@
                         <code code="${data.currentProc2Code}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.currentProc2Name}" />
                         <statusCode code="completed" />
                         <effectiveTime value="${data.currentProc2Date}" />
+                    </procedure>
+                </entry>`;
+            }
+            
+            // Add specimen collection procedures
+            if (data.specimen1Id && data.collection1Date) {
+                entries += `
+                <entry typeCode="DRIV">
+                    <procedure classCode="PROC" moodCode="EVN">
+                        <templateId root="2.16.840.1.113883.10.20.22.4.415" extension="2019-06-21" />
+                        <id root="${generateGUID()}" />
+                        <code code="33747-0" codeSystem="2.16.840.1.113883.6.1" displayName="General procedure" />
+                        <statusCode code="completed" />
+                        <effectiveTime value="${data.collection1Date}" />
+                        <targetSiteCode code="${data.specimen1Source}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.specimen1Type}" />
+                        <participant typeCode="PRD">
+                            <participantRole classCode="SPEC">
+                                <templateId root="2.16.840.1.113883.10.20.22.4.410" extension="2019-06-21" />
+                                <id root="${generateGUID()}" extension="${data.specimen1Id}" />
+                                <code code="${data.specimen1Source}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.specimen1Type}" />
+                            </participantRole>
+                        </participant>
+                    </procedure>
+                </entry>`;
+            }
+            
+            if (data.specimen2Id && data.collection2Date) {
+                entries += `
+                <entry typeCode="DRIV">
+                    <procedure classCode="PROC" moodCode="EVN">
+                        <templateId root="2.16.840.1.113883.10.20.22.4.415" extension="2019-06-21" />
+                        <id root="${generateGUID()}" />
+                        <code code="33747-0" codeSystem="2.16.840.1.113883.6.1" displayName="General procedure" />
+                        <statusCode code="completed" />
+                        <effectiveTime value="${data.collection2Date}" />
+                        <targetSiteCode code="${data.specimen2Source}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.specimen2Type}" />
+                        <participant typeCode="PRD">
+                            <participantRole classCode="SPEC">
+                                <templateId root="2.16.840.1.113883.10.20.22.4.410" extension="2019-06-21" />
+                                <id root="${generateGUID()}" extension="${data.specimen2Id}" />
+                                <code code="${data.specimen2Source}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.specimen2Type}" />
+                            </participantRole>
+                        </participant>
                     </procedure>
                 </entry>`;
             }
@@ -1986,7 +2205,7 @@
   <versionNumber value="${data.versionNumber}" />
   
   <!-- Patient Information -->
-  <recordTarget>
+ <recordTarget>
     <patientRole>
       <id extension="${data.patientId}" root="2.16.840.1.113883.19.5" />
       <addr use="H">
@@ -2008,25 +2227,15 @@
       <administrativeGenderCode code="${data.patientGender}" codeSystem="2.16.840.1.113883.5.1"
         displayName="${data.patientGender === 'F' ? 'Female' : 'Male'}" />
       <birthTime value="${data.patientBirthDate}" />
-      <languageCommunication>
-        <languageCode code="${data.patientLanguage || 'en'}" />
-        <preferenceInd value="true" />
-      </languageCommunication>
+<sdtc:deceasedInd value="${data.patientDeathIndicator || 'false'}" />
+      ${data.patientDeathDate ? `<sdtc:deceasedTime value="${data.patientDeathDate}" />` : ''}
+
       <raceCode code="${data.patientRace}" codeSystem="2.16.840.1.113883.6.238"
         codeSystemName="Race &amp; Ethnicity - CDC" displayName="${getRaceDisplayName(data.patientRace)}" />
       ${data.patientDetailedRace ? `<sdtc:raceCode code="${data.patientDetailedRace}" codeSystem="2.16.840.1.113883.6.238" />` : ''}
       <ethnicGroupCode code="${data.patientEthnicity}" codeSystem="2.16.840.1.113883.6.238"
         codeSystemName="Race &amp; Ethnicity - CDC" displayName="${getEthnicityDisplayName(data.patientEthnicity)}" />
       ${data.patientDetailedEthnicity ? `<sdtc:ethnicGroupCode code="${data.patientDetailedEthnicity}" codeSystem="2.16.840.1.113883.6.238" />` : ''}
-      <birthplace>
-        <place>
-          <addr>
-            <city>${data.patientBirthPlace || data.patientCity}</city>
-          </addr>
-        </place>
-      </birthplace>
-      <sdtc:deceasedInd value="${data.patientDeathIndicator || 'false'}" />
-      ${data.patientDeathDate ? `<sdtc:deceasedTime value="${data.patientDeathDate}" />` : ''}
       ${data.guardianName ? `
       <guardian>
         <code code="${data.guardianCode || 'GUARD'}" codeSystem="2.16.840.1.113883.5.111" />
@@ -2045,6 +2254,18 @@
           </name>
         </guardianPerson>
       </guardian>` : ''}
+      <birthplace>
+        <place>
+          <addr>
+            <city>${data.patientBirthPlace || data.patientCity}</city>
+          </addr>
+        </place>
+      </birthplace>
+      <languageCommunication>
+        <languageCode code="${data.patientLanguage || 'en'}" />
+        <preferenceInd value="true" />
+      </languageCommunication>
+      
     </patient>
     </patientRole>
   </recordTarget>
@@ -2109,7 +2330,7 @@
         <low value="${data.encounterDate}" />
         <high value="${data.encounterEndDate || data.encounterDate}" />
       </effectiveTime>
-      ${data.encounterDisposition ? `<sdtc:dischargeDispositionCode code="${data.encounterDisposition}" codeSystem="2.16.840.1.113883.12.112" />` : ''}
+      ${data.encounterDisposition ? `<dischargeDispositionCode code="${data.encounterDisposition}" codeSystem="2.16.840.1.113883.12.112" />` : ''}
       <responsibleParty>
         <assignedEntity>
           <id extension="${data.providerId}" root="2.16.840.1.113883.4.6" />
@@ -2189,9 +2410,7 @@
               <thead>
                 <tr><th>Encounter</th><th>Date</th><th>Location</th></tr>
               </thead>
-              <tbody>
-                <tr><td>Office outpatient visit</td><td>${data.encounterDate}</td><td>${data.facilityName}</td></tr>
-              </tbody>
+              <tbody><tr><td>Office outpatient visit</td><td>${data.encounterDate}</td><td>${data.facilityName}</td></tr></tbody>
             </table>
           </text>
           <entry typeCode="DRIV">
@@ -2209,6 +2428,8 @@
           </entry>
         </section>
       </component>
+
+         ${buildSpecimenSection(data)}  
 
       <!-- Reason for Visit Section -->
       <component>
@@ -2256,11 +2477,7 @@
               <thead>
                 <tr><th>Problem</th><th>Code</th><th>Date</th><th>RCTC Trigger</th></tr>
               </thead>
-              <tbody>
-                <tr><td>${data.diagnosis1Name}</td><td>${data.diagnosis1Code}</td><td>${data.encounterDate}</td><td>Yes</td></tr>
-                <tr><td>${data.diagnosis2Name}</td><td>${data.diagnosis2Code}</td><td>${data.encounterDate}</td><td>Yes</td></tr>
-                <tr><td>${data.diagnosis3Name}</td><td>${data.diagnosis3Code}</td><td>${data.encounterDate}</td><td>Yes</td></tr>
-              </tbody>
+              <tbody><tr><td>${data.diagnosis1Name}</td><td>${data.diagnosis1Code}</td><td>${data.encounterDate}</td><td>Yes</td></tr><tr><td>${data.diagnosis2Name}</td><td>${data.diagnosis2Code}</td><td>${data.encounterDate}</td><td>Yes</td></tr><tr><td>${data.diagnosis3Name}</td><td>${data.diagnosis3Code}</td><td>${data.encounterDate}</td><td>Yes</td></tr></tbody>
             </table>
           </text>
           <entry typeCode="DRIV">
@@ -2350,10 +2567,7 @@
               <thead>
                 <tr><th>Test</th><th>Result</th><th>Date</th><th>RCTC Trigger</th></tr>
               </thead>
-              <tbody>
-                <tr><td>${data.labTest1Name}</td><td>${data.labTest1Result}</td><td>${data.encounterDate}</td><td>Yes</td></tr>
-                <tr><td>${data.labTest2Name}</td><td>${data.labTest2Result}</td><td>${data.encounterDate}</td><td>Yes</td></tr>
-              </tbody>
+              <tbody><tr><td>${data.labTest1Name}</td><td>${data.labTest1Result}</td><td>${data.encounterDate}</td><td>Yes</td></tr><tr><td>${data.labTest2Name}</td><td>${data.labTest2Result}</td><td>${data.encounterDate}</td><td>Yes</td></tr></tbody>
             </table>
           </text>
           
@@ -2433,9 +2647,7 @@
               <thead>
                 <tr><th>Travel History</th><th>Dates</th><th>Location</th></tr>
               </thead>
-              <tbody>
-                <tr><td>Recent travel</td><td>${data.travelStartDate} - ${data.travelEndDate}</td><td>${data.travelLocation}</td></tr>
-              </tbody>
+              <tbody><tr><td>Recent travel</td><td>${data.travelStartDate} - ${data.travelEndDate}</td><td>${data.travelLocation}</td></tr></tbody>
             </table>
           </text>
           <entry typeCode="DRIV">
@@ -2477,6 +2689,40 @@
               <value xsi:type="CD" code="${data.patientGenderIdentity || data.patientGender}" codeSystem="2.16.840.1.113883.6.96" />
             </observation>
           </entry>
+          
+          <!-- Occupation Information -->
+          ${data.currentOccupation ? `
+          <entry typeCode="DRIV">
+            <observation classCode="OBS" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.217" extension="2022-06-01" />
+              <id root="${generateGUID()}" />
+              <code code="87729-0" codeSystem="2.16.840.1.113883.6.1" displayName="Current occupation" />
+              <statusCode code="active" />
+              <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+              <value xsi:type="ST">${data.currentOccupation}</value>
+              <participant typeCode="IND">
+                <participantRole classCode="ASSIGNED">
+                   
+                  ${data.currentEmployerAddress ? `<addr><streetAddressLine>${data.currentEmployerAddress}</streetAddressLine></addr>` : ''}
+                   ${data.currentEmployerPhone ? `<telecom value="tel:${data.currentEmployerPhone}" />` : ''}
+                  <playingEntity classCode="ORG">
+                    <name>${data.currentEmployerName || 'Unknown'}</name>
+                  </playingEntity>
+                </participantRole>
+              </participant>
+            </observation>
+          </entry>
+          
+          <entry typeCode="DRIV">
+            <observation classCode="OBS" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.216" extension="2022-06-01" />
+              <id root="${generateGUID()}" />
+              <code code="21843-8" codeSystem="2.16.840.1.113883.6.1" displayName="History of Occupation industry" />
+              <statusCode code="active" />
+              <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+              <value xsi:type="ST">${data.currentIndustry || 'Unknown'}</value>
+            </observation>
+          </entry>` : ''}
         </section>
       </component>
 
@@ -2494,13 +2740,14 @@
               <thead>
                 <tr><th>Vital Sign</th><th>Value</th><th>Unit</th><th>Date</th></tr>
               </thead>
-              <tbody>
-                ${data.temperature ? `<tr><td>Temperature</td><td>${data.temperature}</td><td>°F</td><td>${data.encounterDate}</td></tr>` : ''}
-                ${data.bloodPressure ? `<tr><td>Blood Pressure</td><td>${data.bloodPressure}</td><td>mmHg</td><td>${data.encounterDate}</td></tr>` : ''}
-                ${data.heartRate ? `<tr><td>Heart Rate</td><td>${data.heartRate}</td><td>bpm</td><td>${data.encounterDate}</td></tr>` : ''}
-                ${data.respiratoryRate ? `<tr><td>Respiratory Rate</td><td>${data.respiratoryRate}</td><td>/min</td><td>${data.encounterDate}</td></tr>` : ''}
-                ${data.oxygenSaturation ? `<tr><td>Oxygen Saturation</td><td>${data.oxygenSaturation}</td><td>%</td><td>${data.encounterDate}</td></tr>` : ''}
-              </tbody>
+              <tbody>${data.temperature ? `<tr><td>Temperature</td><td>${data.temperature}</td><td>°F</td><td>${data.encounterDate}</td></tr>` : ''}${data.bloodPressure ? `<tr><td>Blood Pressure</td><td>${data.bloodPressure}</td><td>mmHg</td><td>${data.encounterDate}</td></tr>` : ''}${data.heartRate ? `<tr><td>Heart Rate</td><td>${data.heartRate}</td><td>bpm</td><td>${data.encounterDate}</td></tr>` : ''}
+  ${data.respiratoryRate  ? `<tr><td>Respiratory Rate</td><td>${data.respiratoryRate}</td><td>/min</td><td>${data.encounterDate}</td></tr>` : ''}
+  ${data.oxygenSaturation ? `<tr><td>Oxygen Saturation</td><td>${data.oxygenSaturation}</td><td>%</td><td>${data.encounterDate}</td></tr>` : ''}
+  ${data.weight           ? `<tr><td>Weight</td><td>${data.weight}</td><td>kg</td><td>${data.encounterDate}</td></tr>` : ''}
+  ${data.height           ? `<tr><td>Height</td><td>${data.height}</td><td>cm</td><td>${data.encounterDate}</td></tr>` : ''}
+  ${data.bmi              ? `<tr><td>BMI</td><td>${data.bmi}</td><td>kg/m²</td><td>${data.encounterDate}</td></tr>` : ''}
+</tbody>
+
             </table>
           </text>
           ${generateVitalSignsEntries(data)}
@@ -2521,10 +2768,7 @@
               <thead>
                 <tr><th>Medication</th><th>Dose</th><th>Route</th><th>Date</th><th>Status</th></tr>
               </thead>
-              <tbody>
-                ${data.adminMed1Name ? `<tr><td>${data.adminMed1Name}</td><td>${data.adminMed1Dose}</td><td>${data.adminMed1Route}</td><td>${data.adminMed1Time}</td><td>${data.adminMed1Status}</td></tr>` : ''}
-                ${data.adminMed2Name ? `<tr><td>${data.adminMed2Name}</td><td>${data.adminMed2Dose}</td><td>${data.adminMed2Route}</td><td>${data.adminMed2Time}</td><td>${data.adminMed2Status}</td></tr>` : ''}
-              </tbody>
+              <tbody>${data.adminMed1Name ? `<tr><td>${data.adminMed1Name}</td><td>${data.adminMed1DoseValue} ${data.adminMed1DoseUnit}${data.adminMed1VolValue ? ' (' + data.adminMed1VolValue + ' ' + data.adminMed1VolUnit + ')' : ''}</td><td>${data.adminMed1Route}</td><td>${data.adminMed1Time}</td><td>${data.adminMed1Status}</td></tr>` : ''}${data.adminMed2Name ? `<tr><td>${data.adminMed2Name}</td><td>${data.adminMed2DoseValue} ${data.adminMed2DoseUnit}${data.adminMed2VolValue ? ' (' + data.adminMed2VolValue + ' ' + data.adminMed2VolUnit + ')' : ''}</td><td>${data.adminMed2Route}</td><td>${data.adminMed2Time}</td><td>${data.adminMed2Status}</td></tr>` : ''}</tbody>
             </table>
           </text>
           ${generateMedicationEntries(data)}
@@ -2545,10 +2789,7 @@
               <thead>
                 <tr><th>Vaccine</th><th>Date</th><th>Status</th><th>Manufacturer</th></tr>
               </thead>
-              <tbody>
-                ${data.vaccine1Name ? `<tr><td>${data.vaccine1Name}</td><td>${data.immunization1Date}</td><td>${data.immunization1Status}</td><td>${data.vaccine1Manufacturer}</td></tr>` : ''}
-                ${data.vaccine2Name ? `<tr><td>${data.vaccine2Name}</td><td>${data.immunization2Date}</td><td>${data.immunization2Status}</td><td>${data.vaccine2Manufacturer}</td></tr>` : ''}
-              </tbody>
+              <tbody>${data.vaccine1Name ? `<tr><td>${data.vaccine1Name}</td><td>${data.immunization1Date}</td><td>${data.immunization1Status}</td><td>${data.vaccine1Manufacturer}</td></tr>` : ''}${data.vaccine2Name ? `<tr><td>${data.vaccine2Name}</td><td>${data.immunization2Date}</td><td>${data.immunization2Status}</td><td>${data.vaccine2Manufacturer}</td></tr>` : ''}</tbody>
             </table>
           </text>
           ${generateImmunizationEntries(data)}
@@ -2569,10 +2810,7 @@
               <thead>
                 <tr><th>Procedure</th><th>Date</th><th>Type</th></tr>
               </thead>
-              <tbody>
-                ${data.currentProc1Name ? `<tr><td>${data.currentProc1Name}</td><td>${data.currentProc1Date}</td><td>${data.currentProc1Type}</td></tr>` : ''}
-                ${data.currentProc2Name ? `<tr><td>${data.currentProc2Name}</td><td>${data.currentProc2Date}</td><td>${data.currentProc2Type}</td></tr>` : ''}
-                ${data.triggerProc1Name ? `<tr><td>${data.triggerProc1Name}</td><td>${data.triggerProc1Date}</td><td>${data.triggerProc1Type}</td></tr>` : ''}
+              <tbody>${data.currentProc1Name ? `<tr><td>${data.currentProc1Name}</td><td>${data.currentProc1Date}</td><td>${data.currentProc1Type}</td></tr>` : ''}${data.currentProc2Name ? `<tr><td>${data.currentProc2Name}</td><td>${data.currentProc2Date}</td><td>${data.currentProc2Type}</td></tr>` : ''}${data.triggerProc1Name ? `<tr><td>${data.triggerProc1Name}</td><td>${data.triggerProc1Date}</td><td>${data.triggerProc1Type}</td></tr>` : ''}
               </tbody>
             </table>
           </text>
