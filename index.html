@@ -249,11 +249,23 @@
                 </div>
                 <div class="input-group">
                     <label>Race Code</label>
-                    <input type="text" id="patientRace" value="2106-3">
+                    <select id="patientRace">
+                        <option value="1002-5">American Indian or Alaska Native</option>
+                        <option value="2028-9">Asian</option>
+                        <option value="2054-5">Black or African American</option>
+                        <option value="2076-8">Native Hawaiian or Other Pacific Islander</option>
+                        <option value="2106-3" selected>White</option>
+                        <option value="2131-1">Other Race</option>
+                        <option value="UNK">Unknown</option>
+                    </select>
                 </div>
                 <div class="input-group">
                     <label>Ethnicity Code</label>
-                    <input type="text" id="patientEthnicity" value="2186-5">
+                    <select id="patientEthnicity">
+                        <option value="2135-2">Hispanic or Latino</option>
+                        <option value="2186-5" selected>Not Hispanic or Latino</option>
+                        <option value="UNK">Unknown</option>
+                    </select>
                 </div>
                 <div class="input-group">
                     <label>Birth Place</label>
@@ -278,11 +290,30 @@
                 </div>
                 <div class="input-group">
                     <label>Detailed Race Code</label>
-                    <input type="text" id="patientDetailedRace" value="2108-9">
+                    <select id="patientDetailedRace">
+                        <option value="1004-1">American Indian</option>
+                        <option value="1010-8">Alaska Native</option>
+                        <option value="2029-7">Asian Indian</option>
+                        <option value="2040-4">Chinese</option>
+                        <option value="2047-9">Filipino</option>
+                        <option value="2051-1">Japanese</option>
+                        <option value="2054-5">Korean</option>
+                        <option value="2058-6">Vietnamese</option>
+                        <option value="2060-2">Other Asian</option>
+                        <option value="2076-8">Black</option>
+                        <option value="2108-9" selected>White</option>
+                        <option value="2131-1">Other</option>
+                    </select>
                 </div>
                 <div class="input-group">
                     <label>Detailed Ethnicity Code</label>
-                    <input type="text" id="patientDetailedEthnicity" value="2148-5">
+                    <select id="patientDetailedEthnicity">
+                        <option value="2137-8">Mexican</option>
+                        <option value="2141-0">Puerto Rican</option>
+                        <option value="2142-8">Cuban</option>
+                        <option value="2148-5" selected>Not Hispanic or Latino</option>
+                        <option value="2180-8">Other Hispanic or Latino</option>
+                    </select>
                 </div>
                 <div class="input-group">
                     <label>Primary Language</label>
@@ -479,38 +510,38 @@
                 <div class="input-group">
                     <label>Diagnosis 1 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
                     <div class="code-search">
-                        <input type="text" id="diagnosis1Code" value="840539006" onblur="validateTriggerCode('diagnosis1Code')">
+                        <input type="text" id="diagnosis1Code" value="67531005" onblur="validateTriggerCode('diagnosis1Code')">
                         <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis1Code')">🔍</button>
                     </div>
                     <div id="diagnosis1Code_results" class="search-results"></div>
                 </div>
                 <div class="input-group">
                     <label>Diagnosis 1 Name</label>
-                    <input type="text" id="diagnosis1Name" value="Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)">
+                    <input type="text" id="diagnosis1Name" value="Spina bifida (disorder)">
                 </div>
                 <div class="input-group">
                     <label>Diagnosis 2 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
                     <div class="code-search">
-                        <input type="text" id="diagnosis2Code" value="719865001" onblur="validateTriggerCode('diagnosis2Code')">
+                        <input type="text" id="diagnosis2Code" value="414819007" onblur="validateTriggerCode('diagnosis2Code')">
                         <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis2Code')">🔍</button>
                     </div>
                     <div id="diagnosis2Code_results" class="search-results"></div>
                 </div>
                 <div class="input-group">
                     <label>Diagnosis 2 Name</label>
-                    <input type="text" id="diagnosis2Name" value="Influenza A virus infection (disorder)">
+                    <input type="text" id="diagnosis2Name" value="Neonatal abstinence syndrome (disorder)">
                 </div>
                 <div class="input-group">
                     <label>Diagnosis 3 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
                     <div class="code-search">
-                        <input type="text" id="diagnosis3Code" value="3928002" onblur="validateTriggerCode('diagnosis3Code')">
+                        <input type="text" id="diagnosis3Code" value="86299006" onblur="validateTriggerCode('diagnosis3Code')">
                         <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis3Code')">🔍</button>
                     </div>
                     <div id="diagnosis3Code_results" class="search-results"></div>
                 </div>
                 <div class="input-group">
                     <label>Diagnosis 3 Name</label>
-                    <input type="text" id="diagnosis3Name" value="Zika virus disease (disorder)">
+                    <input type="text" id="diagnosis3Name" value="Tetralogy of Fallot (disorder)">
                 </div>
                 <div class="input-group">
                     <label>Date of Diagnosis 1 (YYYYMMDD)</label>
@@ -1440,7 +1471,7 @@
             medications: [],
             organism: [],
             metadata: {
-                oid: '2.16.840.1.114222.4.11.7508',
+                oid: '2.16.840.1.113762.1.4.1146.2260', // RCTC Birth Defect Trigger Codes OID
                 version: '2.0.1',
                 effectiveDate: '2025-06-01',
                 releaseDate: '2025-03-18'
@@ -1580,7 +1611,13 @@
                 { code: '34487-9', display: 'Influenza virus A RNA [Presence] in Respiratory specimen by NAA with probe detection', system: 'LOINC' },
                 { code: '168731009', display: 'Intubation procedure', system: 'SNOMED-CT' },
                 { code: '71388002', display: 'Radiographic procedure', system: 'SNOMED-CT' },
-                { code: '33747-0', display: 'General procedure code', system: 'LOINC' }
+                { code: '33747-0', display: 'General procedure code', system: 'LOINC' },
+                // Birth Defect RCTC Trigger Codes - RCTC Release 20250318.xlsx
+                { code: '41040004', display: 'Complete trisomy 21 syndrome (disorder)', system: 'SNOMED-CT' },
+                { code: '72951007', display: 'Gastroschisis (disorder)', system: 'SNOMED-CT' },
+                { code: '67531005', display: 'Spina bifida (disorder)', system: 'SNOMED-CT' },
+                { code: '86299006', display: 'Tetralogy of Fallot (disorder)', system: 'SNOMED-CT' },
+                { code: '414819007', display: 'Neonatal abstinence syndrome (disorder)', system: 'SNOMED-CT' }
             ];
 
             resultsDiv.innerHTML = '';
@@ -1605,11 +1642,36 @@
 
         function validateTriggerCode(fieldId) {
             const code = document.getElementById(fieldId).value;
-            const triggerCodes = ['840539006', '719865001', '3928002', '94310-0', '34487-9', '168731009'];
+            const triggerCodes = ['840539006', '719865001', '3928002', '94310-0', '34487-9', '168731009',
+                                 '41040004', '72951007', '67531005', '86299006', '414819007'];
             
             if (code && !triggerCodes.includes(code)) {
                 console.log('Warning: Code', code, 'may not be a valid RCTC trigger code');
             }
+        }
+
+        function getRaceDisplayName(raceCode) {
+            const raceCodes = {
+                '1002-5': 'American Indian or Alaska Native',
+                '2028-9': 'Asian',
+                '2054-5': 'Black or African American',
+                '2076-8': 'Native Hawaiian or Other Pacific Islander',
+                '2106-3': 'White',
+                '2131-1': 'Other Race',
+                'UNK': 'Unknown',
+                'ASKU': 'Asked but unknown'
+            };
+            return raceCodes[raceCode] || 'Race';
+        }
+
+        function getEthnicityDisplayName(ethnicityCode) {
+            const ethnicityCodes = {
+                '2135-2': 'Hispanic or Latino',
+                '2186-5': 'Not Hispanic or Latino',
+                'UNK': 'Unknown',
+                'ASKU': 'Asked but unknown'
+            };
+            return ethnicityCodes[ethnicityCode] || 'Ethnicity';
         }
 
         function validateDateFormat(dateString, fieldName) {
@@ -1750,10 +1812,10 @@
   <sdtc:deceasedInd value="${data.patientDeathIndicator || 'false'}" />
   ${data.patientDeathDate ? `<sdtc:deceasedTime value="${data.patientDeathDate}" />` : ''}
   <raceCode code="${data.patientRace}" codeSystem="2.16.840.1.113883.6.238"
-    codeSystemName="Race &amp; Ethnicity - CDC" displayName="Race" />
+    codeSystemName="Race &amp; Ethnicity - CDC" displayName="${getRaceDisplayName(data.patientRace)}" />
   ${data.patientDetailedRace ? `<sdtc:raceCode code="${data.patientDetailedRace}" codeSystem="2.16.840.1.113883.6.238" />` : ''}
   <ethnicGroupCode code="${data.patientEthnicity}" codeSystem="2.16.840.1.113883.6.238"
-    codeSystemName="Race &amp; Ethnicity - CDC" displayName="Ethnicity" />
+    codeSystemName="Race &amp; Ethnicity - CDC" displayName="${getEthnicityDisplayName(data.patientEthnicity)}" />
   ${data.patientDetailedEthnicity ? `<sdtc:ethnicGroupCode code="${data.patientDetailedEthnicity}" codeSystem="2.16.840.1.113883.6.238" />` : ''}
   <birthplace>
     <place>
@@ -2225,8 +2287,6 @@
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 
-                // Success message
-                alert('CDA document generated successfully!\n\n✅ Schema Compliance:\n- Patient elements in correct CDA schema order\n- Author elements properly sequenced\n- All required telecom and address elements included\n- US Realm compliance maintained\n\nThe generated XML is ready for processing by health information systems.');
                 
             } catch (error) {
                 console.error('CDA Generation Error:', error);
