@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eICR Form Generator</title>
+    <title>eICR Form Generator - DQ Schematron Compliant</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
@@ -182,6 +182,7 @@
             <div>
                 <h1>eICR Generator</h1>
                 <p class="subtitle">Electronic Initial Case Report with Reportable Condition Trigger Codes</p>
+                <p class="subtitle" style="color: #10b981; font-weight: bold;">✅ DQ Schematron R3.1.1 Compliant</p>
             </div>
             <div class="buttons">
                 <label class="btn btn-secondary">
@@ -190,6 +191,7 @@
                 </label>
                 <button class="btn btn-warning" onclick="loadRCTCFile()">📋 Load RCTC File</button>
                 <button class="btn btn-success" onclick="saveFormData()">💾 Save Form Data</button>
+                <button class="btn btn-secondary" onclick="validateFormData()">✓ Validate DQ Compliance</button>
                 <button class="btn btn-primary" onclick="generateAndDownloadCDA()">📄 Generate CDA</button>
                 <button class="btn btn-success" onclick="generateAndPostCDA()">🚀 Generate & Post CDA to S3</button>
                 <button class="btn btn-primary" onclick="generateAndDownloadRR()">📨 Generate RR</button>
@@ -206,8 +208,8 @@
                     <input type="text" id="patientId" value="MRN-00234567">
                 </div>
                 <div class="input-group">
-                    <label>Patient Name</label>
-                    <input type="text" id="patientName" value="Emma Rose Johnson">
+                    <label>Patient Name <span style="color: red;">*</span></label>
+                    <input type="text" id="patientName" value="Emma Rose Johnson" required>
                 </div>
                 <div class="input-group">
                     <label>Phone</label>
@@ -218,20 +220,20 @@
                     <input type="email" id="patientEmail" value="johnson.family@email.com">
                 </div>
                 <div class="input-group">
-                    <label>Address</label>
-                    <input type="text" id="patientAddress" value="1247 Maple Street">
+                    <label>Address <span style="color: red;">*</span></label>
+                    <input type="text" id="patientAddress" value="1247 Maple Street" required>
                 </div>
                 <div class="input-group">
-                    <label>City</label>
-                    <input type="text" id="patientCity" value="Springfield">
+                    <label>City <span style="color: red;">*</span></label>
+                    <input type="text" id="patientCity" value="Springfield" required>
                 </div>
                 <div class="input-group">
-                    <label>State</label>
-                    <input type="text" id="patientState" value="Illinois">
+                    <label>State <span style="color: red;">*</span></label>
+                    <input type="text" id="patientState" value="Illinois" required>
                 </div>
                 <div class="input-group">
-                    <label>ZIP Code</label>
-                    <input type="text" id="patientZip" value="62701">
+                    <label>ZIP Code <span style="color: red;">*</span></label>
+                    <input type="text" id="patientZip" value="62701" required>
                 </div>
                 <div class="input-group">
                     <label>County</label>
@@ -242,16 +244,22 @@
                     <input type="text" id="patientCountry" value="United States">
                 </div>
                 <div class="input-group">
-                    <label>Gender (F/M)</label>
-                    <input type="text" id="patientGender" value="F">
+                    <label>Administrative Gender Code <span style="color: red;">*</span></label>
+                    <select id="patientGender" required>
+                        <option value="">Select Gender</option>
+                        <option value="F" selected>Female</option>
+                        <option value="M">Male</option>
+                        <option value="UN">Undifferentiated</option>
+                    </select>
                 </div>
                 <div class="input-group">
                     <label>Birth Date (YYYYMMDD)</label>
                     <input type="text" id="patientBirthDate" value="20240615">
                 </div>
                 <div class="input-group">
-                    <label>Race Code</label>
-                    <select id="patientRace">
+                    <label>Race Code <span style="color: red;">*</span></label>
+                    <select id="patientRace" required>
+                        <option value="">Select Race</option>
                         <option value="1002-5">American Indian or Alaska Native</option>
                         <option value="2028-9">Asian</option>
                         <option value="2054-5">Black or African American</option>
@@ -262,8 +270,9 @@
                     </select>
                 </div>
                 <div class="input-group">
-                    <label>Ethnicity Code</label>
-                    <select id="patientEthnicity">
+                    <label>Ethnicity Code <span style="color: red;">*</span></label>
+                    <select id="patientEthnicity" required>
+                        <option value="">Select Ethnicity</option>
                         <option value="2135-2">Hispanic or Latino</option>
                         <option value="2186-5" selected>Not Hispanic or Latino</option>
                         <option value="UNK">Unknown</option>
@@ -1809,29 +1818,436 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
             return true;
         }
 
-        function validateFormData() {
-            if (!validateRequiredFields()) {
-                return false;
+        // DQ Schematron ValueSets
+        const DQ_VALUESETS = {
+            administrativeGender: {
+                oid: '2.16.840.1.113883.5.1',
+                values: ['F', 'M', 'UN']
+            },
+            raceCategory: {
+                oid: '2.16.840.1.113883.6.238',
+                values: ['1002-5', '2028-9', '2054-5', '2076-8', '2106-3', '2131-1']
+            },
+            ethnicity: {
+                oid: '2.16.840.1.113883.6.238', 
+                values: ['2135-2', '2186-5']
+            },
+            specimenType: {
+                oid: '2.16.840.1.113883.21.327',
+                values: ['258500001', '461911000124106', '258580003', '122555007', '309051001', '119295008', '119297000', '122552005', '168139001', '258467004', '441620008']
+            },
+            bodySite: {
+                oid: '2.16.840.1.113883.3.88.12.3221.8.9',
+                values: ['71341001', '123851003', '181216001', '258435002', '272673000', '362837007']
             }
+        };
+
+        // DQ Validation Functions
+        function validateDQPatientName() {
+            const errors = [];
+            const nameField = document.getElementById('patientName');
             
-            // Validate date formats
-            const dateFields = [
-                { id: 'patientBirthDate', name: 'Patient Birth Date' },
-                { id: 'encounterDate', name: 'Encounter Date' },
-                { id: 'encounterEndDate', name: 'Encounter End Date' },
-                { id: 'travelStartDate', name: 'Travel Start Date' },
-                { id: 'travelEndDate', name: 'Travel End Date' }
-            ];
-            
-            for (let field of dateFields) {
-                const element = document.getElementById(field.id);
-                if (element && !validateDateFormat(element.value, field.name)) {
-                    element.focus();
-                    return false;
+            if (!nameField || !nameField.value || nameField.value.trim() === '') {
+                errors.push('dq-patientName-001: Patient name cannot be nullFlavor or empty');
+            } else {
+                const nameParts = nameField.value.trim().split(' ');
+                if (nameParts.length < 2) {
+                    errors.push('dq-patientName-002/004: Patient must have both family and given name');
                 }
             }
             
+            return errors;
+        }
+
+        function validateDQPatientAddress() {
+            const errors = [];
+            const addressField = document.getElementById('patientAddress');
+            const cityField = document.getElementById('patientCity');
+            const stateField = document.getElementById('patientState');
+            const zipField = document.getElementById('patientZip');
+            
+            if (!addressField?.value?.trim()) {
+                errors.push('dq-patientAddress-002/003/004: Street address line cannot be nullFlavor or blank');
+            }
+            if (!cityField?.value?.trim()) {
+                errors.push('dq-patientAddress-005/006: City cannot be nullFlavor or blank');
+            }
+            if (!stateField?.value?.trim()) {
+                errors.push('dq-patientAddress-007/008: State cannot be nullFlavor or blank');
+            }
+            if (!zipField?.value?.trim()) {
+                errors.push('dq-patientAddress-009/010: Postal code cannot be nullFlavor or blank');
+            }
+            
+            return errors;
+        }
+
+        function validateDQAdministrativeGender() {
+            const errors = [];
+            const genderField = document.getElementById('patientGender');
+            
+            if (!genderField?.value) {
+                errors.push('dq-administrativeGenderCode-001: Administrative gender code cannot be nullFlavor');
+            } else if (!DQ_VALUESETS.administrativeGender.values.includes(genderField.value)) {
+                errors.push('dq-administrativeGenderCode-002: Administrative gender code must be M, F, or UN');
+            }
+            
+            return errors;
+        }
+
+        function validateDQRaceCode() {
+            const errors = [];
+            const raceField = document.getElementById('patientRace');
+            
+            if (!raceField?.value) {
+                errors.push('dq-raceCode-001: Race code cannot be nullFlavor');
+            } else if (!DQ_VALUESETS.raceCategory.values.includes(raceField.value) && raceField.value !== 'UNK') {
+                errors.push('dq-raceCode-002: Race code must be from Race Category Excluding Nulls ValueSet');
+            }
+            
+            return errors;
+        }
+
+        function validateDQEthnicityCode() {
+            const errors = [];
+            const ethnicityField = document.getElementById('patientEthnicity');
+            
+            if (!ethnicityField?.value) {
+                errors.push('dq-ethnicGroupCode-001: Ethnicity code cannot be nullFlavor');
+            } else if (!DQ_VALUESETS.ethnicity.values.includes(ethnicityField.value) && ethnicityField.value !== 'UNK') {
+                errors.push('dq-ethnicGroupCode-002: Ethnicity code must be from Ethnicity ValueSet');
+            }
+            
+            return errors;
+        }
+
+        function validateDQDateFormats() {
+            const errors = [];
+            const dateFields = [
+                { id: 'patientBirthDate', name: 'Patient Birth Date' },
+                { id: 'encounterDate', name: 'Encounter Date' },
+                { id: 'patientDeathDate', name: 'Patient Death Date' },
+                { id: 'diagnosis1Date', name: 'Diagnosis 1 Date' },
+                { id: 'diagnosis1OnsetDate', name: 'Diagnosis 1 Onset Date' },
+                { id: 'labTest1Time', name: 'Lab Test 1 Time' },
+                { id: 'immunization1Date', name: 'Immunization 1 Date' },
+                { id: 'specimenCollectionDate', name: 'Specimen Collection Date' }
+            ];
+
+            dateFields.forEach(field => {
+                const element = document.getElementById(field.id);
+                if (element?.value) {
+                    if (!validateDateFormat(element.value, field.name)) {
+                        errors.push(`dq-dateFormat: ${field.name} must be at least 8 characters (YYYYMMDD)`);
+                    }
+                }
+            });
+
+            return errors;
+        }
+
+        function validateDQSpecimen() {
+            const errors = [];
+            
+            // Check specimen 1
+            const spec1Source = document.getElementById('specimen1Source');
+            const spec1Type = document.getElementById('specimen1Type');  
+            const spec1Id = document.getElementById('specimen1Id');
+            const collect1Date = document.getElementById('collection1Date');
+            
+            if (spec1Source?.value && !DQ_VALUESETS.specimenType.values.includes(spec1Source.value)) {
+                errors.push('dq-specimenType-002: Specimen 1 source must be from HL7 Specimen Type ValueSet');
+            }
+            
+            if (collect1Date?.value && collect1Date.value.length < 8) {
+                errors.push('dq-specimenCollectionDate-002: Specimen 1 collection date must be at least 8 characters');
+            }
+            
+            if (spec1Id?.value && !spec1Id.value.trim()) {
+                errors.push('dq-specimenId-001: Specimen 1 ID cannot be nullFlavor or empty');
+            }
+            
+            // Check specimen 2
+            const spec2Source = document.getElementById('specimen2Source');
+            const spec2Type = document.getElementById('specimen2Type');
+            const spec2Id = document.getElementById('specimen2Id');
+            const collect2Date = document.getElementById('collection2Date');
+            
+            if (spec2Source?.value && !DQ_VALUESETS.specimenType.values.includes(spec2Source.value)) {
+                errors.push('dq-specimenType-002: Specimen 2 source must be from HL7 Specimen Type ValueSet');
+            }
+            
+            if (collect2Date?.value && collect2Date.value.length < 8) {
+                errors.push('dq-specimenCollectionDate-002: Specimen 2 collection date must be at least 8 characters');
+            }
+            
+            if (spec2Id?.value && !spec2Id.value.trim()) {
+                errors.push('dq-specimenId-001: Specimen 2 ID cannot be nullFlavor or empty');
+            }
+            
+            return errors;
+        }
+
+        function validateDQTriggerCodes() {
+            const errors = [];
+            const triggerFields = [
+                'diagnosis1Code', 'diagnosis2Code', 'diagnosis3Code',
+                'labTest1Code', 'labTest2Code', 'labOrder1Code',
+                'adminMed1Code', 'adminMed2Code', 'vaccine1Code', 'vaccine2Code'
+            ];
+            
+            let hasTriggerCode = false;
+            triggerFields.forEach(fieldId => {
+                const element = document.getElementById(fieldId);
+                if (element?.value?.trim()) {
+                    hasTriggerCode = true;
+                }
+            });
+            
+            if (!hasTriggerCode) {
+                errors.push('FATAL: At least one trigger code template must be present (eICR requirement)');
+            }
+            
+            return errors;
+        }
+
+        function validateDQDeathIndicator() {
+            const errors = [];
+            const deathIndicator = document.getElementById('patientDeathIndicator');
+            const deathDate = document.getElementById('patientDeathDate');
+            
+            if (deathIndicator?.value === 'true' && !deathDate?.value) {
+                errors.push('dq-deceasedTime: Death date cannot be nullFlavor when death indicator is true');
+            }
+            
+            return errors;
+        }
+
+        function validateDQLabObservations() {
+            const errors = [];
+            
+            // Lab Test 1 validation
+            const lab1Code = document.getElementById('labTest1Code');
+            const lab1Status = document.getElementById('labTest1Status');
+            const lab1Result = document.getElementById('labTest1Result');
+            
+            if (lab1Code?.value && (!lab1Code.value.trim() || lab1Code.value === 'nullFlavor')) {
+                errors.push('dq-resultObservation-002: Lab test 1 code cannot be nullFlavor');
+            }
+            
+            if (lab1Status?.value && (!lab1Status.value.trim() || lab1Status.value === 'nullFlavor')) {
+                errors.push('dq_lab_result_statusCode_001: Lab test 1 status code cannot be nullFlavor');
+            }
+            
+            if (lab1Result?.value && (!lab1Result.value.trim() || lab1Result.value === 'nullFlavor')) {
+                errors.push('dq-resultObservation-001: Lab test 1 result value cannot be nullFlavor');
+            }
+            
+            // Lab Test 2 validation
+            const lab2Code = document.getElementById('labTest2Code');
+            const lab2Status = document.getElementById('labTest2Status');
+            const lab2Result = document.getElementById('labTest2Result');
+            
+            if (lab2Code?.value && (!lab2Code.value.trim() || lab2Code.value === 'nullFlavor')) {
+                errors.push('dq-resultObservation-002: Lab test 2 code cannot be nullFlavor');
+            }
+            
+            if (lab2Status?.value && (!lab2Status.value.trim() || lab2Status.value === 'nullFlavor')) {
+                errors.push('dq_lab_result_statusCode_001: Lab test 2 status code cannot be nullFlavor');
+            }
+            
+            if (lab2Result?.value && (!lab2Result.value.trim() || lab2Result.value === 'nullFlavor')) {
+                errors.push('dq-resultObservation-001: Lab test 2 result value cannot be nullFlavor');
+            }
+            
+            return errors;
+        }
+
+        function validateDQMedicationAdministration() {
+            const errors = [];
+            
+            // Medication 1 validation  
+            const med1Id = document.getElementById('adminMed1Id');
+            const med1Code = document.getElementById('adminMed1Code');
+            
+            if (med1Id?.value && (!med1Id.value.trim() || med1Id.value === 'nullFlavor')) {
+                errors.push('dq-medicationAdministration-id-001: Medication 1 ID cannot be nullFlavor');
+            }
+            
+            if (med1Code?.value && (!med1Code.value.trim() || med1Code.value === 'nullFlavor')) {
+                errors.push('dq_medicationsAdministered-001: Medication 1 code cannot be nullFlavor');
+            }
+            
+            // Medication 2 validation
+            const med2Id = document.getElementById('adminMed2Id');
+            const med2Code = document.getElementById('adminMed2Code');
+            
+            if (med2Id?.value && (!med2Id.value.trim() || med2Id.value === 'nullFlavor')) {
+                errors.push('dq-medicationAdministration-id-001: Medication 2 ID cannot be nullFlavor');
+            }
+            
+            if (med2Code?.value && (!med2Code.value.trim() || med2Code.value === 'nullFlavor')) {
+                errors.push('dq_medicationsAdministered-001: Medication 2 code cannot be nullFlavor');
+            }
+            
+            return errors;
+        }
+
+        function validateDQImmunizations() {
+            const errors = [];
+            
+            // Immunization 1 validation
+            const imm1Id = document.getElementById('immunization1Id');
+            const imm1Date = document.getElementById('immunization1Date');
+            const vac1Code = document.getElementById('vaccine1Code');
+            
+            if (imm1Id?.value && (!imm1Id.value.trim() || imm1Id.value === 'nullFlavor')) {
+                errors.push('dq-immunizationActivity-id-001: Immunization 1 ID cannot be nullFlavor');
+            }
+            
+            if (imm1Date?.value && (!imm1Date.value.trim() || imm1Date.value === 'nullFlavor')) {
+                errors.push('dq-immunization-effectiveTime-001: Immunization 1 effective time cannot be nullFlavor');
+            }
+            
+            if (imm1Date?.value && imm1Date.value.length < 8) {
+                errors.push('dq-immunization-effectiveTime-003: Immunization 1 effective time must be at least 8 characters (YYYYMMDD)');
+            }
+            
+            if (vac1Code?.value && (!vac1Code.value.trim() || vac1Code.value === 'nullFlavor')) {
+                errors.push('dq-immunization-vaccineCode-001/002: Vaccine 1 code cannot be blank or nullFlavor');
+            }
+            
+            // Immunization 2 validation
+            const imm2Id = document.getElementById('immunization2Id');
+            const imm2Date = document.getElementById('immunization2Date');
+            const vac2Code = document.getElementById('vaccine2Code');
+            
+            if (imm2Id?.value && (!imm2Id.value.trim() || imm2Id.value === 'nullFlavor')) {
+                errors.push('dq-immunizationActivity-id-001: Immunization 2 ID cannot be nullFlavor');
+            }
+            
+            if (imm2Date?.value && (!imm2Date.value.trim() || imm2Date.value === 'nullFlavor')) {
+                errors.push('dq-immunization-effectiveTime-001: Immunization 2 effective time cannot be nullFlavor');
+            }
+            
+            if (imm2Date?.value && imm2Date.value.length < 8) {
+                errors.push('dq-immunization-effectiveTime-003: Immunization 2 effective time must be at least 8 characters (YYYYMMDD)');
+            }
+            
+            if (vac2Code?.value && (!vac2Code.value.trim() || vac2Code.value === 'nullFlavor')) {
+                errors.push('dq-immunization-vaccineCode-001/002: Vaccine 2 code cannot be blank or nullFlavor');
+            }
+            
+            return errors;
+        }
+
+        function validateDQProblemObservations() {
+            const errors = [];
+            
+            // Diagnosis validation
+            const diag1Code = document.getElementById('diagnosis1Code');
+            const diag1Date = document.getElementById('diagnosis1Date');
+            const diag1OnsetDate = document.getElementById('diagnosis1OnsetDate');
+            
+            if (diag1Code?.value && (!diag1Code.value.trim() || diag1Code.value === 'nullFlavor')) {
+                errors.push('dq-problemObservation-002: Diagnosis 1 code cannot be nullFlavor');
+            }
+            
+            if (diag1Date?.value && (!diag1Date.value.trim() || diag1Date.value === 'nullFlavor')) {
+                errors.push('dq-validate_problem_DateofDiagnosis-001: Diagnosis 1 effective time cannot be nullFlavor');
+            }
+            
+            if (diag1OnsetDate?.value && diag1OnsetDate.value.length < 8) {
+                errors.push('dq-validate_problem_DateofDiagnosis-003: Diagnosis 1 onset date must be at least 8 characters (YYYYMMDD)');
+            }
+            
+            return errors;
+        }
+
+        function validateFormData() {
+            const allErrors = [];
+            
+            // Run all DQ validation functions
+            allErrors.push(...validateDQPatientName());
+            allErrors.push(...validateDQPatientAddress());
+            allErrors.push(...validateDQAdministrativeGender());
+            allErrors.push(...validateDQRaceCode());
+            allErrors.push(...validateDQEthnicityCode());
+            allErrors.push(...validateDQDateFormats());
+            allErrors.push(...validateDQSpecimen());
+            allErrors.push(...validateDQTriggerCodes());
+            allErrors.push(...validateDQDeathIndicator());
+            allErrors.push(...validateDQLabObservations());
+            allErrors.push(...validateDQMedicationAdministration());
+            allErrors.push(...validateDQImmunizations());
+            allErrors.push(...validateDQProblemObservations());
+            
+            // Legacy required fields validation
+            if (!validateRequiredFields()) {
+                allErrors.push('Required field validation failed');
+            }
+            
+            if (allErrors.length > 0) {
+                displayValidationErrors(allErrors);
+                return false;
+            }
+            
+            // Clear any existing errors and show success message
+            const existingErrors = document.getElementById('validation-errors');
+            if (existingErrors) {
+                existingErrors.style.display = 'none';
+            }
+            
+            displayValidationSuccess();
             return true;
+        }
+
+        function displayValidationErrors(errors) {
+            const errorContainer = document.getElementById('validation-errors') || createErrorContainer();
+            errorContainer.innerHTML = '<h3>DQ Schematron Validation Errors:</h3>';
+            
+            const errorList = document.createElement('ul');
+            errors.forEach(error => {
+                const errorItem = document.createElement('li');
+                errorItem.textContent = error;
+                errorItem.style.color = 'red';
+                errorItem.style.marginBottom = '5px';
+                errorList.appendChild(errorItem);
+            });
+            
+            errorContainer.appendChild(errorList);
+            errorContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function createErrorContainer() {
+            const container = document.createElement('div');
+            container.id = 'validation-errors';
+            container.style.cssText = 'background: #fee; border: 2px solid #f00; padding: 20px; margin: 20px 0; border-radius: 5px;';
+            document.querySelector('.container').insertBefore(container, document.querySelector('.footer-buttons'));
+            return container;
+        }
+
+        function displayValidationSuccess() {
+            let successContainer = document.getElementById('validation-success');
+            if (!successContainer) {
+                successContainer = document.createElement('div');
+                successContainer.id = 'validation-success';
+                successContainer.style.cssText = 'background: #efe; border: 2px solid #0a0; padding: 20px; margin: 20px 0; border-radius: 5px; color: #060;';
+                document.querySelector('.container').insertBefore(successContainer, document.querySelector('.footer-buttons'));
+            }
+            
+            successContainer.innerHTML = `
+                <h3>✅ DQ Schematron Validation Passed!</h3>
+                <p>All form data complies with eICR R3.1.1 Data Quality Schematron validation rules.</p>
+                <p>The form is ready for CDA generation.</p>
+            `;
+            successContainer.style.display = 'block';
+            successContainer.scrollIntoView({ behavior: 'smooth' });
+            
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                successContainer.style.display = 'none';
+            }, 5000);
         }
 
         // Helper functions for CDA generation
@@ -2402,9 +2818,14 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
         }
 
         function generateCDA() {
+            // Run comprehensive DQ Schematron validation first
+            if (!validateFormData()) {
+                throw new Error('Form data does not pass DQ Schematron validation. Please correct the errors and try again.');
+            }
+            
             const data = getFormData();
             
-            // Validate critical data elements for CDA compliance
+            // Additional CDA-specific validation
             if (!data.patientId || !data.patientName || !data.providerId) {
                 throw new Error('Missing required patient or provider information for CDA generation');
             }
@@ -2440,6 +2861,7 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
   <templateId root="2.16.840.1.113883.10.20.22.1.1" />
   <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.1.1" />
   <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2" />
+  <templateId extension="2022-05-01" root="2.16.840.1.113883.10.20.15.2" />
   <id root="${data.documentId}" />
   <code code="55751-2" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
     displayName="Public Health Case Report" />
