@@ -1575,6 +1575,71 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
             }
         };
 
+        // Condition-specific value set mapping function
+        function getConditionSpecificValueSet(code, codeSystem = '2.16.840.1.113883.6.96') {
+            const valueSetMap = {
+                // COVID-19 Trigger Codes
+                '840539006': { // Disease caused by 2019-nCoV
+                    oid: '2.16.840.1.114222.4.11.7508',
+                    version: '1.2.0.0',
+                    name: 'COVID-19 (Diagnosis, Symptom, Condition, or Healthcare Encounter)'
+                },
+                '840544004': { // Suspected disease caused by 2019-nCoV
+                    oid: '2.16.840.1.114222.4.11.7508',
+                    version: '1.2.0.0',
+                    name: 'COVID-19 (Diagnosis, Symptom, Condition, or Healthcare Encounter)'
+                },
+                '94500-6': { // SARS-CoV-2 RNA [Presence] in Respiratory specimen by NAA with probe detection
+                    oid: '2.16.840.1.114222.4.11.7508',
+                    version: '1.2.0.0',
+                    name: 'COVID-19 (Laboratory Test)'
+                },
+                '94310-0': { // SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection
+                    oid: '2.16.840.1.114222.4.11.7508',
+                    version: '1.2.0.0',
+                    name: 'COVID-19 (Laboratory Test)'
+                },
+                
+                // Influenza Trigger Codes
+                '719865001': { // Influenza A virus infection
+                    oid: '2.16.840.1.114222.4.11.1009',
+                    version: '2.0.0',
+                    name: 'Influenza (Diagnosis, Symptom, Condition, or Healthcare Encounter)'
+                },
+                '34487-9': { // Influenza virus A RNA [Presence] in Respiratory specimen by NAA with probe detection
+                    oid: '2.16.840.1.114222.4.11.1009',
+                    version: '2.0.0',
+                    name: 'Influenza (Laboratory Test)'
+                },
+                
+                // Birth Defects (current focus)
+                '67531005': { // Spina bifida
+                    oid: '2.16.840.1.113762.1.4.1146.2260',
+                    version: '2.0.1',
+                    name: 'Birth Defects Trigger Codes'
+                },
+                '86299006': { // Tetralogy of Fallot
+                    oid: '2.16.840.1.113762.1.4.1146.2260',
+                    version: '2.0.1',
+                    name: 'Birth Defects Trigger Codes'
+                },
+                '414819007': { // Neonatal abstinence syndrome
+                    oid: '2.16.840.1.113762.1.4.1146.2260',
+                    version: '2.0.1',
+                    name: 'Birth Defects Trigger Codes'
+                },
+                
+                // Default fallback
+                'default': {
+                    oid: '2.16.840.1.113762.1.4.1146.2260',
+                    version: '2.0.1',
+                    name: 'RCTC Master List'
+                }
+            };
+            
+            return valueSetMap[code] || valueSetMap['default'];
+        }
+
         function getFormData() {
             const fields = [
                 // Patient Demographics
@@ -2465,6 +2530,44 @@ function generateRR () {
           </reference>
         </act>
       </entry>
+      <entry>
+        <act classCode="ACT" moodCode="EVN">
+          <templateId extension="2017-04-01" root="2.16.840.1.113883.10.20.15.2.3.29"/>
+          <id root="${guid()}"/>
+          <code code="RRVS20" codeSystem="2.16.840.1.114222.4.5.274"
+                codeSystemName="PHIN VS (CDC Local Coding System)"
+                displayName="eICR was processed - with a warning"/>
+          <entryRelationship typeCode="RSON">
+            <observation classCode="OBS" moodCode="EVN">
+              <templateId extension="2017-04-01" root="2.16.840.1.113883.10.20.15.2.3.21"/>
+              <id root="${guid()}"/>
+              <code code="RR6" codeSystem="2.16.840.1.114222.4.5.232"
+                    displayName="eICR processing status reason"/>
+              <value code="RRVS29" codeSystem="2.16.840.1.114222.4.5.274"
+                     displayName="The eICR was processed with the warning of: outdated eRSD (RCTC) version."
+                     xsi:type="CD"/>
+              <entryRelationship typeCode="RSON">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId extension="2017-04-01" root="2.16.840.1.113883.10.20.15.2.3.32"/>
+                  <id root="${guid()}"/>
+                  <code code="RRVS31" codeSystem="2.16.840.1.114222.4.5.274"
+                        displayName="Outdated eRSD (RCTC) Version Detail"/>
+                  <value xsi:type="ST">2.0.1</value>
+                </observation>
+              </entryRelationship>
+              <entryRelationship typeCode="RSON">
+                <observation classCode="OBS" moodCode="EVN">
+                  <templateId extension="2017-04-01" root="2.16.840.1.113883.10.20.15.2.3.32"/>
+                  <id root="${guid()}"/>
+                  <code code="RRVS33" codeSystem="2.16.840.1.114222.4.5.274"
+                        displayName="Expected eRSD (RCTC) Version Detail"/>
+                  <value xsi:type="ST">The expected eRSD (RCTC) version should be one of the following: ["2025-02-28","2.0.0","3.0.1"]</value>
+                </observation>
+              </entryRelationship>
+            </observation>
+          </entryRelationship>
+        </act>
+      </entry>
     </section></component>
 
     <!-- REPORTABILITY RESULTS section (88083-1)  ← NEW -->
@@ -2840,15 +2943,7 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
 <!-- 
   HL7 CDA-compliant eICR Document
   Generated by eICR Form Generator v1.0
-  
-  Schema Compliance Fixes Applied:
-  - CRITICAL FIX: Patient elements in EXACT CDA schema order: name, gender, birthTime, languageCommunication, race, ethnicity, birthplace, deceased
-  - CRITICAL FIX: Author assignedAuthor elements in correct order: id, addr, telecom, device, organization (addr BEFORE telecom)
-  - Author assignedAuthor includes required telecom and US Realm address (CONF:1198-5428, CONF:1198-5452)
-  - Custodian has exactly one telecom element (CONF:1198-5525)
-  - Encounter uses standard dischargeDispositionCode (not sdtc: version)
-  - All addresses include country for US Realm compliance
-  - All template IDs conform to eICR IG requirements
+
 -->
 <ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:cda="urn:hl7-org:v3" xmlns:sdtc="urn:hl7-org:sdtc"
   xmlns:voc="http://www.lantanagroup.com/voc"
@@ -3171,7 +3266,8 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
                   <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
                   <value xsi:type="CD" code="${data.diagnosis1Code}" codeSystem="2.16.840.1.113883.6.96"
                     codeSystemName="SNOMED-CT" displayName="${data.diagnosis1Name}"
-                    sdtc:valueSet="${rctcData.metadata.oid}" sdtc:valueSetVersion="${rctcData.metadata.version}" />
+                    sdtc:valueSet="${getConditionSpecificValueSet(data.diagnosis1Code).oid}" 
+                    sdtc:valueSetVersion="${getConditionSpecificValueSet(data.diagnosis1Code).version}" />
                 </observation>
               </entryRelationship>
 
@@ -3191,7 +3287,8 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
                   <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
                   <value xsi:type="CD" code="${data.diagnosis2Code}" codeSystem="2.16.840.1.113883.6.96"
                     codeSystemName="SNOMED-CT" displayName="${data.diagnosis2Name}"
-                    sdtc:valueSet="${rctcData.metadata.oid}" sdtc:valueSetVersion="${rctcData.metadata.version}" />
+                    sdtc:valueSet="${getConditionSpecificValueSet(data.diagnosis2Code).oid}" 
+                    sdtc:valueSetVersion="${getConditionSpecificValueSet(data.diagnosis2Code).version}" />
                 </observation>
               </entryRelationship>
 
@@ -3211,7 +3308,8 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
                   <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
                   <value xsi:type="CD" code="${data.diagnosis3Code}" codeSystem="2.16.840.1.113883.6.96"
                     codeSystemName="SNOMED-CT" displayName="${data.diagnosis3Name}"
-                    sdtc:valueSet="${rctcData.metadata.oid}" sdtc:valueSetVersion="${rctcData.metadata.version}" />
+                    sdtc:valueSet="${getConditionSpecificValueSet(data.diagnosis3Code).oid}" 
+                    sdtc:valueSetVersion="${getConditionSpecificValueSet(data.diagnosis3Code).version}" />
                 </observation>
               </entryRelationship>
             </act>
@@ -3258,7 +3356,8 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
                   <id root="9890e2c3-019a-4168-8403-a0a069994440" />
                   <code code="${data.labTest1Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
                     displayName="${data.labTest1Name}"
-                    sdtc:valueSet="${rctcData.metadata.oid}" sdtc:valueSetVersion="${rctcData.metadata.version}" />
+                    sdtc:valueSet="${getConditionSpecificValueSet(data.labTest1Code, '2.16.840.1.113883.6.1').oid}" 
+                    sdtc:valueSetVersion="${getConditionSpecificValueSet(data.labTest1Code, '2.16.840.1.113883.6.1').version}" />
                   <statusCode code="completed" />
                   <effectiveTime value="${data.encounterDate}" />
                   <value code="260373001" codeSystem="2.16.840.1.113883.6.96"
@@ -3289,7 +3388,8 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
                   <id root="6c53c5ff-42a9-4f3c-a2c0-d412f019c0de" />
                   <code code="${data.labTest2Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
                     displayName="${data.labTest2Name}"
-                    sdtc:valueSet="${rctcData.metadata.oid}" sdtc:valueSetVersion="${rctcData.metadata.version}" />
+                    sdtc:valueSet="${getConditionSpecificValueSet(data.labTest2Code, '2.16.840.1.113883.6.1').oid}" 
+                    sdtc:valueSetVersion="${getConditionSpecificValueSet(data.labTest2Code, '2.16.840.1.113883.6.1').version}" />
                   <statusCode code="completed" />
                   <effectiveTime value="${data.encounterDate}" />
                   <value code="260373001" codeSystem="2.16.840.1.113883.6.96"
@@ -3481,6 +3581,76 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
             </table>
           </text>
           ${generateProcedureEntries(data)}
+        </section>
+      </component>
+
+      <!-- Allergies Section -->
+      <component>
+        <section nullFlavor="NI">
+          <templateId root="2.16.840.1.113883.10.20.22.2.6.1" extension="2015-08-01"/>
+          <code code="48765-2" codeSystem="2.16.840.1.113883.6.1" displayName="Allergies and adverse reactions Document"/>
+          <title>Allergies</title>
+          <text>No Known Allergies</text>
+        </section>
+      </component>
+
+      <!-- Admission Medications Section -->
+      <component>
+        <section nullFlavor="NI">
+          <templateId root="2.16.840.1.113883.10.20.22.2.44" extension="2015-08-01"/>
+          <code code="42346-7" codeSystem="2.16.840.1.113883.6.1" displayName="Medications on admission (narrative) Document"/>
+          <title>Admission Medications</title>
+          <text>See Medications Administered Section for all Medications</text>
+        </section>
+      </component>
+
+      <!-- Hospital Admission Diagnosis -->
+      <component>
+        <section nullFlavor="NI">
+          <templateId root="2.16.840.1.113883.10.20.22.2.43" extension="2015-08-01"/>
+          <code code="46241-6" codeSystem="2.16.840.1.113883.6.1" displayName="Hospital admission diagnosis Narrative - Reported"/>
+          <title>Hospital Admission Diagnosis</title>
+          <text>See Encounters Section and Problems Section</text>
+        </section>
+      </component>
+
+      <!-- Hospital Discharge Diagnosis -->
+      <component>
+        <section nullFlavor="NI">
+          <templateId root="2.16.840.1.113883.10.20.22.2.24" extension="2015-08-01"/>
+          <code code="11535-2" codeSystem="2.16.840.1.113883.6.1" displayName="Hospital discharge diagnosis Narrative"/>
+          <title>Hospital Discharge Diagnosis</title>
+          <text>See Encounters Section and Problems Section</text>
+        </section>
+      </component>
+
+      <!-- Past Medical History -->
+      <component>
+        <section nullFlavor="NI">
+          <templateId root="2.16.840.1.113883.10.20.22.2.20" extension="2015-08-01"/>
+          <code code="11348-0" codeSystem="2.16.840.1.113883.6.1" displayName="History of Past illness Narrative"/>
+          <title>Past Medical History</title>
+          <text>See Problems Section</text>
+        </section>
+      </component>
+
+      <!-- Review of Systems -->
+      <component>
+        <section nullFlavor="NI">
+          <templateId root="1.3.6.1.4.1.19376.1.5.3.1.3.18"/>
+          <code code="10187-3" codeSystem="2.16.840.1.113883.6.1" displayName="Review of systems Narrative - Reported"/>
+          <title>Review of Systems</title>
+          <text>No Review of Systems Information</text>
+        </section>
+      </component>
+
+      <!-- Chief Complaint -->
+      <component>
+        <section nullFlavor="NI">
+          <templateId root="1.3.6.1.4.1.19376.1.5.3.1.1.13.2.1"/>
+          <code code="10154-3" codeSystem="2.16.840.1.113883.6.1" displayName="Chief complaint Narrative - Reported"/>
+          <title>Chief Complaint</title>
+          <text>No Chief Complaint Information</text>
         </section>
       </component>
 
