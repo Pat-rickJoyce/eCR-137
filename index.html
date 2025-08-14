@@ -175,6 +175,7 @@
             .container { padding: 15px; }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -194,6 +195,7 @@
                 <button class="btn btn-primary" onclick="generateAndDownloadCDA()">📄 Generate CDA</button>
                 <button class="btn btn-success" onclick="generateAndPostCDA()">🚀 Generate & Post CDA to S3</button>
                 <button class="btn btn-primary" onclick="generateAndDownloadRR()">📨 Generate RR</button>
+                <button class="btn btn-info" onclick="downloadZipOfEICRandRR()">📦 Download ZIP (eICR + RR)</button>
 
             </div>
         </div>
@@ -2325,7 +2327,7 @@ function xmlEscape(str = '') {
     .replace(/'/g, '&apos;');
 }
 
-function generateRR () {
+function buildRRXml () {
   const d = getFormData();
   const x = s => xmlEscape(s || '');       // one-letter alias = escape **everything**
   const guid = () => generateGUID();
@@ -2588,7 +2590,74 @@ function generateRR () {
 </ClinicalDocument>`;
 }
 
+function generateRR() {
+    return buildRRXml();
+}
 
+function downloadZipOfEICRandRR() {
+    if (!validateFormData()) {
+        return;
+    }
+    
+    try {
+        const data = getFormData();
+        
+        // Generate both XML documents
+        const eicrXml = buildEICRXml();
+        const rrXml = buildRRXml();
+        
+        // Create timestamp for file naming
+        const timestamp = new Date().toISOString().split('T')[0];
+        
+        // Create file names
+        const patientName = data.patientName ? data.patientName.replace(/[^a-zA-Z0-9]/g, '_') : 'Patient';
+        const setId = data.setId || 'Unknown';
+        const eicrFileName = `eICR_${patientName}_${setId}_${timestamp}.xml`;
+        const rrFileName = `RR_${patientName}_${setId}_${timestamp}.xml`;
+        
+        // Create manifest
+        const manifest = {
+            generated: new Date().toISOString(),
+            patient_name: data.patientName,
+            patient_id: data.patientId,
+            set_id: data.setId,
+            files: [
+                {
+                    name: eicrFileName,
+                    type: 'eICR',
+                    description: 'Electronic Initial Case Report'
+                },
+                {
+                    name: rrFileName,
+                    type: 'RR',
+                    description: 'Reportability Response'
+                }
+            ]
+        };
+        
+        // Create ZIP file
+        const zip = new JSZip();
+        zip.file(eicrFileName, eicrXml);
+        zip.file(rrFileName, rrXml);
+        zip.file('manifest.json', JSON.stringify(manifest, null, 2));
+        
+        // Generate ZIP and download
+        zip.generateAsync({type: 'blob'}).then(function(content) {
+            const url = URL.createObjectURL(content);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `CDA_Package_${patientName}_${setId}_${timestamp}.zip`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+        
+    } catch (error) {
+        console.error('Error generating ZIP file:', error);
+        alert(`Error generating ZIP file: ${error.message}`);
+    }
+}
 
 function generateAndDownloadRR() {
     try {
@@ -2918,7 +2987,7 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
             return entries;
         }
 
-        function generateCDA() {
+        function buildEICRXml() {
             // Run comprehensive DQ Schematron validation first
             if (!validateFormData()) {
                 throw new Error('Form data does not pass DQ Schematron validation. Please correct the errors and try again.');
@@ -3658,6 +3727,10 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
   </component>
 </ClinicalDocument>`;
             return cdaTemplate;
+        }
+
+        function generateCDA() {
+            return buildEICRXml();
         }
 
         function generateAndDownloadCDA() {
