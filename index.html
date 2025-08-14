@@ -189,9 +189,7 @@
                     📁 Load Form Data
                     <input type="file" accept=".json" onchange="loadFormData(event)" class="hidden">
                 </label>
-                <button class="btn btn-warning" onclick="loadRCTCFile()">📋 Load RCTC File</button>
                 <button class="btn btn-success" onclick="saveFormData()">💾 Save Form Data</button>
-                <button class="btn btn-secondary" onclick="validateFormData()">✓ Validate DQ Compliance</button>
                 <button class="btn btn-primary" onclick="generateAndDownloadCDA()">📄 Generate CDA</button>
                 <button class="btn btn-success" onclick="generateAndPostCDA()">🚀 Generate & Post CDA to S3</button>
                 <button class="btn btn-primary" onclick="generateAndDownloadRR()">📨 Generate RR</button>
@@ -1562,6 +1560,160 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
     </div>
 
     <script>
+        // Local XSLT files (no CORS issues)
+        const EICR_XSL_URL = './CDAR2_eCR_eICR-2.xsl';
+        const RR_XSL_URL   = './CDAR2_eCR_RR.xsl';
+
+        // Fetch local XSLT files (no CORS issues)
+        async function fetchXslt(url) {
+          try {
+            const res = await fetch(url);
+            if (!res.ok) {
+              throw new Error(`Failed to load local XSLT file: ${url} (Status: ${res.status})`);
+            }
+            return res.text();
+          } catch (error) {
+            console.error(`Failed to fetch XSLT file ${url}:`, error);
+            throw new Error(`Cannot load XSLT file: ${url}. Make sure the file exists in your project directory.`);
+          }
+        }
+
+        // Add this function to debug XSLT content
+        async function debugXsltFiles() {
+          try {
+            console.log('=== DEBUGGING XSLT FILES ===');
+            
+            const eicrXsl = await fetchXslt(EICR_XSL_URL);
+            const rrXsl = await fetchXslt(RR_XSL_URL);
+            
+            console.log('eICR XSLT length:', eicrXsl.length, 'characters');
+            console.log('eICR XSLT starts with:', eicrXsl.substring(0, 200));
+            console.log('eICR XSLT contains stylesheet?', eicrXsl.includes('xsl:stylesheet'));
+            
+            console.log('RR XSLT length:', rrXsl.length, 'characters');
+            console.log('RR XSLT starts with:', rrXsl.substring(0, 200));
+            console.log('RR XSLT contains stylesheet?', rrXsl.includes('xsl:stylesheet'));
+            
+            // Check if files look like proper XSLT
+            if (!eicrXsl.includes('<?xml') || !eicrXsl.includes('xsl:stylesheet')) {
+              console.error('eICR XSLT appears to be invalid or corrupted');
+            }
+            if (!rrXsl.includes('<?xml') || !rrXsl.includes('xsl:stylesheet')) {
+              console.error('RR XSLT appears to be invalid or corrupted');
+            }
+            
+          } catch (error) {
+            console.error('Failed to debug XSLT files:', error);
+          }
+        }
+
+        // Debug XML structure
+        function debugXmlStructure(xmlString, docType) {
+          console.log(`=== DEBUGGING ${docType} XML ===`);
+          console.log('XML length:', xmlString.length);
+          console.log('First 500 characters:', xmlString.substring(0, 500));
+          
+          // Check for key elements the XSLT might be looking for
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(xmlString, 'application/xml');
+          
+          console.log('Root element:', doc.documentElement?.tagName);
+          console.log('Namespace URI:', doc.documentElement?.namespaceURI);
+          
+          // Look for common CDA elements
+          const commonElements = ['ClinicalDocument', 'component', 'structuredBody', 'section'];
+          commonElements.forEach(element => {
+            const found = doc.getElementsByTagName(element).length;
+            console.log(`${element} elements found:`, found);
+          });
+        }
+
+        // Add this function to scan for invalid XML comments
+        function validateXMLComments(xmlString, docType) {
+          console.log(`Validating ${docType} XML comments...`);
+          
+          // Find all comments using a simple approach
+          const comments = [];
+          let startIndex = 0;
+          while (true) {
+            const start = xmlString.indexOf('<!--', startIndex);
+            if (start === -1) break;
+            const end = xmlString.indexOf('-->', start + 4);
+            if (end === -1) break;
+            comments.push(xmlString.substring(start, end + 3));
+            startIndex = end + 3;
+          }
+          
+          comments.forEach((comment, index) => {
+            // Check for double hyphens in the middle of comments
+            const innerContent = comment.slice(4, -3); // Remove <!-- and -->
+            if (innerContent.includes('--')) {
+              console.error(`Invalid comment #${index + 1} in ${docType}:`, comment);
+              console.error('Contains double hyphens which violate XML specification');
+            }
+          });
+          
+          console.log(`Found ${comments.length} comments total in ${docType}`);
+          return comments.length;
+        }
+
+        // Enhanced XML → HTML transformation with better error handling
+        function xmlToHtml(xmlString, xsltString) {
+          try {
+            console.log('Starting XML transformation...');
+            console.log('XML length:', xmlString.length);
+            console.log('XSLT length:', xsltString.length);
+            
+            const parser = new DOMParser();
+            
+            // Parse XML
+            const xml = parser.parseFromString(xmlString, 'application/xml');
+            const xmlParseErrors = xml.getElementsByTagName('parsererror');
+            if (xmlParseErrors.length > 0) {
+              console.error('XML parsing error:', xmlParseErrors[0].textContent);
+              throw new Error('Invalid XML document');
+            }
+            
+            // Parse XSLT
+            const xsl = parser.parseFromString(xsltString, 'application/xml');
+            const xslParseErrors = xsl.getElementsByTagName('parsererror');
+            if (xslParseErrors.length > 0) {
+              console.error('XSLT parsing error:', xslParseErrors[0].textContent);
+              throw new Error('Invalid XSLT stylesheet');
+            }
+            
+            // Create and configure processor
+            const processor = new XSLTProcessor();
+            processor.importStylesheet(xsl);
+            
+            // Transform
+            const resultDocument = processor.transformToDocument(xml);
+            
+            // Check if transformation produced anything
+            if (!resultDocument || !resultDocument.documentElement) {
+              console.error('XSLT transformation produced no output');
+              throw new Error('XSLT transformation failed - no output generated');
+            }
+            
+            // Serialize result
+            const serializer = new XMLSerializer();
+            const htmlString = '<!DOCTYPE html>\n' + serializer.serializeToString(resultDocument);
+            
+            console.log('Transformation successful. Output length:', htmlString.length);
+            console.log('Output starts with:', htmlString.substring(0, 200));
+            
+            return htmlString;
+            
+          } catch (error) {
+            console.error('XML to HTML transformation failed:', error);
+            throw new Error(`XSLT transformation error: ${error.message}`);
+          }
+        }
+
+        // If your app already has these, keep them; otherwise adapt.
+        function generateEICRXml() { return buildEICRXml(); }
+        function generateRRXml()   { return buildRRXml();   }
+
         // Global RCTC data storage
         let rctcData = {
             diagnosis: [],
@@ -2417,7 +2569,7 @@ function buildRRXml () {
 <ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:sdtc="urn:hl7-org:sdtc"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-  <!-- ---------------- HEADER ---------------- -->
+  <!-- HEADER -->
   <realmCode code="US"/>
   <typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
   <templateId root="2.16.840.1.113883.10.20.15.2.1.2" extension="2017-04-01"/>
@@ -2429,7 +2581,7 @@ function buildRRXml () {
   <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25"/>
   <languageCode code="en-US"/>
 
-  <!-- ---------------- PATIENT ---------------- -->
+  <!-- PATIENT -->
   <recordTarget>
     <patientRole>
       <id extension="${x(d.patientId)}" root="2.16.840.1.113883.19.5"/>
@@ -2452,7 +2604,7 @@ function buildRRXml () {
     </patientRole>
   </recordTarget>
 
-  <!-- ---------------- AUTHOR (AIMS) ---------------- -->
+  <!-- AUTHOR (AIMS) -->
   <author>
     <time value="${rrCreateTS}"/>
     <assignedAuthor>
@@ -2464,7 +2616,7 @@ function buildRRXml () {
     </assignedAuthor>
   </author>
 
-  <!-- ---------------- CUSTODIAN (APHL) ---------------- -->
+  <!-- CUSTODIAN (APHL) -->
   <custodian>
     <assignedCustodian>
       <representedCustodianOrganization>
@@ -2474,7 +2626,7 @@ function buildRRXml () {
     </assignedCustodian>
   </custodian>
 
-  <!-- ---------------- INFO RECIPIENT (Provider) ---------------- -->
+  <!-- INFO RECIPIENT (Provider) -->
   <informationRecipient typeCode="PRCP">
     <intendedRecipient>
       <id extension="${x(d.providerId)}" root="2.16.840.1.113883.4.6"/>
@@ -2488,7 +2640,7 @@ function buildRRXml () {
     </intendedRecipient>
   </informationRecipient>
 
-  <!-- ---------------- ENCOMPASSING ENCOUNTER ---------------- -->
+  <!-- ENCOMPASSING ENCOUNTER -->
   <componentOf>
     <encompassingEncounter>
       <id extension="${x(d.encounterId)}" root="2.16.840.1.113883.19"/>
@@ -2496,7 +2648,7 @@ function buildRRXml () {
     </encompassingEncounter>
   </componentOf>
 
-  <!-- ---------------- BODY ---------------- -->
+  <!-- BODY -->
   <component><structuredBody>
 
     <!-- SUBJECT section (88084-9) -->
@@ -2594,69 +2746,92 @@ function generateRR() {
     return buildRRXml();
 }
 
-function downloadZipOfEICRandRR() {
-    if (!validateFormData()) {
-        return;
+// Updated ZIP builder using local XSLT files with debugging
+async function downloadZipOfEICRandRR() {
+  try {
+    if (!validateFormData()) return;
+    
+    console.log('Starting ZIP generation with debugging...');
+    
+    // Generate XML
+    const eicrXml = generateEICRXml();
+    const rrXml = generateRRXml();
+    
+    // Debug XML structure
+    debugXmlStructure(eicrXml, 'eICR');
+    debugXmlStructure(rrXml, 'RR');
+    
+    // Validate XML comments
+    validateXMLComments(eicrXml, 'eICR');
+    validateXMLComments(rrXml, 'RR');
+    
+    // Load XSLT files
+    console.log('Loading XSLT files...');
+    const eicrXsl = await fetchXslt(EICR_XSL_URL);
+    const rrXsl = await fetchXslt(RR_XSL_URL);
+    
+    // Verify XSLT files
+    if (eicrXsl.length < 1000 || !eicrXsl.includes('xsl:stylesheet')) {
+      throw new Error('eICR XSLT appears to be invalid or incomplete');
+    }
+    if (rrXsl.length < 1000 || !rrXsl.includes('xsl:stylesheet')) {
+      throw new Error('RR XSLT appears to be invalid or incomplete');
     }
     
-    try {
-        const data = getFormData();
-        
-        // Generate both XML documents
-        const eicrXml = buildEICRXml();
-        const rrXml = buildRRXml();
-        
-        // Create timestamp for file naming
-        const timestamp = new Date().toISOString().split('T')[0];
-        
-        // Create file names
-        const patientName = data.patientName ? data.patientName.replace(/[^a-zA-Z0-9]/g, '_') : 'Patient';
-        const setId = data.setId || 'Unknown';
-        const eicrFileName = `eICR_${patientName}_${setId}_${timestamp}.xml`;
-        const rrFileName = `RR_${patientName}_${setId}_${timestamp}.xml`;
-        
-        // Create manifest
-        const manifest = {
-            generated: new Date().toISOString(),
-            patient_name: data.patientName,
-            patient_id: data.patientId,
-            set_id: data.setId,
-            files: [
-                {
-                    name: eicrFileName,
-                    type: 'eICR',
-                    description: 'Electronic Initial Case Report'
-                },
-                {
-                    name: rrFileName,
-                    type: 'RR',
-                    description: 'Reportability Response'
-                }
-            ]
-        };
-        
-        // Create ZIP file
-        const zip = new JSZip();
-        zip.file(eicrFileName, eicrXml);
-        zip.file(rrFileName, rrXml);
-        zip.file('manifest.json', JSON.stringify(manifest, null, 2));
-        
-        // Generate ZIP and download
-        zip.generateAsync({type: 'blob'}).then(function(content) {
-            const url = URL.createObjectURL(content);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `CDA_Package_${patientName}_${setId}_${timestamp}.zip`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        });
-        
-    } catch (error) {
-        console.error('Error generating ZIP file:', error);
-        alert(`Error generating ZIP file: ${error.message}`);
+    // Transform to HTML
+    console.log('Transforming eICR...');
+    const eicrHtml = xmlToHtml(eicrXml, eicrXsl);
+    
+    console.log('Transforming RR...');
+    const rrHtml = xmlToHtml(rrXml, rrXsl);
+
+    // Generate filenames
+    const data = getFormData();
+    const stamp = new Date().toISOString().split('T')[0];
+    const base = (data.patientName || 'Patient').replace(/[^A-Za-z0-9]/g,'_') + '_' + (data.setId || 'Unknown') + '_' + stamp;
+
+    // Create ZIP with all files
+    console.log('Creating ZIP package...');
+    const zip = new JSZip();
+    zip.file(`eICR_${base}.xml`, eicrXml);
+    zip.file(`RR_${base}.xml`, rrXml);
+    zip.file(`eICR_${base}.html`, eicrHtml);
+    zip.file(`RR_${base}.html`, rrHtml);
+
+    // Add metadata if function exists
+    if (typeof buildMetadataXml === 'function') {
+      const metadata = buildMetadataXml([
+        { fileName: `eICR_${base}.xml`, mimeType: 'application/xml' },
+        { fileName: `RR_${base}.xml`, mimeType: 'application/xml' },
+        { fileName: `eICR_${base}.html`, mimeType: 'text/html' },
+        { fileName: `RR_${base}.html`, mimeType: 'text/html' },
+      ]);
+      zip.file('metadata.xml', metadata);
+      console.log('Added metadata.xml to ZIP package');
     }
+
+    console.log('Generating ZIP file...');
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const url = URL.createObjectURL(blob);
+    const a = Object.assign(document.createElement('a'), { 
+      href: url, 
+      download: `eCR_Package_${base}.zip` 
+    });
+    document.body.appendChild(a); 
+    a.click(); 
+    a.remove(); 
+    URL.revokeObjectURL(url);
+    
+    console.log('ZIP download completed successfully with 5 files (XML + HTML + metadata)');
+    
+  } catch (error) {
+    console.error('Detailed error:', error);
+    if (error.message.includes('XSLT file') || error.message.includes('XSLT transformation')) {
+      alert(`Transformation failed: ${error.message}\n\nCheck the console for detailed debugging information.`);
+    } else {
+      alert(`Failed to build ZIP package: ${error.message}\n\nSee console for detailed error information.`);
+    }
+  }
 }
 
 function generateAndDownloadRR() {
