@@ -176,8 +176,18 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+
+  <!-- Clean UI v8.1 styles -->
+  <link rel="stylesheet" href="css/ui.clean.v8_1.theme.css">
+  <link rel="stylesheet" href="css/ui.clean.v8_1.components.css">
+
 </head>
 <body>
+<div class="ui81-brand">
+  <div class="name">eCR-endipity</div>
+</div>
+
     <div class="container">
         <div class="header">
             <div>
@@ -185,10 +195,6 @@
                 <p class="subtitle">Electronic Initial Case Report with Reportable Condition Trigger Codes</p>
             </div>
             <div class="buttons">
-                <label class="btn btn-secondary">
-                    📁 Load Form Data
-                    <input type="file" accept=".json" onchange="loadFormData(event)" class="hidden">
-                </label>
                 <button class="btn btn-success" onclick="saveFormData()">💾 Save Form Data</button>
                 <button class="btn btn-primary" onclick="generateAndDownloadCDA()">📄 Generate CDA</button>
                 <button class="btn btn-success" onclick="generateAndPostCDA()">🚀 Generate & Post CDA to S3</button>
@@ -4088,5 +4094,10 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
             setupConditionalDisplays();
         });
     </script>
+
+
+  <!-- Clean UI v8.1 overlay -->
+  <script type="module" src="js/ui.clean.v8_1.refresh.js" defer></script>
+
 </body>
 </html>
