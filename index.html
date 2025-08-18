@@ -177,6 +177,31 @@
             font-weight: 500;
             margin-left: 10px;
         }
+        .help-tooltip {
+            cursor: help;
+            margin-left: 5px;
+            color: #6b7280;
+        }
+        .help-text {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .help-text h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #374151;
+        }
+        .help-text ul {
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+        .help-text li {
+            margin-bottom: 5px;
+        }
         @media (max-width: 768px) {
             .header { flex-direction: column; }
             .form-grid { grid-template-columns: 1fr; }
@@ -532,6 +557,7 @@
         <div class="section">
             <h2 class="section-title">Diagnoses with RCTC Trigger Codes</h2>
             <div class="form-grid">
+                <!-- Diagnosis 1: Tetralogy of Fallot (Critical Cardiac Condition) -->
                 <div class="input-group">
                     <label>Diagnosis 1 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
                     <div class="code-search">
@@ -542,8 +568,18 @@
                 </div>
                 <div class="input-group">
                     <label>Diagnosis 1 Name</label>
-                    <input type="text" id="diagnosis1Name" value="Spina bifida (disorder)">
+                    <input type="text" id="diagnosis1Name" value="Tetralogy of Fallot (disorder)">
                 </div>
+                <div class="input-group">
+                    <label>Date of Diagnosis 1 (YYYYMMDD)</label>
+                    <input type="text" id="diagnosis1Date" value="20240601">
+                </div>
+                <div class="input-group">
+                    <label>Date of Onset 1 (YYYYMMDD)</label>
+                    <input type="text" id="diagnosis1OnsetDate" value="20240601">
+                </div>
+                
+                <!-- Diagnosis 2: Spina bifida (Neural Tube Defect) -->
                 <div class="input-group">
                     <label>Diagnosis 2 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
                     <div class="code-search">
@@ -554,8 +590,18 @@
                 </div>
                 <div class="input-group">
                     <label>Diagnosis 2 Name</label>
-                    <input type="text" id="diagnosis2Name" value="Neonatal abstinence syndrome (disorder)">
+                    <input type="text" id="diagnosis2Name" value="Spina bifida (disorder)">
                 </div>
+                <div class="input-group">
+                    <label>Date of Diagnosis 2 (YYYYMMDD)</label>
+                    <input type="text" id="diagnosis2Date" value="20240601">
+                </div>
+                <div class="input-group">
+                    <label>Date of Onset 2 (YYYYMMDD)</label>
+                    <input type="text" id="diagnosis2OnsetDate" value="20240601">
+                </div>
+                
+                <!-- Diagnosis 3: Neonatal abstinence syndrome (Treatment-related Condition) -->
                 <div class="input-group">
                     <label>Diagnosis 3 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
                     <div class="code-search">
@@ -566,31 +612,15 @@
                 </div>
                 <div class="input-group">
                     <label>Diagnosis 3 Name</label>
-                    <input type="text" id="diagnosis3Name" value="Tetralogy of Fallot (disorder)">
-                </div>
-                <div class="input-group">
-                    <label>Date of Diagnosis 1 (YYYYMMDD)</label>
-                    <input type="text" id="diagnosis1Date" value="20240615">
-                </div>
-                <div class="input-group">
-                    <label>Date of Onset 1 (YYYYMMDD)</label>
-                    <input type="text" id="diagnosis1OnsetDate" value="20240615">
-                </div>
-                <div class="input-group">
-                    <label>Date of Diagnosis 2 (YYYYMMDD)</label>
-                    <input type="text" id="diagnosis2Date" value="20240615">
-                </div>
-                <div class="input-group">
-                    <label>Date of Onset 2 (YYYYMMDD)</label>
-                    <input type="text" id="diagnosis2OnsetDate" value="20240615">
+                    <input type="text" id="diagnosis3Name" value="Neonatal abstinence syndrome (disorder)">
                 </div>
                 <div class="input-group">
                     <label>Date of Diagnosis 3 (YYYYMMDD)</label>
-                    <input type="text" id="diagnosis3Date" value="20240615">
+                    <input type="text" id="diagnosis3Date" value="20240610">
                 </div>
                 <div class="input-group">
                     <label>Date of Onset 3 (YYYYMMDD)</label>
-                    <input type="text" id="diagnosis3OnsetDate" value="20240615">
+                    <input type="text" id="diagnosis3OnsetDate" value="20240610">
                 </div>
                 <div class="input-group">
                     <label>Problem Type</label>
@@ -1551,7 +1581,7 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
         </div>
 
         <div class="section">
-            <h2 class="section-title">Document Information</h2>
+            <h2 class="section-title">Related Document Information</h2>
             <div class="form-grid">
                 <div class="input-group">
                     <label>Document ID</label>
@@ -1562,12 +1592,30 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                     <input type="text" id="effectiveTime" value="20240615150000-0500">
                 </div>
                 <div class="input-group">
-                    <label>Set ID</label>
+                    <label>Document Relationship Type <span class="help-tooltip" title="Defines how this document relates to other documents. Use 'New Document' for standalone documents, or 'Replace/Update Document' to supersede or modify an existing document.">ℹ️</span></label>
+                    <select id="documentRelationshipType" onchange="handleRelationshipTypeChange()">
+                        <option value="NEW" selected>New Document</option>
+                        <option value="RPLC">Replace/Update Document</option>
+                    </select>
+                </div>
+                <div class="input-group" id="relatedDocIdGroup" style="display: none;">
+                    <label>Related Document Set ID <span style="color: red;">*</span> <span class="help-tooltip" title="The Set ID of the original document you are replacing/updating. This will become the Set ID for this new version. Required when relationship type is not 'New Document'.">ℹ️</span></label>
+                    <input type="text" id="relatedDocumentId" placeholder="Enter the Set ID of the original document" onchange="handleRelatedDocumentIdChange()">
+                </div>
+                <div class="input-group" id="setIdGroup">
+                    <label>Set ID <span class="help-tooltip" title="Unique identifier that stays the same across all versions of the same logical document. Documents with the same Set ID represent different versions of the same document.">ℹ️</span></label>
                     <input type="text" id="setId" value="8d86218e-0fea-11eb-8216-a80388425cfb">
                 </div>
                 <div class="input-group">
-                    <label>Version Number</label>
+                    <label>Version Number <span class="help-tooltip" title="Sequential number that increments with each new version of the document. Same Set ID + higher version number = newer version.">ℹ️</span></label>
                     <input type="text" id="versionNumber" value="3">
+                </div>
+                <div class="help-text">
+                    <h4>Document Relationship Guide:</h4>
+                    <ul>
+                        <li><strong>New Document:</strong> Creates a standalone document with a unique Set ID and version 1</li>
+                        <li><strong>Replace/Update Document:</strong> Creates a new version of an existing document by entering the original document's Set ID and incrementing the version number</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -1727,6 +1775,35 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
 
         // If your app already has these, keep them; otherwise adapt.
         function generateEICRXml() { return buildEICRXml(); }
+
+        function getEffectiveSetId(data) {
+            // For Replace/Update documents, use the relatedDocumentId as the setId
+            // For New documents, use the setId field
+            if (data.documentRelationshipType === 'RPLC') {
+                return data.relatedDocumentId || data.setId;
+            }
+            return data.setId;
+        }
+
+        function generateRelatedDocumentXml(data) {
+            // Only generate relatedDocument element if not a new document
+            if (!data.documentRelationshipType || data.documentRelationshipType === 'NEW') {
+                return '';
+            }
+
+            const relatedSetId = data.relatedDocumentId || '';
+            const typeCode = data.documentRelationshipType || 'RPLC';
+
+            return `
+  <!-- Related Document Information -->
+  <relatedDocument typeCode="${typeCode}">
+    <parentDocument>
+      <setId extension="${relatedSetId}" root="1.2.840.114350.1.13.380.3.7.1.1" />
+      <code code="55751-2" codeSystem="2.16.840.1.113883.6.1" 
+            codeSystemName="LOINC" displayName="Public Health Case Report" />
+    </parentDocument>
+  </relatedDocument>`;
+        }
         function generateRRXml()   { return buildRRXml();   }
 
         // Global RCTC data storage
@@ -1898,7 +1975,7 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                 'vaccineCredentialAssertion', 'vaccineCardAvailable', 'quarantineStatus', 'isolationStatus',
                 
                 // Document Information
-                'documentId', 'effectiveTime', 'setId', 'versionNumber'
+                'documentId', 'effectiveTime', 'documentRelationshipType', 'relatedDocumentId', 'setId', 'versionNumber'
             ];
             
             const data = {};
@@ -1935,6 +2012,71 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
             alert('RCTC file processing would require additional libraries in a real implementation. For now, the generator uses hardcoded RCTC OID and version information.');
             
             console.log('RCTC file selected:', file.name);
+        }
+
+        function handleRelationshipTypeChange() {
+            const relationshipType = document.getElementById('documentRelationshipType').value;
+            const relatedDocIdGroup = document.getElementById('relatedDocIdGroup');
+            const relatedDocIdField = document.getElementById('relatedDocumentId');
+            const setIdGroup = document.getElementById('setIdGroup');
+            const setIdField = document.getElementById('setId');
+            const versionNumberField = document.getElementById('versionNumber');
+
+            if (relationshipType === 'NEW') {
+                // Show Set ID field, hide Related Document Set ID field
+                setIdGroup.style.display = 'block';
+                relatedDocIdGroup.style.display = 'none';
+                relatedDocIdField.required = false;
+                relatedDocIdField.value = '';
+                
+                // Generate new setId for new document
+                generateNewSetId();
+                versionNumberField.value = '1';
+            } else {
+                // Hide Set ID field, show Related Document Set ID field
+                setIdGroup.style.display = 'none';
+                relatedDocIdGroup.style.display = 'block';
+                relatedDocIdField.required = true;
+                
+                // For Replace/Update relationship, increment version
+                if (relationshipType === 'RPLC') {
+                    const currentVersion = parseInt(versionNumberField.value) || 1;
+                    versionNumberField.value = currentVersion + 1;
+                }
+            }
+        }
+
+        function handleRelatedDocumentIdChange() {
+            // This function can be simplified since we're no longer copying values between fields
+            // The relatedDocumentId field serves as the Set ID when in Replace/Update mode
+            console.log('Related Document Set ID updated');
+        }
+
+        function generateNewSetId() {
+            // Generate a new UUID for setId
+            const setIdField = document.getElementById('setId');
+            setIdField.value = generateUUID();
+        }
+
+        function generateUUID() {
+            // Simple UUID v4 generator
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function validateRelatedDocumentFields() {
+            const relationshipType = document.getElementById('documentRelationshipType').value;
+            const relatedDocIdField = document.getElementById('relatedDocumentId');
+
+            if (relationshipType !== 'NEW' && !relatedDocIdField.value.trim()) {
+                alert('Related Document ID is required when relationship type is not "New Document".');
+                relatedDocIdField.focus();
+                return false;
+            }
+            return true;
         }
 
 
@@ -2382,6 +2524,11 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
             // Legacy required fields validation
             if (!validateRequiredFields()) {
                 allErrors.push('Required field validation failed');
+            }
+            
+            // Related document validation
+            if (!validateRelatedDocumentFields()) {
+                allErrors.push('Related document field validation failed');
             }
             
             if (allErrors.length > 0) {
@@ -3185,8 +3332,9 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
   <effectiveTime value="${data.effectiveTime}" />
   <confidentialityCode code="N" codeSystem="2.16.840.1.113883.5.25" displayName="Normal" />
   <languageCode code="en-US" />
-  <setId extension="${data.setId}" root="1.2.840.114350.1.13.380.3.7.1.1" />
+  <setId extension="${getEffectiveSetId(data)}" root="1.2.840.114350.1.13.380.3.7.1.1" />
   <versionNumber value="${data.versionNumber}" />
+  ${generateRelatedDocumentXml(data)}
   
   <!-- Patient Information -->
  <recordTarget>
@@ -3473,7 +3621,7 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
               <statusCode code="active" />
               <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
               
-              <!-- COVID-19 Diagnosis with RCTC Trigger Code Template -->
+              <!-- Diagnosis with RCTC Trigger Code Template -->
               <entryRelationship typeCode="SUBJ">
                 <observation classCode="OBS" moodCode="EVN" negationInd="false">
                   <templateId root="2.16.840.1.113883.10.20.22.4.4" />
@@ -4197,6 +4345,9 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
             });
             
             setupConditionalDisplays();
+            
+            // Initialize document relationship fields
+            handleRelationshipTypeChange();
         });
     </script>
 
