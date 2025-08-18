@@ -116,6 +116,14 @@
             resize: vertical;
             min-height: 80px;
         }
+        select[id*="diagnosis"] {
+            min-width: 300px;
+            max-width: 100%;
+        }
+        select[id*="diagnosis"] option[style*="font-weight: bold"] {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
         .footer-buttons {
             display: flex;
             justify-content: center;
@@ -176,6 +184,7 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 
   <!-- Clean UI v8.1 styles -->
@@ -526,10 +535,10 @@
                 <div class="input-group">
                     <label>Diagnosis 1 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
                     <div class="code-search">
-                        <input type="text" id="diagnosis1Code" value="67531005" onblur="validateTriggerCode('diagnosis1Code')">
-                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis1Code')">🔍</button>
+                        <select id="diagnosis1Code" onchange="handleDiagnosisSelection('diagnosis1Code', this.value, conditionsData)">
+                            <option value="">Select Diagnosis Code...</option>
+                        </select>
                     </div>
-                    <div id="diagnosis1Code_results" class="search-results"></div>
                 </div>
                 <div class="input-group">
                     <label>Diagnosis 1 Name</label>
@@ -538,10 +547,10 @@
                 <div class="input-group">
                     <label>Diagnosis 2 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
                     <div class="code-search">
-                        <input type="text" id="diagnosis2Code" value="414819007" onblur="validateTriggerCode('diagnosis2Code')">
-                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis2Code')">🔍</button>
+                        <select id="diagnosis2Code" onchange="handleDiagnosisSelection('diagnosis2Code', this.value, conditionsData)">
+                            <option value="">Select Diagnosis Code...</option>
+                        </select>
                     </div>
-                    <div id="diagnosis2Code_results" class="search-results"></div>
                 </div>
                 <div class="input-group">
                     <label>Diagnosis 2 Name</label>
@@ -550,10 +559,10 @@
                 <div class="input-group">
                     <label>Diagnosis 3 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
                     <div class="code-search">
-                        <input type="text" id="diagnosis3Code" value="86299006" onblur="validateTriggerCode('diagnosis3Code')">
-                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis3Code')">🔍</button>
+                        <select id="diagnosis3Code" onchange="handleDiagnosisSelection('diagnosis3Code', this.value, conditionsData)">
+                            <option value="">Select Diagnosis Code...</option>
+                        </select>
                     </div>
-                    <div id="diagnosis3Code_results" class="search-results"></div>
                 </div>
                 <div class="input-group">
                     <label>Diagnosis 3 Name</label>
@@ -1928,53 +1937,17 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
             console.log('RCTC file selected:', file.name);
         }
 
-        function searchRCTCCodes(fieldId) {
-            const resultsDiv = document.getElementById(fieldId + '_results');
-            
-            // Sample RCTC codes for demonstration
-            const sampleCodes = [
-                { code: '840539006', display: 'Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)', system: 'SNOMED-CT' },
-                { code: '719865001', display: 'Influenza A virus infection (disorder)', system: 'SNOMED-CT' },
-                { code: '3928002', display: 'Zika virus disease (disorder)', system: 'SNOMED-CT' },
-                { code: '94310-0', display: 'SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection', system: 'LOINC' },
-                { code: '34487-9', display: 'Influenza virus A RNA [Presence] in Respiratory specimen by NAA with probe detection', system: 'LOINC' },
-                { code: '168731009', display: 'Intubation procedure', system: 'SNOMED-CT' },
-                { code: '71388002', display: 'Radiographic procedure', system: 'SNOMED-CT' },
-                { code: '33747-0', display: 'General procedure code', system: 'LOINC' },
-                // Birth Defect RCTC Trigger Codes - RCTC Release 20250318.xlsx
-                { code: '41040004', display: 'Complete trisomy 21 syndrome (disorder)', system: 'SNOMED-CT' },
-                { code: '72951007', display: 'Gastroschisis (disorder)', system: 'SNOMED-CT' },
-                { code: '67531005', display: 'Spina bifida (disorder)', system: 'SNOMED-CT' },
-                { code: '86299006', display: 'Tetralogy of Fallot (disorder)', system: 'SNOMED-CT' },
-                { code: '414819007', display: 'Neonatal abstinence syndrome (disorder)', system: 'SNOMED-CT' }
-            ];
 
-            resultsDiv.innerHTML = '';
-            sampleCodes.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'result-item';
-                div.innerHTML = `<strong>${item.code}</strong> (${item.system})<br><small>${item.display}</small>`;
-                div.onclick = () => {
-                    document.getElementById(fieldId).value = item.code;
-                    const nameField = fieldId.replace('Code', 'Name');
-                    const nameElement = document.getElementById(nameField);
-                    if (nameElement) {
-                        nameElement.value = item.display;
-                    }
-                    resultsDiv.style.display = 'none';
-                };
-                resultsDiv.appendChild(div);
-            });
-            
-            resultsDiv.style.display = 'block';
+        function isRCTCTriggerCode(code) {
+            const triggerCodes = ['840539006', '719865001', '3928002', '94310-0', '34487-9', '168731009',
+                                 '41040004', '72951007', '67531005', '86299006', '414819007'];
+            return triggerCodes.includes(code);
         }
 
         function validateTriggerCode(fieldId) {
             const code = document.getElementById(fieldId).value;
-            const triggerCodes = ['840539006', '719865001', '3928002', '94310-0', '34487-9', '168731009',
-                                 '41040004', '72951007', '67531005', '86299006', '414819007'];
             
-            if (code && !triggerCodes.includes(code)) {
+            if (code && !isRCTCTriggerCode(code)) {
                 console.log('Warning: Code', code, 'may not be a valid RCTC trigger code');
             }
         }
@@ -4087,10 +4060,142 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
             }
         }
 
+        // Global variable to store conditions data
+        let conditionsData = [];
+        let conditionsLoaded = false;
+
+        // Load conditions from Excel file
+        async function loadConditionsFromExcel() {
+            try {
+                const response = await fetch('./assets/xslt/conditions.xlsx');
+                if (!response.ok) {
+                    throw new Error(`Failed to load Excel file: ${response.status}`);
+                }
+                
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                
+                const allConditions = [];
+                
+                // Process all sheets
+                workbook.SheetNames.forEach(sheetName => {
+                    const worksheet = workbook.Sheets[sheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    
+                    // Skip empty sheets or sheets with no data rows
+                    if (jsonData.length <= 1) return;
+                    
+                    const headers = jsonData[0];
+                    const conditionIndex = headers.findIndex(h => h && h.toLowerCase().includes('condition'));
+                    const codeTypeIndex = headers.findIndex(h => h && h.toLowerCase().includes('code_type'));
+                    const codeIndex = headers.findIndex(h => h && (h.toLowerCase().includes('code') && !h.toLowerCase().includes('code_type')));
+                    const descriptionIndex = headers.findIndex(h => h && h.toLowerCase().includes('description'));
+                    
+                    // Process data rows
+                    for (let i = 1; i < jsonData.length; i++) {
+                        const row = jsonData[i];
+                        if (row && row[codeIndex]) {
+                            allConditions.push({
+                                condition: row[conditionIndex] || '',
+                                codeType: row[codeTypeIndex] || '',
+                                code: row[codeIndex] || '',
+                                description: row[descriptionIndex] || ''
+                            });
+                        }
+                    }
+                });
+                
+                conditionsData = allConditions;
+                conditionsLoaded = true;
+                
+                // Populate dropdowns after loading
+                populateConditionDropdowns(conditionsData);
+                
+                console.log(`Loaded ${conditionsData.length} conditions from Excel file`);
+                return conditionsData;
+                
+            } catch (error) {
+                console.warn('Failed to load conditions from Excel file:', error);
+                // Fallback to hardcoded values if Excel file can't be loaded
+                conditionsData = getHardcodedConditions();
+                conditionsLoaded = true;
+                populateConditionDropdowns(conditionsData);
+                return conditionsData;
+            }
+        }
+
+        // Fallback hardcoded conditions
+        function getHardcodedConditions() {
+            return [
+                { condition: "Down Syndrome", code: "67531005", codeType: "SNOMEDCT", description: "Down syndrome (disorder)" },
+                { condition: "Pertussis", code: "414819007", codeType: "SNOMEDCT", description: "Disease caused by Bordetella pertussis (disorder)" },
+                { condition: "Gonorrhea", code: "86299006", codeType: "SNOMEDCT", description: "Gonorrhea (disorder)" }
+            ];
+        }
+
+        // Populate condition dropdowns
+        function populateConditionDropdowns(conditions) {
+            const diagnosisFields = ['diagnosis1Code', 'diagnosis2Code', 'diagnosis3Code'];
+            const defaultValues = ['67531005', '414819007', '86299006']; // Original hardcoded values
+            
+            diagnosisFields.forEach((fieldId, index) => {
+                const select = document.getElementById(fieldId);
+                if (select && select.tagName === 'SELECT') {
+                    // Clear existing options except the first placeholder
+                    while (select.children.length > 1) {
+                        select.removeChild(select.lastChild);
+                    }
+                    
+                    // Add conditions as options
+                    conditions.forEach(condition => {
+                        const option = document.createElement('option');
+                        option.value = condition.code;
+                        option.textContent = `${condition.code} - ${condition.description} (${condition.condition})`;
+                        
+                        // Mark RCTC trigger codes
+                        if (isRCTCTriggerCode(condition.code)) {
+                            option.textContent += ' [RCTC]';
+                            option.style.fontWeight = 'bold';
+                        }
+                        
+                        select.appendChild(option);
+                    });
+                    
+                    // Set default value and trigger auto-population
+                    if (defaultValues[index]) {
+                        select.value = defaultValues[index];
+                        handleDiagnosisSelection(fieldId, defaultValues[index], conditions);
+                    }
+                }
+            });
+        }
+
+        // Handle diagnosis code selection
+        function handleDiagnosisSelection(fieldId, selectedCode, conditions) {
+            const nameFieldId = fieldId.replace('Code', 'Name');
+            const nameField = document.getElementById(nameFieldId);
+            
+            if (nameField && selectedCode) {
+                const selectedCondition = conditions.find(c => c.code === selectedCode);
+                if (selectedCondition) {
+                    nameField.value = selectedCondition.condition;
+                }
+            }
+            
+            // Validate trigger code
+            validateTriggerCode(fieldId);
+        }
+
         // Initialize the form
         document.addEventListener('DOMContentLoaded', function() {
             console.log('eICR Generator loaded');
             console.log('RCTC Metadata:', rctcData.metadata);
+            
+            // Load conditions from Excel file
+            loadConditionsFromExcel().then(() => {
+                console.log('Conditions loaded successfully');
+            });
+            
             setupConditionalDisplays();
         });
     </script>
