@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
   Title: Lantana's CDA Stylesheet
   Original Filename: cda.xsl
   Usage: This stylesheet is designed for use with clinical documents
@@ -42,6 +43,21 @@
   Revision History: 2019-04-20 Sarah Gaunt   - Added author time rendering
   Revision History: 2019-04-20 Sarah Gaunt   - Added parent/guardian rendering
   Revision History: 2019-04-21 Sarah Gaunt   - Updated serviceEvent rendering to properly render if @classCode missing (i.e. uses default @classCode)
+  Revision History: 2020-01-13 Sarah Gaunt   - Updated author rendering to to include all information
+  Revision History: 2020-01-13 Sarah Gaunt   - Updated rendering to deal with External Encounter (missing most encompassingEncounter information) more gracefully
+  Revision History: 2020-05-11 Sarah Gaunt   - Updated telecom rendering (fixed typo) and updated contact handling
+  
+  Revision History: 2020-09-26 Sarah Gaunt   - eCR Requirements: Stylesheets (September 2020 Updates)
+                                              #1 | Change the eICR and RR stylesheets so demographics will display on the HTMLs when no ID’s are present in Patient Role
+                                              #2 | Correct issue with eICR stylesheet in rendering health care facility location
+  Revision History: 2020-10-05 Sarah Gaunt    - Tweaked the above change to the health care facility location rendering - now uses display name of code plus "of"
+                                                ServiceProviderLocation/name   
+  Revision History: 2021-05-10 Sarah Gaunt    - Added: sdtc:deceasedDate, sdtc:raceCode, sdtc:ethnicGroupCode                                           
+  Revision History: 2021-10-19 Sarah Gaunt    - Added preferred language display
+  Revision History: 2021-10-20 Sarah Gaunt    - Added processing for patient addr useable period
+  Revision History: 2021-12-02 Sarah Gaunt    - Remove legacy SVN version and author information after migration from HL7 GForge SVN to HL7 Github 
+  Revision History: 2023-05-18 Sarah Gaunt    - Update to not display SSN if it is present
+  Revision History: 2025-05-21 Sarah Gaunt    - Update to translate 3 character language codes
 
   This style sheet is based on a major revision of the original CDA XSL, which was made possible thanks to the contributions of:
   - Jingdong Li
@@ -52,7 +68,7 @@
 
 -->
 <!--
-Copyright 2016-2019 Lantana Consulting Group
+Copyright 2016-2021+ Lantana Consulting Group
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -66,297 +82,310 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-  <!-- This is where all the styles are loaded -->
+<xsl:stylesheet xmlns:sdtc="urn:hl7-org:sdtc" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+    <!-- This is where all the styles are loaded -->
 
-
-
-  <xsl:output xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" method="html" indent="yes" version="4.01" encoding="UTF-8"
-    doctype-system="http://www.w3.org/TR/html4/strict.dtd" doctype-public="-//W3C//DTD HTML 4.01//EN" />
-  <xsl:param xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="limit-external-images" select="'yes'" />
-  <!-- A vertical bar separated list of URI prefixes, such as "http://www.example.com|https://www.example.com" -->
-  <xsl:param xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="external-image-whitelist" />
-  <xsl:param xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="logo-location" />
-  <!-- string processing variables -->
-  <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="lc" select="'abcdefghijklmnopqrstuvwxyz'" />
-  <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="uc" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
-  <!-- removes the following characters, in addition to line breaks "':;?`{}“”„‚’ -->
-  <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="simple-sanitizer-match">
-    <xsl:text>
+    <xsl:output xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" method="html" indent="yes" version="4.01" encoding="UTF-8" doctype-system="http://www.w3.org/TR/html4/strict.dtd"
+        doctype-public="-//W3C//DTD HTML 4.01//EN" />
+    <xsl:param xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="limit-external-images" select="'yes'" />
+    <!-- A vertical bar separated list of URI prefixes, such as "http://www.example.com|https://www.example.com" -->
+    <xsl:param xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="external-image-whitelist" />
+    <xsl:param xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="logo-location" />
+    <!-- string processing variables -->
+    <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="lc" select="'abcdefghijklmnopqrstuvwxyz'" />
+    <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="uc" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
+    <!-- removes the following characters, in addition to line breaks "':;?`{}“”„‚’ -->
+    <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="simple-sanitizer-match">
+        <xsl:text>
 &#13;"':;?`{}“”„‚’</xsl:text>
-  </xsl:variable>
-  <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="simple-sanitizer-replace" select="'***************'" />
-  <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="javascript-injection-warning"
-    >WARNING: Javascript injection attempt detected
-    in source CDA document. Terminating</xsl:variable>
-  <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="malicious-content-warning"
-    >WARNING: Potentially malicious content found in CDA
-    document.</xsl:variable>
+    </xsl:variable>
+    <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="simple-sanitizer-replace" select="'***************'" />
+    <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="javascript-injection-warning">WARNING: Javascript injection attempt detected in source CDA document.
+        Terminating</xsl:variable>
+    <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="malicious-content-warning">WARNING: Potentially malicious content found in CDA document.</xsl:variable>
 
-  <!-- global variable title -->
-  <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="title">
-    <xsl:choose>
-      <xsl:when test="string-length(/n1:ClinicalDocument/n1:title) &gt;= 1">
-        <xsl:value-of select="/n1:ClinicalDocument/n1:title" />
-      </xsl:when>
-      <xsl:when test="/n1:ClinicalDocument/n1:code/@displayName">
-        <xsl:value-of select="/n1:ClinicalDocument/n1:code/@displayName" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>Clinical Document</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
-
-
-  <!-- Main -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="/">
-    <xsl:apply-templates select="n1:ClinicalDocument" />
-  </xsl:template>
-
-  <!-- produce browser rendered, human readable clinical document -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:ClinicalDocument">
-    <html>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <xsl:comment> Do NOT edit this HTML directly: it was generated via an XSLT transformation from a CDA Release 2 XML document. </xsl:comment>
-        <title class="cda-title">
-          <xsl:value-of select="$title" />
-        </title>
-        <xsl:call-template name="jquery" />
-        <xsl:call-template name="jquery-ui" />
-        <xsl:call-template name="bootstrap-css" />
-        <xsl:call-template name="bootstrap-javascript" />
-        <xsl:call-template name="lantana-js" />
-        <xsl:call-template name="lantana-css" />
-      </head>
-      <body data-spy="scroll" data-target="#navbar-cda">
-
-        <div class="cda-render toc col-md-3" role="complementary">
-
-          <!-- produce table of contents -->
-          <xsl:if test="not(//n1:nonXMLBody)">
-            <xsl:if test="count(/n1:ClinicalDocument/n1:component/n1:structuredBody/n1:component[n1:section]) &gt; 0">
-              <xsl:call-template name="make-tableofcontents" />
-            </xsl:if>
-          </xsl:if>
-        </div>
-
-        <!-- Container: CDA Render -->
-        <div class="cda-render container-fluid col-md-9 cda-render-main" role="main">
-
-          <row>
-            <h1 id="top" class="cda-title">
-              <xsl:value-of select="$title" />
-            </h1>
-          </row>
-          <!-- START display top portion of clinical document -->
-          <div class="top container-fluid">
-            <xsl:call-template name="recordTarget" />
-            <xsl:call-template name="documentationOf" />
-            <xsl:call-template name="author" />
-            <xsl:call-template name="componentOf" />
-            <xsl:call-template name="participant" />
-            <xsl:call-template name="informant" />
-            <xsl:call-template name="informationRecipient" />
-            <xsl:call-template name="legalAuthenticator" />
-          </div>
-          <!-- END display top portion of clinical document -->
-
-          <!-- produce human readable document content -->
-          <div class="middle" id="doc-clinical-info">
-            <xsl:apply-templates select="n1:component/n1:structuredBody | n1:component/n1:nonXMLBody" />
-          </div>
-          <!-- Footer -->
-          <div class="bottom" id="doc-info">
-            <xsl:call-template name="authenticator" />
-            <xsl:call-template name="custodian" />
-            <xsl:call-template name="dataEnterer" />
-            <xsl:call-template name="documentGeneral" />
-          </div>
-        </div>
-
-      </body>
-    </html>
-
-
-
-    <!-- BEGIN TEMPLATES -->
-  </xsl:template>
-  <!-- generate table of contents -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="make-tableofcontents">
-
-    <nav class="cda-render hidden-print hidden-xs hidden-sm affix toc-box" id="navbar-cda">
-      <div class="container-fluid cda-render toc-header-container">
-        <xsl:if test="$logo-location">
-          <div class="col-md-1">
-            <img src="logo.png" class="img-responsive" alt="Logo">
-              <xsl:attribute name="src">
-                <xsl:value-of select="$logo-location" />
-              </xsl:attribute>
-            </img>
-          </div>
-        </xsl:if>
-        <div class="cda-render toc-header">
-          <xsl:for-each select="/n1:ClinicalDocument/n1:recordTarget/n1:patientRole">
-            <xsl:call-template name="show-name">
-              <xsl:with-param name="name" select="n1:patient/n1:name" />
-            </xsl:call-template>
-          </xsl:for-each>
-        </div>
-        <div class="cda-render toc-header">
-          <xsl:value-of select="$title" />
-        </div>
-      </div>
-      <ul class="cda-render nav nav-stacked fixed" id="navbar-list-cda">
-        <li>
-          <a class="cda-render lantana-toc" href="#top">BACK TO TOP</a>
-        </li>
-        <li>
-          <a class="cda-render lantana-toc" href="#cda-patient">DEMOGRAPHICS</a>
-        </li>
-        <li>
-          <a class="cda-render lantana-toc" href="#author-performer">AUTHORING DETAILS</a>
-        </li>
-        <li>
-          <a class="cda-render lantana-toc bold" href="#doc-clinical-info">Clinical Sections</a>
-          <ul class="cda-render nav nav-stacked fixed" id="navbar-list-cda-sortable">
-            <xsl:for-each select="n1:component/n1:structuredBody/n1:component/n1:section/n1:title">
-              <li>
-                <a class="cda-render lantana-toc" href="#{generate-id(.)}">
-                  <xsl:value-of select="." />
-                </a>
-              </li>
-            </xsl:for-each>
-          </ul>
-        </li>
-        <li>
-          <a class="cda-render lantana-toc" href="#doc-info">SIGNATURES</a>
-        </li>
-      </ul>
-    </nav>
-  </xsl:template>
-  <!-- header elements -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="documentGeneral">
-    <div class="container-fluid">
-      <h2 class="section-title col-md-6">
-        <xsl:text>Document Information</xsl:text>
-      </h2>
-      <div class="table-responsive col-md-6">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>
-                <xsl:text>Document Identifier</xsl:text>
-              </th>
-              <th>
-                <xsl:text>Document Created</xsl:text>
-              </th>
-            </tr>
-
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <xsl:call-template name="show-id">
-                  <xsl:with-param name="id" select="n1:id" />
-                </xsl:call-template>
-              </td>
-              <td>
-                <xsl:call-template name="show-time">
-                  <xsl:with-param name="datetime" select="n1:effectiveTime" />
-                </xsl:call-template>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </xsl:template>
-  <!-- confidentiality -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="confidentiality">
-    <table class="header_table">
-      <tbody>
-        <td class="td_header_role_name">
-          <xsl:text>Confidentiality</xsl:text>
-        </td>
-        <td class="td_header_role_value">
-          <xsl:choose>
-            <xsl:when test="n1:confidentialityCode/@code = 'N'">
-              <xsl:text>Normal</xsl:text>
+    <!-- global variable title -->
+    <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="title">
+        <xsl:choose>
+            <xsl:when test="string-length(/n1:ClinicalDocument/n1:title) &gt;= 1">
+                <xsl:value-of select="/n1:ClinicalDocument/n1:title" />
             </xsl:when>
-            <xsl:when test="n1:confidentialityCode/@code = 'R'">
-              <xsl:text>Restricted</xsl:text>
+            <xsl:when test="/n1:ClinicalDocument/n1:code/@displayName">
+                <xsl:value-of select="/n1:ClinicalDocument/n1:code/@displayName" />
             </xsl:when>
-            <xsl:when test="n1:confidentialityCode/@code = 'V'">
-              <xsl:text>Very restricted</xsl:text>
-            </xsl:when>
-          </xsl:choose>
-          <xsl:if test="n1:confidentialityCode/n1:originalText">
-            <xsl:text> </xsl:text>
-            <xsl:value-of select="n1:confidentialityCode/n1:originalText" />
-          </xsl:if>
-        </td>
-      </tbody>
-    </table>
-  </xsl:template>
-  <!-- author -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="author">
-    <xsl:if test="n1:author">
-      <div class="header container-fluid">
-        <!-- SG: removed assignedAuthor from for-each to grab time, then added back in inside loop -->
-        <xsl:for-each select="n1:author">
-          <div class="container-fluid">
-            <div class="col-md-6">
-              <h2 class="section-title col-md-6" id="author-performer">
-                <xsl:text>Author</xsl:text>
-              </h2>
-              <div class="header-group-content col-md-8">
-                <!-- SG: Added time -->
-                <xsl:if test="n1:time">
-                  <div class="row">
-                    <div class="attribute-title col-md-6">
-                      <xsl:text>Time: </xsl:text>
+            <xsl:otherwise>
+                <xsl:text>Clinical Document</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+
+    <!-- Main -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="/">
+        <xsl:apply-templates select="n1:ClinicalDocument" />
+    </xsl:template>
+
+    <!-- produce browser rendered, human readable clinical document -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:ClinicalDocument">
+        <html>
+            <head>
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <xsl:comment> Do NOT edit this HTML directly: it was generated via an XSLT transformation from a CDA Release 2 XML document. </xsl:comment>
+                <title class="cda-title">
+                    <xsl:value-of select="$title" />
+                </title>
+                <xsl:call-template name="jquery" />
+                <xsl:call-template name="jquery-ui" />
+                <xsl:call-template name="bootstrap-css" />
+                <xsl:call-template name="bootstrap-javascript" />
+                <xsl:call-template name="lantana-js" />
+                <xsl:call-template name="lantana-css" />
+            </head>
+            <body data-spy="scroll" data-target="#navbar-cda">
+
+                <div class="cda-render toc col-md-3" role="complementary">
+
+                    <!-- produce table of contents -->
+                    <xsl:if test="not(//n1:nonXMLBody)">
+                        <xsl:if test="count(/n1:ClinicalDocument/n1:component/n1:structuredBody/n1:component[n1:section]) &gt; 0">
+                            <xsl:call-template name="make-tableofcontents" />
+                        </xsl:if>
+                    </xsl:if>
+                </div>
+
+                <!-- Container: CDA Render -->
+                <div class="cda-render container-fluid col-md-9 cda-render-main" role="main">
+
+                    <row>
+                        <h1 id="top" class="cda-title">
+                            <xsl:value-of select="$title" />
+                        </h1>
+                    </row>
+                    <!-- START display top portion of clinical document -->
+                    <div class="header container-fluid">
+                        <div class="top container-fluid">
+                            <xsl:call-template name="recordTarget" />
+                            <xsl:call-template name="documentationOf" />
+                            <xsl:call-template name="author" />
+                            <xsl:call-template name="componentOf" />
+                            <xsl:call-template name="participant" />
+                            <xsl:call-template name="informant" />
+                            <xsl:call-template name="informationRecipient" />
+                            <xsl:call-template name="legalAuthenticator" />
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                      <xsl:call-template name="show-time">
-                        <xsl:with-param name="datetime" select="n1:time" />
-                      </xsl:call-template>
+                    <!-- END display top portion of clinical document -->
+
+                    <!-- produce human readable document content -->
+                    <div class="middle" id="doc-clinical-info">
+                        <xsl:apply-templates select="n1:component/n1:structuredBody | n1:component/n1:nonXMLBody" />
                     </div>
-                  </div>
+                    <!-- Footer -->
+                    <div class="bottom" id="doc-info">
+                        <xsl:call-template name="authenticator" />
+                        <xsl:call-template name="custodian" />
+                        <xsl:call-template name="dataEnterer" />
+                        <xsl:call-template name="documentGeneral" />
+                    </div>
+                </div>
+
+            </body>
+        </html>
+
+
+
+        <!-- BEGIN TEMPLATES -->
+    </xsl:template>
+    <!-- generate table of contents -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="make-tableofcontents">
+
+        <nav class="cda-render hidden-print hidden-xs hidden-sm affix toc-box" id="navbar-cda">
+            <div class="container-fluid cda-render toc-header-container">
+                <xsl:if test="$logo-location">
+                    <div class="col-md-1">
+                        <img src="logo.png" class="img-responsive" alt="Logo">
+                            <xsl:attribute name="src">
+                                <xsl:value-of select="$logo-location" />
+                            </xsl:attribute>
+                        </img>
+                    </div>
                 </xsl:if>
-
-                <xsl:choose>
-                  <xsl:when test="n1:assignedAuthor/n1:assignedPerson/n1:name">
-                    <div class="row">
-                      <div class="col-md-8">
+                <div class="cda-render toc-header">
+                    <xsl:for-each select="/n1:ClinicalDocument/n1:recordTarget/n1:patientRole">
                         <xsl:call-template name="show-name">
-                          <xsl:with-param name="name" select="n1:assignedAuthor/n1:assignedPerson/n1:name" />
+                            <xsl:with-param name="name" select="n1:patient/n1:name" />
                         </xsl:call-template>
-                        <xsl:if test="n1:assignedAuthor/n1:representedOrganization">
+                    </xsl:for-each>
+                </div>
+                <div class="cda-render toc-header">
+                    <xsl:value-of select="$title" />
+                </div>
+            </div>
+            <ul class="cda-render nav nav-stacked fixed" id="navbar-list-cda">
+                <li>
+                    <a class="cda-render lantana-toc" href="#top">BACK TO TOP</a>
+                </li>
+                <li>
+                    <a class="cda-render lantana-toc" href="#cda-patient">DEMOGRAPHICS</a>
+                </li>
+                <li>
+                    <a class="cda-render lantana-toc" href="#author-performer">AUTHORING DETAILS</a>
+                </li>
+                <li>
+                    <a class="cda-render lantana-toc bold" href="#doc-clinical-info">Clinical Sections</a>
+                    <ul class="cda-render nav nav-stacked fixed" id="navbar-list-cda-sortable">
+                        <xsl:for-each select="n1:component/n1:structuredBody/n1:component/n1:section/n1:title">
+                            <li>
+                                <a class="cda-render lantana-toc" href="#{generate-id(.)}">
+                                    <xsl:value-of select="." />
+                                </a>
+                            </li>
+                        </xsl:for-each>
+                    </ul>
+                </li>
+                <li>
+                    <a class="cda-render lantana-toc" href="#doc-info">SIGNATURES</a>
+                </li>
+            </ul>
+        </nav>
+    </xsl:template>
+    <!-- header elements -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="documentGeneral">
+        <div class="container-fluid">
+            <h2 class="section-title col-md-6">
+                <xsl:text>Document Information</xsl:text>
+            </h2>
+            <div class="table-responsive col-md-6">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                <xsl:text>Document Identifier</xsl:text>
+                            </th>
+                            <th>
+                                <xsl:text>Document Created</xsl:text>
+                            </th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <xsl:call-template name="show-id">
+                                    <xsl:with-param name="id" select="n1:id" />
+                                </xsl:call-template>
+                            </td>
+                            <td>
+                                <xsl:call-template name="show-time">
+                                    <xsl:with-param name="datetime" select="n1:effectiveTime" />
+                                </xsl:call-template>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </xsl:template>
+    <!-- confidentiality -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="confidentiality">
+        <table class="header_table">
+            <tbody>
+                <td class="td_header_role_name">
+                    <xsl:text>Confidentiality</xsl:text>
+                </td>
+                <td class="td_header_role_value">
+                    <xsl:choose>
+                        <xsl:when test="n1:confidentialityCode/@code = 'N'">
+                            <xsl:text>Normal</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="n1:confidentialityCode/@code = 'R'">
+                            <xsl:text>Restricted</xsl:text>
+                        </xsl:when>
+                        <xsl:when test="n1:confidentialityCode/@code = 'V'">
+                            <xsl:text>Very restricted</xsl:text>
+                        </xsl:when>
+                    </xsl:choose>
+                    <xsl:if test="n1:confidentialityCode/n1:originalText">
+                        <xsl:text> </xsl:text>
+                        <xsl:value-of select="n1:confidentialityCode/n1:originalText" />
+                    </xsl:if>
+                </td>
+            </tbody>
+        </table>
+    </xsl:template>
+    <!-- author -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="author">
+        <xsl:if test="n1:author">
+            <div class="container-fluid">
+                <!-- SG: removed assignedAuthor from for-each to grab time, then added back in inside loop -->
+                <xsl:for-each select="n1:author">
+                    <!-- Author -->
+                    <div class="container-fluid">
+                        <!-- Author Name-->
+                        <div class="col-md-6">
+                            <h2 class="section-title col-md-6" id="author-performer">
+                                <xsl:text>Author</xsl:text>
+                            </h2>
+                            <div class="header-group-content col-md-8">
+                                <!-- SG: Added time -->
+                                <xsl:if test="n1:time">
+                                    <div class="row">
+                                        <div class="attribute-title col-md-6">
+                                            <xsl:text>Time: </xsl:text>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <xsl:call-template name="show-time">
+                                                <xsl:with-param name="datetime" select="n1:time" />
+                                            </xsl:call-template>
+                                        </div>
+                                    </div>
+                                </xsl:if>
+                                <xsl:choose>
+                                    <xsl:when test="n1:assignedAuthor/n1:assignedPerson/n1:name">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <xsl:call-template name="show-name">
+                                                    <xsl:with-param name="name" select="n1:assignedAuthor/n1:assignedPerson/n1:name" />
+                                                </xsl:call-template>
+                                                <!-- Getting this down further for the Author Organization section -->
+                                                <!--<xsl:if test="n1:assignedAuthor/n1:representedOrganization">
                           <xsl:text> - </xsl:text>
                           <xsl:call-template name="show-name">
                             <xsl:with-param name="name" select="n1:assignedAuthor/n1:representedOrganization/n1:name" />
                           </xsl:call-template>
-                        </xsl:if>
-                      </div>
-                    </div>
-                  </xsl:when>
-                  <xsl:when test="n1:assignedAuthor/n1:assignedAuthoringDevice/n1:softwareName">
-                    <div class="row">
-                      <div class="col-md-8">
-                        <xsl:call-template name="show-code">
-                          <xsl:with-param name="code" select="n1:assignedAuthor/n1:assignedAuthoringDevice/n1:softwareName" />
-                        </xsl:call-template>
-                        <xsl:if test="n1:assignedAuthor/n1:representedOrganization">
+                        </xsl:if>-->
+                                            </div>
+                                        </div>
+                                    </xsl:when>
+                                    <xsl:when test="n1:assignedAuthor/n1:assignedAuthoringDevice/n1:softwareName">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <xsl:call-template name="show-code">
+                                                    <xsl:with-param name="code" select="n1:assignedAuthor/n1:assignedAuthoringDevice/n1:softwareName" />
+                                                </xsl:call-template>
+                                                <!-- Getting this down further for the Author Organization section -->
+                                                <!--<xsl:if test="n1:assignedAuthor/n1:representedOrganization">
                           <xsl:text> - </xsl:text>
                           <xsl:call-template name="show-name">
                             <xsl:with-param name="name" select="n1:assignedAuthor/n1:representedOrganization/n1:name" />
                           </xsl:call-template>
-                        </xsl:if>
-                      </div>
-                    </div>
-                  </xsl:when>
+                        </xsl:if>-->
+                                            </div>
+                                        </div>
+                                    </xsl:when>
+                                </xsl:choose>
+                                <xsl:if test="n1:assignedAuthor/n1:id">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <xsl:for-each select="n1:assignedAuthor/n1:id">
+                                                <xsl:call-template name="show-id">
+                                                    <xsl:with-param name="id" select="." />
+                                                </xsl:call-template>
+                                            </xsl:for-each>
+                                        </div>
+                                    </div>
+                                </xsl:if>
+                                <!--<xsl:choose>
                   <xsl:when test="n1:assignedAuthor/n1:representedOrganization">
                     <div class="row">
                       <div class="col-md-8">
@@ -377,2837 +406,4814 @@ limitations under the License.
                       </div>
                     </div>
                   </xsl:otherwise>
-                </xsl:choose>
-              </div>
+                </xsl:choose>-->
+                            </div>
+                        </div>
+                        <!-- Author Contact -->
+                        <div class="col-md-6">
+                            <xsl:if test="n1:assignedAuthor/n1:addr | n1:assignedAuthor/n1:telecom">
+                                <h2 class="section-title col-md-6">Contact</h2>
+                                <div class="header-group-content col-md-8">
+                                    <xsl:call-template name="show-contactInfo">
+                                        <xsl:with-param name="contact" select="n1:assignedAuthor" />
+                                    </xsl:call-template>
+                                </div>
+                            </xsl:if>
+                        </div>
+                    </div>
+                    <!-- ********************** -->
+
+                    <xsl:if test="n1:assignedAuthor/n1:representedOrganization">
+                        <div class="container-fluid">
+                            <div class="col-md-6">
+                                <h2 class="section-title col-md-6" id="author-performer">
+                                    <xsl:text>Author Organization</xsl:text>
+                                </h2>
+                                <div class="header-group-content col-md-8">
+
+                                    <xsl:for-each select="n1:assignedAuthor/n1:representedOrganization/n1:name">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <xsl:call-template name="show-name">
+                                                    <xsl:with-param name="name" select="." />
+                                                </xsl:call-template>
+                                            </div>
+                                        </div>
+                                    </xsl:for-each>
+
+                                    <xsl:for-each select="n1:assignedAuthor/n1:representedOrganization/n1:id">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <xsl:for-each select=".">
+                                                    <xsl:call-template name="show-id">
+                                                        <xsl:with-param name="id" select="." />
+                                                    </xsl:call-template>
+                                                </xsl:for-each>
+                                            </div>
+                                        </div>
+                                    </xsl:for-each>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <xsl:if test="n1:assignedAuthor/n1:representedOrganization/n1:addr | n1:assignedAuthor/n1:representedOrganization/n1:telecom">
+                                    <h2 class="section-title col-md-6">Contact</h2>
+                                    <div class="header-group-content col-md-8">
+                                        <xsl:call-template name="show-contactInfo">
+                                            <xsl:with-param name="contact" select="n1:assignedAuthor/n1:representedOrganization" />
+                                        </xsl:call-template>
+                                    </div>
+                                </xsl:if>
+                            </div>
+                        </div>
+                    </xsl:if>
+                    <!-- ********************** -->
+                </xsl:for-each>
             </div>
-            <div class="col-md-6">
-              <xsl:if test="n1:addr | n1:telecom">
-                <h2 class="section-title col-md-6">Contact</h2>
-                <div class="header-group-content col-md-8">
-                  <xsl:call-template name="show-contactInfo">
-                    <xsl:with-param name="contact" select="." />
-                  </xsl:call-template>
+        </xsl:if>
+    </xsl:template>
+    <!--  authenticator -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="authenticator">
+        <xsl:if test="n1:authenticator">
+            <div class="container-fluid">
+                <xsl:for-each select="n1:authenticator">
+                    <div class="col-md-6">
+                        <h2 class="section-title col-md-6">
+                            <xsl:text>Signed</xsl:text>
+                        </h2>
+                        <div class="header-group-content col-md-8">
+                            <xsl:call-template name="show-name">
+                                <xsl:with-param name="name" select="n1:assignedEntity/n1:assignedPerson/n1:name" />
+                            </xsl:call-template>
+                            <xsl:text> at </xsl:text>
+                            <xsl:call-template name="show-time">
+                                <xsl:with-param name="datetime" select="n1:time" />
+                            </xsl:call-template>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <xsl:if test="n1:assignedEntity/n1:addr | n1:assignedEntity/n1:telecom">
+                            <h2 class="section-title col-md-6">
+                                <xsl:text>Contact</xsl:text>
+                            </h2>
+                            <div class="header-group-content col-md-8">
+                                <xsl:call-template name="show-contactInfo">
+                                    <xsl:with-param name="contact" select="n1:assignedEntity" />
+                                </xsl:call-template>
+                            </div>
+                        </xsl:if>
+                    </div>
+                </xsl:for-each>
+            </div>
+        </xsl:if>
+    </xsl:template>
+    <!-- legalAuthenticator -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="legalAuthenticator">
+        <div class="container-fluid">
+            <xsl:if test="n1:legalAuthenticator">
+                <div class="container-fluid">
+                    <div class="col-md-6">
+                        <h2 class="section-title col-md-6">
+                            <xsl:text>Legal authenticator</xsl:text>
+                        </h2>
+                        <div class="header-group-content col-md-8">
+                            <xsl:call-template name="show-assignedEntity">
+                                <xsl:with-param name="asgnEntity" select="n1:legalAuthenticator/n1:assignedEntity" />
+                            </xsl:call-template>
+                            <xsl:text> </xsl:text>
+                            <xsl:call-template name="show-sig">
+                                <xsl:with-param name="sig" select="n1:legalAuthenticator/n1:signatureCode" />
+                            </xsl:call-template>
+                            <xsl:if test="n1:legalAuthenticator/n1:time/@value">
+                                <xsl:text> at </xsl:text>
+                                <xsl:call-template name="show-time">
+                                    <xsl:with-param name="datetime" select="n1:legalAuthenticator/n1:time" />
+                                </xsl:call-template>
+                            </xsl:if>
+                        </div>
+                    </div>
+                    <xsl:if test="n1:legalAuthenticator/n1:assignedEntity/n1:addr | n1:legalAuthenticator/n1:assignedEntity/n1:telecom">
+                        <div class="col-md-6">
+                            <h2 class="col-md-6 section-title">Contact</h2>
+                            <div class="header-group-content col-md-8">
+                                <xsl:call-template name="show-contactInfo">
+                                    <xsl:with-param name="contact" select="n1:legalAuthenticator/n1:assignedEntity" />
+                                </xsl:call-template>
+                            </div>
+                        </div>
+                    </xsl:if>
                 </div>
-              </xsl:if>
-            </div>
-          </div>
-        </xsl:for-each>
-      </div>
-    </xsl:if>
-  </xsl:template>
-  <!--  authenticator -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="authenticator">
-    <xsl:if test="n1:authenticator">
-      <div class="header container-fluid">
-        <xsl:for-each select="n1:authenticator">
-          <div class="col-md-6">
-            <h2 class="section-title col-md-6">
-              <xsl:text>Signed</xsl:text>
-            </h2>
-            <div class="header-group-content col-md-8">
-              <xsl:call-template name="show-name">
-                <xsl:with-param name="name" select="n1:assignedEntity/n1:assignedPerson/n1:name" />
-              </xsl:call-template>
-              <xsl:text> at </xsl:text>
-              <xsl:call-template name="show-time">
-                <xsl:with-param name="datetime" select="n1:time" />
-              </xsl:call-template>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <xsl:if test="n1:assignedEntity/n1:addr | n1:assignedEntity/n1:telecom">
-              <h2 class="section-title col-md-6">
-                <xsl:text>Contact</xsl:text>
-              </h2>
-              <div class="header-group-content col-md-8">
-                <xsl:call-template name="show-contactInfo">
-                  <xsl:with-param name="contact" select="n1:assignedEntity" />
-                </xsl:call-template>
-              </div>
             </xsl:if>
-          </div>
-        </xsl:for-each>
-      </div>
-    </xsl:if>
-  </xsl:template>
-  <!-- legalAuthenticator -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="legalAuthenticator">
-    <div class="container-fluid">
-      <xsl:if test="n1:legalAuthenticator">
-        <div class="header container-fluid">
-          <div class="col-md-6">
-            <h2 class="section-title col-md-6">
-              <xsl:text>Legal authenticator</xsl:text>
-            </h2>
-            <div class="header-group-content col-md-8">
-              <xsl:call-template name="show-assignedEntity">
-                <xsl:with-param name="asgnEntity" select="n1:legalAuthenticator/n1:assignedEntity" />
-              </xsl:call-template>
-              <xsl:text> </xsl:text>
-              <xsl:call-template name="show-sig">
-                <xsl:with-param name="sig" select="n1:legalAuthenticator/n1:signatureCode" />
-              </xsl:call-template>
-              <xsl:if test="n1:legalAuthenticator/n1:time/@value">
-                <xsl:text> at </xsl:text>
-                <xsl:call-template name="show-time">
-                  <xsl:with-param name="datetime" select="n1:legalAuthenticator/n1:time" />
-                </xsl:call-template>
-              </xsl:if>
-            </div>
-          </div>
-          <xsl:if test="n1:legalAuthenticator/n1:assignedEntity/n1:addr | n1:legalAuthenticator/n1:assignedEntity/n1:telecom">
-            <div class="col-md-6">
-              <h2 class="col-md-6 section-title">Contact</h2>
-              <div class="header-group-content col-md-8">
-                <xsl:call-template name="show-contactInfo">
-                  <xsl:with-param name="contact" select="n1:legalAuthenticator/n1:assignedEntity" />
-                </xsl:call-template>
-              </div>
-            </div>
-          </xsl:if>
         </div>
-      </xsl:if>
-    </div>
-  </xsl:template>
-  <!-- dataEnterer -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="dataEnterer">
-    <xsl:if test="n1:dataEnterer">
-      <div class="container-fluid header">
-        <div class="col-md-6">
-          <h2 class="section-title col-md-6">
-            <xsl:text>Entered by</xsl:text>
-          </h2>
-          <div class="col-md-6 header-group-content">
-            <xsl:call-template name="show-assignedEntity">
-              <xsl:with-param name="asgnEntity" select="n1:dataEnterer/n1:assignedEntity" />
+    </xsl:template>
+    <!-- dataEnterer -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="dataEnterer">
+        <xsl:if test="n1:dataEnterer">
+            <div class="container-fluid header">
+                <div class="col-md-6">
+                    <h2 class="section-title col-md-6">
+                        <xsl:text>Entered by</xsl:text>
+                    </h2>
+                    <div class="col-md-6 header-group-content">
+                        <xsl:call-template name="show-assignedEntity">
+                            <xsl:with-param name="asgnEntity" select="n1:dataEnterer/n1:assignedEntity" />
+                        </xsl:call-template>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <xsl:if test="n1:dataEnterer/n1:assignedEntity/n1:addr | n1:dataEnterer/n1:assignedEntity/n1:telecom">
+                        <h2 class="section-title col-md-6">
+                            <xsl:text>Contact</xsl:text>
+                        </h2>
+                        <div class="col-md-6 header-group-content">
+                            <xsl:call-template name="show-contactInfo">
+                                <xsl:with-param name="contact" select="n1:dataEnterer/n1:assignedEntity" />
+                            </xsl:call-template>
+                        </div>
+                    </xsl:if>
+                </div>
+            </div>
+        </xsl:if>
+    </xsl:template>
+    <!-- componentOf -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="componentOf">
+        <xsl:if test="n1:componentOf">
+            <div class="container-fluid">
+                <xsl:for-each select="n1:componentOf/n1:encompassingEncounter">
+                    <div class="container-fluid">
+                        <h2 class="section-title">
+                            <xsl:text>Encounter</xsl:text>
+                        </h2>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <tbody>
+                                    <xsl:if test="n1:id[not(@nullFlavor)]">
+                                        <tr>
+                                            <td class="attribute-title">
+                                                <xsl:text>Identifier</xsl:text>
+                                            </td>
+                                            <td>
+                                                <xsl:call-template name="show-id">
+                                                    <xsl:with-param name="id" select="n1:id" />
+                                                </xsl:call-template>
+                                            </td>
+                                        </tr>
+                                    </xsl:if>
+                                    <xsl:if test="n1:code">
+                                        <tr>
+                                            <td class="attribute-title">
+                                                <xsl:text>Type</xsl:text>
+                                            </td>
+                                            <td>
+                                                <xsl:call-template name="show-code">
+                                                    <xsl:with-param name="code" select="n1:code" />
+                                                </xsl:call-template>
+                                            </td>
+                                        </tr>
+                                    </xsl:if>
+                                    <xsl:if test="n1:effectiveTime[not(@nullFlavor)] and not(n1:effectiveTime/n1:low/@nullFlavor)">
+                                        <tr>
+                                            <td class="attribute-title">
+                                                <xsl:text>Date</xsl:text>
+                                            </td>
+                                            <td>
+                                                <xsl:choose>
+                                                    <xsl:when test="n1:effectiveTime/@value">
+                                                        <xsl:call-template name="show-time">
+                                                            <xsl:with-param name="datetime" select="n1:effectiveTime" />
+                                                        </xsl:call-template>
+                                                    </xsl:when>
+                                                    <xsl:when test="n1:effectiveTime/n1:low">
+                                                        <xsl:text>From: </xsl:text>
+                                                        <xsl:call-template name="show-time">
+                                                            <xsl:with-param name="datetime" select="n1:effectiveTime/n1:low" />
+                                                        </xsl:call-template>
+                                                        <xsl:if test="n1:effectiveTime/n1:high">
+                                                            <br/>
+                                                            <xsl:text>To: </xsl:text>
+                                                            <xsl:call-template name="show-time">
+                                                                <xsl:with-param name="datetime" select="n1:effectiveTime/n1:high" />
+                                                            </xsl:call-template>
+                                                        </xsl:if>
+                                                    </xsl:when>
+                                                </xsl:choose>
+                                            </td>
+                                        </tr>
+                                    </xsl:if>
+                                    <xsl:if
+                                        test="n1:location/n1:healthCareFacility and not(n1:location/n1:healthCareFacility/n1:code/@nullFlavor) and not(n1:location/n1:healthCareFacility/n1:location/n1:addr/n1:state/@nullFlavor) and not(n1:location/n1:healthCareFacility/n1:location/n1:serviceProviderOrganization/n1:addr/n1:state/@nullFlavor)">
+                                        <tr>
+                                            <td class="attribute-title">
+                                                <xsl:text>Location</xsl:text>
+                                            </td>
+                                            <td>
+                                                <xsl:choose>
+                                                    <xsl:when test="n1:location/n1:healthCareFacility/n1:location/n1:name">
+                                                        <xsl:call-template name="show-name">
+                                                            <xsl:with-param name="name" select="n1:location/n1:healthCareFacility/n1:location/n1:name" />
+                                                        </xsl:call-template>
+                                                        <xsl:for-each select="n1:location/n1:healthCareFacility/n1:serviceProviderOrganization/n1:name">
+                                                            <xsl:text> of </xsl:text>
+                                                            <xsl:call-template name="show-name">
+                                                                <xsl:with-param name="name" select="." />
+                                                            </xsl:call-template>
+                                                        </xsl:for-each>
+                                                    </xsl:when>
+                                                    <xsl:when test="n1:location/n1:healthCareFacility/n1:code">
+                                                        <xsl:call-template name="show-code">
+                                                            <xsl:with-param name="code" select="n1:location/n1:healthCareFacility/n1:code" />
+                                                        </xsl:call-template>
+                                                        <xsl:for-each select="n1:location/n1:healthCareFacility/n1:serviceProviderOrganization/n1:name">
+                                                            <xsl:text> of </xsl:text>
+                                                            <xsl:call-template name="show-name">
+                                                                <xsl:with-param name="name" select="." />
+                                                            </xsl:call-template>
+                                                        </xsl:for-each>
+                                                    </xsl:when>
+                                                    <xsl:otherwise>
+                                                        <xsl:if test="n1:location/n1:healthCareFacility/n1:id">
+                                                            <xsl:text>ID: </xsl:text>
+                                                            <xsl:for-each select="n1:location/n1:healthCareFacility/n1:id">
+                                                                <xsl:call-template name="show-id">
+                                                                    <xsl:with-param name="id" select="." />
+                                                                </xsl:call-template>
+                                                            </xsl:for-each>
+                                                        </xsl:if>
+                                                    </xsl:otherwise>
+                                                </xsl:choose>
+                                            </td>
+                                        </tr>
+                                    </xsl:if>
+                                </tbody>
+                            </table>
+                        </div>
+                        <xsl:if
+                            test="n1:responsibleParty and not(n1:responsibleParty/n1:assignedEntity/n1:id/@nullFlavor) and not(n1:responsibleParty/n1:assignedEntity/n1:addr/n1:state/@nullFlavor) and not(n1:responsibleParty/n1:assignedEntity/n1:assignedPerson/n1:name/n1:given/@nullFlavor) and not(n1:responsibleParty/n1:assignedEntity/n1:representedOrganization/n1:addr/n1:state/@nullFlavor)">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h2 class="section-title">
+                                        <xsl:text>Responsible Party</xsl:text>
+                                    </h2>
+                                    <div class="header-group-content">
+                                        <xsl:call-template name="show-assignedEntity">
+                                            <xsl:with-param name="asgnEntity" select="n1:responsibleParty/n1:assignedEntity" />
+                                        </xsl:call-template>
+                                    </div>
+                                </div>
+                                <xsl:if
+                                    test="(n1:responsibleParty/n1:assignedEntity/n1:addr and not(n1:responsibleParty/n1:assignedEntity/n1:addr/n1:state/@nullFlavor)) or (n1:responsibleParty/n1:assignedEntity/n1:telecom and not(n1:responsibleParty/n1:assignedEntity/n1:telecom/@nullFlavor))">
+                                    <div class="col-md-6">
+                                        <h2 class="section-title">
+                                            <xsl:text>Contact</xsl:text>
+                                        </h2>
+                                        <div class="header-group-content">
+                                            <xsl:call-template name="show-contactInfo">
+                                                <xsl:with-param name="contact" select="n1:responsibleParty/n1:assignedEntity" />
+                                            </xsl:call-template>
+                                        </div>
+                                    </div>
+                                </xsl:if>
+                            </div>
+                        </xsl:if>
+                    </div>
+                </xsl:for-each>
+            </div>
+        </xsl:if>
+    </xsl:template>
+    <!-- custodian -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="custodian">
+        <xsl:if test="n1:custodian">
+            <div class="container-fluid header">
+                <div class="col-md-6">
+                    <h2 class="section-title col-md-6">
+                        <xsl:text>Document maintained by</xsl:text>
+                    </h2>
+                    <div class="header-group-content col-md-8">
+                        <xsl:choose>
+                            <xsl:when test="n1:custodian/n1:assignedCustodian/n1:representedCustodianOrganization/n1:name">
+                                <xsl:call-template name="show-name">
+                                    <xsl:with-param name="name" select="n1:custodian/n1:assignedCustodian/n1:representedCustodianOrganization/n1:name" />
+                                </xsl:call-template>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:for-each select="n1:custodian/n1:assignedCustodian/n1:representedCustodianOrganization/n1:id">
+                                    <xsl:call-template name="show-id" />
+                                    <xsl:if test="position() != last()"> </xsl:if>
+                                </xsl:for-each>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </div>
+                </div>
+                <xsl:if test="n1:custodian/n1:assignedCustodian/n1:representedCustodianOrganization/n1:addr | n1:custodian/n1:assignedCustodian/n1:representedCustodianOrganization/n1:telecom">
+                    <div class="col-md-6">
+                        <h2 class="section-title col-md-6"> Contact </h2>
+                        <div class="header-group-content col-md-8">
+                            <xsl:call-template name="show-contactInfo">
+                                <xsl:with-param name="contact" select="n1:custodian/n1:assignedCustodian/n1:representedCustodianOrganization" />
+                            </xsl:call-template>
+                        </div>
+                    </div>
+                </xsl:if>
+            </div>
+        </xsl:if>
+    </xsl:template>
+    <!-- documentationOf -->
+    <!-- SG: Updated to show section information even if the @classCode isn't present (i.e. default value) -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="documentationOf">
+        <xsl:if test="n1:documentationOf">
+            <div class="container-fluid">
+                <xsl:for-each select="n1:documentationOf">
+                    <xsl:choose>
+                        <!-- SG: Updated - this was testing for both @classCode AND serviceEvent/code previously -->
+                        <xsl:when test="n1:serviceEvent/n1:code">
+                            <!-- SG: serviceEvent/@classCode defaults to "ACT" so if it's not there,
+                   we need to use default value, otherwise the whole serviceEvent section is blank, 
+                   even if it contains data-->
+                            <xsl:variable name="vServiceEventClassCode">
+                                <xsl:choose>
+                                    <xsl:when test="n1:serviceEvent/@classCode">
+                                        <xsl:value-of select="n1:serviceEvent/@classCode" />
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:value-of select="'ACT'" />
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:variable>
+                            <div class="container-fluid">
+                                <div class="container-fluid">
+                                    <xsl:variable name="displayName">
+                                        <xsl:call-template name="show-actClassCode">
+                                            <xsl:with-param name="clsCode" select="$vServiceEventClassCode" />
+                                        </xsl:call-template>
+                                    </xsl:variable>
+                                    <xsl:if test="$displayName">
+                                        <div class="col-md-6">
+                                            <h2 class="section-title">
+                                                <xsl:call-template name="firstCharCaseUp">
+                                                    <xsl:with-param name="data" select="$displayName" />
+                                                </xsl:call-template>
+                                            </h2>
+                                        </div>
+                                        <div class="header-group-content col-md-8">
+                                            <xsl:call-template name="show-code">
+                                                <xsl:with-param name="code" select="n1:serviceEvent/n1:code" />
+                                            </xsl:call-template>
+                                            <xsl:if test="n1:serviceEvent/n1:effectiveTime">
+                                                <xsl:choose>
+                                                    <xsl:when test="n1:serviceEvent/n1:effectiveTime/@value">
+                                                        <xsl:text> at </xsl:text>
+                                                        <xsl:call-template name="show-time">
+                                                            <xsl:with-param name="datetime" select="n1:serviceEvent/n1:effectiveTime" />
+                                                        </xsl:call-template>
+                                                    </xsl:when>
+                                                    <xsl:when test="n1:serviceEvent/n1:effectiveTime/n1:low">
+                                                        <xsl:text> from </xsl:text>
+                                                        <xsl:call-template name="show-time">
+                                                            <xsl:with-param name="datetime" select="n1:serviceEvent/n1:effectiveTime/n1:low" />
+                                                        </xsl:call-template>
+                                                        <xsl:if test="n1:serviceEvent/n1:effectiveTime/n1:high">
+                                                            <xsl:text> to </xsl:text>
+                                                            <xsl:call-template name="show-time">
+                                                                <xsl:with-param name="datetime" select="n1:serviceEvent/n1:effectiveTime/n1:high" />
+                                                            </xsl:call-template>
+                                                        </xsl:if>
+                                                    </xsl:when>
+                                                </xsl:choose>
+                                            </xsl:if>
+                                        </div>
+                                    </xsl:if>
+                                </div>
+                            </div>
+                        </xsl:when>
+                    </xsl:choose>
+                    <xsl:for-each select="n1:serviceEvent/n1:performer">
+                        <div class="header-group container-fluid">
+                            <xsl:variable name="displayName">
+                                <xsl:call-template name="show-participationType">
+                                    <xsl:with-param name="ptype" select="@typeCode" />
+                                </xsl:call-template>
+                                <xsl:if test="n1:functionCode/@code">
+                                    <xsl:text> </xsl:text>
+                                    <xsl:call-template name="show-participationFunction">
+                                        <xsl:with-param name="pFunction" select="n1:functionCode/@code" />
+                                    </xsl:call-template>
+                                </xsl:if>
+                            </xsl:variable>
+                            <div class="container-fluid">
+                                <h2 class="section-title col-md-6" id="service-event">
+                                    <xsl:text>Service Event</xsl:text>
+                                </h2>
+                                <div class="header-group-content col-md-8">
+                                    <xsl:call-template name="show-assignedEntity">
+                                        <xsl:with-param name="asgnEntity" select="n1:assignedEntity" />
+                                    </xsl:call-template>
+                                </div>
+                                <div class="header-group-content col-md-8">
+                                    <xsl:if test="../n1:effectiveTime/n1:low">
+                                        <xsl:call-template name="show-time">
+                                            <xsl:with-param name="datetime" select="../n1:effectiveTime/n1:low" />
+                                        </xsl:call-template>
+                                    </xsl:if>
+
+                                    <xsl:if test="../n1:effectiveTime/n1:high"> - <xsl:call-template name="show-time">
+                                            <xsl:with-param name="datetime" select="../n1:effectiveTime/n1:high" />
+                                        </xsl:call-template>
+                                    </xsl:if>
+                                </div>
+                            </div>
+                        </div>
+                    </xsl:for-each>
+                </xsl:for-each>
+            </div>
+        </xsl:if>
+    </xsl:template>
+    <!-- inFulfillmentOf -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="inFulfillmentOf">
+        <xsl:if test="n1:infulfillmentOf">
+            <xsl:for-each select="n1:inFulfillmentOf">
+                <xsl:text>In fulfillment of</xsl:text>
+                <xsl:for-each select="n1:order">
+                    <xsl:for-each select="n1:id">
+                        <xsl:call-template name="show-id" />
+                    </xsl:for-each>
+                    <xsl:for-each select="n1:code">
+                        <xsl:text> </xsl:text>
+                        <xsl:call-template name="show-code">
+                            <xsl:with-param name="code" select="." />
+                        </xsl:call-template>
+                    </xsl:for-each>
+                    <xsl:for-each select="n1:priorityCode">
+                        <xsl:text> </xsl:text>
+                        <xsl:call-template name="show-code">
+                            <xsl:with-param name="code" select="." />
+                        </xsl:call-template>
+                    </xsl:for-each>
+                </xsl:for-each>
+            </xsl:for-each>
+        </xsl:if>
+    </xsl:template>
+    <!-- informant -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="informant">
+        <xsl:if test="n1:informant">
+            <div class="container-fluid">
+                <xsl:for-each select="n1:informant">
+                    <div class="container-fluid">
+                        <div class="col-md-6">
+                            <h2 class="section-title col-md-6">
+                                <xsl:text>Informant</xsl:text>
+                            </h2>
+                            <div class="header-group-content col-md-8">
+                                <xsl:if test="n1:assignedEntity">
+                                    <xsl:call-template name="show-assignedEntity">
+                                        <xsl:with-param name="asgnEntity" select="n1:assignedEntity" />
+                                    </xsl:call-template>
+                                </xsl:if>
+                                <xsl:if test="n1:relatedEntity">
+                                    <xsl:call-template name="show-relatedEntity">
+                                        <xsl:with-param name="relatedEntity" select="n1:relatedEntity" />
+                                    </xsl:call-template>
+                                </xsl:if>
+                            </div>
+                        </div>
+                        <xsl:choose>
+                            <xsl:when test="n1:assignedEntity/n1:addr | n1:assignedEntity/n1:telecom">
+                                <div class="col-md-6">
+                                    <h2 class="section-title col-md-6">
+                                        <xsl:text>Contact</xsl:text>
+                                    </h2>
+                                    <div class="header-group-content col-md-8">
+                                        <xsl:if test="n1:assignedEntity">
+                                            <xsl:call-template name="show-contactInfo">
+                                                <xsl:with-param name="contact" select="n1:assignedEntity" />
+                                            </xsl:call-template>
+                                        </xsl:if>
+                                    </div>
+                                </div>
+                            </xsl:when>
+                            <xsl:when test="n1:relatedEntity/n1:addr | n1:relatedEntity/n1:telecom">
+                                <div class="col-md-6">
+                                    <h2 class="col-md-6 section-title">
+                                        <xsl:text>Contact</xsl:text>
+                                    </h2>
+                                    <div class="col-md-6 header-group-content">
+                                        <xsl:if test="n1:relatedEntity">
+                                            <xsl:call-template name="show-contactInfo">
+                                                <xsl:with-param name="contact" select="n1:relatedEntity" />
+                                            </xsl:call-template>
+                                        </xsl:if>
+                                    </div>
+                                </div>
+                            </xsl:when>
+                        </xsl:choose>
+                    </div>
+                </xsl:for-each>
+            </div>
+        </xsl:if>
+    </xsl:template>
+    <!-- informantionRecipient -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="informationRecipient">
+        <div class="container-fluid">
+            <xsl:if test="n1:informationRecipient">
+                <div class="container-fluid header">
+                    <xsl:for-each select="n1:informationRecipient">
+                        <div class="container-fluid">
+                            <h2 class="section-title col-md-6">
+                                <xsl:text>Information Recipient</xsl:text>
+                            </h2>
+                            <div class="col-md-6 header-group-content">
+                                <xsl:choose>
+                                    <xsl:when test="n1:intendedRecipient/n1:informationRecipient/n1:name">
+                                        <xsl:for-each select="n1:intendedRecipient/n1:informationRecipient">
+                                            <xsl:call-template name="show-name">
+                                                <xsl:with-param name="name" select="n1:name" />
+                                            </xsl:call-template>
+                                            <xsl:if test="position() != last()"> </xsl:if>
+                                        </xsl:for-each>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:for-each select="n1:intendedRecipient">
+                                            <xsl:for-each select="n1:id">
+                                                <xsl:call-template name="show-id" />
+                                            </xsl:for-each>
+                                            <xsl:if test="position() != last()"> </xsl:if>
+                                        </xsl:for-each>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </div>
+                            <div class="col-md-6">
+                                <xsl:if test="n1:intendedRecipient/n1:addr | n1:intendedRecipient/n1:telecom">
+                                    <h2 class="section-title col-md-6">
+                                        <xsl:text>Contact</xsl:text>
+                                    </h2>
+                                    <div class="col-md-6">
+                                        <xsl:call-template name="show-contactInfo">
+                                            <xsl:with-param name="contact" select="n1:intendedRecipient" />
+                                        </xsl:call-template>
+                                    </div>
+                                </xsl:if>
+                            </div>
+                        </div>
+                    </xsl:for-each>
+                </div>
+            </xsl:if>
+        </div>
+    </xsl:template>
+    <!-- participant -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="participant">
+        <div class="container-fluid">
+            <xsl:if test="n1:participant">
+                <div class="container-fluid">
+                    <xsl:for-each select="n1:participant">
+                        <xsl:if test="not(n1:associatedEntity/@classCode = 'ECON' or n1:associatedEntity/@classCode = 'NOK')">
+                            <xsl:variable name="participtRole">
+                                <xsl:call-template name="translateRoleAssoCode">
+                                    <xsl:with-param name="classCode" select="n1:associatedEntity/@classCode" />
+                                    <xsl:with-param name="code" select="n1:associatedEntity/n1:code" />
+                                </xsl:call-template>
+                            </xsl:variable>
+                            <div class="col-md-6">
+                                <h2 class="col-md-6 section-title">
+                                    <xsl:choose>
+                                        <xsl:when test="$participtRole">
+                                            <xsl:call-template name="firstCharCaseUp">
+                                                <xsl:with-param name="data" select="$participtRole" />
+                                            </xsl:call-template>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:text>Participant</xsl:text>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </h2>
+                                <div class="header-group-content col-md-8">
+                                    <xsl:if test="n1:functionCode">
+                                        <xsl:call-template name="show-code">
+                                            <xsl:with-param name="code" select="n1:functionCode" />
+                                        </xsl:call-template>
+                                    </xsl:if>
+                                    <xsl:call-template name="show-associatedEntity">
+                                        <xsl:with-param name="assoEntity" select="n1:associatedEntity" />
+                                    </xsl:call-template>
+                                    <xsl:if test="n1:time">
+                                        <xsl:if test="n1:time/n1:low">
+                                            <xsl:text> from </xsl:text>
+                                            <xsl:call-template name="show-time">
+                                                <xsl:with-param name="datetime" select="n1:time/n1:low" />
+                                            </xsl:call-template>
+                                        </xsl:if>
+                                        <xsl:if test="n1:time/n1:high">
+                                            <xsl:text> to </xsl:text>
+                                            <xsl:call-template name="show-time">
+                                                <xsl:with-param name="datetime" select="n1:time/n1:high" />
+                                            </xsl:call-template>
+                                        </xsl:if>
+                                    </xsl:if>
+                                    <xsl:if test="position() != last()">
+                                        <br />
+                                    </xsl:if>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <xsl:if test="n1:associatedEntity/n1:addr | n1:associatedEntity/n1:telecom">
+                                    <h2 class="section-title col-md-6">
+                                        <xsl:text>Contact</xsl:text>
+                                    </h2>
+                                    <div class="col-md-6 header-group-content">
+                                        <xsl:call-template name="show-contactInfo">
+                                            <xsl:with-param name="contact" select="n1:associatedEntity" />
+                                        </xsl:call-template>
+                                    </div>
+                                </xsl:if>
+                            </div>
+                        </xsl:if>
+                    </xsl:for-each>
+                </div>
+            </xsl:if>
+        </div>
+    </xsl:template>
+
+    <!-- recordTarget / Patient -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="recordTarget">
+        <div class="container-fluid" id="cda-patient">
+            <xsl:for-each select="/n1:ClinicalDocument/n1:recordTarget/n1:patientRole">
+                <!-- SG: Removed the if as no patient demos were showing up when id was nullFlavor -->
+                <!--        <xsl:if test="not(n1:id/@nullFlavor)">-->
+                <div class="patient-heading container-fluid">
+                    <div class="patient-name row">
+                        <xsl:call-template name="show-name">
+                            <xsl:with-param name="name" select="n1:patient/n1:name" />
+                        </xsl:call-template>
+                    </div>
+                    <div class="patient-identifier container-fluid">
+                        <div class="attribute-title row">Patient Identifiers</div>
+                        <xsl:choose>
+                            <xsl:when test="not(n1:id) or (n1:id/@nullFlavor and not(n1:id/@extension))">No id provided</xsl:when>
+                        </xsl:choose>
+                        <!-- SG: Don't display id if it's an SSN -->
+                        <xsl:for-each select="n1:id[not(@root='2.16.840.1.113883.4.1')]">
+                            <div class="row">
+                                <div class="col-md-6 patient-id">
+                                    <xsl:call-template name="show-id" />
+                                </div>
+                            </div>
+                        </xsl:for-each>
+                    </div>
+                </div>
+                <div class="patient-info container-fluid">
+  <div class="row">
+    <!-- LEFT: About -->
+    <div class="col-md-6">
+      <h2 class="section-title">About</h2>
+      <div class="header-group-content">
+        <div class="row">
+          <div class="attribute-title col-md-6"><xsl:text>Date of Birth</xsl:text></div>
+          <div class="col-md-6">
+            <xsl:call-template name="show-time">
+              <xsl:with-param name="datetime" select="n1:patient/n1:birthTime"/>
             </xsl:call-template>
           </div>
         </div>
-        <div class="col-md-6">
-          <xsl:if test="n1:dataEnterer/n1:assignedEntity/n1:addr | n1:dataEnterer/n1:assignedEntity/n1:telecom">
-            <h2 class="section-title col-md-6">
-              <xsl:text>Contact</xsl:text>
-            </h2>
-            <div class="col-md-6 header-group-content">
-              <xsl:call-template name="show-contactInfo">
-                <xsl:with-param name="contact" select="n1:dataEnterer/n1:assignedEntity" />
+
+        <xsl:if test="n1:patient/sdtc:deceasedInd/@value = 'true'">
+          <div class="row">
+            <div class="attribute-title col-md-6"><xsl:text>Deceased Date</xsl:text></div>
+            <div class="col-md-6">
+              <xsl:call-template name="show-time">
+                <xsl:with-param name="datetime" select="n1:patient/sdtc:deceasedTime"/>
               </xsl:call-template>
             </div>
-          </xsl:if>
+          </div>
+        </xsl:if>
+
+        <div class="row">
+          <div class="attribute-title col-md-6"><xsl:text>Sex</xsl:text></div>
+          <div class="col-md-6">
+            <xsl:for-each select="n1:patient/n1:administrativeGenderCode">
+              <xsl:call-template name="show-gender"/>
+            </xsl:for-each>
+          </div>
         </div>
-      </div>
-    </xsl:if>
-  </xsl:template>
-  <!-- componentOf -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="componentOf">
-    <xsl:if test="n1:componentOf">
-      <div class="header container-fluid">
-        <xsl:for-each select="n1:componentOf/n1:encompassingEncounter">
-          <div class="container-fluid col-md-8">
-            <div class="container-fluid">
-              <h2 class="section-title col-md-10">
-                <xsl:text>Encounter</xsl:text>
-              </h2>
-              <div class="header-group-content col-md-10">
-                <xsl:if test="n1:id">
-                  <xsl:choose>
-                    <xsl:when test="n1:code">
-                      <div class="row">
-                        <div class="attribute-title col-md-2">
-                          <xsl:text>Identifier</xsl:text>
-                        </div>
-                        <div class="col-md-6">
-                          <xsl:call-template name="show-id">
-                            <xsl:with-param name="id" select="n1:id" />
-                          </xsl:call-template>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="attribute-title col-md-2">
-                          <xsl:text>Type</xsl:text>
-                        </div>
-                        <div class="col-md-6">
-                          <xsl:call-template name="show-code">
-                            <xsl:with-param name="code" select="n1:code" />
-                          </xsl:call-template>
-                        </div>
-                      </div>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <div class="row">
-                        <div class="attribute-title col-md-2">
-                          <xsl:text>Identifier</xsl:text>
-                        </div>
-                        <div class="col-md-6">
-                          <xsl:call-template name="show-id">
-                            <xsl:with-param name="id" select="n1:id" />
-                          </xsl:call-template>
-                        </div>
-                      </div>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </xsl:if>
-                <div class="row">
-                  <div class="attribute-title col-md-2">
-                    <xsl:text>Date</xsl:text>
-                  </div>
-                  <xsl:if test="n1:effectiveTime">
-                    <xsl:choose>
-                      <xsl:when test="n1:effectiveTime/@value">
-                        <div class="col-md-4">
-                          <xsl:call-template name="show-time">
-                            <xsl:with-param name="datetime" select="n1:effectiveTime" />
-                          </xsl:call-template>
-                        </div>
-                      </xsl:when>
-                      <xsl:when test="n1:effectiveTime/n1:low">
-                        <div class="col-md-4">
-                          <span class="attribute-title">
-                            <xsl:text>From: </xsl:text>
-                          </span>
-                          <xsl:call-template name="show-time">
-                            <xsl:with-param name="datetime" select="n1:effectiveTime/n1:low" />
-                          </xsl:call-template>
-                        </div>
-                        <xsl:if test="n1:effectiveTime/n1:high">
-                          <div class="col-md-4">
-                            <span class="attribute-title">
-                              <xsl:text>To: </xsl:text>
-                            </span>
-                            <xsl:call-template name="show-time">
-                              <xsl:with-param name="datetime" select="n1:effectiveTime/n1:high" />
-                            </xsl:call-template>
-                          </div>
-                        </xsl:if>
-                      </xsl:when>
-                    </xsl:choose>
-                  </xsl:if>
-                </div>
-                <xsl:if test="n1:location/n1:healthCareFacility">
-                  <div class="row">
-                    <div class="attribute-title col-md-2">
-                      <xsl:text>Location</xsl:text>
-                    </div>
-                    <div class="col-md-6">
-                      <xsl:choose>
-                        <xsl:when test="n1:location/n1:healthCareFacility/n1:location/n1:name">
-                          <xsl:call-template name="show-name">
-                            <xsl:with-param name="name" select="n1:location/n1:healthCareFacility/n1:location/n1:name" />
-                          </xsl:call-template>
-                          <xsl:for-each select="n1:location/n1:healthCareFacility/n1:serviceProviderOrganization/n1:name">
-                            <xsl:text> of </xsl:text>
-                            <xsl:call-template name="show-name">
-                              <xsl:with-param name="name" select="n1:location/n1:healthCareFacility/n1:serviceProviderOrganization/n1:name" />
-                            </xsl:call-template>
-                          </xsl:for-each>
-                        </xsl:when>
-                        <xsl:when test="n1:location/n1:healthCareFacility/n1:code">
-                          <xsl:call-template name="show-code">
-                            <xsl:with-param name="code" select="n1:location/n1:healthCareFacility/n1:code" />
-                          </xsl:call-template>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <xsl:if test="n1:location/n1:healthCareFacility/n1:id">
-                            <span class="attribute-title">
-                              <xsl:text>ID: </xsl:text>
-                            </span>
-                            <xsl:for-each select="n1:location/n1:healthCareFacility/n1:id">
-                              <xsl:call-template name="show-id">
-                                <xsl:with-param name="id" select="." />
-                              </xsl:call-template>
-                            </xsl:for-each>
-                          </xsl:if>
-                        </xsl:otherwise>
-                      </xsl:choose>
-                    </div>
-                  </div>
-                </xsl:if>
-              </div>
-              <xsl:if test="n1:responsibleParty">
-                <div class="col-md-6">
-                  <h2 class="section-title col-md-6">
-                    <xsl:text>Responsible Party</xsl:text>
-                  </h2>
-                  <div class="header-group-content col-md-8">
-                    <xsl:call-template name="show-assignedEntity">
-                      <xsl:with-param name="asgnEntity" select="n1:responsibleParty/n1:assignedEntity" />
-                    </xsl:call-template>
-                  </div>
-                </div>
-              </xsl:if>
-              <xsl:if test="n1:responsibleParty/n1:assignedEntity/n1:addr | n1:responsibleParty/n1:assignedEntity/n1:telecom">
-                <div class="col-md-6">
-                  <h2 class="section-title col-md-6">
-                    <xsl:text>Contact</xsl:text>
-                  </h2>
-                  <div class="header-group-content col-md-8">
-                    <xsl:call-template name="show-contactInfo">
-                      <xsl:with-param name="contact" select="n1:responsibleParty/n1:assignedEntity" />
-                    </xsl:call-template>
-                  </div>
-                </div>
-              </xsl:if>
+
+        <xsl:if test="n1:patient/n1:raceCode | n1:patient/n1:ethnicGroupCode">
+          <div class="row">
+            <div class="attribute-title col-md-6"><xsl:text>Race</xsl:text></div>
+            <div class="col-md-6">
+              <xsl:choose>
+                <xsl:when test="n1:patient/n1:raceCode">
+                  <xsl:for-each select="n1:patient/n1:raceCode">
+                    <xsl:call-template name="show-race-ethnicity"/>
+                  </xsl:for-each>
+                  <xsl:for-each select="n1:patient/sdtc:raceCode">
+                    <xsl:text>, </xsl:text>
+                    <xsl:call-template name="show-race-ethnicity"/>
+                  </xsl:for-each>
+                </xsl:when>
+                <xsl:otherwise>
+                  <span class="generated-text"><xsl:text>Information not available</xsl:text></span>
+                </xsl:otherwise>
+              </xsl:choose>
             </div>
           </div>
-        </xsl:for-each>
-      </div>
-    </xsl:if>
-  </xsl:template>
-  <!-- custodian -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="custodian">
-    <xsl:if test="n1:custodian">
-      <div class="container-fluid header">
-        <div class="col-md-6">
-          <h2 class="section-title col-md-6">
-            <xsl:text>Document maintained by</xsl:text>
-          </h2>
-          <div class="header-group-content col-md-8">
+
+          <div class="row">
+            <div class="attribute-title col-md-6"><xsl:text>Ethnicity</xsl:text></div>
+            <div class="col-md-6">
+              <xsl:choose>
+                <xsl:when test="n1:patient/n1:ethnicGroupCode">
+                  <xsl:for-each select="n1:patient/n1:ethnicGroupCode">
+                    <xsl:call-template name="show-race-ethnicity"/>
+                  </xsl:for-each>
+                  <xsl:for-each select="n1:patient/sdtc:ethnicGroupCode">
+                    <xsl:text>, </xsl:text>
+                    <xsl:call-template name="show-race-ethnicity"/>
+                  </xsl:for-each>
+                </xsl:when>
+                <xsl:otherwise>
+                  <span class="generated-text"><xsl:text>Information not available</xsl:text></span>
+                </xsl:otherwise>
+              </xsl:choose>
+            </div>
+          </div>
+        </xsl:if>
+
+        <div class="row">
+          <div class="attribute-title col-md-6"><xsl:text>Preferred Language</xsl:text></div>
+          <div class="col-md-6">
             <xsl:choose>
-              <xsl:when test="n1:custodian/n1:assignedCustodian/n1:representedCustodianOrganization/n1:name">
-                <xsl:call-template name="show-name">
-                  <xsl:with-param name="name" select="n1:custodian/n1:assignedCustodian/n1:representedCustodianOrganization/n1:name" />
-                </xsl:call-template>
+              <xsl:when test="n1:patient/n1:languageCommunication/n1:preferenceInd[@value='true']">
+                <xsl:variable name="vPrefLangCount" select="count(n1:patient/n1:languageCommunication/n1:preferenceInd[@value='true'])"/>
+                <xsl:for-each select="n1:patient/n1:languageCommunication/n1:preferenceInd[@value='true']/preceding-sibling::n1:languageCode">
+                  <xsl:call-template name="show-preferred-language"/>
+                  <xsl:if test="$vPrefLangCount &gt; 1 and position() != last()"><xsl:text> or </xsl:text></xsl:if>
+                </xsl:for-each>
               </xsl:when>
               <xsl:otherwise>
-                <xsl:for-each select="n1:custodian/n1:assignedCustodian/n1:representedCustodianOrganization/n1:id">
-                  <xsl:call-template name="show-id" />
-                  <xsl:if test="position() != last()"> </xsl:if>
-                </xsl:for-each>
+                <span class="generated-text"><xsl:text>Information not available</xsl:text></span>
               </xsl:otherwise>
             </xsl:choose>
           </div>
         </div>
-        <xsl:if
-          test="n1:custodian/n1:assignedCustodian/n1:representedCustodianOrganization/n1:addr | n1:custodian/n1:assignedCustodian/n1:representedCustodianOrganization/n1:telecom">
-          <div class="col-md-6">
-            <h2 class="section-title col-md-6"> Contact </h2>
-            <div class="header-group-content col-md-8">
-              <xsl:call-template name="show-contactInfo">
-                <xsl:with-param name="contact" select="n1:custodian/n1:assignedCustodian/n1:representedCustodianOrganization" />
-              </xsl:call-template>
-            </div>
-          </div>
-        </xsl:if>
-      </div>
-    </xsl:if>
-  </xsl:template>
-  <!-- documentationOf -->
-  <!-- SG: Updated to show section information even if the @classCode isn't present (i.e. default value) -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="documentationOf">
-    <xsl:if test="n1:documentationOf">
-      <div class="header container-fluid">
-        <xsl:for-each select="n1:documentationOf">
-          <xsl:choose>
-            <!-- SG: Updated - this was testing for both @classCode AND serviceEvent/code previously -->
-            <xsl:when test="n1:serviceEvent/n1:code">
-              <!-- SG: serviceEvent/@classCode defaults to "ACT" so if it's not there,
-                   we need to use default value, otherwise the whole serviceEvent section is blank, 
-                   even if it contains data-->
-              <xsl:variable name="vServiceEventClassCode">
-                <xsl:choose>
-                  <xsl:when test="n1:serviceEvent/@classCode">
-                    <xsl:value-of select="n1:serviceEvent/@classCode" />
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:value-of select="'ACT'" />
-                  </xsl:otherwise>
-                </xsl:choose>
-              </xsl:variable>
-              <div class="container-fluid">
-                <div class="container-fluid">
-                  <xsl:variable name="displayName">
-                    <xsl:call-template name="show-actClassCode">
-                      <xsl:with-param name="clsCode" select="$vServiceEventClassCode" />
-                    </xsl:call-template>
-                  </xsl:variable>
-                  <xsl:if test="$displayName">
-                    <div class="col-md-6">
-                      <h2 class="section-title">
-                        <xsl:call-template name="firstCharCaseUp">
-                          <xsl:with-param name="data" select="$displayName" />
-                        </xsl:call-template>
-                      </h2>
-                    </div>
-                    <div class="header-group-content col-md-8">
-                      <xsl:call-template name="show-code">
-                        <xsl:with-param name="code" select="n1:serviceEvent/n1:code" />
-                      </xsl:call-template>
-                      <xsl:if test="n1:serviceEvent/n1:effectiveTime">
-                        <xsl:choose>
-                          <xsl:when test="n1:serviceEvent/n1:effectiveTime/@value">
-                            <xsl:text> at </xsl:text>
-                            <xsl:call-template name="show-time">
-                              <xsl:with-param name="datetime" select="n1:serviceEvent/n1:effectiveTime" />
-                            </xsl:call-template>
-                          </xsl:when>
-                          <xsl:when test="n1:serviceEvent/n1:effectiveTime/n1:low">
-                            <xsl:text> from </xsl:text>
-                            <xsl:call-template name="show-time">
-                              <xsl:with-param name="datetime" select="n1:serviceEvent/n1:effectiveTime/n1:low" />
-                            </xsl:call-template>
-                            <xsl:if test="n1:serviceEvent/n1:effectiveTime/n1:high">
-                              <xsl:text> to </xsl:text>
-                              <xsl:call-template name="show-time">
-                                <xsl:with-param name="datetime" select="n1:serviceEvent/n1:effectiveTime/n1:high" />
-                              </xsl:call-template>
-                            </xsl:if>
-                          </xsl:when>
-                        </xsl:choose>
-                      </xsl:if>
-                    </div>
-                  </xsl:if>
-                </div>
-              </div>
-            </xsl:when>
-          </xsl:choose>
-          <xsl:for-each select="n1:serviceEvent/n1:performer">
-            <div class="header-group container-fluid">
-              <xsl:variable name="displayName">
-                <xsl:call-template name="show-participationType">
-                  <xsl:with-param name="ptype" select="@typeCode" />
-                </xsl:call-template>
-                <xsl:if test="n1:functionCode/@code">
-                  <xsl:text> </xsl:text>
-                  <xsl:call-template name="show-participationFunction">
-                    <xsl:with-param name="pFunction" select="n1:functionCode/@code" />
-                  </xsl:call-template>
-                </xsl:if>
-              </xsl:variable>
-              <div class="container-fluid">
-                <h2 class="section-title col-md-6" id="service-event">
-                  <xsl:text>Service Event</xsl:text>
-                </h2>
-                <div class="header-group-content col-md-8">
-                  <xsl:call-template name="show-assignedEntity">
-                    <xsl:with-param name="asgnEntity" select="n1:assignedEntity" />
-                  </xsl:call-template>
-                </div>
-                <div class="header-group-content col-md-8">
-                  <xsl:if test="../n1:effectiveTime/n1:low">
-                    <xsl:call-template name="show-time">
-                      <xsl:with-param name="datetime" select="../n1:effectiveTime/n1:low" />
-                    </xsl:call-template>
-                  </xsl:if>
+      </div><!-- /.header-group-content -->
+    </div><!-- /.col-md-6 (About) -->
 
-                  <xsl:if test="../n1:effectiveTime/n1:high"> - <xsl:call-template name="show-time">
-                      <xsl:with-param name="datetime" select="../n1:effectiveTime/n1:high" />
-                    </xsl:call-template>
-                  </xsl:if>
-                </div>
-              </div>
-            </div>
-          </xsl:for-each>
-        </xsl:for-each>
+    <!-- RIGHT: Contact -->
+    <div class="col-md-6">
+      <h2 class="section-title"><xsl:text>Contact</xsl:text></h2>
+      <div class="header-group-content">
+        <xsl:call-template name="show-contactInfo">
+          <xsl:with-param name="contact" select="."/>
+        </xsl:call-template>
       </div>
-    </xsl:if>
-  </xsl:template>
-  <!-- inFulfillmentOf -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="inFulfillmentOf">
-    <xsl:if test="n1:infulfillmentOf">
-      <xsl:for-each select="n1:inFulfillmentOf">
-        <xsl:text>In fulfillment of</xsl:text>
-        <xsl:for-each select="n1:order">
-          <xsl:for-each select="n1:id">
-            <xsl:call-template name="show-id" />
-          </xsl:for-each>
-          <xsl:for-each select="n1:code">
-            <xsl:text> </xsl:text>
-            <xsl:call-template name="show-code">
-              <xsl:with-param name="code" select="." />
-            </xsl:call-template>
-          </xsl:for-each>
-          <xsl:for-each select="n1:priorityCode">
-            <xsl:text> </xsl:text>
-            <xsl:call-template name="show-code">
-              <xsl:with-param name="code" select="." />
-            </xsl:call-template>
-          </xsl:for-each>
-        </xsl:for-each>
-      </xsl:for-each>
-    </xsl:if>
-  </xsl:template>
-  <!-- informant -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="informant">
-    <xsl:if test="n1:informant">
-      <div class="header container-fluid">
-        <xsl:for-each select="n1:informant">
-          <div class="container-fluid">
-            <div class="col-md-6">
-              <h2 class="section-title col-md-6">
-                <xsl:text>Informant</xsl:text>
-              </h2>
-              <div class="header-group-content col-md-8">
-                <xsl:if test="n1:assignedEntity">
-                  <xsl:call-template name="show-assignedEntity">
-                    <xsl:with-param name="asgnEntity" select="n1:assignedEntity" />
-                  </xsl:call-template>
+    </div><!-- /.col-md-6 (Contact) -->
+  </div><!-- /.row -->
+</div><!-- /.patient-info.container-fluid -->
+
+
+                <!--</xsl:if>-->
+                <!-- SG: Added list parent/guardian -->
+                <xsl:if test="n1:patient/n1:guardian">
+                    <div class="guardian-info container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="guardian-name container-fluid">
+                                    <h2 class="section-title col-md-6">Parent/Guardian</h2>
+                                    <div class="header-group-content col-md-8">
+                                        <xsl:call-template name="show-guardian">
+                                            <xsl:with-param name="guard" select="n1:patient/n1:guardian" />
+                                        </xsl:call-template>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <xsl:if test="n1:patient/n1:guardian/n1:addr | n1:patient/n1:guardian/n1:telecom">
+                                    <div class="col-md-6">
+                                        <h2 class="section-title col-md-6">Contact</h2>
+                                        <div class="header-group-content col-md-8">
+                                            <xsl:call-template name="show-contactInfo">
+                                                <xsl:with-param name="contact" select="n1:patient/n1:guardian" />
+                                            </xsl:call-template>
+                                        </div>
+                                    </div>
+                                </xsl:if>
+                            </div>
+                        </div>
+                    </div>
                 </xsl:if>
-                <xsl:if test="n1:relatedEntity">
-                  <xsl:call-template name="show-relatedEntity">
-                    <xsl:with-param name="relatedEntity" select="n1:relatedEntity" />
-                  </xsl:call-template>
-                </xsl:if>
-              </div>
-            </div>
-            <xsl:choose>
-              <xsl:when test="n1:assignedEntity/n1:addr | n1:assignedEntity/n1:telecom">
-                <div class="col-md-6">
-                  <h2 class="section-title col-md-6">
-                    <xsl:text>Contact</xsl:text>
-                  </h2>
-                  <div class="header-group-content col-md-8">
-                    <xsl:if test="n1:assignedEntity">
-                      <xsl:call-template name="show-contactInfo">
-                        <xsl:with-param name="contact" select="n1:assignedEntity" />
-                      </xsl:call-template>
+            </xsl:for-each>
+            <!-- list all the emergency contacts -->
+            <xsl:if test="n1:participant">
+                <xsl:for-each select="n1:participant">
+                    <xsl:if test="n1:associatedEntity/@classCode = 'ECON'">
+                        <div class="container-fluid" id="emergency-contact">
+                            <div class="col-md-6">
+                                <h2 class="section-title col-md-6">Emergency Contact</h2>
+                                <div class="header-group-content col-md-8">
+                                    <xsl:call-template name="show-associatedEntity">
+                                        <xsl:with-param name="assoEntity" select="n1:associatedEntity" />
+                                    </xsl:call-template>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h2 class="section-title col-md-6">Contact</h2>
+                                <div class="header-group-content col-md-8">
+                                    <xsl:call-template name="show-contactInfo">
+                                        <xsl:with-param name="contact" select="n1:associatedEntity" />
+                                    </xsl:call-template>
+                                </div>
+                            </div>
+                        </div>
                     </xsl:if>
-                  </div>
-                </div>
-              </xsl:when>
-              <xsl:when test="n1:relatedEntity/n1:addr | n1:relatedEntity/n1:telecom">
-                <div class="col-md-6">
-                  <h2 class="col-md-6 section-title">
-                    <xsl:text>Contact</xsl:text>
-                  </h2>
-                  <div class="col-md-6 header-group-content">
-                    <xsl:if test="n1:relatedEntity">
-                      <xsl:call-template name="show-contactInfo">
-                        <xsl:with-param name="contact" select="n1:relatedEntity" />
-                      </xsl:call-template>
+                </xsl:for-each>
+            </xsl:if>
+
+            <!-- list nex of kin-->
+            <xsl:if test="n1:participant">
+                <xsl:for-each select="n1:participant">
+                    <xsl:if test="n1:associatedEntity/@classCode = 'NOK'">
+                        <div class="container-fluid" id="emergency-contact">
+                            <div class="col-md-6">
+                                <h2 class="section-title col-md-6">Next of Kin</h2>
+                                <div class="header-group-content col-md-8">
+                                    <xsl:call-template name="show-associatedEntity">
+                                        <xsl:with-param name="assoEntity" select="n1:associatedEntity" />
+                                    </xsl:call-template>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h2 class="section-title col-md-6">Contact</h2>
+                                <div class="header-group-content col-md-8">
+                                    <xsl:call-template name="show-contactInfo">
+                                        <xsl:with-param name="contact" select="n1:associatedEntity" />
+                                    </xsl:call-template>
+                                </div>
+                            </div>
+                        </div>
                     </xsl:if>
-                  </div>
-                </div>
-              </xsl:when>
-            </xsl:choose>
-          </div>
-        </xsl:for-each>
-      </div>
-    </xsl:if>
-  </xsl:template>
-  <!-- informantionRecipient -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="informationRecipient">
-    <div class="container-fluid">
-      <xsl:if test="n1:informationRecipient">
-        <div class="container-fluid header">
-          <xsl:for-each select="n1:informationRecipient">
-            <div class="container-fluid">
-              <h2 class="section-title col-md-6">
-                <xsl:text>Information Recipient</xsl:text>
-              </h2>
-              <div class="col-md-6 header-group-content">
-                <xsl:choose>
-                  <xsl:when test="n1:intendedRecipient/n1:informationRecipient/n1:name">
-                    <xsl:for-each select="n1:intendedRecipient/n1:informationRecipient">
-                      <xsl:call-template name="show-name">
-                        <xsl:with-param name="name" select="n1:name" />
-                      </xsl:call-template>
-                      <xsl:if test="position() != last()"> </xsl:if>
-                    </xsl:for-each>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:for-each select="n1:intendedRecipient">
-                      <xsl:for-each select="n1:id">
-                        <xsl:call-template name="show-id" />
-                      </xsl:for-each>
-                      <xsl:if test="position() != last()"> </xsl:if>
-                    </xsl:for-each>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </div>
-              <div class="col-md-6">
-                <xsl:if test="n1:intendedRecipient/n1:addr | n1:intendedRecipient/n1:telecom">
-                  <h2 class="section-title col-md-6">
-                    <xsl:text>Contact</xsl:text>
-                  </h2>
-                  <div class="col-md-6">
-                    <xsl:call-template name="show-contactInfo">
-                      <xsl:with-param name="contact" select="n1:intendedRecipient" />
-                    </xsl:call-template>
-                  </div>
-                </xsl:if>
-              </div>
-            </div>
-          </xsl:for-each>
+                </xsl:for-each>
+            </xsl:if>
         </div>
-      </xsl:if>
-    </div>
-  </xsl:template>
-  <!-- participant -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="participant">
-    <div class="container-fluid">
-      <xsl:if test="n1:participant">
-        <div class="header container-fluid">
-          <xsl:for-each select="n1:participant">
-            <xsl:if test="not(n1:associatedEntity/@classCode = 'ECON' or n1:associatedEntity/@classCode = 'NOK')">
-              <xsl:variable name="participtRole">
-                <xsl:call-template name="translateRoleAssoCode">
-                  <xsl:with-param name="classCode" select="n1:associatedEntity/@classCode" />
-                  <xsl:with-param name="code" select="n1:associatedEntity/n1:code" />
-                </xsl:call-template>
-              </xsl:variable>
-              <div class="col-md-6">
-                <h2 class="col-md-6 section-title">
-                  <xsl:choose>
-                    <xsl:when test="$participtRole">
-                      <xsl:call-template name="firstCharCaseUp">
-                        <xsl:with-param name="data" select="$participtRole" />
-                      </xsl:call-template>
+
+    </xsl:template>
+    <!-- relatedDocument -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="relatedDocument">
+        <xsl:if test="n1:relatedDocument">
+            <table class="header_table">
+                <tbody>
+                    <xsl:for-each select="n1:relatedDocument">
+                        <tr>
+                            <td class="td_header_role_name">
+                                <span class="td_label">
+                                    <xsl:text>Related document</xsl:text>
+                                </span>
+                            </td>
+                            <td class="td_header_role_value">
+                                <xsl:for-each select="n1:parentDocument">
+                                    <xsl:for-each select="n1:id">
+                                        <xsl:call-template name="show-id" />
+                                        <br />
+                                    </xsl:for-each>
+                                </xsl:for-each>
+                            </td>
+                        </tr>
+                    </xsl:for-each>
+                </tbody>
+            </table>
+        </xsl:if>
+    </xsl:template>
+    <!-- authorization (consent) -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="authorization">
+        <xsl:if test="n1:authorization">
+            <table class="header_table">
+                <tbody>
+                    <xsl:for-each select="n1:authorization">
+                        <tr>
+                            <td class="td_header_role_name">
+                                <span class="td_label">
+                                    <xsl:text>Consent</xsl:text>
+                                </span>
+                            </td>
+                            <td class="td_header_role_value">
+                                <xsl:choose>
+                                    <xsl:when test="n1:consent/n1:code">
+                                        <xsl:call-template name="show-code">
+                                            <xsl:with-param name="code" select="n1:consent/n1:code" />
+                                        </xsl:call-template>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:call-template name="show-code">
+                                            <xsl:with-param name="code" select="n1:consent/n1:statusCode" />
+                                        </xsl:call-template>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                                <br />
+                            </td>
+                        </tr>
+                    </xsl:for-each>
+                </tbody>
+            </table>
+        </xsl:if>
+    </xsl:template>
+    <!-- setAndVersion -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="setAndVersion">
+        <xsl:if test="n1:setId and n1:versionNumber">
+            <table class="header_table">
+                <tbody>
+                    <tr>
+                        <td class="td_header_role_name">
+                            <xsl:text>SetId and Version</xsl:text>
+                        </td>
+                        <td class="td_header_role_value">
+                            <xsl:text>SetId: </xsl:text>
+                            <xsl:call-template name="show-id">
+                                <xsl:with-param name="id" select="n1:setId" />
+                            </xsl:call-template>
+                            <xsl:text>  Version: </xsl:text>
+                            <xsl:value-of select="n1:versionNumber/@value" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </xsl:if>
+    </xsl:template>
+    <!-- show StructuredBody  -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:component/n1:structuredBody">
+        <xsl:for-each select="n1:component/n1:section">
+            <xsl:call-template name="section" />
+        </xsl:for-each>
+    </xsl:template>
+    <!-- show nonXMLBody -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:component/n1:nonXMLBody">
+        <xsl:choose>
+            <!-- if there is a reference, use that in an IFRAME -->
+            <xsl:when test="n1:text/n1:reference">
+                <xsl:variable name="source" select="string(n1:text/n1:reference/@value)" />
+                <xsl:variable name="mediaType" select="string(n1:text/@mediaType)" />
+                <xsl:variable name="lcSource" select="translate($source, $uc, $lc)" />
+                <xsl:variable name="scrubbedSource" select="translate($source, $simple-sanitizer-match, $simple-sanitizer-replace)" />
+                <xsl:message>
+                    <xsl:value-of select="$source" />, <xsl:value-of select="$lcSource" />
+                </xsl:message>
+                <xsl:choose>
+                    <xsl:when test="contains($lcSource, 'javascript')">
+                        <p>
+                            <xsl:value-of select="$javascript-injection-warning" />
+                        </p>
+                        <xsl:message>
+                            <xsl:value-of select="$javascript-injection-warning" />
+                        </xsl:message>
+                    </xsl:when>
+                    <xsl:when test="not($source = $scrubbedSource)">
+                        <p>
+                            <xsl:value-of select="$malicious-content-warning" />
+                        </p>
+                        <xsl:message>
+                            <xsl:value-of select="$malicious-content-warning" />
+                        </xsl:message>
                     </xsl:when>
                     <xsl:otherwise>
-                      <xsl:text>Participant</xsl:text>
+                        <iframe name="nonXMLBody" id="nonXMLBody" WIDTH="80%" HEIGHT="600" src="{$source}">
+                            <html>
+                                <body>
+                                    <object data="{$source}" type="{$mediaType}">
+                                        <embed src="{$source}" type="{$mediaType}" />
+                                    </object>
+                                </body>
+                            </html>
+                        </iframe>
                     </xsl:otherwise>
-                  </xsl:choose>
-                </h2>
-                <div class="header-group-content col-md-8">
-                  <xsl:if test="n1:functionCode">
-                    <xsl:call-template name="show-code">
-                      <xsl:with-param name="code" select="n1:functionCode" />
-                    </xsl:call-template>
-                  </xsl:if>
-                  <xsl:call-template name="show-associatedEntity">
-                    <xsl:with-param name="assoEntity" select="n1:associatedEntity" />
-                  </xsl:call-template>
-                  <xsl:if test="n1:time">
-                    <xsl:if test="n1:time/n1:low">
-                      <xsl:text> from </xsl:text>
-                      <xsl:call-template name="show-time">
-                        <xsl:with-param name="datetime" select="n1:time/n1:low" />
-                      </xsl:call-template>
-                    </xsl:if>
-                    <xsl:if test="n1:time/n1:high">
-                      <xsl:text> to </xsl:text>
-                      <xsl:call-template name="show-time">
-                        <xsl:with-param name="datetime" select="n1:time/n1:high" />
-                      </xsl:call-template>
-                    </xsl:if>
-                  </xsl:if>
-                  <xsl:if test="position() != last()">
-                    <br />
-                  </xsl:if>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <xsl:if test="n1:associatedEntity/n1:addr | n1:associatedEntity/n1:telecom">
-                  <h2 class="section-title col-md-6">
-                    <xsl:text>Contact</xsl:text>
-                  </h2>
-                  <div class="col-md-6 header-group-content">
-                    <xsl:call-template name="show-contactInfo">
-                      <xsl:with-param name="contact" select="n1:associatedEntity" />
-                    </xsl:call-template>
-                  </div>
-                </xsl:if>
-              </div>
-            </xsl:if>
-          </xsl:for-each>
-        </div>
-      </xsl:if>
-    </div>
-  </xsl:template>
-
-  <!-- recordTarget / Patient -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="recordTarget">
-    <div class="header container-fluid" id="cda-patient">
-      <xsl:for-each select="/n1:ClinicalDocument/n1:recordTarget/n1:patientRole">
-        <xsl:if test="not(n1:id/@nullFlavor)">
-          <div class="patient-heading container-fluid">
-            <div class="patient-name row">
-              <xsl:call-template name="show-name">
-                <xsl:with-param name="name" select="n1:patient/n1:name" />
-              </xsl:call-template>
-            </div>
-            <div class="patient-identifier container-fluid">
-              <div class="attribute-title row">Patient Identifiers</div>
-              <xsl:for-each select="n1:id">
-                <div class="row">
-                  <div class="col-md-6 patient-id">
-                    <xsl:call-template name="show-id" />
-                  </div>
-                </div>
-              </xsl:for-each>
-            </div>
-          </div>
-          <div class="patient-info container-fluid">
-            <div class="col-md-6">
-              <h2 class="section-title col-md-6">About</h2>
-              <div class="header-group-content col-md-8">
-                <div class="row">
-                  <div class="attribute-title col-md-6">
-                    <xsl:text>Date of Birth</xsl:text>
-                  </div>
-                  <div class="col-md-6">
-                    <xsl:call-template name="show-time">
-                      <xsl:with-param name="datetime" select="n1:patient/n1:birthTime" />
-                    </xsl:call-template>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="attribute-title col-md-6">
-                    <xsl:text>Sex</xsl:text>
-                  </div>
-                  <div class="col-md-6">
-                    <xsl:for-each select="n1:patient/n1:administrativeGenderCode">
-                      <xsl:call-template name="show-gender" />
-                    </xsl:for-each>
-                  </div>
-                </div>
-                <xsl:if test="n1:patient/n1:raceCode | (n1:patient/n1:ethnicGroupCode)">
-                  <div class="row">
-                    <div class="attribute-title col-md-6">
-                      <xsl:text>Race</xsl:text>
-                    </div>
-                    <div class="col-md-6">
-                      <xsl:choose>
-                        <xsl:when test="n1:patient/n1:raceCode">
-                          <xsl:for-each select="n1:patient/n1:raceCode">
-                            <xsl:call-template name="show-race-ethnicity" />
-                          </xsl:for-each>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <span class="generated-text">
-                            <xsl:text>Information not available</xsl:text>
-                          </span>
-                        </xsl:otherwise>
-                      </xsl:choose>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="attribute-title col-md-6">
-                      <xsl:text>Ethnicity</xsl:text>
-                    </div>
-                    <div class="col-md-6">
-                      <xsl:choose>
-                        <xsl:when test="n1:patient/n1:ethnicGroupCode">
-                          <xsl:for-each select="n1:patient/n1:ethnicGroupCode">
-                            <xsl:call-template name="show-race-ethnicity" />
-                          </xsl:for-each>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <span class="generated-text">
-                            <xsl:text>Information not available</xsl:text>
-                          </span>
-                        </xsl:otherwise>
-                      </xsl:choose>
-                    </div>
-                  </div>
-                </xsl:if>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <h2 class="section-title col-md-6">
-                <xsl:text>Contact</xsl:text>
-              </h2>
-              <div class="header-group-content col-md-8">
-                <xsl:call-template name="show-contactInfo">
-                  <xsl:with-param name="contact" select="." />
-                </xsl:call-template>
-              </div>
-            </div>
-          </div>
-        </xsl:if>
-        <!-- SG: Added list parent/guardian -->
-        <xsl:if test="n1:patient/n1:guardian">
-          <div class="guardian-info container-fluid">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="guardian-name container-fluid">
-                  <h2 class="section-title col-md-6">Parent/Guardian</h2>
-                  <div class="header-group-content col-md-8">
-                    <xsl:call-template name="show-guardian">
-                      <xsl:with-param name="guard" select="n1:patient/n1:guardian" />
-                    </xsl:call-template>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <xsl:if test="n1:patient/n1:guardian/n1:addr | n1:patient/n1:guardian/n1:telecom">
-                  <div class="col-md-6">
-                    <h2 class="section-title col-md-6">Contact</h2>
-                    <div class="header-group-content col-md-8">
-                      <xsl:call-template name="show-contactInfo">
-                        <xsl:with-param name="contact" select="n1:patient/n1:guardian" />
-                      </xsl:call-template>
-                    </div>
-                  </div>
-                </xsl:if>
-              </div>
-            </div>
-          </div>
-        </xsl:if>
-      </xsl:for-each>
-      <!-- list all the emergency contacts -->
-      <xsl:if test="n1:participant">
-        <xsl:for-each select="n1:participant">
-          <xsl:if test="n1:associatedEntity/@classCode = 'ECON'">
-            <div class="container-fluid" id="emergency-contact">
-              <div class="col-md-6">
-                <h2 class="section-title col-md-6">Emergency Contact</h2>
-                <div class="header-group-content col-md-8">
-                  <xsl:call-template name="show-associatedEntity">
-                    <xsl:with-param name="assoEntity" select="n1:associatedEntity" />
-                  </xsl:call-template>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <h2 class="section-title col-md-6">Contact</h2>
-                <div class="header-group-content col-md-8">
-                  <xsl:call-template name="show-contactInfo">
-                    <xsl:with-param name="contact" select="n1:associatedEntity" />
-                  </xsl:call-template>
-                </div>
-              </div>
-            </div>
-          </xsl:if>
-        </xsl:for-each>
-      </xsl:if>
-
-      <!-- list nex of kin-->
-      <xsl:if test="n1:participant">
-        <xsl:for-each select="n1:participant">
-          <xsl:if test="n1:associatedEntity/@classCode = 'NOK'">
-            <div class="container-fluid" id="emergency-contact">
-              <div class="col-md-6">
-                <h2 class="section-title col-md-6">Next of Kin</h2>
-                <div class="header-group-content col-md-8">
-                  <xsl:call-template name="show-associatedEntity">
-                    <xsl:with-param name="assoEntity" select="n1:associatedEntity" />
-                  </xsl:call-template>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <h2 class="section-title col-md-6">Contact</h2>
-                <div class="header-group-content col-md-8">
-                  <xsl:call-template name="show-contactInfo">
-                    <xsl:with-param name="contact" select="n1:associatedEntity" />
-                  </xsl:call-template>
-                </div>
-              </div>
-            </div>
-          </xsl:if>
-        </xsl:for-each>
-      </xsl:if>
-    </div>
-
-  </xsl:template>
-  <!-- relatedDocument -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="relatedDocument">
-    <xsl:if test="n1:relatedDocument">
-      <table class="header_table">
-        <tbody>
-          <xsl:for-each select="n1:relatedDocument">
-            <tr>
-              <td class="td_header_role_name">
-                <span class="td_label">
-                  <xsl:text>Related document</xsl:text>
-                </span>
-              </td>
-              <td class="td_header_role_value">
-                <xsl:for-each select="n1:parentDocument">
-                  <xsl:for-each select="n1:id">
-                    <xsl:call-template name="show-id" />
-                    <br />
-                  </xsl:for-each>
-                </xsl:for-each>
-              </td>
-            </tr>
-          </xsl:for-each>
-        </tbody>
-      </table>
-    </xsl:if>
-  </xsl:template>
-  <!-- authorization (consent) -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="authorization">
-    <xsl:if test="n1:authorization">
-      <table class="header_table">
-        <tbody>
-          <xsl:for-each select="n1:authorization">
-            <tr>
-              <td class="td_header_role_name">
-                <span class="td_label">
-                  <xsl:text>Consent</xsl:text>
-                </span>
-              </td>
-              <td class="td_header_role_value">
-                <xsl:choose>
-                  <xsl:when test="n1:consent/n1:code">
-                    <xsl:call-template name="show-code">
-                      <xsl:with-param name="code" select="n1:consent/n1:code" />
-                    </xsl:call-template>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:call-template name="show-code">
-                      <xsl:with-param name="code" select="n1:consent/n1:statusCode" />
-                    </xsl:call-template>
-                  </xsl:otherwise>
                 </xsl:choose>
-                <br />
-              </td>
-            </tr>
-          </xsl:for-each>
-        </tbody>
-      </table>
-    </xsl:if>
-  </xsl:template>
-  <!-- setAndVersion -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="setAndVersion">
-    <xsl:if test="n1:setId and n1:versionNumber">
-      <table class="header_table">
-        <tbody>
-          <tr>
-            <td class="td_header_role_name">
-              <xsl:text>SetId and Version</xsl:text>
-            </td>
-            <td class="td_header_role_value">
-              <xsl:text>SetId: </xsl:text>
-              <xsl:call-template name="show-id">
-                <xsl:with-param name="id" select="n1:setId" />
-              </xsl:call-template>
-              <xsl:text>  Version: </xsl:text>
-              <xsl:value-of select="n1:versionNumber/@value" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </xsl:if>
-  </xsl:template>
-  <!-- show StructuredBody  -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:component/n1:structuredBody">
-    <xsl:for-each select="n1:component/n1:section">
-      <xsl:call-template name="section" />
-    </xsl:for-each>
-  </xsl:template>
-  <!-- show nonXMLBody -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:component/n1:nonXMLBody">
-    <xsl:choose>
-      <!-- if there is a reference, use that in an IFRAME -->
-      <xsl:when test="n1:text/n1:reference">
-        <xsl:variable name="source" select="string(n1:text/n1:reference/@value)" />
-        <xsl:variable name="mediaType" select="string(n1:text/@mediaType)" />
-        <xsl:variable name="lcSource" select="translate($source, $uc, $lc)" />
-        <xsl:variable name="scrubbedSource" select="translate($source, $simple-sanitizer-match, $simple-sanitizer-replace)" />
-        <xsl:message>
-          <xsl:value-of select="$source" />, <xsl:value-of select="$lcSource" />
-        </xsl:message>
-        <xsl:choose>
-          <xsl:when test="contains($lcSource, 'javascript')">
-            <p>
-              <xsl:value-of select="$javascript-injection-warning" />
-            </p>
-            <xsl:message>
-              <xsl:value-of select="$javascript-injection-warning" />
-            </xsl:message>
-          </xsl:when>
-          <xsl:when test="not($source = $scrubbedSource)">
-            <p>
-              <xsl:value-of select="$malicious-content-warning" />
-            </p>
-            <xsl:message>
-              <xsl:value-of select="$malicious-content-warning" />
-            </xsl:message>
-          </xsl:when>
-          <xsl:otherwise>
-            <iframe name="nonXMLBody" id="nonXMLBody" WIDTH="80%" HEIGHT="600" src="{$source}">
-              <html>
-                <body>
-                  <object data="{$source}" type="{$mediaType}">
-                    <embed src="{$source}" type="{$mediaType}" />
-                  </object>
-                </body>
-              </html>
-            </iframe>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:when>
-      <xsl:when test="n1:text/@mediaType = &quot;text/plain&quot;">
-        <pre>
+            </xsl:when>
+            <xsl:when test="n1:text/@mediaType = &quot;text/plain&quot;">
+                <pre>
 <xsl:value-of select="n1:text/text()" />
 </pre>
-      </xsl:when>
-      <xsl:otherwise>
-        <pre>Cannot display the text</pre>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-  <!-- top level component/section: display title and text,
-      and process any nested component/sections
-    -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="section">
-    <div class="container-fluid header">
-      <xsl:call-template name="section-title">
-        <xsl:with-param name="title" select="n1:title" />
-      </xsl:call-template>
-      <xsl:call-template name="section-author" />
-      <xsl:call-template name="section-text" />
-      <xsl:for-each select="n1:component/n1:section">
-        <div class="container-fluid">
-          <xsl:call-template name="nestedSection">
-            <xsl:with-param name="margin" select="2" />
-          </xsl:call-template>
-        </div>
-      </xsl:for-each>
-    </div>
-  </xsl:template>
-  <!-- top level section title -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="section-title">
-    <xsl:param name="title" />
-    <h1 class="section-title" id="{generate-id($title)}" ng-click="gotoAnchor('toc')">
-      <xsl:value-of select="$title" />
-    </h1>
-  </xsl:template>
-
-  <!-- section author -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="section-author">
-    <xsl:if test="count(n1:author) &gt; 0">
-      <div class="section-author">
-        <span class="emphasis">
-          <xsl:text>Section Author: </xsl:text>
-        </span>
-        <xsl:for-each select="n1:author/n1:assignedAuthor">
-          <xsl:choose>
-            <xsl:when test="n1:assignedPerson/n1:name">
-              <xsl:call-template name="show-name">
-                <xsl:with-param name="name" select="n1:assignedPerson/n1:name" />
-              </xsl:call-template>
-              <xsl:if test="n1:representedOrganization">
-                <xsl:text>, </xsl:text>
-                <xsl:call-template name="show-name">
-                  <xsl:with-param name="name" select="n1:representedOrganization/n1:name" />
-                </xsl:call-template>
-              </xsl:if>
-            </xsl:when>
-            <xsl:when test="n1:assignedAuthoringDevice/n1:softwareName">
-              <xsl:call-template name="show-code">
-                <xsl:with-param name="code" select="n1:assignedAuthoringDevice/n1:softwareName" />
-              </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:for-each select="n1:id">
-                <xsl:call-template name="show-id" />
-                <br />
-              </xsl:for-each>
+                <pre>Cannot display the text</pre>
             </xsl:otherwise>
-          </xsl:choose>
+        </xsl:choose>
+    </xsl:template>
+    <!-- top level component/section: display title and text,
+      and process any nested component/sections
+    -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="section">
+        <div class="container-fluid header">
+            <xsl:call-template name="section-title">
+                <xsl:with-param name="title" select="n1:title" />
+            </xsl:call-template>
+            <xsl:call-template name="section-author" />
+            <xsl:call-template name="section-text" />
+            <xsl:for-each select="n1:component/n1:section">
+                <div class="container-fluid">
+                    <xsl:call-template name="nestedSection">
+                        <xsl:with-param name="margin" select="2" />
+                    </xsl:call-template>
+                </div>
+            </xsl:for-each>
+        </div>
+    </xsl:template>
+    <!-- top level section title -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="section-title">
+        <xsl:param name="title" />
+        <h1 class="section-title" id="{generate-id($title)}" ng-click="gotoAnchor('toc')">
+            <xsl:value-of select="$title" />
+        </h1>
+    </xsl:template>
+
+    <!-- section author -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="section-author">
+        <xsl:if test="count(n1:author) &gt; 0">
+            <div class="section-author">
+                <span class="emphasis">
+                    <xsl:text>Section Author: </xsl:text>
+                </span>
+                <xsl:for-each select="n1:author/n1:assignedAuthor">
+                    <xsl:choose>
+                        <xsl:when test="n1:assignedPerson/n1:name">
+                            <xsl:call-template name="show-name">
+                                <xsl:with-param name="name" select="n1:assignedPerson/n1:name" />
+                            </xsl:call-template>
+                            <xsl:if test="n1:representedOrganization">
+                                <xsl:text>, </xsl:text>
+                                <xsl:call-template name="show-name">
+                                    <xsl:with-param name="name" select="n1:representedOrganization/n1:name" />
+                                </xsl:call-template>
+                            </xsl:if>
+                        </xsl:when>
+                        <xsl:when test="n1:assignedAuthoringDevice/n1:softwareName">
+                            <xsl:call-template name="show-code">
+                                <xsl:with-param name="code" select="n1:assignedAuthoringDevice/n1:softwareName" />
+                            </xsl:call-template>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:for-each select="n1:id">
+                                <xsl:call-template name="show-id" />
+                                <br />
+                            </xsl:for-each>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:for-each>
+                <br />
+            </div>
+        </xsl:if>
+    </xsl:template>
+    <!-- top-level section Text   -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="section-text">
+        <div class="section-text">
+            <xsl:apply-templates select="n1:text" />
+        </div>
+    </xsl:template>
+    <!-- nested component/section -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="nestedSection">
+        <xsl:param name="margin" />
+        <h4>
+            <xsl:value-of select="n1:title" />
+        </h4>
+        <div class="nested-section" style="margin-left : {$margin}em;">
+            <xsl:apply-templates select="n1:text" />
+        </div>
+        <xsl:for-each select="n1:component/n1:section">
+            <xsl:call-template name="nestedSection">
+                <xsl:with-param name="margin" select="2 * $margin" />
+            </xsl:call-template>
         </xsl:for-each>
-        <br />
-      </div>
-    </xsl:if>
-  </xsl:template>
-  <!-- top-level section Text   -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="section-text">
-    <div class="section-text">
-      <xsl:apply-templates select="n1:text" />
-    </div>
-  </xsl:template>
-  <!-- nested component/section -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="nestedSection">
-    <xsl:param name="margin" />
-    <h4>
-      <xsl:value-of select="n1:title" />
-    </h4>
-    <div class="nested-section" style="margin-left : {$margin}em;">
-      <xsl:apply-templates select="n1:text" />
-    </div>
-    <xsl:for-each select="n1:component/n1:section">
-      <xsl:call-template name="nestedSection">
-        <xsl:with-param name="margin" select="2 * $margin" />
-      </xsl:call-template>
-    </xsl:for-each>
-  </xsl:template>
-  <!--   paragraph  -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:paragraph">
-    <xsl:element name="p">
-      <xsl:call-template name="output-attrs" />
-      <xsl:apply-templates />
-    </xsl:element>
-  </xsl:template>
-  <!--   pre format  -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:pre">
-    <xsl:element name="pre">
-      <xsl:call-template name="output-attrs" />
-      <xsl:apply-templates />
-    </xsl:element>
-  </xsl:template>
-  <!--   Content w/ deleted text is hidden -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:content[@revised = 'delete']" />
-  <!--   content  -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:content">
-    <xsl:element name="content">
-      <xsl:call-template name="output-attrs" />
-      <!--<xsl:apply-templates select="@styleCode"/>-->
-      <xsl:apply-templates />
-    </xsl:element>
-  </xsl:template>
-  <!-- line break -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:br">
-    <xsl:element name="br">
-      <xsl:apply-templates />
-    </xsl:element>
-  </xsl:template>
-  <!--   list  -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:list">
-    <xsl:if test="n1:caption">
-      <p>
-        <b>
-          <xsl:apply-templates select="n1:caption" />
-        </b>
-      </p>
-    </xsl:if>
-    <ul>
-      <xsl:for-each select="n1:item">
-        <li>
-          <xsl:apply-templates />
-        </li>
-      </xsl:for-each>
-    </ul>
-  </xsl:template>
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:list[@styleCode = 'none']">
-    <xsl:if test="n1:caption">
-      <p>
-        <b>
-          <xsl:apply-templates select="n1:caption" />
-        </b>
-      </p>
-    </xsl:if>
-    <ul style="list-style-type:none">
-      <xsl:for-each select="n1:item">
-        <li>
-          <xsl:apply-templates />
-        </li>
-      </xsl:for-each>
-    </ul>
-  </xsl:template>
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:list[@listType = 'ordered']">
-    <xsl:if test="n1:caption">
-      <span style="font-weight:bold; ">
-        <xsl:apply-templates select="n1:caption" />
-      </span>
-    </xsl:if>
-    <ol>
-      <xsl:for-each select="n1:item">
-        <li>
-          <xsl:apply-templates />
-        </li>
-      </xsl:for-each>
-    </ol>
-  </xsl:template>
+    </xsl:template>
+    <!--   paragraph  -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:paragraph">
+        <xsl:element name="p">
+            <xsl:call-template name="output-attrs" />
+            <xsl:apply-templates />
+        </xsl:element>
+    </xsl:template>
+    <!--   pre format  -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:pre">
+        <xsl:element name="pre">
+            <xsl:call-template name="output-attrs" />
+            <xsl:apply-templates />
+        </xsl:element>
+    </xsl:template>
+    <!--   Content w/ deleted text is hidden -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:content[@revised = 'delete']" />
+    <!--   content  -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:content">
+        <xsl:element name="content">
+            <xsl:call-template name="output-attrs" />
+            <!--<xsl:apply-templates select="@styleCode"/>-->
+            <xsl:apply-templates />
+        </xsl:element>
+    </xsl:template>
+    <!-- line break -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:br">
+        <xsl:element name="br">
+            <xsl:apply-templates />
+        </xsl:element>
+    </xsl:template>
+    <!--   list  -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:list">
+        <xsl:if test="n1:caption">
+            <p>
+                <b>
+                    <xsl:apply-templates select="n1:caption" />
+                </b>
+            </p>
+        </xsl:if>
+        <ul>
+            <xsl:for-each select="n1:item">
+                <li>
+                    <xsl:apply-templates />
+                </li>
+            </xsl:for-each>
+        </ul>
+    </xsl:template>
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:list[@styleCode = 'none']">
+        <xsl:if test="n1:caption">
+            <p>
+                <b>
+                    <xsl:apply-templates select="n1:caption" />
+                </b>
+            </p>
+        </xsl:if>
+        <ul style="list-style-type:none">
+            <xsl:for-each select="n1:item">
+                <li>
+                    <xsl:apply-templates />
+                </li>
+            </xsl:for-each>
+        </ul>
+    </xsl:template>
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:list[@listType = 'ordered']">
+        <xsl:if test="n1:caption">
+            <span style="font-weight:bold; ">
+                <xsl:apply-templates select="n1:caption" />
+            </span>
+        </xsl:if>
+        <ol>
+            <xsl:for-each select="n1:item">
+                <li>
+                    <xsl:apply-templates />
+                </li>
+            </xsl:for-each>
+        </ol>
+    </xsl:template>
 
-  <!--   caption  -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:caption">
-    <xsl:apply-templates />
-    <xsl:text>: </xsl:text>
-  </xsl:template>
-  <!--  Tables   -->
+    <!--   caption  -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:caption">
+        <xsl:apply-templates />
+        <xsl:text>: </xsl:text>
+    </xsl:template>
+    <!--  Tables   -->
 
-  <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="table-elem-attrs">
-    <in:tableElems>
-      <in:elem name="table">
-        <in:attr name="ID" />
-        <in:attr name="language" />
-        <in:attr name="styleCode" />
-        <in:attr name="summary" />
-        <in:attr name="width" />
-        <!-- Commented out to keep table rendering consistent -->
-        <!--<in:attr name="border"/>-->
-        <in:attr name="frame" />
-        <in:attr name="rules" />
-        <in:attr name="cellspacing" />
-        <in:attr name="cellpadding" />
-      </in:elem>
-      <in:elem name="thead">
-        <in:attr name="ID" />
-        <in:attr name="language" />
-        <in:attr name="styleCode" />
-        <in:attr name="align" />
-        <in:attr name="char" />
-        <in:attr name="charoff" />
-        <in:attr name="valign" />
-      </in:elem>
-      <in:elem name="tfoot">
-        <in:attr name="ID" />
-        <in:attr name="language" />
-        <in:attr name="styleCode" />
-        <in:attr name="align" />
-        <in:attr name="char" />
-        <in:attr name="charoff" />
-        <in:attr name="valign" />
-      </in:elem>
-      <in:elem name="tbody">
-        <in:attr name="ID" />
-        <in:attr name="language" />
-        <in:attr name="styleCode" />
-        <in:attr name="align" />
-        <in:attr name="char" />
-        <in:attr name="charoff" />
-        <in:attr name="valign" />
-      </in:elem>
-      <in:elem name="colgroup">
-        <in:attr name="ID" />
-        <in:attr name="language" />
-        <in:attr name="styleCode" />
-        <in:attr name="span" />
-        <in:attr name="width" />
-        <in:attr name="align" />
-        <in:attr name="char" />
-        <in:attr name="charoff" />
-        <in:attr name="valign" />
-      </in:elem>
-      <in:elem name="col">
-        <in:attr name="ID" />
-        <in:attr name="language" />
-        <in:attr name="styleCode" />
-        <in:attr name="span" />
-        <in:attr name="width" />
-        <in:attr name="align" />
-        <in:attr name="char" />
-        <in:attr name="charoff" />
-        <in:attr name="valign" />
-      </in:elem>
-      <in:elem name="tr">
-        <in:attr name="ID" />
-        <in:attr name="language" />
-        <in:attr name="styleCode" />
-        <in:attr name="align" />
-        <in:attr name="char" />
-        <in:attr name="charoff" />
-        <in:attr name="valign" />
-      </in:elem>
-      <in:elem name="th">
-        <in:attr name="ID" />
-        <in:attr name="language" />
-        <in:attr name="styleCode" />
-        <in:attr name="abbr" />
-        <in:attr name="axis" />
-        <in:attr name="headers" />
-        <in:attr name="scope" />
-        <in:attr name="rowspan" />
-        <in:attr name="colspan" />
-        <in:attr name="align" />
-        <in:attr name="char" />
-        <in:attr name="charoff" />
-        <in:attr name="valign" />
-      </in:elem>
-      <in:elem name="td">
-        <in:attr name="ID" />
-        <in:attr name="language" />
-        <in:attr name="styleCode" />
-        <in:attr name="abbr" />
-        <in:attr name="axis" />
-        <in:attr name="headers" />
-        <in:attr name="scope" />
-        <in:attr name="rowspan" />
-        <in:attr name="colspan" />
-        <in:attr name="align" />
-        <in:attr name="char" />
-        <in:attr name="charoff" />
-        <in:attr name="valign" />
-      </in:elem>
-    </in:tableElems>
-  </xsl:variable>
+    <xsl:variable xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="table-elem-attrs">
+        <in:tableElems>
+            <in:elem name="table">
+                <in:attr name="ID" />
+                <in:attr name="language" />
+                <in:attr name="styleCode" />
+                <in:attr name="summary" />
+                <in:attr name="width" />
+                <!-- Commented out to keep table rendering consistent -->
+                <!--<in:attr name="border"/>-->
+                <in:attr name="frame" />
+                <in:attr name="rules" />
+                <in:attr name="cellspacing" />
+                <in:attr name="cellpadding" />
+            </in:elem>
+            <in:elem name="thead">
+                <in:attr name="ID" />
+                <in:attr name="language" />
+                <in:attr name="styleCode" />
+                <in:attr name="align" />
+                <in:attr name="char" />
+                <in:attr name="charoff" />
+                <in:attr name="valign" />
+            </in:elem>
+            <in:elem name="tfoot">
+                <in:attr name="ID" />
+                <in:attr name="language" />
+                <in:attr name="styleCode" />
+                <in:attr name="align" />
+                <in:attr name="char" />
+                <in:attr name="charoff" />
+                <in:attr name="valign" />
+            </in:elem>
+            <in:elem name="tbody">
+                <in:attr name="ID" />
+                <in:attr name="language" />
+                <in:attr name="styleCode" />
+                <in:attr name="align" />
+                <in:attr name="char" />
+                <in:attr name="charoff" />
+                <in:attr name="valign" />
+            </in:elem>
+            <in:elem name="colgroup">
+                <in:attr name="ID" />
+                <in:attr name="language" />
+                <in:attr name="styleCode" />
+                <in:attr name="span" />
+                <in:attr name="width" />
+                <in:attr name="align" />
+                <in:attr name="char" />
+                <in:attr name="charoff" />
+                <in:attr name="valign" />
+            </in:elem>
+            <in:elem name="col">
+                <in:attr name="ID" />
+                <in:attr name="language" />
+                <in:attr name="styleCode" />
+                <in:attr name="span" />
+                <in:attr name="width" />
+                <in:attr name="align" />
+                <in:attr name="char" />
+                <in:attr name="charoff" />
+                <in:attr name="valign" />
+            </in:elem>
+            <in:elem name="tr">
+                <in:attr name="ID" />
+                <in:attr name="language" />
+                <in:attr name="styleCode" />
+                <in:attr name="align" />
+                <in:attr name="char" />
+                <in:attr name="charoff" />
+                <in:attr name="valign" />
+            </in:elem>
+            <in:elem name="th">
+                <in:attr name="ID" />
+                <in:attr name="language" />
+                <in:attr name="styleCode" />
+                <in:attr name="abbr" />
+                <in:attr name="axis" />
+                <in:attr name="headers" />
+                <in:attr name="scope" />
+                <in:attr name="rowspan" />
+                <in:attr name="colspan" />
+                <in:attr name="align" />
+                <in:attr name="char" />
+                <in:attr name="charoff" />
+                <in:attr name="valign" />
+            </in:elem>
+            <in:elem name="td">
+                <in:attr name="ID" />
+                <in:attr name="language" />
+                <in:attr name="styleCode" />
+                <in:attr name="abbr" />
+                <in:attr name="axis" />
+                <in:attr name="headers" />
+                <in:attr name="scope" />
+                <in:attr name="rowspan" />
+                <in:attr name="colspan" />
+                <in:attr name="align" />
+                <in:attr name="char" />
+                <in:attr name="charoff" />
+                <in:attr name="valign" />
+            </in:elem>
+        </in:tableElems>
+    </xsl:variable>
 
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="output-attrs">
-    <xsl:variable name="elem-name" select="local-name(.)" />
-    <!-- This assigns all outputted elements the cda-render class -->
-    <!-- <xsl:attribute name="class">cda-render</xsl:attribute>-->
-    <xsl:choose>
-      <xsl:when test="$elem-name = 'table'">
-        <xsl:attribute name="class">table table-striped table-hover</xsl:attribute>
-      </xsl:when>
-    </xsl:choose>
-    <xsl:for-each select="@*">
-      <xsl:variable name="attr-name" select="local-name(.)" />
-      <xsl:variable name="source" select="." />
-      <xsl:variable name="lcSource" select="translate($source, $uc, $lc)" />
-      <xsl:variable name="scrubbedSource" select="translate($source, $simple-sanitizer-match, $simple-sanitizer-replace)" />
-      <xsl:choose>
-        <xsl:when test="contains($lcSource, 'javascript')">
-          <p>
-            <xsl:value-of select="$javascript-injection-warning" />
-          </p>
-          <xsl:message terminate="yes">
-            <xsl:value-of select="$javascript-injection-warning" />
-          </xsl:message>
-        </xsl:when>
-        <xsl:when test="$attr-name = 'styleCode'">
-          <xsl:apply-templates select="." />
-        </xsl:when>
-        <!--<xsl:when
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="output-attrs">
+        <xsl:variable name="elem-name" select="local-name(.)" />
+        <!-- This assigns all outputted elements the cda-render class -->
+        <!-- <xsl:attribute name="class">cda-render</xsl:attribute>-->
+        <xsl:choose>
+            <xsl:when test="$elem-name = 'table'">
+                <xsl:attribute name="class">table table-striped table-hover</xsl:attribute>
+            </xsl:when>
+        </xsl:choose>
+        <xsl:for-each select="@*">
+            <xsl:variable name="attr-name" select="local-name(.)" />
+            <xsl:variable name="source" select="." />
+            <xsl:variable name="lcSource" select="translate($source, $uc, $lc)" />
+            <xsl:variable name="scrubbedSource" select="translate($source, $simple-sanitizer-match, $simple-sanitizer-replace)" />
+            <xsl:choose>
+                <xsl:when test="contains($lcSource, 'javascript')">
+                    <p>
+                        <xsl:value-of select="$javascript-injection-warning" />
+                    </p>
+                    <xsl:message terminate="yes">
+                        <xsl:value-of select="$javascript-injection-warning" />
+                    </xsl:message>
+                </xsl:when>
+                <xsl:when test="$attr-name = 'styleCode'">
+                    <xsl:apply-templates select="." />
+                </xsl:when>
+                <!--<xsl:when
           test="not(document('')/xsl:stylesheet/xsl:variable[@name = 'table-elem-attrs']/in:tableElems/in:elem[@name = $elem-name]/in:attr[@name = $attr-name])">
           <xsl:message><xsl:value-of select="$attr-name"/> is not legal in <xsl:value-of
               select="$elem-name"/></xsl:message>
         </xsl:when>-->
-        <xsl:when test="not($source = $scrubbedSource)">
-          <p>
-            <xsl:value-of select="$malicious-content-warning" />
-          </p>
-          <xsl:message>
-            <xsl:value-of select="$malicious-content-warning" />
-          </xsl:message>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:copy-of select="." />
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:for-each>
-  </xsl:template>
+                <xsl:when test="not($source = $scrubbedSource)">
+                    <p>
+                        <xsl:value-of select="$malicious-content-warning" />
+                    </p>
+                    <xsl:message>
+                        <xsl:value-of select="$malicious-content-warning" />
+                    </xsl:message>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:copy-of select="." />
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:for-each>
+    </xsl:template>
 
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:table">
-    <div class="table-responsive">
-      <xsl:element name="{local-name()}">
-        <xsl:call-template name="output-attrs" />
-        <xsl:apply-templates />
-      </xsl:element>
-    </div>
-  </xsl:template>
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:table">
+        <div class="table-responsive">
+            <xsl:element name="{local-name()}">
+                <xsl:call-template name="output-attrs" />
+                <xsl:apply-templates />
+            </xsl:element>
+        </div>
+    </xsl:template>
 
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data"
-    match="n1:thead | n1:tfoot | n1:tbody | n1:colgroup | n1:col | n1:tr | n1:th | n1:td">
-    <xsl:element name="{local-name()}">
-      <xsl:call-template name="output-attrs" />
-      <xsl:apply-templates />
-    </xsl:element>
-  </xsl:template>
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:thead | n1:tfoot | n1:tbody | n1:colgroup | n1:col | n1:tr | n1:th | n1:td">
+        <xsl:element name="{local-name()}">
+            <xsl:call-template name="output-attrs" />
+            <xsl:apply-templates />
+        </xsl:element>
+    </xsl:template>
 
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:table/n1:caption">
-    <span style="font-weight:bold; ">
-      <xsl:apply-templates />
-    </span>
-  </xsl:template>
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:table/n1:caption">
+        <span style="font-weight:bold; ">
+            <xsl:apply-templates />
+        </span>
+    </xsl:template>
 
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:linkHtml">
-    <xsl:element name="a">
-      <xsl:copy-of select="@* | text()" />
-    </xsl:element>
-  </xsl:template>
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:linkHtml">
+        <xsl:element name="a">
+            <xsl:copy-of select="@* | text()" />
+        </xsl:element>
+    </xsl:template>
 
-  <!--   RenderMultiMedia
+    <!--   RenderMultiMedia
      this currently only handles GIF's and JPEG's.  It could, however,
      be extended by including other image MIME types in the predicate
      and/or by generating <object> or <applet> tag with the correct
      params depending on the media type  @ID  =$imageRef  referencedObject
      -->
 
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="check-external-image-whitelist">
-    <xsl:param name="current-whitelist" />
-    <xsl:param name="image-uri" />
-    <xsl:choose>
-      <xsl:when test="string-length($current-whitelist) &gt; 0">
-        <xsl:variable name="whitelist-item">
-          <xsl:choose>
-            <xsl:when test="contains($current-whitelist, '|')">
-              <xsl:value-of select="substring-before($current-whitelist, '|')" />
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="check-external-image-whitelist">
+        <xsl:param name="current-whitelist" />
+        <xsl:param name="image-uri" />
+        <xsl:choose>
+            <xsl:when test="string-length($current-whitelist) &gt; 0">
+                <xsl:variable name="whitelist-item">
+                    <xsl:choose>
+                        <xsl:when test="contains($current-whitelist, '|')">
+                            <xsl:value-of select="substring-before($current-whitelist, '|')" />
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="$current-whitelist" />
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="starts-with($image-uri, $whitelist-item)">
+                        <br clear="all" />
+                        <xsl:element name="img">
+                            <xsl:attribute name="src">
+                                <xsl:value-of select="$image-uri" />
+                            </xsl:attribute>
+                        </xsl:element>
+                        <xsl:message>
+                            <xsl:value-of select="$image-uri" /> is in the whitelist</xsl:message>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="check-external-image-whitelist">
+                            <xsl:with-param name="current-whitelist" select="substring-after($current-whitelist, '|')" />
+                            <xsl:with-param name="image-uri" select="$image-uri" />
+                        </xsl:call-template>
+                    </xsl:otherwise>
+                </xsl:choose>
+
             </xsl:when>
             <xsl:otherwise>
-              <xsl:value-of select="$current-whitelist" />
+                <p>WARNING: non-local image found <xsl:value-of select="$image-uri" />. Removing. If you wish non-local images preserved please set the limit-external-images param to 'no'.</p>
+                <xsl:message>WARNING: non-local image found <xsl:value-of select="$image-uri" />. Removing. If you wish non-local images preserved please set the limit-external-images param to 'no'.</xsl:message>
             </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-        <xsl:choose>
-          <xsl:when test="starts-with($image-uri, $whitelist-item)">
-            <br clear="all" />
-            <xsl:element name="img">
-              <xsl:attribute name="src">
-                <xsl:value-of select="$image-uri" />
-              </xsl:attribute>
-            </xsl:element>
-            <xsl:message>
-              <xsl:value-of select="$image-uri" /> is in the whitelist</xsl:message>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:call-template name="check-external-image-whitelist">
-              <xsl:with-param name="current-whitelist" select="substring-after($current-whitelist, '|')" />
-              <xsl:with-param name="image-uri" select="$image-uri" />
-            </xsl:call-template>
-          </xsl:otherwise>
         </xsl:choose>
-
-      </xsl:when>
-      <xsl:otherwise>
-        <p>WARNING: non-local image found <xsl:value-of select="$image-uri"
-           />. Removing. If you wish
-          non-local images preserved please set the limit-external-images param to 'no'.</p>
-        <xsl:message>WARNING: non-local image found <xsl:value-of select="$image-uri"
-           />. Removing.
-          If you wish non-local images preserved please set the limit-external-images param to
-          'no'.</xsl:message>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
+    </xsl:template>
 
 
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:renderMultiMedia">
-    <xsl:variable name="imageRef" select="@referencedObject" />
-    <xsl:choose>
-      <xsl:when test="//n1:regionOfInterest[@ID = $imageRef]">
-        <!-- Here is where the Region of Interest image referencing goes -->
-        <xsl:if test="//n1:regionOfInterest[@ID = $imageRef]//n1:observationMedia/n1:value[@mediaType = 'image/gif' or @mediaType = 'image/jpeg']">
-          <xsl:variable name="image-uri" select="//n1:regionOfInterest[@ID = $imageRef]//n1:observationMedia/n1:value/n1:reference/@value" />
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:renderMultiMedia">
+        <xsl:variable name="imageRef" select="@referencedObject" />
+        <xsl:choose>
+            <xsl:when test="//n1:regionOfInterest[@ID = $imageRef]">
+                <!-- Here is where the Region of Interest image referencing goes -->
+                <xsl:if test="//n1:regionOfInterest[@ID = $imageRef]//n1:observationMedia/n1:value[@mediaType = 'image/gif' or @mediaType = 'image/jpeg']">
+                    <xsl:variable name="image-uri" select="//n1:regionOfInterest[@ID = $imageRef]//n1:observationMedia/n1:value/n1:reference/@value" />
 
-          <xsl:choose>
-            <xsl:when test="$limit-external-images = 'yes' and (contains($image-uri, ':') or starts-with($image-uri, '\\'))">
-              <xsl:call-template name="check-external-image-whitelist">
-                <xsl:with-param name="current-whitelist" select="$external-image-whitelist" />
-                <xsl:with-param name="image-uri" select="$image-uri" />
-              </xsl:call-template>
-              <!--
+                    <xsl:choose>
+                        <xsl:when test="$limit-external-images = 'yes' and (contains($image-uri, ':') or starts-with($image-uri, '\\'))">
+                            <xsl:call-template name="check-external-image-whitelist">
+                                <xsl:with-param name="current-whitelist" select="$external-image-whitelist" />
+                                <xsl:with-param name="image-uri" select="$image-uri" />
+                            </xsl:call-template>
+                            <!--
                             <p>WARNING: non-local image found <xsl:value-of select="$image-uri"/>. Removing. If you wish non-local images preserved please set the limit-external-images param to 'no'.</p>
                             <xsl:message>WARNING: non-local image found <xsl:value-of select="$image-uri"/>. Removing. If you wish non-local images preserved please set the limit-external-images param to 'no'.</xsl:message>
                             -->
-            </xsl:when>
-            <!--
+                        </xsl:when>
+                        <!--
                         <xsl:when test="$limit-external-images='yes' and starts-with($image-uri,'\\')">
                             <p>WARNING: non-local image found <xsl:value-of select="$image-uri"/></p>
                             <xsl:message>WARNING: non-local image found <xsl:value-of select="$image-uri"/>. Removing. If you wish non-local images preserved please set the limit-external-images param to 'no'.</xsl:message>
                         </xsl:when>
                         -->
-            <xsl:otherwise>
-              <br clear="all" />
-              <xsl:element name="img">
-                <xsl:attribute name="src">
-                  <xsl:value-of select="$image-uri" />
-                </xsl:attribute>
-              </xsl:element>
-            </xsl:otherwise>
-          </xsl:choose>
+                        <xsl:otherwise>
+                            <br clear="all" />
+                            <xsl:element name="img">
+                                <xsl:attribute name="src">
+                                    <xsl:value-of select="$image-uri" />
+                                </xsl:attribute>
+                            </xsl:element>
+                        </xsl:otherwise>
+                    </xsl:choose>
 
-        </xsl:if>
-      </xsl:when>
-      <xsl:otherwise>
-        <!-- Here is where the direct MultiMedia image referencing goes -->
-        <xsl:if test="//n1:observationMedia[@ID = $imageRef]/n1:value[@mediaType = 'image/gif' or @mediaType = 'image/jpeg']">
-          <br clear="all" />
-          <xsl:element name="img">
-            <xsl:attribute name="src">
-              <xsl:value-of select="//n1:observationMedia[@ID = $imageRef]/n1:value/n1:reference/@value" />
-            </xsl:attribute>
-          </xsl:element>
-        </xsl:if>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-  <!--    Stylecode processing
-     Supports Bold, Underline and Italics display
-     -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="@styleCode">
-    <xsl:attribute name="styleCode">
-      <xsl:value-of select="." />
-    </xsl:attribute>
-  </xsl:template>
-  <!--    Superscript or Subscript   -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:sup">
-    <xsl:element name="sup">
-      <xsl:apply-templates />
-    </xsl:element>
-  </xsl:template>
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:sub">
-    <xsl:element name="sub">
-      <xsl:apply-templates />
-    </xsl:element>
-  </xsl:template>
-  <!-- show-signature -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-sig">
-    <xsl:param name="sig" />
-    <xsl:choose>
-      <xsl:when test="$sig/@code = 'S'">
-        <xsl:text>signed</xsl:text>
-      </xsl:when>
-      <xsl:when test="$sig/@code = 'I'">
-        <xsl:text>intended</xsl:text>
-      </xsl:when>
-      <xsl:when test="$sig/@code = 'X'">
-        <xsl:text>signature required</xsl:text>
-      </xsl:when>
-    </xsl:choose>
-  </xsl:template>
-  <!--  show-id -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-id">
-    <xsl:param name="id" select="." />
-    <xsl:choose>
-      <xsl:when test="not($id)">
-        <xsl:if test="not(@nullFlavor)">
-          <xsl:if test="@extension">
-            <xsl:value-of select="@extension" />
-          </xsl:if>
-          <xsl:text> </xsl:text>
-          <xsl:call-template name="translate-id-type">
-            <xsl:with-param name="id-oid" select="@root" />
-          </xsl:call-template>
-        </xsl:if>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:if test="not($id/@nullFlavor)">
-          <xsl:if test="$id/@extension">
-            <xsl:value-of select="$id/@extension" />
-          </xsl:if>
-          <xsl:text> </xsl:text>
-          <xsl:call-template name="translate-id-type">
-            <xsl:with-param name="id-oid" select="$id/@root" />
-          </xsl:call-template>
-        </xsl:if>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-  <!-- show-name  -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-name">
-    <xsl:param name="name" />
-    <xsl:choose>
-      <xsl:when test="$name/n1:family">
-        <xsl:if test="$name/n1:prefix">
-          <xsl:value-of select="$name/n1:prefix" />
-          <xsl:text> </xsl:text>
-        </xsl:if>
-        <xsl:value-of select="$name/n1:given" />
-        <xsl:text> </xsl:text>
-        <xsl:value-of select="$name/n1:family" />
-        <xsl:if test="$name/n1:suffix">
-          <xsl:text>, </xsl:text>
-          <xsl:value-of select="$name/n1:suffix" />
-        </xsl:if>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$name" />
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-  <!-- show-gender  -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-gender">
-    <xsl:choose>
-      <xsl:when test="@code = 'M' or @code = 'Male'">
-        <xsl:text>Male</xsl:text>
-      </xsl:when>
-      <xsl:when test="@code = 'F' or @code = 'Female'">
-        <xsl:text>Female</xsl:text>
-      </xsl:when>
-      <xsl:when test="@code = 'UN' or @code = 'Undifferentiated'">
-        <xsl:text>Undifferentiated</xsl:text>
-      </xsl:when>
-    </xsl:choose>
-  </xsl:template>
-  <!-- show-race-ethnicity  -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-race-ethnicity">
-    <xsl:choose>
-      <xsl:when test="@displayName">
-        <xsl:value-of select="@displayName" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="@code" />
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-  <!-- show-contactInfo -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-contactInfo">
-    <xsl:param name="contact" />
-    <xsl:call-template name="show-address">
-      <xsl:with-param name="address" select="$contact/n1:addr" />
-    </xsl:call-template>
-    <xsl:call-template name="show-telecom">
-      <xsl:with-param name="telecom" select="$contact/n1:telecom" />
-    </xsl:call-template>
-  </xsl:template>
-  <!-- show-address -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-address">
-    <xsl:param name="address" />
-    <div class="address-group">
-      <xsl:choose>
-        <xsl:when test="$address">
-          <div class="adress-group-header">
-            <xsl:if test="$address/@use">
-              <xsl:call-template name="translateTelecomCode">
-                <xsl:with-param name="code" select="$address/@use" />
-              </xsl:call-template>
-            </xsl:if>
-          </div>
-          <div class="address-group-content">
-            <p class="tight">
-              <xsl:for-each select="$address/n1:streetAddressLine">
-                <xsl:value-of select="." />
-                <xsl:text> </xsl:text>
-              </xsl:for-each>
-              <xsl:if test="$address/n1:streetName">
-                <xsl:value-of select="$address/n1:streetName" />
-                <xsl:text> </xsl:text>
-                <xsl:value-of select="$address/n1:houseNumber" />
-              </xsl:if>
-            </p>
-            <p class="tight">
-              <xsl:if test="string-length($address/n1:city) &gt; 0">
-                <xsl:value-of select="$address/n1:city" />
-              </xsl:if>
-              <xsl:if test="string-length($address/n1:state) &gt; 0">
-                <xsl:text>, </xsl:text>
-                <xsl:value-of select="$address/n1:state" />
-              </xsl:if>
-            </p>
-            <p class="tight">
-              <xsl:if test="string-length($address/n1:postalCode) &gt; 0">
-                <!--<xsl:text>&#160;</xsl:text>-->
-                <xsl:value-of select="$address/n1:postalCode" />
-              </xsl:if>
-              <xsl:if test="string-length($address/n1:country) &gt; 0">
-                <xsl:text>, </xsl:text>
-                <xsl:value-of select="$address/n1:country" />
-              </xsl:if>
-            </p>
-          </div>
-
-        </xsl:when>
-        <xsl:otherwise>
-          <div class="address-group-content">
-            <span class="generated-text">
-              <xsl:text>&lt;&gt;</xsl:text>
-            </span>
-          </div>
-        </xsl:otherwise>
-      </xsl:choose>
-    </div>
-  </xsl:template>
-  <!-- show-telecom -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-telecom">
-    <xsl:param name="telecom" />
-    <div class="address-group">
-      <xsl:choose>
-        <xsl:when test="$telecom">
-          <xsl:variable name="type" select="substring-before($telecom/@value, ':')" />
-          <xsl:variable name="value" select="substring-after($telecom/@value, ':')" />
-          <xsl:if test="$type">
-            <div class="address-group-header">
-              <xsl:call-template name="translateTelecomCode">
-                <xsl:with-param name="code" select="$type" />
-              </xsl:call-template>
-              <xsl:text> : </xsl:text>
-              <xsl:if test="@use">
-                <xsl:text> (</xsl:text>
-                <xsl:call-template name="translateTelecomCode">
-                  <xsl:with-param name="code" select="@use" />
-                </xsl:call-template>
-                <xsl:text>)</xsl:text>
-              </xsl:if>
-              <xsl:value-of select="$value" />
-            </div>
-          </xsl:if>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>&lt;&gt;</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
-    </div>
-  </xsl:template>
-  <!-- show-recipientType -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-recipientType">
-    <xsl:param name="typeCode" />
-    <xsl:choose>
-      <xsl:when test="$typeCode = 'PRCP'">Primary Recipient:</xsl:when>
-      <xsl:when test="$typeCode = 'TRC'">Secondary Recipient:</xsl:when>
-      <xsl:otherwise>Recipient:</xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-  <!-- Convert Telecom URL to display text -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="translateTelecomCode">
-    <xsl:param name="code" />
-    <!--xsl:value-of select="document('voc.xml')/systems/system[@root=$code/@codeSystem]/code[@value=$code/@code]/@displayName"/-->
-    <!--xsl:value-of select="document('codes.xml')/*/code[@code=$code]/@display"/-->
-    <xsl:choose>
-      <!-- lookup table Telecom URI -->
-      <xsl:when test="$code = 'tel'">
-        <xsl:text>Tel</xsl:text>
-      </xsl:when>
-      <xsl:when test="$code = 'fax'">
-        <xsl:text>Fax</xsl:text>
-      </xsl:when>
-      <xsl:when test="$code = 'http'">
-        <xsl:text>Web</xsl:text>
-      </xsl:when>
-      <xsl:when test="$code = 'mailto'">
-        <xsl:text>Mail</xsl:text>
-      </xsl:when>
-      <xsl:when test="$code = 'H'">
-        <xsl:text>Home</xsl:text>
-      </xsl:when>
-      <xsl:when test="$code = 'url'">
-        <xsl:text>URL</xsl:text>
-      </xsl:when>
-      <xsl:when test="$code = 'HV'">
-        <xsl:text>Vacation Home</xsl:text>
-      </xsl:when>
-      <xsl:when test="$code = 'HP'">
-        <xsl:text>Primary Home</xsl:text>
-      </xsl:when>
-      <xsl:when test="$code = 'WP'">
-        <xsl:text>Work Place</xsl:text>
-      </xsl:when>
-      <xsl:when test="$code = 'PUB'">
-        <xsl:text>Pub</xsl:text>
-      </xsl:when>
-      <xsl:when test="$code = 'TMP'">
-        <xsl:text>Temporary</xsl:text>
-      </xsl:when>
-      <xsl:when test="$code = 'BAD'">
-        <xsl:text>Bad or Old</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>{$code='</xsl:text>
-        <xsl:value-of select="$code" />
-        <xsl:text>'?}</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-  <!-- convert RoleClassAssociative code to display text -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="translateRoleAssoCode">
-    <xsl:param name="classCode" />
-    <xsl:param name="code" />
-    <xsl:choose>
-      <xsl:when test="$classCode = 'AFFL'">
-        <xsl:text>affiliate</xsl:text>
-      </xsl:when>
-      <xsl:when test="$classCode = 'AGNT'">
-        <xsl:text>agent</xsl:text>
-      </xsl:when>
-      <xsl:when test="$classCode = 'ASSIGNED'">
-        <xsl:text>assigned entity</xsl:text>
-      </xsl:when>
-      <xsl:when test="$classCode = 'COMPAR'">
-        <xsl:text>commissioning party</xsl:text>
-      </xsl:when>
-      <xsl:when test="$classCode = 'CON'">
-        <xsl:text>contact</xsl:text>
-      </xsl:when>
-      <xsl:when test="$classCode = 'ECON'">
-        <xsl:text>emergency contact</xsl:text>
-      </xsl:when>
-      <xsl:when test="$classCode = 'NOK'">
-        <xsl:text>next of kin</xsl:text>
-      </xsl:when>
-      <xsl:when test="$classCode = 'SGNOFF'">
-        <xsl:text>signing authority</xsl:text>
-      </xsl:when>
-      <xsl:when test="$classCode = 'GUARD'">
-        <xsl:text>guardian</xsl:text>
-      </xsl:when>
-      <xsl:when test="$classCode = 'GUAR'">
-        <xsl:text>guardian</xsl:text>
-      </xsl:when>
-      <xsl:when test="$classCode = 'CIT'">
-        <xsl:text>citizen</xsl:text>
-      </xsl:when>
-      <xsl:when test="$classCode = 'COVPTY'">
-        <xsl:text>covered party</xsl:text>
-      </xsl:when>
-      <xsl:when test="$classCode = 'PRS'">
-        <xsl:text>personal relationship</xsl:text>
-      </xsl:when>
-      <xsl:when test="$classCode = 'CAREGIVER'">
-        <xsl:text>care giver</xsl:text>
-      </xsl:when>
-      <xsl:when test="$classCode = 'PROV'">
-        <xsl:text>healthcare provider</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>{$classCode='</xsl:text>
-        <xsl:value-of select="$classCode" />
-        <xsl:text>'?}</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:if test="($code/@code) and ($code/@codeSystem = '2.16.840.1.113883.5.111')">
-      <xsl:text> </xsl:text>
-      <xsl:choose>
-        <xsl:when test="$code/@code = 'FTH'">
-          <xsl:text>(Father)</xsl:text>
-        </xsl:when>
-        <xsl:when test="$code/@code = 'MTH'">
-          <xsl:text>(Mother)</xsl:text>
-        </xsl:when>
-        <xsl:when test="$code/@code = 'NPRN'">
-          <xsl:text>(Natural parent)</xsl:text>
-        </xsl:when>
-        <xsl:when test="$code/@code = 'STPPRN'">
-          <xsl:text>(Step parent)</xsl:text>
-        </xsl:when>
-        <xsl:when test="$code/@code = 'SONC'">
-          <xsl:text>(Son)</xsl:text>
-        </xsl:when>
-        <xsl:when test="$code/@code = 'DAUC'">
-          <xsl:text>(Daughter)</xsl:text>
-        </xsl:when>
-        <xsl:when test="$code/@code = 'CHILD'">
-          <xsl:text>(Child)</xsl:text>
-        </xsl:when>
-        <xsl:when test="$code/@code = 'EXT'">
-          <xsl:text>(Extended family member)</xsl:text>
-        </xsl:when>
-        <xsl:when test="$code/@code = 'NBOR'">
-          <xsl:text>(Neighbor)</xsl:text>
-        </xsl:when>
-        <xsl:when test="$code/@code = 'SIGOTHR'">
-          <xsl:text>(Significant other)</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>{$code/@code='</xsl:text>
-          <xsl:value-of select="$code/@code" />
-          <xsl:text>'?}</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:if>
-  </xsl:template>
-  <!-- show time -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-time">
-    <xsl:param name="datetime" />
-    <xsl:choose>
-      <xsl:when test="not($datetime)">
-        <xsl:call-template name="formatDateTime">
-          <xsl:with-param name="date" select="@value" />
-        </xsl:call-template>
-        <xsl:text> </xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:call-template name="formatDateTime">
-          <xsl:with-param name="date" select="$datetime/@value" />
-        </xsl:call-template>
-        <xsl:text> </xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-  <!-- paticipant facility and date -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="facilityAndDates">
-    <table class="header_table">
-      <tbody>
-        <!-- facility id -->
-        <tr>
-          <td class="td_header_role_name">
-            <span class="td_label">
-              <xsl:text>Facility ID</xsl:text>
-            </span>
-          </td>
-          <td class="td_header_role_value">
-            <xsl:choose>
-              <xsl:when
-                test="count(/n1:ClinicalDocument/n1:participant[@typeCode = 'LOC'][@contextControlCode = 'OP']/n1:associatedEntity[@classCode = 'SDLOC']/n1:id) &gt; 0">
-                <!-- change context node -->
-                <xsl:for-each
-                  select="/n1:ClinicalDocument/n1:participant[@typeCode = 'LOC'][@contextControlCode = 'OP']/n1:associatedEntity[@classCode = 'SDLOC']/n1:id">
-                  <xsl:call-template name="show-id" />
-                  <!-- change context node again, for the code -->
-                  <xsl:for-each select="../n1:code">
-                    <xsl:text> (</xsl:text>
-                    <xsl:call-template name="show-code">
-                      <xsl:with-param name="code" select="." />
-                    </xsl:call-template>
-                    <xsl:text>)</xsl:text>
-                  </xsl:for-each>
-                </xsl:for-each>
-              </xsl:when>
-              <xsl:otherwise> Not available </xsl:otherwise>
-            </xsl:choose>
-          </td>
-        </tr>
-        <!-- Period reported -->
-        <tr>
-          <td class="td_header_role_name">
-            <span class="td_label">
-              <xsl:text>First day of period reported</xsl:text>
-            </span>
-          </td>
-          <td class="td_header_role_value">
-            <xsl:call-template name="show-time">
-              <xsl:with-param name="datetime" select="/n1:ClinicalDocument/n1:documentationOf/n1:serviceEvent/n1:effectiveTime/n1:low" />
-            </xsl:call-template>
-          </td>
-        </tr>
-        <tr>
-          <td class="td_header_role_name">
-            <span class="td_label">
-              <xsl:text>Last day of period reported</xsl:text>
-            </span>
-          </td>
-          <td class="td_header_role_value">
-            <xsl:call-template name="show-time">
-              <xsl:with-param name="datetime" select="/n1:ClinicalDocument/n1:documentationOf/n1:serviceEvent/n1:effectiveTime/n1:high" />
-            </xsl:call-template>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </xsl:template>
-  <!-- SG: Add for parent/guardian -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-guardian">
-    <xsl:param name="guard" />
-    <xsl:choose>
-      <xsl:when test="$guard/n1:guardianPerson/n1:name">
-        <xsl:call-template name="show-name">
-          <xsl:with-param name="name" select="$guard/n1:guardianPerson/n1:name" />
-        </xsl:call-template>
-      </xsl:when>
-    </xsl:choose>
-  </xsl:template>
-  <!-- show assignedEntity -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-assignedEntity">
-    <xsl:param name="asgnEntity" />
-    <xsl:choose>
-      <xsl:when test="$asgnEntity/n1:assignedPerson/n1:name">
-        <xsl:call-template name="show-name">
-          <xsl:with-param name="name" select="$asgnEntity/n1:assignedPerson/n1:name" />
-        </xsl:call-template>
-        <xsl:if test="$asgnEntity/n1:representedOrganization/n1:name">
-          <xsl:text> of </xsl:text>
-          <xsl:value-of select="$asgnEntity/n1:representedOrganization/n1:name" />
-        </xsl:if>
-      </xsl:when>
-      <xsl:when test="$asgnEntity/n1:representedOrganization">
-        <xsl:value-of select="$asgnEntity/n1:representedOrganization/n1:name" />
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:for-each select="$asgnEntity/n1:id">
-          <xsl:call-template name="show-id" />
-          <xsl:choose>
-            <xsl:when test="position() != last()">
-              <xsl:text>, </xsl:text>
+                </xsl:if>
             </xsl:when>
             <xsl:otherwise>
-              <br />
+                <!-- Here is where the direct MultiMedia image referencing goes -->
+                <xsl:if test="//n1:observationMedia[@ID = $imageRef]/n1:value[@mediaType = 'image/gif' or @mediaType = 'image/jpeg']">
+                    <br clear="all" />
+                    <xsl:element name="img">
+                        <xsl:attribute name="src">
+                            <xsl:value-of select="//n1:observationMedia[@ID = $imageRef]/n1:value/n1:reference/@value" />
+                        </xsl:attribute>
+                    </xsl:element>
+                </xsl:if>
             </xsl:otherwise>
-          </xsl:choose>
-        </xsl:for-each>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-  <!-- show relatedEntity -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-relatedEntity">
-    <xsl:param name="relatedEntity" />
-    <xsl:choose>
-      <xsl:when test="$relatedEntity/n1:relatedPerson/n1:name">
-        <xsl:call-template name="show-name">
-          <xsl:with-param name="name" select="$relatedEntity/n1:relatedPerson/n1:name" />
-        </xsl:call-template>
-      </xsl:when>
-    </xsl:choose>
-  </xsl:template>
-  <!-- show associatedEntity -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-associatedEntity">
-    <xsl:param name="assoEntity" />
-    <xsl:choose>
-      <xsl:when test="$assoEntity/n1:associatedPerson">
-        <xsl:for-each select="$assoEntity/n1:associatedPerson/n1:name">
-          <xsl:call-template name="show-name">
-            <xsl:with-param name="name" select="." />
-          </xsl:call-template>
-        </xsl:for-each>
-      </xsl:when>
-      <xsl:when test="$assoEntity/n1:scopingOrganization">
-        <xsl:for-each select="$assoEntity/n1:scopingOrganization">
-          <xsl:if test="n1:name">
-            <xsl:call-template name="show-name">
-              <xsl:with-param name="name" select="n1:name" />
+        </xsl:choose>
+    </xsl:template>
+    <!--    Stylecode processing
+     Supports Bold, Underline and Italics display
+     -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="@styleCode">
+        <xsl:attribute name="styleCode">
+            <xsl:value-of select="." />
+        </xsl:attribute>
+    </xsl:template>
+    <!--    Superscript or Subscript   -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:sup">
+        <xsl:element name="sup">
+            <xsl:apply-templates />
+        </xsl:element>
+    </xsl:template>
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" match="n1:sub">
+        <xsl:element name="sub">
+            <xsl:apply-templates />
+        </xsl:element>
+    </xsl:template>
+    <!-- show-signature -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-sig">
+        <xsl:param name="sig" />
+        <xsl:choose>
+            <xsl:when test="$sig/@code = 'S'">
+                <xsl:text>signed</xsl:text>
+            </xsl:when>
+            <xsl:when test="$sig/@code = 'I'">
+                <xsl:text>intended</xsl:text>
+            </xsl:when>
+            <xsl:when test="$sig/@code = 'X'">
+                <xsl:text>signature required</xsl:text>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
+    <!--  show-id -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-id">
+        <xsl:param name="id" select="." />
+        <xsl:choose>
+            <xsl:when test="not($id)">
+                <xsl:if test="not(@nullFlavor)">
+                    <xsl:if test="@extension">
+                        <xsl:value-of select="@extension" />
+                    </xsl:if>
+                    <xsl:text> </xsl:text>
+                    <xsl:call-template name="translate-id-type">
+                        <xsl:with-param name="id-oid" select="@root" />
+                    </xsl:call-template>
+                </xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:if test="not($id/@nullFlavor)">
+                    <xsl:if test="$id/@extension">
+                        <xsl:value-of select="$id/@extension" />
+                    </xsl:if>
+                    <xsl:text> </xsl:text>
+                    <xsl:call-template name="translate-id-type">
+                        <xsl:with-param name="id-oid" select="$id/@root" />
+                    </xsl:call-template>
+                </xsl:if>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <!-- show-name  -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-name">
+        <xsl:param name="name" />
+        <xsl:choose>
+            <xsl:when test="$name/n1:family">
+                <xsl:if test="$name/n1:prefix">
+                    <xsl:value-of select="$name/n1:prefix" />
+                    <xsl:text> </xsl:text>
+                </xsl:if>
+                <xsl:value-of select="$name/n1:given" />
+                <xsl:text> </xsl:text>
+                <xsl:value-of select="$name/n1:family" />
+                <xsl:if test="$name/n1:suffix">
+                    <xsl:text>, </xsl:text>
+                    <xsl:value-of select="$name/n1:suffix" />
+                </xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$name" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <!-- show-gender  -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-gender">
+        <xsl:choose>
+            <xsl:when test="@code = 'M' or @code = 'Male'">
+                <xsl:text>Male</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'F' or @code = 'Female'">
+                <xsl:text>Female</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'UN' or @code = 'Undifferentiated'">
+                <xsl:text>Undifferentiated</xsl:text>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
+    <!-- show-race-ethnicity  -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-race-ethnicity">
+        <xsl:choose>
+            <xsl:when test="@displayName">
+                <xsl:value-of select="@displayName" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="@code" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <!-- show-preferred-language  -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-preferred-language">
+        <xsl:choose>
+            <xsl:when test="@displayName">
+                <xsl:value-of select="@displayName" />
+            </xsl:when>
+            <xsl:when test="@code = 'ar'">
+                <xsl:text>Arabic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bn'">
+                <xsl:text>Bengali</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cs'">
+                <xsl:text>Czech</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'da'">
+                <xsl:text>Danish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'de'">
+                <xsl:text>German</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'de-AT'">
+                <xsl:text>German (Austria)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'de-CH'">
+                <xsl:text>German (Switzerland)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'de-DE'">
+                <xsl:text>German (Germany)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'el'">
+                <xsl:text>Greek</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'en'">
+                <xsl:text>English</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'en-AU'">
+                <xsl:text>English (Australia)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'en-CA'">
+                <xsl:text>English (Canada)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'en-GB'">
+                <xsl:text>English (Great Britain)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'en-IN'">
+                <xsl:text>English (India)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'en-NZ'">
+                <xsl:text>English (New Zeland)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'en-SG'">
+                <xsl:text>English (Singapore)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'en-US'">
+                <xsl:text>English (United States)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'es'">
+                <xsl:text>Spanish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'es-AR'">
+                <xsl:text>Spanish (Argentina)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'es-ES'">
+                <xsl:text>Spanish (Spain)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'es-UY'">
+                <xsl:text>Spanish (Uruguay)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fi'">
+                <xsl:text>Finnish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fr'">
+                <xsl:text>French</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fr-BE'">
+                <xsl:text>French (Belgium)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fr-CH'">
+                <xsl:text>French (Switzerland)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fr-FR'">
+                <xsl:text>French (France)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fy'">
+                <xsl:text>Frysian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fy-NL'">
+                <xsl:text>Frysian (Netherlands)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hi'">
+                <xsl:text>Hindi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hr'">
+                <xsl:text>Croatian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'it'">
+                <xsl:text>Italian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'it-CH'">
+                <xsl:text>Italian (Switzerland)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'it-IT'">
+                <xsl:text>Italian (Italy)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ja'">
+                <xsl:text>Japanese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ko'">
+                <xsl:text>Korean</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nl'">
+                <xsl:text>Dutch</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nl-BE'">
+                <xsl:text>Dutch (Belgium)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nl-NL'">
+                <xsl:text>Dutch (Netherlands)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'no'">
+                <xsl:text>Norwegian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'no-NO'">
+                <xsl:text>Norwegian (Norway)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pa'">
+                <xsl:text>Punjabi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pl'">
+                <xsl:text>Polish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pt'">
+                <xsl:text>Portuguese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pt-BR'">
+                <xsl:text>Portuguese (Brazil)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ru'">
+                <xsl:text>Russian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ru-RU'">
+                <xsl:text>Russian (Russia)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sr'">
+                <xsl:text>Serbian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sr-RS'">
+                <xsl:text>Serbian (Serbia)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sv'">
+                <xsl:text>Swedish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sv-SE'">
+                <xsl:text>Swedish (Sweden)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'te'">
+                <xsl:text>Telegu</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zh'">
+                <xsl:text>Chinese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zh-CN'">
+                <xsl:text>Chinese (China)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zh-HK'">
+                <xsl:text>Chinese (Hong Kong)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zh-SG'">
+                <xsl:text>Chinese (Singapore)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zh-TW'">
+                <xsl:text>Chinese (Taiwan)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'aar'">
+                <xsl:text>Afar</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'abk'">
+                <xsl:text>Abkhazian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ace'">
+                <xsl:text>Achinese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ach'">
+                <xsl:text>Acoli</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ada'">
+                <xsl:text>Adangme</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ady'">
+                <xsl:text>Adyghe; Adygei</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'afa'">
+                <xsl:text>Afro-Asiatic languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'afh'">
+                <xsl:text>Afrihili</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'afr'">
+                <xsl:text>Afrikaans</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ain'">
+                <xsl:text>Ainu</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'aka'">
+                <xsl:text>Akan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'akk'">
+                <xsl:text>Akkadian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'alb (B)'">
+                <xsl:text>Albanian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sqi (T)'">
+                <xsl:text>Albanian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ale'">
+                <xsl:text>Aleut</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'alg'">
+                <xsl:text>Algonquian languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'alt'">
+                <xsl:text>Southern Altai</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'amh'">
+                <xsl:text>Amharic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ang'">
+                <xsl:text>English, Old (ca.450-1100)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'anp'">
+                <xsl:text>Angika</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'apa'">
+                <xsl:text>Apache languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ara'">
+                <xsl:text>Arabic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'arc'">
+                <xsl:text>Official Aramaic (700-300 BCE); Imperial Aramaic (700-300 BCE)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'arg'">
+                <xsl:text>Aragonese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'arm (B)'">
+                <xsl:text>Armenian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hye (T)'">
+                <xsl:text>Armenian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'arn'">
+                <xsl:text>Mapudungun; Mapuche</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'arp'">
+                <xsl:text>Arapaho</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'art'">
+                <xsl:text>Artificial languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'arw'">
+                <xsl:text>Arawak</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'asm'">
+                <xsl:text>Assamese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ast'">
+                <xsl:text>Asturian; Bable; Leonese; Asturleonese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ath'">
+                <xsl:text>Athapascan languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'aus'">
+                <xsl:text>Australian languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ava'">
+                <xsl:text>Avaric</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ave'">
+                <xsl:text>Avestan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'awa'">
+                <xsl:text>Awadhi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'aym'">
+                <xsl:text>Aymara</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'aze'">
+                <xsl:text>Azerbaijani</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bad'">
+                <xsl:text>Banda languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bai'">
+                <xsl:text>Bamileke languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bak'">
+                <xsl:text>Bashkir</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bal'">
+                <xsl:text>Baluchi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bam'">
+                <xsl:text>Bambara</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ban'">
+                <xsl:text>Balinese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'baq (B)'">
+                <xsl:text>Basque</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'eus (T)'">
+                <xsl:text>Basque</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bas'">
+                <xsl:text>Basa</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bat'">
+                <xsl:text>Baltic languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bej'">
+                <xsl:text>Beja; Bedawiyet</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bel'">
+                <xsl:text>Belarusian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bem'">
+                <xsl:text>Bemba</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ben'">
+                <xsl:text>Bengali</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ber'">
+                <xsl:text>Berber languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bho'">
+                <xsl:text>Bhojpuri</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bih'">
+                <xsl:text>Bihari languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bik'">
+                <xsl:text>Bikol</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bin'">
+                <xsl:text>Bini; Edo</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bis'">
+                <xsl:text>Bislama</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bla'">
+                <xsl:text>Siksika</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bnt'">
+                <xsl:text>Bantu languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tib (B)'">
+                <xsl:text>Tibetan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bod (T)'">
+                <xsl:text>Tibetan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bos'">
+                <xsl:text>Bosnian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bra'">
+                <xsl:text>Braj</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bre'">
+                <xsl:text>Breton</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'btk'">
+                <xsl:text>Batak languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bua'">
+                <xsl:text>Buriat</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bug'">
+                <xsl:text>Buginese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bul'">
+                <xsl:text>Bulgarian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bur (B)'">
+                <xsl:text>Burmese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mya (T)'">
+                <xsl:text>Burmese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'byn'">
+                <xsl:text>Blin; Bilin</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cad'">
+                <xsl:text>Caddo</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cai'">
+                <xsl:text>Central American Indian languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'car'">
+                <xsl:text>Galibi Carib</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cat'">
+                <xsl:text>Catalan; Valencian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cau'">
+                <xsl:text>Caucasian languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ceb'">
+                <xsl:text>Cebuano</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cel'">
+                <xsl:text>Celtic languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cze (B)'">
+                <xsl:text>Czech</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ces (T)'">
+                <xsl:text>Czech</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cha'">
+                <xsl:text>Chamorro</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'chb'">
+                <xsl:text>Chibcha</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'che'">
+                <xsl:text>Chechen</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'chg'">
+                <xsl:text>Chagatai</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'chi (B)'">
+                <xsl:text>Chinese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zho (T)'">
+                <xsl:text>Chinese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'chk'">
+                <xsl:text>Chuukese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'chm'">
+                <xsl:text>Mari</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'chn'">
+                <xsl:text>Chinook jargon</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cho'">
+                <xsl:text>Choctaw</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'chp'">
+                <xsl:text>Chipewyan; Dene Suline</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'chr'">
+                <xsl:text>Cherokee</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'chu'">
+                <xsl:text>Church Slavic; Old Slavonic; Church Slavonic; Old Bulgarian; Old Church Slavonic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'chv'">
+                <xsl:text>Chuvash</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'chy'">
+                <xsl:text>Cheyenne</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cmc'">
+                <xsl:text>Chamic languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cnr'">
+                <xsl:text>Montenegrin</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cop'">
+                <xsl:text>Coptic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cor'">
+                <xsl:text>Cornish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cos'">
+                <xsl:text>Corsican</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cpe'">
+                <xsl:text>Creoles and pidgins, English based</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cpf'">
+                <xsl:text>Creoles and pidgins, French-based</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cpp'">
+                <xsl:text>Creoles and pidgins, Portuguese-based</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cre'">
+                <xsl:text>Cree</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'crh'">
+                <xsl:text>Crimean Tatar; Crimean Turkish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'crp'">
+                <xsl:text>Creoles and pidgins</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'csb'">
+                <xsl:text>Kashubian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cus'">
+                <xsl:text>Cushitic languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'wel (B)'">
+                <xsl:text>Welsh</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cym (T)'">
+                <xsl:text>Welsh</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cze (B)'">
+                <xsl:text>Czech</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ces (T)'">
+                <xsl:text>Czech</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'dak'">
+                <xsl:text>Dakota</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'dan'">
+                <xsl:text>Danish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'dar'">
+                <xsl:text>Dargwa</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'day'">
+                <xsl:text>Land Dayak languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'del'">
+                <xsl:text>Delaware</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'den'">
+                <xsl:text>Slave (Athapascan)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ger (B)'">
+                <xsl:text>German</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'deu (T)'">
+                <xsl:text>German</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'dgr'">
+                <xsl:text>Tlicho; Dogrib</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'din'">
+                <xsl:text>Dinka</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'div'">
+                <xsl:text>Divehi; Dhivehi; Maldivian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'doi'">
+                <xsl:text>Dogri (macrolanguage)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'dra'">
+                <xsl:text>Dravidian languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'dsb'">
+                <xsl:text>Lower Sorbian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'dua'">
+                <xsl:text>Duala</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'dum'">
+                <xsl:text>Dutch, Middle (ca.1050-1350)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'dut (B)'">
+                <xsl:text>Dutch; Flemish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nld (T)'">
+                <xsl:text>Dutch; Flemish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'dyu'">
+                <xsl:text>Dyula</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'dzo'">
+                <xsl:text>Dzongkha</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'efi'">
+                <xsl:text>Efik</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'egy'">
+                <xsl:text>Egyptian (Ancient)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'eka'">
+                <xsl:text>Ekajuk</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'gre (B)'">
+                <xsl:text>Greek, Modern (1453-)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ell (T)'">
+                <xsl:text>Greek, Modern (1453-)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'elx'">
+                <xsl:text>Elamite</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'eng'">
+                <xsl:text>English</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'enm'">
+                <xsl:text>English, Middle (1100-1500)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'epo'">
+                <xsl:text>Esperanto</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'est'">
+                <xsl:text>Estonian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'baq (B)'">
+                <xsl:text>Basque</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'eus (T)'">
+                <xsl:text>Basque</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ewe'">
+                <xsl:text>Ewe</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ewo'">
+                <xsl:text>Ewondo</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fan'">
+                <xsl:text>Fang</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fao'">
+                <xsl:text>Faroese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'per (B)'">
+                <xsl:text>Persian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fas (T)'">
+                <xsl:text>Persian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fat'">
+                <xsl:text>Fanti</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fij'">
+                <xsl:text>Fijian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fil'">
+                <xsl:text>Filipino; Pilipino</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fin'">
+                <xsl:text>Finnish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fiu'">
+                <xsl:text>Finno-Ugrian languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fon'">
+                <xsl:text>Fon</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fre (B)'">
+                <xsl:text>French</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fra (T)'">
+                <xsl:text>French</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fre (B)'">
+                <xsl:text>French</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fra (T)'">
+                <xsl:text>French</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'frm'">
+                <xsl:text>French, Middle (ca.1400-1600)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fro'">
+                <xsl:text>French, Old (842-ca.1400)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'frr'">
+                <xsl:text>Northern Frisian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'frs'">
+                <xsl:text>Eastern Frisian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fry'">
+                <xsl:text>Western Frisian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ful'">
+                <xsl:text>Fulah</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fur'">
+                <xsl:text>Friulian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'gaa'">
+                <xsl:text>Ga</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'gay'">
+                <xsl:text>Gayo</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'gba'">
+                <xsl:text>Gbaya</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'gem'">
+                <xsl:text>Germanic languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'geo (B)'">
+                <xsl:text>Georgian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kat (T)'">
+                <xsl:text>Georgian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ger (B)'">
+                <xsl:text>German</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'deu (T)'">
+                <xsl:text>German</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'gez'">
+                <xsl:text>Geez</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'gil'">
+                <xsl:text>Gilbertese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'gla'">
+                <xsl:text>Gaelic; Scottish Gaelic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'gle'">
+                <xsl:text>Irish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'glg'">
+                <xsl:text>Galician</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'glv'">
+                <xsl:text>Manx</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'gmh'">
+                <xsl:text>German, Middle High (ca.1050-1500)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'goh'">
+                <xsl:text>German, Old High (ca.750-1050)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'gon'">
+                <xsl:text>Gondi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'gor'">
+                <xsl:text>Gorontalo</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'got'">
+                <xsl:text>Gothic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'grb'">
+                <xsl:text>Grebo</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'grc'">
+                <xsl:text>Greek, Ancient (to 1453)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'gre (B)'">
+                <xsl:text>Greek, Modern (1453-)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ell (T)'">
+                <xsl:text>Greek, Modern (1453-)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'grn'">
+                <xsl:text>Guarani</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'gsw'">
+                <xsl:text>Swiss German; Alemannic; Alsatian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'guj'">
+                <xsl:text>Gujarati</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'gwi'">
+                <xsl:text>Gwich'in</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hai'">
+                <xsl:text>Haida</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hat'">
+                <xsl:text>Haitian; Haitian Creole</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hau'">
+                <xsl:text>Hausa</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'haw'">
+                <xsl:text>Hawaiian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'heb'">
+                <xsl:text>Hebrew</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'her'">
+                <xsl:text>Herero</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hil'">
+                <xsl:text>Hiligaynon</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'him'">
+                <xsl:text>Himachali languages; Western Pahari languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hin'">
+                <xsl:text>Hindi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hit'">
+                <xsl:text>Hittite</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hmn'">
+                <xsl:text>Hmong; Mong</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hmo'">
+                <xsl:text>Hiri Motu</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hrv'">
+                <xsl:text>Croatian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hsb'">
+                <xsl:text>Upper Sorbian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hun'">
+                <xsl:text>Hungarian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hup'">
+                <xsl:text>Hupa</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'arm (B)'">
+                <xsl:text>Armenian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'hye (T)'">
+                <xsl:text>Armenian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'iba'">
+                <xsl:text>Iban</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ibo'">
+                <xsl:text>Igbo</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ice (B)'">
+                <xsl:text>Icelandic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'isl (T)'">
+                <xsl:text>Icelandic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ido'">
+                <xsl:text>Ido</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'iii'">
+                <xsl:text>Sichuan Yi; Nuosu</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ijo'">
+                <xsl:text>Ijo languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'iku'">
+                <xsl:text>Inuktitut</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ile'">
+                <xsl:text>Interlingue; Occidental</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ilo'">
+                <xsl:text>Iloko</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ina'">
+                <xsl:text>Interlingua (International Auxiliary Language Association)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'inc'">
+                <xsl:text>Indic languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ind'">
+                <xsl:text>Indonesian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ine'">
+                <xsl:text>Indo-European languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'inh'">
+                <xsl:text>Ingush</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ipk'">
+                <xsl:text>Inupiaq</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ira'">
+                <xsl:text>Iranian languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'iro'">
+                <xsl:text>Iroquoian languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ice (B)'">
+                <xsl:text>Icelandic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'isl (T)'">
+                <xsl:text>Icelandic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ita'">
+                <xsl:text>Italian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'jav'">
+                <xsl:text>Javanese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'jbo'">
+                <xsl:text>Lojban</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'jpn'">
+                <xsl:text>Japanese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'jpr'">
+                <xsl:text>Judeo-Persian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'jrb'">
+                <xsl:text>Judeo-Arabic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kaa'">
+                <xsl:text>Kara-Kalpak</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kab'">
+                <xsl:text>Kabyle</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kac'">
+                <xsl:text>Kachin; Jingpho</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kal'">
+                <xsl:text>Kalaallisut; Greenlandic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kam'">
+                <xsl:text>Kamba</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kan'">
+                <xsl:text>Kannada</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kar'">
+                <xsl:text>Karen languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kas'">
+                <xsl:text>Kashmiri</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'geo (B)'">
+                <xsl:text>Georgian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kat (T)'">
+                <xsl:text>Georgian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kau'">
+                <xsl:text>Kanuri</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kaw'">
+                <xsl:text>Kawi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kaz'">
+                <xsl:text>Kazakh</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kbd'">
+                <xsl:text>Kabardian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kha'">
+                <xsl:text>Khasi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'khi'">
+                <xsl:text>Khoisan languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'khm'">
+                <xsl:text>Central Khmer</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kho'">
+                <xsl:text>Khotanese; Sakan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kik'">
+                <xsl:text>Kikuyu; Gikuyu</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kin'">
+                <xsl:text>Kinyarwanda</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kir'">
+                <xsl:text>Kirghiz; Kyrgyz</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kmb'">
+                <xsl:text>Kimbundu</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kok'">
+                <xsl:text>Konkani (macrolanguage)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kom'">
+                <xsl:text>Komi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kon'">
+                <xsl:text>Kongo</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kor'">
+                <xsl:text>Korean</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kos'">
+                <xsl:text>Kosraean</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kpe'">
+                <xsl:text>Kpelle</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'krc'">
+                <xsl:text>Karachay-Balkar</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'krl'">
+                <xsl:text>Karelian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kro'">
+                <xsl:text>Kru languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kru'">
+                <xsl:text>Kurukh</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kua'">
+                <xsl:text>Kuanyama; Kwanyama</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kum'">
+                <xsl:text>Kumyk</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kur'">
+                <xsl:text>Kurdish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'kut'">
+                <xsl:text>Kutenai</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lad'">
+                <xsl:text>Ladino</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lah'">
+                <xsl:text>Lahnda</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lam'">
+                <xsl:text>Lamba</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lao'">
+                <xsl:text>Lao</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lat'">
+                <xsl:text>Latin</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lav'">
+                <xsl:text>Latvian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lez'">
+                <xsl:text>Lezghian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lim'">
+                <xsl:text>Limburgan; Limburger; Limburgish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lin'">
+                <xsl:text>Lingala</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lit'">
+                <xsl:text>Lithuanian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lol'">
+                <xsl:text>Mongo</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'loz'">
+                <xsl:text>Lozi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ltz'">
+                <xsl:text>Luxembourgish; Letzeburgesch</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lua'">
+                <xsl:text>Luba-Lulua</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lub'">
+                <xsl:text>Luba-Katanga</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lug'">
+                <xsl:text>Ganda</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lui'">
+                <xsl:text>Luiseno</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lun'">
+                <xsl:text>Lunda</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'luo'">
+                <xsl:text>Luo (Kenya and Tanzania)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'lus'">
+                <xsl:text>Lushai</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mac (B)'">
+                <xsl:text>Macedonian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mkd (T)'">
+                <xsl:text>Macedonian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mad'">
+                <xsl:text>Madurese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mag'">
+                <xsl:text>Magahi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mah'">
+                <xsl:text>Marshallese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mai'">
+                <xsl:text>Maithili</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mak'">
+                <xsl:text>Makasar</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mal'">
+                <xsl:text>Malayalam</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'man'">
+                <xsl:text>Mandingo</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mao (B)'">
+                <xsl:text>Maori</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mri (T)'">
+                <xsl:text>Maori</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'map'">
+                <xsl:text>Austronesian languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mar'">
+                <xsl:text>Marathi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mas'">
+                <xsl:text>Masai</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'may (B)'">
+                <xsl:text>Malay (macrolanguage)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'msa (T)'">
+                <xsl:text>Malay (macrolanguage)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mdf'">
+                <xsl:text>Moksha</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mdr'">
+                <xsl:text>Mandar</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'men'">
+                <xsl:text>Mende</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mga'">
+                <xsl:text>Irish, Middle (900-1200)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mic'">
+                <xsl:text>Mi'kmaq; Micmac</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'min'">
+                <xsl:text>Minangkabau</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mis'">
+                <xsl:text>Uncoded languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mac (B)'">
+                <xsl:text>Macedonian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mkd (T)'">
+                <xsl:text>Macedonian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mkh'">
+                <xsl:text>Mon-Khmer languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mlg'">
+                <xsl:text>Malagasy</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mlt'">
+                <xsl:text>Maltese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mnc'">
+                <xsl:text>Manchu</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mni'">
+                <xsl:text>Manipuri</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mno'">
+                <xsl:text>Manobo languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'moh'">
+                <xsl:text>Mohawk</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mon'">
+                <xsl:text>Mongolian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mos'">
+                <xsl:text>Mossi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mao (B)'">
+                <xsl:text>Maori</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mri (T)'">
+                <xsl:text>Maori</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'may (B)'">
+                <xsl:text>Malay (macrolanguage)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'msa (T)'">
+                <xsl:text>Malay (macrolanguage)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mul'">
+                <xsl:text>Multiple languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mun'">
+                <xsl:text>Munda languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mus'">
+                <xsl:text>Creek</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mwl'">
+                <xsl:text>Mirandese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mwr'">
+                <xsl:text>Marwari</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bur (B)'">
+                <xsl:text>Burmese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'mya (T)'">
+                <xsl:text>Burmese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'myn'">
+                <xsl:text>Mayan languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'myv'">
+                <xsl:text>Erzya</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nah'">
+                <xsl:text>Nahuatl languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nai'">
+                <xsl:text>North American Indian languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nap'">
+                <xsl:text>Neapolitan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nau'">
+                <xsl:text>Nauru</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nav'">
+                <xsl:text>Navajo; Navaho</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nbl'">
+                <xsl:text>Ndebele, South; South Ndebele</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nde'">
+                <xsl:text>Ndebele, North; North Ndebele</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ndo'">
+                <xsl:text>Ndonga</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nds'">
+                <xsl:text>Low German; Low Saxon; German, Low; Saxon, Low</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nep'">
+                <xsl:text>Nepali (macrolanguage)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'new'">
+                <xsl:text>Nepal Bhasa; Newari</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nia'">
+                <xsl:text>Nias</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nic'">
+                <xsl:text>Niger-Kordofanian languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'niu'">
+                <xsl:text>Niuean</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'dut (B)'">
+                <xsl:text>Dutch; Flemish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nld (T)'">
+                <xsl:text>Dutch; Flemish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nno'">
+                <xsl:text>Norwegian Nynorsk; Nynorsk, Norwegian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nob'">
+                <xsl:text>Bokmål, Norwegian; Norwegian Bokmål</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nog'">
+                <xsl:text>Nogai</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'non'">
+                <xsl:text>Norse, Old</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nor'">
+                <xsl:text>Norwegian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nqo'">
+                <xsl:text>N'Ko</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nso'">
+                <xsl:text>Pedi; Sepedi; Northern Sotho</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nub'">
+                <xsl:text>Nubian languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nwc'">
+                <xsl:text>Classical Newari; Old Newari; Classical Nepal Bhasa</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nya'">
+                <xsl:text>Chichewa; Chewa; Nyanja</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nym'">
+                <xsl:text>Nyamwezi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nyn'">
+                <xsl:text>Nyankole</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nyo'">
+                <xsl:text>Nyoro</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'nzi'">
+                <xsl:text>Nzima</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'oci'">
+                <xsl:text>Occitan (post 1500)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'oji'">
+                <xsl:text>Ojibwa</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ori'">
+                <xsl:text>Oriya (macrolanguage)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'orm'">
+                <xsl:text>Oromo</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'osa'">
+                <xsl:text>Osage</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'oss'">
+                <xsl:text>Ossetian; Ossetic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ota'">
+                <xsl:text>Turkish, Ottoman (1500-1928)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'oto'">
+                <xsl:text>Otomian languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'paa'">
+                <xsl:text>Papuan languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pag'">
+                <xsl:text>Pangasinan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pal'">
+                <xsl:text>Pahlavi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pam'">
+                <xsl:text>Pampanga; Kapampangan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pan'">
+                <xsl:text>Panjabi; Punjabi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pap'">
+                <xsl:text>Papiamento</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pau'">
+                <xsl:text>Palauan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'peo'">
+                <xsl:text>Persian, Old (ca.600-400 B.C.)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'per (B)'">
+                <xsl:text>Persian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'fas (T)'">
+                <xsl:text>Persian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'phi'">
+                <xsl:text>Philippine languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'phn'">
+                <xsl:text>Phoenician</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pli'">
+                <xsl:text>Pali</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pol'">
+                <xsl:text>Polish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pon'">
+                <xsl:text>Pohnpeian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'por'">
+                <xsl:text>Portuguese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pra'">
+                <xsl:text>Prakrit languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pro'">
+                <xsl:text>Provençal, Old (to 1500);Occitan, Old (to 1500)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'pus'">
+                <xsl:text>Pushto; Pashto</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'qaa-qtz'">
+                <xsl:text>Reserved for local use</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'que'">
+                <xsl:text>Quechua</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'raj'">
+                <xsl:text>Rajasthani</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'rap'">
+                <xsl:text>Rapanui</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'rar'">
+                <xsl:text>Rarotongan; Cook Islands Maori</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'roa'">
+                <xsl:text>Romance languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'roh'">
+                <xsl:text>Romansh</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'rom'">
+                <xsl:text>Romany</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'rum (B)'">
+                <xsl:text>Romanian; Moldavian; Moldovan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ron (T)'">
+                <xsl:text>Romanian; Moldavian; Moldovan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'rum (B)'">
+                <xsl:text>Romanian; Moldavian; Moldovan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ron (T)'">
+                <xsl:text>Romanian; Moldavian; Moldovan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'run'">
+                <xsl:text>Rundi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'rup'">
+                <xsl:text>Aromanian; Arumanian; Macedo-Romanian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'rus'">
+                <xsl:text>Russian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sad'">
+                <xsl:text>Sandawe</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sag'">
+                <xsl:text>Sango</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sah'">
+                <xsl:text>Yakut</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sai'">
+                <xsl:text>South American Indian languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sal'">
+                <xsl:text>Salishan languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sam'">
+                <xsl:text>Samaritan Aramaic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'san'">
+                <xsl:text>Sanskrit</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sas'">
+                <xsl:text>Sasak</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sat'">
+                <xsl:text>Santali</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'scn'">
+                <xsl:text>Sicilian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sco'">
+                <xsl:text>Scots</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sel'">
+                <xsl:text>Selkup</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sem'">
+                <xsl:text>Semitic languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sga'">
+                <xsl:text>Irish, Old (to 900)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sgn'">
+                <xsl:text>Sign Languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'shn'">
+                <xsl:text>Shan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sid'">
+                <xsl:text>Sidamo</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sin'">
+                <xsl:text>Sinhala; Sinhalese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sio'">
+                <xsl:text>Siouan languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sit'">
+                <xsl:text>Sino-Tibetan languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sla'">
+                <xsl:text>Slavic languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'slo (B)'">
+                <xsl:text>Slovak</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'slk (T)'">
+                <xsl:text>Slovak</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'slo (B)'">
+                <xsl:text>Slovak</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'slk (T)'">
+                <xsl:text>Slovak</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'slv'">
+                <xsl:text>Slovenian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sma'">
+                <xsl:text>Southern Sami</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sme'">
+                <xsl:text>Northern Sami</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'smi'">
+                <xsl:text>Sami languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'smj'">
+                <xsl:text>Lule Sami</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'smn'">
+                <xsl:text>Inari Sami</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'smo'">
+                <xsl:text>Samoan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sms'">
+                <xsl:text>Skolt Sami</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sna'">
+                <xsl:text>Shona</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'snd'">
+                <xsl:text>Sindhi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'snk'">
+                <xsl:text>Soninke</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sog'">
+                <xsl:text>Sogdian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'som'">
+                <xsl:text>Somali</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'son'">
+                <xsl:text>Songhai languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sot'">
+                <xsl:text>Sotho, Southern</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'spa'">
+                <xsl:text>Spanish; Castilian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'alb (B)'">
+                <xsl:text>Albanian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sqi (T)'">
+                <xsl:text>Albanian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'srd'">
+                <xsl:text>Sardinian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'srn'">
+                <xsl:text>Sranan Tongo</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'srp'">
+                <xsl:text>Serbian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'srr'">
+                <xsl:text>Serer</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ssa'">
+                <xsl:text>Nilo-Saharan languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ssw'">
+                <xsl:text>Swati</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'suk'">
+                <xsl:text>Sukuma</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sun'">
+                <xsl:text>Sundanese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sus'">
+                <xsl:text>Susu</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'sux'">
+                <xsl:text>Sumerian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'swa'">
+                <xsl:text>Swahili (macrolanguage)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'swe'">
+                <xsl:text>Swedish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'syc'">
+                <xsl:text>Classical Syriac</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'syr'">
+                <xsl:text>Syriac</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tah'">
+                <xsl:text>Tahitian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tai'">
+                <xsl:text>Tai languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tam'">
+                <xsl:text>Tamil</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tat'">
+                <xsl:text>Tatar</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tel'">
+                <xsl:text>Telugu</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tem'">
+                <xsl:text>Timne</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ter'">
+                <xsl:text>Tereno</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tet'">
+                <xsl:text>Tetum</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tgk'">
+                <xsl:text>Tajik</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tgl'">
+                <xsl:text>Tagalog</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tha'">
+                <xsl:text>Thai</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tib (B)'">
+                <xsl:text>Tibetan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'bod (T)'">
+                <xsl:text>Tibetan</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tig'">
+                <xsl:text>Tigre</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tir'">
+                <xsl:text>Tigrinya</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tiv'">
+                <xsl:text>Tiv</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tkl'">
+                <xsl:text>Tokelau</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tlh'">
+                <xsl:text>Klingon; tlhIngan-Hol</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tli'">
+                <xsl:text>Tlingit</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tmh'">
+                <xsl:text>Tamashek</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tog'">
+                <xsl:text>Tonga (Nyasa)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ton'">
+                <xsl:text>Tonga (Tonga Islands)</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tpi'">
+                <xsl:text>Tok Pisin</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tsi'">
+                <xsl:text>Tsimshian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tsn'">
+                <xsl:text>Tswana</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tso'">
+                <xsl:text>Tsonga</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tuk'">
+                <xsl:text>Turkmen</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tum'">
+                <xsl:text>Tumbuka</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tup'">
+                <xsl:text>Tupi languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tur'">
+                <xsl:text>Turkish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tut'">
+                <xsl:text>Altaic languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tvl'">
+                <xsl:text>Tuvalu</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'twi'">
+                <xsl:text>Twi</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'tyv'">
+                <xsl:text>Tuvinian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'udm'">
+                <xsl:text>Udmurt</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'uga'">
+                <xsl:text>Ugaritic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'uig'">
+                <xsl:text>Uighur; Uyghur</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ukr'">
+                <xsl:text>Ukrainian</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'umb'">
+                <xsl:text>Umbundu</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'und'">
+                <xsl:text>Undetermined</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'urd'">
+                <xsl:text>Urdu</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'uzb'">
+                <xsl:text>Uzbek</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'vai'">
+                <xsl:text>Vai</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ven'">
+                <xsl:text>Venda</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'vie'">
+                <xsl:text>Vietnamese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'vol'">
+                <xsl:text>Volapük</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'vot'">
+                <xsl:text>Votic</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'wak'">
+                <xsl:text>Wakashan languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'wal'">
+                <xsl:text>Wolaitta; Wolaytta</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'war'">
+                <xsl:text>Waray</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'was'">
+                <xsl:text>Washo</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'wel (B)'">
+                <xsl:text>Welsh</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'cym (T)'">
+                <xsl:text>Welsh</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'wen'">
+                <xsl:text>Sorbian languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'wln'">
+                <xsl:text>Walloon</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'wol'">
+                <xsl:text>Wolof</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'xal'">
+                <xsl:text>Kalmyk; Oirat</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'xho'">
+                <xsl:text>Xhosa</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'yao'">
+                <xsl:text>Yao</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'yap'">
+                <xsl:text>Yapese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'yid'">
+                <xsl:text>Yiddish</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'yor'">
+                <xsl:text>Yoruba</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'ypk'">
+                <xsl:text>Yupik languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zap'">
+                <xsl:text>Zapotec</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zbl'">
+                <xsl:text>Blissymbols; Blissymbolics; Bliss</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zen'">
+                <xsl:text>Zenaga</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zgh'">
+                <xsl:text>Standard Moroccan Tamazight</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zha'">
+                <xsl:text>Zhuang; Chuang</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'chi (B)'">
+                <xsl:text>Chinese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zho (T)'">
+                <xsl:text>Chinese</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'znd'">
+                <xsl:text>Zande languages</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zul'">
+                <xsl:text>Zulu</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zun'">
+                <xsl:text>Zuni</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zxx'">
+                <xsl:text>No linguistic content; Not applicable</xsl:text>
+            </xsl:when>
+            <xsl:when test="@code = 'zza'">
+                <xsl:text>Zaza; Dimili; Dimli; Kirdki; Kirmanjki; Zazaki</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="@code" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <!-- show-contactInfo -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-contactInfo">
+        <xsl:param name="contact" />
+        <xsl:variable name="vAddrCount">
+            <xsl:value-of
+                select="count($contact/n1:addr[string-length(n1:streetAddressLine) > 0 or string-length(n1:streetName) > 0 or string-length(n1:houseNumber) > 0 or string-length(n1:city) > 0 or string-length(n1:state) > 0 or string-length(n1:postalCode) > 0 or string-length(n1:county) > 0 or string-length(n1:country) > 0])"
+             />
+        </xsl:variable>
+        <xsl:for-each select="$contact/n1:addr[string-length(n1:streetAddressLine) > 0 or string-length(n1:streetName) > 0 or string-length(n1:houseNumber) > 0 or string-length(n1:city) > 0 or string-length(n1:state) > 0 or string-length(n1:postalCode) > 0 or string-length(n1:county) > 0 or string-length(n1:country) > 0]">
+            <xsl:call-template name="show-address">
+                <xsl:with-param name="address" select="." />
             </xsl:call-template>
-            <br />
-          </xsl:if>
-          <xsl:if test="n1:standardIndustryClassCode">
-            <xsl:value-of select="n1:standardIndustryClassCode/@displayName" />
-            <xsl:text> code:</xsl:text>
-            <xsl:value-of select="n1:standardIndustryClassCode/@code" />
-          </xsl:if>
+            <xsl:if test="$vAddrCount > 1 and position() != last()">
+                <br />
+            </xsl:if>
         </xsl:for-each>
-      </xsl:when>
-      <xsl:when test="$assoEntity/n1:code">
-        <xsl:call-template name="show-code">
-          <xsl:with-param name="code" select="$assoEntity/n1:code" />
-        </xsl:call-template>
-      </xsl:when>
-      <xsl:when test="$assoEntity/n1:id">
+        <xsl:for-each select="$contact/n1:telecom">
+            <xsl:call-template name="show-telecom">
+                <xsl:with-param name="telecom" select="." />
+            </xsl:call-template>
+        </xsl:for-each>
+    </xsl:template>
+    <!-- show-address -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-address">
+        <xsl:param name="address" />
+        <div class="address-group">
+            <xsl:choose>
+                <xsl:when test="$address">
+                    <div class="adress-group-header">
+                        <xsl:if test="$address/@use">
+                            <xsl:call-template name="translateTelecomCode">
+                                <xsl:with-param name="code" select="$address/@use" />
+                            </xsl:call-template>
+                        </xsl:if>
+                        <!-- SG: 20211020 Added processing for useable period -->
+                        <xsl:if test="$address/n1:useablePeriod">
+                            <xsl:text> (</xsl:text>
+                            <xsl:call-template name="show-time">
+                                <xsl:with-param name="datetime" select="$address/n1:useablePeriod/n1:low" />
+                            </xsl:call-template>
+                            <xsl:text> to </xsl:text>
+                            <xsl:choose>
+                                <xsl:when test="$address/n1:useablePeriod/n1:high">
+                                    <xsl:call-template name="show-time">
+                                        <xsl:with-param name="datetime" select="$address/n1:useablePeriod/n1:high" />
+                                    </xsl:call-template>
+                                </xsl:when>
+                                <xsl:otherwise>present</xsl:otherwise>
+                            </xsl:choose>
+                            <xsl:text>)</xsl:text>
+                        </xsl:if>
+                    </div>
+                    <div class="address-group-content">
+                        <p class="tight">
+                            <xsl:for-each select="$address/n1:streetAddressLine">
+                                <xsl:value-of select="." />
+                                <xsl:text> </xsl:text>
+                            </xsl:for-each>
+                            <xsl:if test="$address/n1:streetName">
+                                <xsl:value-of select="$address/n1:streetName" />
+                                <xsl:text> </xsl:text>
+                                <xsl:value-of select="$address/n1:houseNumber" />
+                            </xsl:if>
+                        </p>
+                        <p class="tight">
+                            <xsl:if test="string-length($address/n1:city) &gt; 0">
+                                <xsl:value-of select="$address/n1:city" />
+                            </xsl:if>
+                            <xsl:if test="string-length($address/n1:state) &gt; 0">
+                                <xsl:text>, </xsl:text>
+                                <xsl:value-of select="$address/n1:state" />
+                            </xsl:if>
+                        </p>
+                        <p class="tight">
+                            <xsl:if test="string-length($address/n1:postalCode) &gt; 0">
+                                <!--<xsl:text>&#160;</xsl:text>-->
+                                <xsl:value-of select="$address/n1:postalCode" />
+                            </xsl:if>
+                            <xsl:if test="string-length($address/n1:country) &gt; 0">
+                                <xsl:if test="string-length($address/n1:postalCode) &gt; 0">
+                                    <xsl:text>, </xsl:text>
+                                </xsl:if>
+                                <xsl:value-of select="$address/n1:country" />
+                            </xsl:if>
+                        </p>
+                    </div>
+
+                </xsl:when>
+                <xsl:otherwise>
+                    <div class="address-group-content">
+                        <span class="generated-text">
+                            <xsl:text>&lt;&gt;</xsl:text>
+                        </span>
+                    </div>
+                </xsl:otherwise>
+            </xsl:choose>
+        </div>
+    </xsl:template>
+    <!-- show-telecom -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-telecom">
+        <xsl:param name="telecom" />
+        <div class="address-group">
+            <xsl:choose>
+                <xsl:when test="$telecom">
+                    <xsl:variable name="type" select="substring-before($telecom/@value, ':')" />
+                    <xsl:variable name="value" select="substring-after($telecom/@value, ':')" />
+                    <xsl:if test="$type">
+                        <div class="address-group-header">
+                            <xsl:call-template name="translateTelecomCode">
+                                <xsl:with-param name="code" select="$type" />
+                            </xsl:call-template>
+                            <xsl:text>: </xsl:text>
+                            <xsl:if test="@use">
+                                <xsl:text> (</xsl:text>
+                                <xsl:call-template name="translateTelecomCode">
+                                    <xsl:with-param name="code" select="@use" />
+                                </xsl:call-template>
+                                <xsl:text>) </xsl:text>
+                            </xsl:if>
+                            <xsl:value-of select="$value" />
+                        </div>
+                    </xsl:if>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:text>&lt;&gt;</xsl:text>
+                </xsl:otherwise>
+            </xsl:choose>
+        </div>
+    </xsl:template>
+    <!-- show-recipientType -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-recipientType">
+        <xsl:param name="typeCode" />
+        <xsl:choose>
+            <xsl:when test="$typeCode = 'PRCP'">Primary Recipient:</xsl:when>
+            <xsl:when test="$typeCode = 'TRC'">Secondary Recipient:</xsl:when>
+            <xsl:otherwise>Recipient:</xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <!-- Convert Telecom URL to display text -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="translateTelecomCode">
+        <xsl:param name="code" />
+        <!--xsl:value-of select="document('voc.xml')/systems/system[@root=$code/@codeSystem]/code[@value=$code/@code]/@displayName"/-->
+        <!--xsl:value-of select="document('codes.xml')/*/code[@code=$code]/@display"/-->
+        <xsl:choose>
+            <!-- lookup table Telecom URI -->
+            <xsl:when test="$code = 'tel'">
+                <xsl:text>tel</xsl:text>
+            </xsl:when>
+            <xsl:when test="$code = 'fax'">
+                <xsl:text>fax</xsl:text>
+            </xsl:when>
+            <xsl:when test="$code = 'http'">
+                <xsl:text>web</xsl:text>
+            </xsl:when>
+            <xsl:when test="$code = 'mailto'">
+                <xsl:text>email</xsl:text>
+            </xsl:when>
+            <xsl:when test="$code = 'H'">
+                <xsl:text>Home</xsl:text>
+            </xsl:when>
+            <xsl:when test="$code = 'url'">
+                <xsl:text>URL</xsl:text>
+            </xsl:when>
+            <xsl:when test="$code = 'HV'">
+                <xsl:text>Vacation Home</xsl:text>
+            </xsl:when>
+            <xsl:when test="$code = 'HP'">
+                <xsl:text>Primary Home</xsl:text>
+            </xsl:when>
+            <xsl:when test="$code = 'WP'">
+                <xsl:text>Work Place</xsl:text>
+            </xsl:when>
+            <xsl:when test="$code = 'MC'">
+                <xsl:text>Mobile Contact</xsl:text>
+            </xsl:when>
+            <xsl:when test="$code = 'DIR'">
+                <xsl:text>Direct</xsl:text>
+            </xsl:when>
+            <xsl:when test="$code = 'PUB'">
+                <xsl:text>Public</xsl:text>
+            </xsl:when>
+            <xsl:when test="$code = 'AS'">
+                <xsl:text>Answering Service</xsl:text>
+            </xsl:when>
+            <xsl:when test="$code = 'PG'">
+                <xsl:text>Pager</xsl:text>
+            </xsl:when>
+            <xsl:when test="$code = 'TMP'">
+                <xsl:text>Temporary</xsl:text>
+            </xsl:when>
+            <xsl:when test="$code = 'BAD'">
+                <xsl:text>Bad or Old</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:text>{$code='</xsl:text>
+                <xsl:value-of select="$code" />
+                <xsl:text>'?}</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <!-- convert RoleClassAssociative code to display text -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="translateRoleAssoCode">
+        <xsl:param name="classCode" />
+        <xsl:param name="code" />
+        <xsl:choose>
+            <xsl:when test="$classCode = 'AFFL'">
+                <xsl:text>affiliate</xsl:text>
+            </xsl:when>
+            <xsl:when test="$classCode = 'AGNT'">
+                <xsl:text>agent</xsl:text>
+            </xsl:when>
+            <xsl:when test="$classCode = 'ASSIGNED'">
+                <xsl:text>assigned entity</xsl:text>
+            </xsl:when>
+            <xsl:when test="$classCode = 'COMPAR'">
+                <xsl:text>commissioning party</xsl:text>
+            </xsl:when>
+            <xsl:when test="$classCode = 'CON'">
+                <xsl:text>contact</xsl:text>
+            </xsl:when>
+            <xsl:when test="$classCode = 'ECON'">
+                <xsl:text>emergency contact</xsl:text>
+            </xsl:when>
+            <xsl:when test="$classCode = 'NOK'">
+                <xsl:text>next of kin</xsl:text>
+            </xsl:when>
+            <xsl:when test="$classCode = 'SGNOFF'">
+                <xsl:text>signing authority</xsl:text>
+            </xsl:when>
+            <xsl:when test="$classCode = 'GUARD'">
+                <xsl:text>guardian</xsl:text>
+            </xsl:when>
+            <xsl:when test="$classCode = 'GUAR'">
+                <xsl:text>guardian</xsl:text>
+            </xsl:when>
+            <xsl:when test="$classCode = 'CIT'">
+                <xsl:text>citizen</xsl:text>
+            </xsl:when>
+            <xsl:when test="$classCode = 'COVPTY'">
+                <xsl:text>covered party</xsl:text>
+            </xsl:when>
+            <xsl:when test="$classCode = 'PRS'">
+                <xsl:text>personal relationship</xsl:text>
+            </xsl:when>
+            <xsl:when test="$classCode = 'CAREGIVER'">
+                <xsl:text>care giver</xsl:text>
+            </xsl:when>
+            <xsl:when test="$classCode = 'PROV'">
+                <xsl:text>healthcare provider</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:text>{$classCode='</xsl:text>
+                <xsl:value-of select="$classCode" />
+                <xsl:text>'?}</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
+        <xsl:if test="($code/@code) and ($code/@codeSystem = '2.16.840.1.113883.5.111')">
+            <xsl:text> </xsl:text>
+            <xsl:choose>
+                <xsl:when test="$code/@code = 'FTH'">
+                    <xsl:text>(Father)</xsl:text>
+                </xsl:when>
+                <xsl:when test="$code/@code = 'MTH'">
+                    <xsl:text>(Mother)</xsl:text>
+                </xsl:when>
+                <xsl:when test="$code/@code = 'NPRN'">
+                    <xsl:text>(Natural parent)</xsl:text>
+                </xsl:when>
+                <xsl:when test="$code/@code = 'STPPRN'">
+                    <xsl:text>(Step parent)</xsl:text>
+                </xsl:when>
+                <xsl:when test="$code/@code = 'SONC'">
+                    <xsl:text>(Son)</xsl:text>
+                </xsl:when>
+                <xsl:when test="$code/@code = 'DAUC'">
+                    <xsl:text>(Daughter)</xsl:text>
+                </xsl:when>
+                <xsl:when test="$code/@code = 'CHILD'">
+                    <xsl:text>(Child)</xsl:text>
+                </xsl:when>
+                <xsl:when test="$code/@code = 'EXT'">
+                    <xsl:text>(Extended family member)</xsl:text>
+                </xsl:when>
+                <xsl:when test="$code/@code = 'NBOR'">
+                    <xsl:text>(Neighbor)</xsl:text>
+                </xsl:when>
+                <xsl:when test="$code/@code = 'SIGOTHR'">
+                    <xsl:text>(Significant other)</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:text>{$code/@code='</xsl:text>
+                    <xsl:value-of select="$code/@code" />
+                    <xsl:text>'?}</xsl:text>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:if>
+    </xsl:template>
+    <!-- show time -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-time">
+        <xsl:param name="datetime" />
+        <xsl:choose>
+            <xsl:when test="not($datetime)">
+                <xsl:call-template name="formatDateTime">
+                    <xsl:with-param name="date" select="@value" />
+                </xsl:call-template>
+                <xsl:text> </xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="formatDateTime">
+                    <xsl:with-param name="date" select="$datetime/@value" />
+                </xsl:call-template>
+                <xsl:text> </xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <!-- paticipant facility and date -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="facilityAndDates">
+        <table class="header_table">
+            <tbody>
+                <!-- facility id -->
+                <tr>
+                    <td class="td_header_role_name">
+                        <span class="td_label">
+                            <xsl:text>Facility ID</xsl:text>
+                        </span>
+                    </td>
+                    <td class="td_header_role_value">
+                        <xsl:choose>
+                            <xsl:when test="count(/n1:ClinicalDocument/n1:participant[@typeCode = 'LOC'][@contextControlCode = 'OP']/n1:associatedEntity[@classCode = 'SDLOC']/n1:id) &gt; 0">
+                                <!-- change context node -->
+                                <xsl:for-each select="/n1:ClinicalDocument/n1:participant[@typeCode = 'LOC'][@contextControlCode = 'OP']/n1:associatedEntity[@classCode = 'SDLOC']/n1:id">
+                                    <xsl:call-template name="show-id" />
+                                    <!-- change context node again, for the code -->
+                                    <xsl:for-each select="../n1:code">
+                                        <xsl:text> (</xsl:text>
+                                        <xsl:call-template name="show-code">
+                                            <xsl:with-param name="code" select="." />
+                                        </xsl:call-template>
+                                        <xsl:text>)</xsl:text>
+                                    </xsl:for-each>
+                                </xsl:for-each>
+                            </xsl:when>
+                            <xsl:otherwise> Not available </xsl:otherwise>
+                        </xsl:choose>
+                    </td>
+                </tr>
+                <!-- Period reported -->
+                <tr>
+                    <td class="td_header_role_name">
+                        <span class="td_label">
+                            <xsl:text>First day of period reported</xsl:text>
+                        </span>
+                    </td>
+                    <td class="td_header_role_value">
+                        <xsl:call-template name="show-time">
+                            <xsl:with-param name="datetime" select="/n1:ClinicalDocument/n1:documentationOf/n1:serviceEvent/n1:effectiveTime/n1:low" />
+                        </xsl:call-template>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td_header_role_name">
+                        <span class="td_label">
+                            <xsl:text>Last day of period reported</xsl:text>
+                        </span>
+                    </td>
+                    <td class="td_header_role_value">
+                        <xsl:call-template name="show-time">
+                            <xsl:with-param name="datetime" select="/n1:ClinicalDocument/n1:documentationOf/n1:serviceEvent/n1:effectiveTime/n1:high" />
+                        </xsl:call-template>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </xsl:template>
+    <!-- SG: Add for parent/guardian -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-guardian">
+        <xsl:param name="guard" />
+        <xsl:choose>
+            <xsl:when test="$guard/n1:guardianPerson/n1:name">
+                <xsl:call-template name="show-name">
+                    <xsl:with-param name="name" select="$guard/n1:guardianPerson/n1:name" />
+                </xsl:call-template>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
+    <!-- show assignedEntity -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-assignedEntity">
+        <xsl:param name="asgnEntity" />
+        <xsl:choose>
+            <xsl:when test="$asgnEntity/n1:assignedPerson/n1:name">
+                <xsl:call-template name="show-name">
+                    <xsl:with-param name="name" select="$asgnEntity/n1:assignedPerson/n1:name" />
+                </xsl:call-template>
+                <xsl:if test="$asgnEntity/n1:representedOrganization/n1:name">
+                    <xsl:text> of </xsl:text>
+                    <xsl:value-of select="$asgnEntity/n1:representedOrganization/n1:name" />
+                </xsl:if>
+            </xsl:when>
+            <xsl:when test="$asgnEntity/n1:representedOrganization">
+                <xsl:value-of select="$asgnEntity/n1:representedOrganization/n1:name" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:for-each select="$asgnEntity/n1:id">
+                    <xsl:call-template name="show-id" />
+                    <xsl:choose>
+                        <xsl:when test="position() != last()">
+                            <xsl:text>, </xsl:text>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <br />
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:for-each>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <!-- show relatedEntity -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-relatedEntity">
+        <xsl:param name="relatedEntity" />
+        <xsl:choose>
+            <xsl:when test="$relatedEntity/n1:relatedPerson/n1:name">
+                <xsl:call-template name="show-name">
+                    <xsl:with-param name="name" select="$relatedEntity/n1:relatedPerson/n1:name" />
+                </xsl:call-template>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
+    <!-- show associatedEntity -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-associatedEntity">
+        <xsl:param name="assoEntity" />
+        <!-- SG: This shouldn't be a choice, can be a combination of these things -->
+        <!--<xsl:choose>-->
+        <!--      <xsl:when test="$assoEntity/n1:associatedPerson">-->
+        <xsl:for-each select="$assoEntity/n1:associatedPerson/n1:name">
+            <xsl:call-template name="show-name">
+                <xsl:with-param name="name" select="." />
+            </xsl:call-template><br />
+        </xsl:for-each>
+        <!--</xsl:when>-->
+        <!--      <xsl:when test="$assoEntity/n1:scopingOrganization">-->
+        <xsl:for-each select="$assoEntity/n1:scopingOrganization">
+            <xsl:if test="n1:name">
+                <xsl:call-template name="show-name">
+                    <xsl:with-param name="name" select="n1:name" />
+                </xsl:call-template>
+                <br />
+            </xsl:if>
+            <xsl:if test="n1:standardIndustryClassCode">
+                <xsl:value-of select="n1:standardIndustryClassCode/@displayName" />
+                <xsl:text> code:</xsl:text>
+                <xsl:value-of select="n1:standardIndustryClassCode/@code" />
+            </xsl:if>
+            <br />
+        </xsl:for-each>
+        <!--</xsl:when>-->
+        <!--      <xsl:when test="$assoEntity/n1:code">--> (<xsl:call-template name="show-code">
+            <xsl:with-param name="code" select="$assoEntity/n1:code" />
+        </xsl:call-template>) <!--</xsl:when>-->
+        <!--      <xsl:when test="$assoEntity/n1:id">-->
         <xsl:value-of select="$assoEntity/n1:id/@extension" />
         <xsl:text> </xsl:text>
         <xsl:value-of select="$assoEntity/n1:id/@root" />
-      </xsl:when>
-    </xsl:choose>
-  </xsl:template>
-  <!-- show code
+        <!--</xsl:when>-->
+        <!--</xsl:choose>-->
+    </xsl:template>
+    <!-- show code
      if originalText present, return it, otherwise, check and return attribute: display name
      -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-code">
-    <xsl:param name="code" />
-    <xsl:variable name="this-codeSystem">
-      <xsl:value-of select="$code/@codeSystem" />
-    </xsl:variable>
-    <xsl:variable name="this-code">
-      <xsl:value-of select="$code/@code" />
-    </xsl:variable>
-    <xsl:choose>
-      <xsl:when test="$code/n1:originalText">
-        <xsl:value-of select="$code/n1:originalText" />
-      </xsl:when>
-      <xsl:when test="$code/@displayName">
-        <xsl:value-of select="$code/@displayName" />
-      </xsl:when>
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-code">
+        <xsl:param name="code" />
+        <xsl:variable name="this-codeSystem">
+            <xsl:value-of select="$code/@codeSystem" />
+        </xsl:variable>
+        <xsl:variable name="this-code">
+            <xsl:value-of select="$code/@code" />
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$code/n1:originalText">
+                <xsl:value-of select="$code/n1:originalText" />
+            </xsl:when>
+            <xsl:when test="$code/@displayName">
+                <xsl:value-of select="$code/@displayName" />
+            </xsl:when>
 
-      <xsl:otherwise>
-        <xsl:value-of select="$this-code" />
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-  <!-- show classCode -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-actClassCode">
-    <xsl:param name="clsCode" />
-    <xsl:choose>
-      <xsl:when test="$clsCode = 'ACT'">
-        <xsl:text>healthcare service</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'ACCM'">
-        <xsl:text>accommodation</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'ACCT'">
-        <xsl:text>account</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'ACSN'">
-        <xsl:text>accession</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'ADJUD'">
-        <xsl:text>financial adjudication</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'CONS'">
-        <xsl:text>consent</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'CONTREG'">
-        <xsl:text>container registration</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'CTTEVENT'">
-        <xsl:text>clinical trial timepoint event</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'DISPACT'">
-        <xsl:text>disciplinary action</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'ENC'">
-        <xsl:text>encounter</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'INC'">
-        <xsl:text>incident</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'INFRM'">
-        <xsl:text>inform</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'INVE'">
-        <xsl:text>invoice element</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'LIST'">
-        <xsl:text>working list</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'MPROT'">
-        <xsl:text>monitoring program</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'PCPR'">
-        <xsl:text>care provision</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'PROC'">
-        <xsl:text>procedure</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'REG'">
-        <xsl:text>registration</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'REV'">
-        <xsl:text>review</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'SBADM'">
-        <xsl:text>substance administration</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'SPCTRT'">
-        <xsl:text>specimen treatment</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'SUBST'">
-        <xsl:text>substitution</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'TRNS'">
-        <xsl:text>transportation</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'VERIF'">
-        <xsl:text>verification</xsl:text>
-      </xsl:when>
-      <xsl:when test="$clsCode = 'XACT'">
-        <xsl:text>financial transaction</xsl:text>
-      </xsl:when>
-    </xsl:choose>
-  </xsl:template>
-  <!-- show participationType -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-participationType">
-    <xsl:param name="ptype" />
-    <xsl:choose>
-      <xsl:when test="$ptype = 'PPRF'">
-        <xsl:text>primary performer</xsl:text>
-      </xsl:when>
-      <xsl:when test="$ptype = 'PRF'">
-        <xsl:text>performer</xsl:text>
-      </xsl:when>
-      <xsl:when test="$ptype = 'VRF'">
-        <xsl:text>verifier</xsl:text>
-      </xsl:when>
-      <xsl:when test="$ptype = 'SPRF'">
-        <xsl:text>secondary performer</xsl:text>
-      </xsl:when>
-    </xsl:choose>
-  </xsl:template>
-  <!-- show participationFunction -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-participationFunction">
-    <xsl:param name="pFunction" />
-    <xsl:choose>
-      <!-- From the HL7 v3 ParticipationFunction code system -->
-      <xsl:when test="$pFunction = 'ADMPHYS'">
-        <xsl:text>(admitting physician)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'ANEST'">
-        <xsl:text>(anesthesist)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'ANRS'">
-        <xsl:text>(anesthesia nurse)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'ATTPHYS'">
-        <xsl:text>(attending physician)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'DISPHYS'">
-        <xsl:text>(discharging physician)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'FASST'">
-        <xsl:text>(first assistant surgeon)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'MDWF'">
-        <xsl:text>(midwife)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'NASST'">
-        <xsl:text>(nurse assistant)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'PCP'">
-        <xsl:text>(primary care physician)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'PRISURG'">
-        <xsl:text>(primary surgeon)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'RNDPHYS'">
-        <xsl:text>(rounding physician)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'SASST'">
-        <xsl:text>(second assistant surgeon)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'SNRS'">
-        <xsl:text>(scrub nurse)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'TASST'">
-        <xsl:text>(third assistant)</xsl:text>
-      </xsl:when>
-      <!-- From the HL7 v2 Provider Role code system (2.16.840.1.113883.12.443) which is used by HITSP -->
-      <xsl:when test="$pFunction = 'CP'">
-        <xsl:text>(consulting provider)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'PP'">
-        <xsl:text>(primary care provider)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'RP'">
-        <xsl:text>(referring provider)</xsl:text>
-      </xsl:when>
-      <xsl:when test="$pFunction = 'MP'">
-        <xsl:text>(medical home provider)</xsl:text>
-      </xsl:when>
-    </xsl:choose>
-  </xsl:template>
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="formatDateTime">
-    <xsl:param name="date" />
-    <!-- month -->
-    <xsl:variable name="month" select="substring($date, 5, 2)" />
-    <!-- day -->
-    <xsl:value-of select="$month" />
-    <xsl:text>/</xsl:text>
-    <xsl:choose>
-      <xsl:when test="substring($date, 7, 1) = &quot;0&quot;">
-        <xsl:value-of select="substring($date, 8, 1)" />
+            <xsl:otherwise>
+                <xsl:value-of select="$this-code" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <!-- show classCode -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-actClassCode">
+        <xsl:param name="clsCode" />
+        <xsl:choose>
+            <xsl:when test="$clsCode = 'ACT'">
+                <xsl:text>healthcare service</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'ACCM'">
+                <xsl:text>accommodation</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'ACCT'">
+                <xsl:text>account</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'ACSN'">
+                <xsl:text>accession</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'ADJUD'">
+                <xsl:text>financial adjudication</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'CONS'">
+                <xsl:text>consent</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'CONTREG'">
+                <xsl:text>container registration</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'CTTEVENT'">
+                <xsl:text>clinical trial timepoint event</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'DISPACT'">
+                <xsl:text>disciplinary action</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'ENC'">
+                <xsl:text>encounter</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'INC'">
+                <xsl:text>incident</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'INFRM'">
+                <xsl:text>inform</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'INVE'">
+                <xsl:text>invoice element</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'LIST'">
+                <xsl:text>working list</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'MPROT'">
+                <xsl:text>monitoring program</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'PCPR'">
+                <xsl:text>care provision</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'PROC'">
+                <xsl:text>procedure</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'REG'">
+                <xsl:text>registration</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'REV'">
+                <xsl:text>review</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'SBADM'">
+                <xsl:text>substance administration</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'SPCTRT'">
+                <xsl:text>specimen treatment</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'SUBST'">
+                <xsl:text>substitution</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'TRNS'">
+                <xsl:text>transportation</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'VERIF'">
+                <xsl:text>verification</xsl:text>
+            </xsl:when>
+            <xsl:when test="$clsCode = 'XACT'">
+                <xsl:text>financial transaction</xsl:text>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
+    <!-- show participationType -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-participationType">
+        <xsl:param name="ptype" />
+        <xsl:choose>
+            <xsl:when test="$ptype = 'PPRF'">
+                <xsl:text>primary performer</xsl:text>
+            </xsl:when>
+            <xsl:when test="$ptype = 'PRF'">
+                <xsl:text>performer</xsl:text>
+            </xsl:when>
+            <xsl:when test="$ptype = 'VRF'">
+                <xsl:text>verifier</xsl:text>
+            </xsl:when>
+            <xsl:when test="$ptype = 'SPRF'">
+                <xsl:text>secondary performer</xsl:text>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
+    <!-- show participationFunction -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-participationFunction">
+        <xsl:param name="pFunction" />
+        <xsl:choose>
+            <!-- From the HL7 v3 ParticipationFunction code system -->
+            <xsl:when test="$pFunction = 'ADMPHYS'">
+                <xsl:text>(admitting physician)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'ANEST'">
+                <xsl:text>(anesthesist)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'ANRS'">
+                <xsl:text>(anesthesia nurse)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'ATTPHYS'">
+                <xsl:text>(attending physician)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'DISPHYS'">
+                <xsl:text>(discharging physician)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'FASST'">
+                <xsl:text>(first assistant surgeon)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'MDWF'">
+                <xsl:text>(midwife)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'NASST'">
+                <xsl:text>(nurse assistant)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'PCP'">
+                <xsl:text>(primary care physician)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'PRISURG'">
+                <xsl:text>(primary surgeon)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'RNDPHYS'">
+                <xsl:text>(rounding physician)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'SASST'">
+                <xsl:text>(second assistant surgeon)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'SNRS'">
+                <xsl:text>(scrub nurse)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'TASST'">
+                <xsl:text>(third assistant)</xsl:text>
+            </xsl:when>
+            <!-- From the HL7 v2 Provider Role code system (2.16.840.1.113883.12.443) which is used by HITSP -->
+            <xsl:when test="$pFunction = 'CP'">
+                <xsl:text>(consulting provider)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'PP'">
+                <xsl:text>(primary care provider)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'RP'">
+                <xsl:text>(referring provider)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$pFunction = 'MP'">
+                <xsl:text>(medical home provider)</xsl:text>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="formatDateTime">
+        <xsl:param name="date" />
+        <!-- month -->
+        <xsl:variable name="month" select="substring($date, 5, 2)" />
+        <!-- day -->
+        <xsl:value-of select="$month" />
         <xsl:text>/</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="substring($date, 7, 2)" />
-        <xsl:text>/</xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
-    <!-- year -->
-    <xsl:value-of select="substring($date, 1, 4)" />
-    <!-- time and US timezone -->
-    <xsl:if test="string-length($date) &gt; 8">
-      <!-- time -->
-      <xsl:variable name="time">
-        <xsl:value-of select="substring($date, 9, 6)" />
-      </xsl:variable>
-      <xsl:variable name="hh">
-        <xsl:value-of select="substring($time, 1, 2)" />
-      </xsl:variable>
-      <xsl:variable name="mm">
-        <xsl:value-of select="substring($time, 3, 2)" />
-      </xsl:variable>
-      <xsl:variable name="ss">
-        <xsl:value-of select="substring($time, 5, 2)" />
-      </xsl:variable>
-      <xsl:if test="(string-length($hh) &gt; 1 and not($hh = '00')) or (string-length($mm) &gt; 1 and not($mm = '00'))">
-        <xsl:text>, </xsl:text>
-        <xsl:value-of select="$hh" />
-        <xsl:if test="string-length($mm) &gt; 1 and not(contains($mm, '-')) and not(contains($mm, '+'))">
-          <xsl:text>:</xsl:text>
-          <xsl:value-of select="$mm" />
+        <xsl:choose>
+            <xsl:when test="substring($date, 7, 1) = &quot;0&quot;">
+                <xsl:value-of select="substring($date, 8, 1)" />
+                <xsl:text>/</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="substring($date, 7, 2)" />
+                <xsl:text>/</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
+        <!-- year -->
+        <xsl:value-of select="substring($date, 1, 4)" />
+        <!-- time and US timezone -->
+        <xsl:if test="string-length($date) &gt; 8">
+            <!-- time -->
+            <xsl:variable name="time">
+                <xsl:value-of select="substring($date, 9, 6)" />
+            </xsl:variable>
+            <xsl:variable name="hh">
+                <xsl:value-of select="substring($time, 1, 2)" />
+            </xsl:variable>
+            <xsl:variable name="mm">
+                <xsl:value-of select="substring($time, 3, 2)" />
+            </xsl:variable>
+            <xsl:variable name="ss">
+                <xsl:value-of select="substring($time, 5, 2)" />
+            </xsl:variable>
+            <xsl:if test="(string-length($hh) &gt; 1 and not($hh = '00')) or (string-length($mm) &gt; 1 and not($mm = '00'))">
+                <xsl:text>, </xsl:text>
+                <xsl:value-of select="$hh" />
+                <xsl:if test="string-length($mm) &gt; 1 and not(contains($mm, '-')) and not(contains($mm, '+'))">
+                    <xsl:text>:</xsl:text>
+                    <xsl:value-of select="$mm" />
+                </xsl:if>
+            </xsl:if>
         </xsl:if>
-      </xsl:if>
-    </xsl:if>
-  </xsl:template>
-  <!-- convert to lower case -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="caseDown">
-    <xsl:param name="data" />
-    <xsl:if test="$data">
-      <xsl:value-of select="translate($data, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')" />
-    </xsl:if>
-  </xsl:template>
-  <!-- convert to upper case -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="caseUp">
-    <xsl:param name="data" />
-    <xsl:if test="$data">
-      <xsl:value-of select="translate($data, 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')" />
-    </xsl:if>
-  </xsl:template>
-  <!-- convert first character to upper case -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="firstCharCaseUp">
-    <xsl:param name="data" />
-    <xsl:if test="$data">
-      <xsl:call-template name="caseUp">
-        <xsl:with-param name="data" select="substring($data, 1, 1)" />
-      </xsl:call-template>
-      <xsl:value-of select="substring($data, 2)" />
-    </xsl:if>
-  </xsl:template>
-  <!-- show-noneFlavor -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-noneFlavor">
-    <xsl:param name="nf" />
-    <xsl:choose>
-      <xsl:when test="$nf = 'NI'">
-        <xsl:text>no information</xsl:text>
-      </xsl:when>
-      <xsl:when test="$nf = 'INV'">
-        <xsl:text>invalid</xsl:text>
-      </xsl:when>
-      <xsl:when test="$nf = 'MSK'">
-        <xsl:text>masked</xsl:text>
-      </xsl:when>
-      <xsl:when test="$nf = 'NA'">
-        <xsl:text>not applicable</xsl:text>
-      </xsl:when>
-      <xsl:when test="$nf = 'UNK'">
-        <xsl:text>unknown</xsl:text>
-      </xsl:when>
-      <xsl:when test="$nf = 'OTH'">
-        <xsl:text>other</xsl:text>
-      </xsl:when>
-    </xsl:choose>
-  </xsl:template>
+    </xsl:template>
+    <!-- convert to lower case -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="caseDown">
+        <xsl:param name="data" />
+        <xsl:if test="$data">
+            <xsl:value-of select="translate($data, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')" />
+        </xsl:if>
+    </xsl:template>
+    <!-- convert to upper case -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="caseUp">
+        <xsl:param name="data" />
+        <xsl:if test="$data">
+            <xsl:value-of select="translate($data, 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')" />
+        </xsl:if>
+    </xsl:template>
+    <!-- convert first character to upper case -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="firstCharCaseUp">
+        <xsl:param name="data" />
+        <xsl:if test="$data">
+            <xsl:call-template name="caseUp">
+                <xsl:with-param name="data" select="substring($data, 1, 1)" />
+            </xsl:call-template>
+            <xsl:value-of select="substring($data, 2)" />
+        </xsl:if>
+    </xsl:template>
+    <!-- show-noneFlavor -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="show-noneFlavor">
+        <xsl:param name="nf" />
+        <xsl:choose>
+            <xsl:when test="$nf = 'NI'">
+                <xsl:text>no information</xsl:text>
+            </xsl:when>
+            <xsl:when test="$nf = 'INV'">
+                <xsl:text>invalid</xsl:text>
+            </xsl:when>
+            <xsl:when test="$nf = 'MSK'">
+                <xsl:text>masked</xsl:text>
+            </xsl:when>
+            <xsl:when test="$nf = 'NA'">
+                <xsl:text>not applicable</xsl:text>
+            </xsl:when>
+            <xsl:when test="$nf = 'UNK'">
+                <xsl:text>unknown</xsl:text>
+            </xsl:when>
+            <xsl:when test="$nf = 'OTH'">
+                <xsl:text>other</xsl:text>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
 
-  <!-- convert common OIDs for Identifiers -->
-  <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="translate-id-type">
-    <xsl:param name="id-oid" />
-    <xsl:choose>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.1'">
-        <xsl:text>United States Social Security Number</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.6'">
-        <xsl:text>United States National Provider Identifier</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.2'">
-        <xsl:text>Alaska Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.1'">
-        <xsl:text>Alabama Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.5'">
-        <xsl:text>Arkansas Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.4'">
-        <xsl:text>Arizona Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.6'">
-        <xsl:text>California Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.8'">
-        <xsl:text>Colorado Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.9'">
-        <xsl:text>Connecticut Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.11'">
-        <xsl:text>DC Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.10'">
-        <xsl:text>Delaware Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.12'">
-        <xsl:text>Florida Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.13'">
-        <xsl:text>Georgia Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.15'">
-        <xsl:text>Hawaii Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.18'">
-        <xsl:text>Indiana Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.19'">
-        <xsl:text>Iowa Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.16'">
-        <xsl:text>Idaho Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.17'">
-        <xsl:text>Illinois Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.20'">
-        <xsl:text>Kansas Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.21'">
-        <xsl:text>Kentucky Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.22'">
-        <xsl:text>Louisiana Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.25'">
-        <xsl:text>Massachusetts Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.24'">
-        <xsl:text>Maryland Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.23'">
-        <xsl:text>Maine Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.26'">
-        <xsl:text>Michigan Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.27'">
-        <xsl:text>Minnesota Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.29'">
-        <xsl:text>Missouri Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.28'">
-        <xsl:text>Mississippi Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.30'">
-        <xsl:text>Montana Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.36'">
-        <xsl:text>New York Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.37'">
-        <xsl:text>North Carolina Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.38'">
-        <xsl:text>North Dakota Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.31'">
-        <xsl:text>Nebraska Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.33'">
-        <xsl:text>New Hampshire Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.34'">
-        <xsl:text>New Jersey Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.35'">
-        <xsl:text>New Mexico Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.32'">
-        <xsl:text>Nevada Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.39'">
-        <xsl:text>Ohio Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.40'">
-        <xsl:text>Oklahoma Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.41'">
-        <xsl:text>Oregon Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.42'">
-        <xsl:text>Pennsylvania Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.44'">
-        <xsl:text>Rhode Island Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.45'">
-        <xsl:text>South Carolina Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.46'">
-        <xsl:text>South Dakota Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.47'">
-        <xsl:text>Tennessee Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.48'">
-        <xsl:text>Texas Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.49'">
-        <xsl:text>Utah Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.51'">
-        <xsl:text>Virginia Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.50'">
-        <xsl:text>Vermont Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.53'">
-        <xsl:text>Washington Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.55'">
-        <xsl:text>Wisconsin Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.54'">
-        <xsl:text>West Virginia Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.56'">
-        <xsl:text>Wyoming Driver's License</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.12.203'">
-        <xsl:text>Identifier Type (HL7)</xsl:text>
-      </xsl:when>
+    <!-- convert common OIDs for Identifiers -->
+    <xsl:template xmlns:n1="urn:hl7-org:v3" xmlns:in="urn:lantana-com:inline-variable-data" name="translate-id-type">
+        <xsl:param name="id-oid" />
+        <xsl:choose>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.1'">
+                <xsl:text>United States Social Security Number</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.6'">
+                <xsl:text>NPI (US)</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.2'">
+                <xsl:text>Alaska Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.1'">
+                <xsl:text>Alabama Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.5'">
+                <xsl:text>Arkansas Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.4'">
+                <xsl:text>Arizona Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.6'">
+                <xsl:text>California Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.8'">
+                <xsl:text>Colorado Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.9'">
+                <xsl:text>Connecticut Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.11'">
+                <xsl:text>DC Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.10'">
+                <xsl:text>Delaware Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.12'">
+                <xsl:text>Florida Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.13'">
+                <xsl:text>Georgia Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.15'">
+                <xsl:text>Hawaii Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.18'">
+                <xsl:text>Indiana Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.19'">
+                <xsl:text>Iowa Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.16'">
+                <xsl:text>Idaho Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.17'">
+                <xsl:text>Illinois Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.20'">
+                <xsl:text>Kansas Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.21'">
+                <xsl:text>Kentucky Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.22'">
+                <xsl:text>Louisiana Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.25'">
+                <xsl:text>Massachusetts Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.24'">
+                <xsl:text>Maryland Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.23'">
+                <xsl:text>Maine Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.26'">
+                <xsl:text>Michigan Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.27'">
+                <xsl:text>Minnesota Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.29'">
+                <xsl:text>Missouri Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.28'">
+                <xsl:text>Mississippi Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.30'">
+                <xsl:text>Montana Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.36'">
+                <xsl:text>New York Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.37'">
+                <xsl:text>North Carolina Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.38'">
+                <xsl:text>North Dakota Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.31'">
+                <xsl:text>Nebraska Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.33'">
+                <xsl:text>New Hampshire Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.34'">
+                <xsl:text>New Jersey Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.35'">
+                <xsl:text>New Mexico Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.32'">
+                <xsl:text>Nevada Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.39'">
+                <xsl:text>Ohio Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.40'">
+                <xsl:text>Oklahoma Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.41'">
+                <xsl:text>Oregon Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.42'">
+                <xsl:text>Pennsylvania Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.44'">
+                <xsl:text>Rhode Island Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.45'">
+                <xsl:text>South Carolina Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.46'">
+                <xsl:text>South Dakota Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.47'">
+                <xsl:text>Tennessee Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.48'">
+                <xsl:text>Texas Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.49'">
+                <xsl:text>Utah Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.51'">
+                <xsl:text>Virginia Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.50'">
+                <xsl:text>Vermont Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.53'">
+                <xsl:text>Washington Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.55'">
+                <xsl:text>Wisconsin Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.54'">
+                <xsl:text>West Virginia Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.4.3.56'">
+                <xsl:text>Wyoming Driver's License</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.12.203'">
+                <xsl:text>Identifier Type (HL7)</xsl:text>
+            </xsl:when>
 
-      <!-- Axesson-specific OIDs -->
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.1'">
-        <xsl:text>Associated Pathology Medical Group</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.2'">
-        <xsl:text>ATMS</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.3'">
-        <xsl:text>AXESSON TRANSCRIPTION</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.4'">
-        <xsl:text>Axesson Word Doc Transcriptions</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.5'">
-        <xsl:text>CrossTx</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.9'">
-        <xsl:text>Dignity Health Medical Group</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.9.4.1'">
-        <xsl:text>Dignity Boulder Creek</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.10'">
-        <xsl:text>Dominican Santa Cruz Hospital</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.10.4.1'">
-        <xsl:text>Dignity Internal Medicine</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.10.4.2'">
-        <xsl:text>Dignity Pediatrics</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50023'">
-        <xsl:text>Joydip Bhattacharya</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50003'">
-        <xsl:text>Balance Health of Ben Lomond</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50040'">
-        <xsl:text>Edward T Bradbury MD A Prof. Corp</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50014'">
-        <xsl:text>Bayview Gastroenterology</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50037'">
-        <xsl:text>Peggy Chen, M.D.</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50004'">
-        <xsl:text>Central Coast Sleep Disorders Center</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50024'">
-        <xsl:text>Central Coast Oncology and Hematology</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50002'">
-        <xsl:text>Albert Crevello, MD</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50021'">
-        <xsl:text>Diabetes Health Center</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50005'">
-        <xsl:text>Foot Doctors of Santa Cruz</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50032'">
-        <xsl:text>Maria Granthom, M.D.</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50006'">
-        <xsl:text>Gastroenterology</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50030'">
-        <xsl:text>Harbor Medical Group</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50033'">
-        <xsl:text>Monterey Bay Gastroenterology</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50034'">
-        <xsl:text>Monterey Bay Urology</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '1.2.840.114398.1.35.1'">
-        <xsl:text>No More Clipboard</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50010'">
-        <xsl:text>Plazita Medical Clinic</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50009'">
-        <xsl:text>Pajaro Valley Neurolgy Medical Associates</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50007'">
-        <xsl:text>Milan Patel, MD</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50039'">
-        <xsl:text>Santa Cruz Pulmonary Medical Group</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50038'">
-        <xsl:text>Rio Del Mar Medical Clinic</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50011'">
-        <xsl:text>Romo, Mary-Lou</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50027'">
-        <xsl:text>Santa Cruz Office Santa Cruz Ear Nose and Throat Medical Group</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50012'">
-        <xsl:text>Scotts Valley Medical Clinic</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50041'">
-        <xsl:text>Simkin, Josefa MD</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50013'">
-        <xsl:text>Vu, Thanh</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.6'">
-        <xsl:text>Bioreference Labs</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.7'">
-        <xsl:text>BSCA Claims Data</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.8'">
-        <xsl:text>CCSDC</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.11'">
-        <xsl:text>Cedar Medical Clinic</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.12'">
-        <xsl:text>Cedar Medical Clinic</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.13'">
-        <xsl:text>DIANON</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.14'">
-        <xsl:text>ANDREA EDWARDS MD</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.15'">
-        <xsl:text>Elysium</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.16'">
-        <xsl:text>Family Doctors of Santa Cruz</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.17'">
-        <xsl:text>Hurray, Alvie</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.18'">
-        <xsl:text>Hunter</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.19'">
-        <xsl:text>LABCORP</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.20'">
-        <xsl:text>LABCORP UNKNOWN</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.21'">
-        <xsl:text>Melissa Lopez-Bermejo, MD</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.22'">
-        <xsl:text>Monterey Bay Family Physicians</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.23'">
-        <xsl:text>Medtek</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.24'">
-        <xsl:text>Mirth Support Testing Facility</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.25'">
-        <xsl:text>NSIGHT</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.26'">
-        <xsl:text>NwHIN</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.27'">
-        <xsl:text>OrthoNorCal</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.28'">
-        <xsl:text>Pajaro Health Center</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.29'">
-        <xsl:text>Pajaro Valley Medical Clinic</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.30'">
-        <xsl:text>Pajaro Valley Personal Health</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.31'">
-        <xsl:text>PMG</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.32'">
-        <xsl:text>QUEST</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.33'">
-        <xsl:text>Radiology Medical Group</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.34'">
-        <xsl:text>Resneck-Sannes, L. David MD</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.35'">
-        <xsl:text>Salud Para La Gente</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.36'">
-        <xsl:text>SBWTest</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.37'">
-        <xsl:text>Quest Diagnostics SC</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.38'">
-        <xsl:text>Santa Cruz County Health Services Agency</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.39'">
-        <xsl:text>Santa Cruz County Mental Health</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.40'">
-        <xsl:text>SCHIEAUTH</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.41'">
-        <xsl:text>Santa Cruz HIE</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.42'">
-        <xsl:text>Santa Cruz Nephrology Medical Group, Inc</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.43'">
-        <xsl:text>Santa Cruz Surgery Center</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.44'">
-        <xsl:text>Quest Diagnostics SJ</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.45'">
-        <xsl:text>Stanford Lab</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.46'">
-        <xsl:text>Unknown</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.47'">
-        <xsl:text>Watsonville Community Hospital</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.48'">
-        <xsl:text>zzBAD_REFERENCE_FACILITY</xsl:text>
-      </xsl:when>
+            <!-- Axesson-specific OIDs -->
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.1'">
+                <xsl:text>Associated Pathology Medical Group</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.2'">
+                <xsl:text>ATMS</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.3'">
+                <xsl:text>AXESSON TRANSCRIPTION</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.4'">
+                <xsl:text>Axesson Word Doc Transcriptions</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.5'">
+                <xsl:text>CrossTx</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.9'">
+                <xsl:text>Dignity Health Medical Group</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.9.4.1'">
+                <xsl:text>Dignity Boulder Creek</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.10'">
+                <xsl:text>Dominican Santa Cruz Hospital</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.10.4.1'">
+                <xsl:text>Dignity Internal Medicine</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.10.4.2'">
+                <xsl:text>Dignity Pediatrics</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50023'">
+                <xsl:text>Joydip Bhattacharya</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50003'">
+                <xsl:text>Balance Health of Ben Lomond</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50040'">
+                <xsl:text>Edward T Bradbury MD A Prof. Corp</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50014'">
+                <xsl:text>Bayview Gastroenterology</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50037'">
+                <xsl:text>Peggy Chen, M.D.</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50004'">
+                <xsl:text>Central Coast Sleep Disorders Center</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50024'">
+                <xsl:text>Central Coast Oncology and Hematology</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50002'">
+                <xsl:text>Albert Crevello, MD</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50021'">
+                <xsl:text>Diabetes Health Center</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50005'">
+                <xsl:text>Foot Doctors of Santa Cruz</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50032'">
+                <xsl:text>Maria Granthom, M.D.</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50006'">
+                <xsl:text>Gastroenterology</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50030'">
+                <xsl:text>Harbor Medical Group</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50033'">
+                <xsl:text>Monterey Bay Gastroenterology</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50034'">
+                <xsl:text>Monterey Bay Urology</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '1.2.840.114398.1.35.1'">
+                <xsl:text>No More Clipboard</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50010'">
+                <xsl:text>Plazita Medical Clinic</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50009'">
+                <xsl:text>Pajaro Valley Neurolgy Medical Associates</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50007'">
+                <xsl:text>Milan Patel, MD</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50039'">
+                <xsl:text>Santa Cruz Pulmonary Medical Group</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50038'">
+                <xsl:text>Rio Del Mar Medical Clinic</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50011'">
+                <xsl:text>Romo, Mary-Lou</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50027'">
+                <xsl:text>Santa Cruz Office Santa Cruz Ear Nose and Throat Medical Group</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50012'">
+                <xsl:text>Scotts Valley Medical Clinic</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50041'">
+                <xsl:text>Simkin, Josefa MD</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.3.1.50013'">
+                <xsl:text>Vu, Thanh</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.6'">
+                <xsl:text>Bioreference Labs</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.7'">
+                <xsl:text>BSCA Claims Data</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.8'">
+                <xsl:text>CCSDC</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.11'">
+                <xsl:text>Cedar Medical Clinic</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.12'">
+                <xsl:text>Cedar Medical Clinic</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.13'">
+                <xsl:text>DIANON</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.14'">
+                <xsl:text>ANDREA EDWARDS MD</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.15'">
+                <xsl:text>Elysium</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.16'">
+                <xsl:text>Family Doctors of Santa Cruz</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.17'">
+                <xsl:text>Hurray, Alvie</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.18'">
+                <xsl:text>Hunter</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.19'">
+                <xsl:text>LABCORP</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.20'">
+                <xsl:text>LABCORP UNKNOWN</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.21'">
+                <xsl:text>Melissa Lopez-Bermejo, MD</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.22'">
+                <xsl:text>Monterey Bay Family Physicians</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.23'">
+                <xsl:text>Medtek</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.24'">
+                <xsl:text>Mirth Support Testing Facility</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.25'">
+                <xsl:text>NSIGHT</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.26'">
+                <xsl:text>NwHIN</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.27'">
+                <xsl:text>OrthoNorCal</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.28'">
+                <xsl:text>Pajaro Health Center</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.29'">
+                <xsl:text>Pajaro Valley Medical Clinic</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.30'">
+                <xsl:text>Pajaro Valley Personal Health</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.31'">
+                <xsl:text>PMG</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.32'">
+                <xsl:text>QUEST</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.33'">
+                <xsl:text>Radiology Medical Group</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.34'">
+                <xsl:text>Resneck-Sannes, L. David MD</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.35'">
+                <xsl:text>Salud Para La Gente</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.36'">
+                <xsl:text>SBWTest</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.37'">
+                <xsl:text>Quest Diagnostics SC</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.38'">
+                <xsl:text>Santa Cruz County Health Services Agency</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.39'">
+                <xsl:text>Santa Cruz County Mental Health</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.40'">
+                <xsl:text>SCHIEAUTH</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.41'">
+                <xsl:text>Santa Cruz HIE</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.42'">
+                <xsl:text>Santa Cruz Nephrology Medical Group, Inc</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.43'">
+                <xsl:text>Santa Cruz Surgery Center</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.44'">
+                <xsl:text>Quest Diagnostics SJ</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.45'">
+                <xsl:text>Stanford Lab</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.46'">
+                <xsl:text>Unknown</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.47'">
+                <xsl:text>Watsonville Community Hospital</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.3.290.2.1.48'">
+                <xsl:text>zzBAD_REFERENCE_FACILITY</xsl:text>
+            </xsl:when>
 
 
 
-      <!-- Example OIDS -->
-      <xsl:when test="$id-oid = '2.16.840.1.113883.19.5'">
-        <xsl:text>Meaningless identifier, not to be used for any actual entities. Examples only.</xsl:text>
-      </xsl:when>
-      <xsl:when test="$id-oid = '2.16.840.1.113883.19.5.99999.2'">
-        <xsl:text>Meaningless identifier, not to be used for any actual entities. Examples only.</xsl:text>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:text>OID: </xsl:text>
-        <xsl:value-of select="$id-oid" />
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
+            <!-- Example OIDS -->
+            <xsl:when test="$id-oid = '2.16.840.1.113883.19.5'">
+                <xsl:text>Meaningless identifier, not to be used for any actual entities. Examples only.</xsl:text>
+            </xsl:when>
+            <xsl:when test="$id-oid = '2.16.840.1.113883.19.5.99999.2'">
+                <xsl:text>Meaningless identifier, not to be used for any actual entities. Examples only.</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:text>OID: </xsl:text>
+                <xsl:value-of select="$id-oid" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
-  <xsl:template xmlns:xs="http://www.w3.org/2001/XMLSchema" name="lantana-css">
-    <style>
-      /* Catch all for the document */
-      .cda-render{
-        font-family: CenturyGothic, sans-serif;
-        /*font-size:1.25em;*/
-      }
-      
-      /* One-off - CDA Document Title */
-      .cda-render h1.cda-title{
-        color: #b3623d;
-        font-size: 1.5em;
-        font-weight: bold;
-        text-align: center;
-        text-transform: uppercase;
-      }
-      
-      
-      /* One-off - Table of contents formatting */
-      .cda-render .toc-header-container{
-        padding-top: 0.5em;
-        border-bottom-width: 0.1em;
-        border-bottom-style: solid;
-        border-bottom-color: #b3623d;
-        padding-bottom: 0.5em;
-      }
-      
-      .cda-render .toc-header{
-        text-transform: uppercase;
-        color: #b3623d;
-        font-weight: bold;
-      }
-      
-      .cda-render .toc{
-        margin-top: 3em;
-        padding: 0px 15px;
-      }
-      
-      .cda-render .toc-box{
-      
-      }
-      
-      
-      /* One-off - Patient Name Formatting */
-      .cda-render .patient-name{
-        color: #336b7a;
-        font-size: 1.25em;
-        font-weight: bold;
-      }
-      
-      /* Patient ID Formatting */
-      .patient-id{
-        border-left-width: 0.15em;
-        border-left-style: solid;
-        border-left-color: #478B95;
-      }
-      /* Re-usable - Section-Title */
-      .cda-render .section-title{
-        color: #336b7a;
-        font-size: 1.09em;
-        font-weight: bold;
-        text-transform: uppercase;
-      }
-      
-      /* Re-usable - Attribute title */
-      .cda-render .attribute-title{
-        color: #000000;
-        font-weight: bold;
-        font-size: 1.04em;
-      }
-      
-      
-      /***** Header Grouping */
-      .cda-render .header{
-        border-bottom-width: 0.1em;
-        border-bottom-style: solid;
-        border-bottom-color: #1B6373;
-        padding-bottom: 0.5em;
-      }
-      
-      .cda-render .header-group-content{
-        margin-left: 1em;
-        padding-left: 0.5em;
-        border-left-width: 0.15em;
-        border-left-style: solid;
-        border-left-color: #478B95;
-      }
-      
-      .cda-render .tight{
-        margin: 0;
-      }
-      .cda-render .generated-text{
-        white-space: no-wrap;
-        margin: 0em;
-        color: #B0592C;
-        font-style: italic;
-      }
-      .cda-render .bottom{
-        border-top-width: 0.2em;
-        border-top-color: #B0592C;
-        border-top-style: solid;
-      }
-      
-      /***** Table of Contents Attributes */
-      /* Table of contents entry */
-      .cda-render .lantana-toc{
-        text-transform: uppercase;
-      }
-      
-      .cda-render .bold{
-        font-weight: bold;
-      }
-      
-      .cda-render .active{
-        border-right-color: #336b7a;
-        border-right-style: solid;
-        border-left-color: #336b7a;
-        border-left-style: solid;
-        background-color: #eee;
-      }
-      
-      #navbar-list-cda{
-        overflow: auto;
-      }</style>
-  </xsl:template>
-  <xsl:template xmlns:xs="http://www.w3.org/2001/XMLSchema" name="lantana-js">
-    <script type="text/javascript">
-      
-$(document).ready(function(){
-    $('#navbar-list-cda').height($(window).height()-100);
-});
-$(window).resize(function(){
-    $('#navbar-list-cda').height($(window).height()-100);
-});
-
-$(document).ready(function(){
-    $('#navbar-list-cda').height($(window).height()-100);
-});
-
-$(window).resize(function(){
-    $('#navbar-list-cda').height($(window).height()-100);
-});
-
-$(document).ready(function(){
-    $('.cda-render a[href*="#"]:not([href="#"])').bind('click.smoothscroll',function (e) {
-        e.preventDefault();
-      
-        var target = this.hash,
-        $target = $(target);
-      
-        $('html, body').stop().animate({
-            'scrollTop': $target.offset().top
-        }, 1000, 'swing', function () {
-            window.location.hash = target;
+    <xsl:template xmlns:xs="http://www.w3.org/2001/XMLSchema" name="lantana-css">
+        <style>
+            /* Catch all for the document */
+            .cda-render {
+                font-family: CenturyGothic, sans-serif;
+                /*font-size:1.25em;*/
+            }
             
-            // lets add a div in the background
-            $('&lt;div /&gt;').css({'background':'#336b7a'}).prependTo($target).fadeIn('fast', function(){
-                $(this).fadeOut('fast', function(){
-                    $(this).remove();
+            /* One-off - CDA Document Title */
+            .cda-render h1.cda-title {
+                color: #b3623d;
+                font-size: 1.5em;
+                font-weight: bold;
+                text-align: center;
+                text-transform: uppercase;
+            }
+            
+            
+            /* One-off - Table of contents formatting */
+            .cda-render .toc-header-container {
+                padding-top: 0.5em;
+                border-bottom-width: 0.1em;
+                border-bottom-style: solid;
+                border-bottom-color: #b3623d;
+                padding-bottom: 0.5em;
+            }
+            
+            .cda-render .toc-header {
+                text-transform: uppercase;
+                color: #b3623d;
+                font-weight: bold;
+            }
+            
+            .cda-render .toc {
+                margin-top: 3em;
+                padding: 0px 15px;
+            }
+            
+            .cda-render .toc-box {
+            
+            }
+            
+            
+            /* One-off - Patient Name Formatting */
+            .cda-render .patient-name {
+                color: #336b7a;
+                font-size: 1.25em;
+                font-weight: bold;
+            }
+            
+            /* Patient ID Formatting */
+            .patient-id {
+                border-left-width: 0.15em;
+                border-left-style: solid;
+                border-left-color: #478B95;
+            }
+            /* Re-usable - Section-Title */
+            .cda-render .section-title {
+                color: #336b7a;
+                font-size: 1.09em;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+            
+            /* Re-usable - Attribute title */
+            .cda-render .attribute-title {
+                color: #000000;
+                font-weight: bold;
+                font-size: 1.04em;
+            }
+            
+            
+            /***** Header Grouping */
+            .cda-render .header {
+                border-bottom-width: 0.1em;
+                border-bottom-style: solid;
+                border-bottom-color: #1B6373;
+                padding-bottom: 0.5em;
+            }
+            
+            .cda-render .header-group-content {
+                margin-left: 1em;
+                padding-left: 0.5em;
+                border-left-width: 0.15em;
+                border-left-style: solid;
+                border-left-color: #478B95;
+            }
+            
+            .cda-render .tight {
+                margin: 0;
+            }
+            .cda-render .generated-text {
+                white-space: no-wrap;
+                margin: 0em;
+                color: #B0592C;
+                font-style: italic;
+            }
+            .cda-render .bottom {
+                border-top-width: 0.1em;
+                border-top-color: #B0592C;
+                border-top-style: solid;
+                padding-top: 0.5em;
+            }
+            
+            /* Fix header table borders */
+            .header_table {
+                border: none !important;
+                border-collapse: collapse !important;
+            }
+            .header_table td {
+                border: none !important;
+                padding: 0.25em 0.5em;
+            }
+            .header_table .td_header_role_name {
+                font-weight: bold;
+                color: #1B6373;
+            }
+            
+            /* Standardize table styling */
+            .table-responsive .table {
+                margin-bottom: 1em;
+            }
+            .table .attribute-title {
+                font-weight: 600;
+                color: #1B6373;
+                width: 25%;
+                background-color: #f8f9fa;
+                vertical-align: top;
+                padding: 0.75em;
+            }
+            .table td {
+                padding: 0.75em;
+                vertical-align: top;
+                border-top: 1px solid #dee2e6;
+            }
+            .table tr:first-child td {
+                border-top: none;
+            }
+            
+            /* Fix section consistency */
+            .section-title {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: #1B6373;
+                margin: 1em 0 0.5em 0;
+                padding-bottom: 0.25em;
+                border-bottom: 1px solid #dee2e6;
+            }
+            
+            /* Improve spacing */
+            .header-group-content {
+                padding: 0.5em 0;
+            }
+            
+            /***** Table of Contents Attributes */
+            /* Table of contents entry */
+            .cda-render .lantana-toc {
+                text-transform: uppercase;
+            }
+            
+            .cda-render .bold {
+                font-weight: bold;
+            }
+            
+            .cda-render .active {
+                border-right-color: #336b7a;
+                border-right-style: solid;
+                border-left-color: #336b7a;
+                border-left-style: solid;
+                background-color: #eee;
+            }
+            
+            #navbar-list-cda {
+                overflow: auto;
+            }</style>
+    </xsl:template>
+    <xsl:template xmlns:xs="http://www.w3.org/2001/XMLSchema" name="lantana-js">
+        <script type="text/javascript">
+        $(document).ready(function () {
+            $('#navbar-list-cda').height($(window).height() -100);
+        });
+        $(window).resize(function () {
+            $('#navbar-list-cda').height($(window).height() -100);
+        });
+        
+        $(document).ready(function () {
+            $('#navbar-list-cda').height($(window).height() -100);
+        });
+        
+        $(window).resize(function () {
+            $('#navbar-list-cda').height($(window).height() -100);
+        });
+        
+        $(document).ready(function () {
+            $('.cda-render a[href*="#"]:not([href="#"])').bind('click.smoothscroll', function (e) {
+                e.preventDefault();
+                
+                var target = this.hash,
+                $target = $(target);
+                
+                $('html, body').stop().animate({
+                    'scrollTop': $target.offset().top
+                },
+                1000, 'swing', function () {
+                    window.location.hash = target;
+                    
+                    // lets add a div in the background
+                    $('&amp;lt;div /&amp;gt;').css({
+                        'background': '#336b7a'
+                    }).prependTo($target).fadeIn('fast', function () {
+                        $(this).fadeOut('fast', function () {
+                            $(this).remove();
+                        });
+                    });
                 });
             });
-            
         });
-    });
-});
-
-$( function() {
-    $( "#navbar-list-cda-sortable" ).sortable();
-    $( "#navbar-list-cda-sortable" ).disableSelection();
-  } );
-
-  $( function( ) {
-    var $nav = $( '#navbar-list-cda-sortable' );
-    var $content = $( '#doc-clinical-info' );
-    var $originalContent = $content.clone( );
-    $nav.sortable( {
-        update: function ( e ) {
-            $content.empty( );
-            $nav.find( 'a' ).each( function ( ) {
-                $content.append( $originalContent.clone( ).find( $( this ).attr( 'href' ) ).parent ( ) );
-            } );
-
-              $('[data-spy="scroll"]').each(function () {
-  var $spy = $(this).scrollspy('refresh')
-})
-        }
-    } );
-  } );
-
-
-      
-    </script>
-  </xsl:template>
-  <xsl:template xmlns:xs="http://www.w3.org/2001/XMLSchema" name="jquery">
-    <script type="text/javascript">
-            /*! jQuery v1.12.1 | (c) jQuery Foundation | jquery.org/license */
-            <xsl:if test="2 &gt; 1">
+        
+        $(function () {
+            $("#navbar-list-cda-sortable").sortable();
+            $("#navbar-list-cda-sortable").disableSelection();
+        });
+        
+        $(function () {
+            var $nav = $('#navbar-list-cda-sortable');
+            var $content = $('#doc-clinical-info');
+            var $originalContent = $content.clone();
+            $nav.sortable({
+                update: function (e) {
+                    $content.empty();
+                    $nav.find('a').each(function () {
+                        $content.append($originalContent.clone().find($(this).attr('href')).parent ());
+                    });
+                    
+                    $('[data-spy="scroll"]').each(function () {
+                        var $spy = $(this).scrollspy('refresh')
+                    })
+                }
+            });
+        });</script>
+    </xsl:template>
+    <xsl:template xmlns:xs="http://www.w3.org/2001/XMLSchema" name="jquery">
+        <script type="text/javascript">
+        /*! jQuery v1.12.1 | (c) jQuery Foundation | jquery.org/license */<xsl:if test="2 &gt; 1">
                 
     !function(a,b){"object"==typeof module&amp;&amp;"object"==typeof module.exports?module.exports=a.document?b(a,!0):function(a){if(!a.document)throw new Error("jQuery requires a window with a document");return b(a)}:b(a)}("undefined"!=typeof window?window:this,function(a,b){var c=[],d=a.document,e=c.slice,f=c.concat,g=c.push,h=c.indexOf,i={},j=i.toString,k=i.hasOwnProperty,l={},m="1.12.1",n=function(a,b){return new n.fn.init(a,b)},o=/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,p=/^-ms-/,q=/-([\da-z])/gi,r=function(a,b){return b.toUpperCase()};n.fn=n.prototype={jquery:m,constructor:n,selector:"",length:0,toArray:function(){return e.call(this)},get:function(a){return null!=a?0&gt;a?this[a+this.length]:this[a]:e.call(this)},pushStack:function(a){var b=n.merge(this.constructor(),a);return b.prevObject=this,b.context=this.context,b},each:function(a){return n.each(this,a)},map:function(a){return this.pushStack(n.map(this,function(b,c){return a.call(b,c,b)}))},slice:function(){return this.pushStack(e.apply(this,arguments))},first:function(){return this.eq(0)},last:function(){return this.eq(-1)},eq:function(a){var b=this.length,c=+a+(0&gt;a?b:0);return this.pushStack(c&gt;=0&amp;&amp;b&gt;c?[this[c]]:[])},end:function(){return this.prevObject||this.constructor()},push:g,sort:c.sort,splice:c.splice},n.extend=n.fn.extend=function(){var a,b,c,d,e,f,g=arguments[0]||{},h=1,i=arguments.length,j=!1;for("boolean"==typeof g&amp;&amp;(j=g,g=arguments[h]||{},h++),"object"==typeof g||n.isFunction(g)||(g={}),h===i&amp;&amp;(g=this,h--);i&gt;h;h++)if(null!=(e=arguments[h]))for(d in e)a=g[d],c=e[d],g!==c&amp;&amp;(j&amp;&amp;c&amp;&amp;(n.isPlainObject(c)||(b=n.isArray(c)))?(b?(b=!1,f=a&amp;&amp;n.isArray(a)?a:[]):f=a&amp;&amp;n.isPlainObject(a)?a:{},g[d]=n.extend(j,f,c)):void 0!==c&amp;&amp;(g[d]=c));return g},n.extend({expando:"jQuery"+(m+Math.random()).replace(/\D/g,""),isReady:!0,error:function(a){throw new Error(a)},noop:function(){},isFunction:function(a){return"function"===n.type(a)},isArray:Array.isArray||function(a){return"array"===n.type(a)},isWindow:function(a){return null!=a&amp;&amp;a==a.window},isNumeric:function(a){var b=a&amp;&amp;a.toString();return!n.isArray(a)&amp;&amp;b-parseFloat(b)+1&gt;=0},isEmptyObject:function(a){var b;for(b in a)return!1;return!0},isPlainObject:function(a){var b;if(!a||"object"!==n.type(a)||a.nodeType||n.isWindow(a))return!1;try{if(a.constructor&amp;&amp;!k.call(a,"constructor")&amp;&amp;!k.call(a.constructor.prototype,"isPrototypeOf"))return!1}catch(c){return!1}if(!l.ownFirst)for(b in a)return k.call(a,b);for(b in a);return void 0===b||k.call(a,b)},type:function(a){return null==a?a+"":"object"==typeof a||"function"==typeof a?i[j.call(a)]||"object":typeof a},globalEval:function(b){b&amp;&amp;n.trim(b)&amp;&amp;(a.execScript||function(b){a.eval.call(a,b)})(b)},camelCase:function(a){return a.replace(p,"ms-").replace(q,r)},nodeName:function(a,b){return a.nodeName&amp;&amp;a.nodeName.toLowerCase()===b.toLowerCase()},each:function(a,b){var c,d=0;if(s(a)){for(c=a.length;c&gt;d;d++)if(b.call(a[d],d,a[d])===!1)break}else for(d in a)if(b.call(a[d],d,a[d])===!1)break;return a},trim:function(a){return null==a?"":(a+"").replace(o,"")},makeArray:function(a,b){var c=b||[];return null!=a&amp;&amp;(s(Object(a))?n.merge(c,"string"==typeof a?[a]:a):g.call(c,a)),c},inArray:function(a,b,c){var d;if(b){if(h)return h.call(b,a,c);for(d=b.length,c=c?0&gt;c?Math.max(0,d+c):c:0;d&gt;c;c++)if(c in b&amp;&amp;b[c]===a)return c}return-1},merge:function(a,b){var c=+b.length,d=0,e=a.length;while(c&gt;d)a[e++]=b[d++];if(c!==c)while(void 0!==b[d])a[e++]=b[d++];return a.length=e,a},grep:function(a,b,c){for(var d,e=[],f=0,g=a.length,h=!c;g&gt;f;f++)d=!b(a[f],f),d!==h&amp;&amp;e.push(a[f]);return e},map:function(a,b,c){var d,e,g=0,h=[];if(s(a))for(d=a.length;d&gt;g;g++)e=b(a[g],g,c),null!=e&amp;&amp;h.push(e);else for(g in a)e=b(a[g],g,c),null!=e&amp;&amp;h.push(e);return f.apply([],h)},guid:1,proxy:function(a,b){var c,d,f;return"string"==typeof b&amp;&amp;(f=a[b],b=a,a=f),n.isFunction(a)?(c=e.call(arguments,2),d=function(){return a.apply(b||this,c.concat(e.call(arguments)))},d.guid=a.guid=a.guid||n.guid++,d):void 0},now:function(){return+new Date},support:l}),"function"==typeof Symbol&amp;&amp;(n.fn[Symbol.iterator]=c[Symbol.iterator]),n.each("Boolean Number String Function Array Date RegExp Object Error Symbol".split(" "),function(a,b){i["[object "+b+"]"]=b.toLowerCase()});function s(a){var b=!!a&amp;&amp;"length"in a&amp;&amp;a.length,c=n.type(a);return"function"===c||n.isWindow(a)?!1:"array"===c||0===b||"number"==typeof b&amp;&amp;b&gt;0&amp;&amp;b-1 in a}var t=function(a){var b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u="sizzle"+1*new Date,v=a.document,w=0,x=0,y=ga(),z=ga(),A=ga(),B=function(a,b){return a===b&amp;&amp;(l=!0),0},C=1&lt;&lt;31,D={}.hasOwnProperty,E=[],F=E.pop,G=E.push,H=E.push,I=E.slice,J=function(a,b){for(var c=0,d=a.length;d&gt;c;c++)if(a[c]===b)return c;return-1},K="checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped",L="[\\x20\\t\\r\\n\\f]",M="(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+",N="\\["+L+"*("+M+")(?:"+L+"*([*^$|!~]?=)"+L+"*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|("+M+"))|)"+L+"*\\]",O=":("+M+")(?:\\((('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|((?:\\\\.|[^\\\\()[\\]]|"+N+")*)|.*)\\)|)",P=new RegExp(L+"+","g"),Q=new RegExp("^"+L+"+|((?:^|[^\\\\])(?:\\\\.)*)"+L+"+$","g"),R=new RegExp("^"+L+"*,"+L+"*"),S=new RegExp("^"+L+"*([&gt;+~]|"+L+")"+L+"*"),T=new RegExp("="+L+"*([^\\]'\"]*?)"+L+"*\\]","g"),U=new RegExp(O),V=new RegExp("^"+M+"$"),W={ID:new RegExp("^#("+M+")"),CLASS:new RegExp("^\\.("+M+")"),TAG:new RegExp("^("+M+"|[*])"),ATTR:new RegExp("^"+N),PSEUDO:new RegExp("^"+O),CHILD:new RegExp("^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\("+L+"*(even|odd|(([+-]|)(\\d*)n|)"+L+"*(?:([+-]|)"+L+"*(\\d+)|))"+L+"*\\)|)","i"),bool:new RegExp("^(?:"+K+")$","i"),needsContext:new RegExp("^"+L+"*[&gt;+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\("+L+"*((?:-\\d)?\\d*)"+L+"*\\)|)(?=[^-]|$)","i")},X=/^(?:input|select|textarea|button)$/i,Y=/^h\d$/i,Z=/^[^{]+\{\s*\[native \w/,$=/^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,_=/[+~]/,aa=/'|\\/g,ba=new RegExp("\\\\([\\da-f]{1,6}"+L+"?|("+L+")|.)","ig"),ca=function(a,b,c){var d="0x"+b-65536;return d!==d||c?b:0&gt;d?String.fromCharCode(d+65536):String.fromCharCode(d&gt;&gt;10|55296,1023&amp;d|56320)},da=function(){m()};try{H.apply(E=I.call(v.childNodes),v.childNodes),E[v.childNodes.length].nodeType}catch(ea){H={apply:E.length?function(a,b){G.apply(a,I.call(b))}:function(a,b){var c=a.length,d=0;while(a[c++]=b[d++]);a.length=c-1}}}function fa(a,b,d,e){var f,h,j,k,l,o,r,s,w=b&amp;&amp;b.ownerDocument,x=b?b.nodeType:9;if(d=d||[],"string"!=typeof a||!a||1!==x&amp;&amp;9!==x&amp;&amp;11!==x)return d;if(!e&amp;&amp;((b?b.ownerDocument||b:v)!==n&amp;&amp;m(b),b=b||n,p)){if(11!==x&amp;&amp;(o=$.exec(a)))if(f=o[1]){if(9===x){if(!(j=b.getElementById(f)))return d;if(j.id===f)return d.push(j),d}else if(w&amp;&amp;(j=w.getElementById(f))&amp;&amp;t(b,j)&amp;&amp;j.id===f)return d.push(j),d}else{if(o[2])return H.apply(d,b.getElementsByTagName(a)),d;if((f=o[3])&amp;&amp;c.getElementsByClassName&amp;&amp;b.getElementsByClassName)return H.apply(d,b.getElementsByClassName(f)),d}if(c.qsa&amp;&amp;!A[a+" "]&amp;&amp;(!q||!q.test(a))){if(1!==x)w=b,s=a;else if("object"!==b.nodeName.toLowerCase()){(k=b.getAttribute("id"))?k=k.replace(aa,"\\$&amp;"):b.setAttribute("id",k=u),r=g(a),h=r.length,l=V.test(k)?"#"+k:"[id='"+k+"']";while(h--)r[h]=l+" "+qa(r[h]);s=r.join(","),w=_.test(a)&amp;&amp;oa(b.parentNode)||b}if(s)try{return H.apply(d,w.querySelectorAll(s)),d}catch(y){}finally{k===u&amp;&amp;b.removeAttribute("id")}}}return i(a.replace(Q,"$1"),b,d,e)}function ga(){var a=[];function b(c,e){return a.push(c+" ")&gt;d.cacheLength&amp;&amp;delete b[a.shift()],b[c+" "]=e}return b}function ha(a){return a[u]=!0,a}function ia(a){var b=n.createElement("div");try{return!!a(b)}catch(c){return!1}finally{b.parentNode&amp;&amp;b.parentNode.removeChild(b),b=null}}function ja(a,b){var c=a.split("|"),e=c.length;while(e--)d.attrHandle[c[e]]=b}function ka(a,b){var c=b&amp;&amp;a,d=c&amp;&amp;1===a.nodeType&amp;&amp;1===b.nodeType&amp;&amp;(~b.sourceIndex||C)-(~a.sourceIndex||C);if(d)return d;if(c)while(c=c.nextSibling)if(c===b)return-1;return a?1:-1}function la(a){return function(b){var c=b.nodeName.toLowerCase();return"input"===c&amp;&amp;b.type===a}}function ma(a){return function(b){var c=b.nodeName.toLowerCase();return("input"===c||"button"===c)&amp;&amp;b.type===a}}function na(a){return ha(function(b){return b=+b,ha(function(c,d){var e,f=a([],c.length,b),g=f.length;while(g--)c[e=f[g]]&amp;&amp;(c[e]=!(d[e]=c[e]))})})}function oa(a){return a&amp;&amp;"undefined"!=typeof a.getElementsByTagName&amp;&amp;a}c=fa.support={},f=fa.isXML=function(a){var b=a&amp;&amp;(a.ownerDocument||a).documentElement;return b?"HTML"!==b.nodeName:!1},m=fa.setDocument=function(a){var b,e,g=a?a.ownerDocument||a:v;return g!==n&amp;&amp;9===g.nodeType&amp;&amp;g.documentElement?(n=g,o=n.documentElement,p=!f(n),(e=n.defaultView)&amp;&amp;e.top!==e&amp;&amp;(e.addEventListener?e.addEventListener("unload",da,!1):e.attachEvent&amp;&amp;e.attachEvent("onunload",da)),c.attributes=ia(function(a){return a.className="i",!a.getAttribute("className")}),c.getElementsByTagName=ia(function(a){return a.appendChild(n.createComment("")),!a.getElementsByTagName("*").length}),c.getElementsByClassName=Z.test(n.getElementsByClassName),c.getById=ia(function(a){return o.appendChild(a).id=u,!n.getElementsByName||!n.getElementsByName(u).length}),c.getById?(d.find.ID=function(a,b){if("undefined"!=typeof b.getElementById&amp;&amp;p){var c=b.getElementById(a);return c?[c]:[]}},d.filter.ID=function(a){var b=a.replace(ba,ca);return function(a){return a.getAttribute("id")===b}}):(delete d.find.ID,d.filter.ID=function(a){var b=a.replace(ba,ca);return function(a){var c="undefined"!=typeof a.getAttributeNode&amp;&amp;a.getAttributeNode("id");return c&amp;&amp;c.value===b}}),d.find.TAG=c.getElementsByTagName?function(a,b){return"undefined"!=typeof b.getElementsByTagName?b.getElementsByTagName(a):c.qsa?b.querySelectorAll(a):void 0}:function(a,b){var c,d=[],e=0,f=b.getElementsByTagName(a);if("*"===a){while(c=f[e++])1===c.nodeType&amp;&amp;d.push(c);return d}return f},d.find.CLASS=c.getElementsByClassName&amp;&amp;function(a,b){return"undefined"!=typeof b.getElementsByClassName&amp;&amp;p?b.getElementsByClassName(a):void 0},r=[],q=[],(c.qsa=Z.test(n.querySelectorAll))&amp;&amp;(ia(function(a){o.appendChild(a).innerHTML="&lt;a id='"+u+"'&gt;&lt;/a&gt;&lt;select id='"+u+"-\r\\' msallowcapture=''&gt;&lt;option selected=''&gt;&lt;/option&gt;&lt;/select&gt;",a.querySelectorAll("[msallowcapture^='']").length&amp;&amp;q.push("[*^$]="+L+"*(?:''|\"\")"),a.querySelectorAll("[selected]").length||q.push("\\["+L+"*(?:value|"+K+")"),a.querySelectorAll("[id~="+u+"-]").length||q.push("~="),a.querySelectorAll(":checked").length||q.push(":checked"),a.querySelectorAll("a#"+u+"+*").length||q.push(".#.+[+~]")}),ia(function(a){var b=n.createElement("input");b.setAttribute("type","hidden"),a.appendChild(b).setAttribute("name","D"),a.querySelectorAll("[name=d]").length&amp;&amp;q.push("name"+L+"*[*^$|!~]?="),a.querySelectorAll(":enabled").length||q.push(":enabled",":disabled"),a.querySelectorAll("*,:x"),q.push(",.*:")})),(c.matchesSelector=Z.test(s=o.matches||o.webkitMatchesSelector||o.mozMatchesSelector||o.oMatchesSelector||o.msMatchesSelector))&amp;&amp;ia(function(a){c.disconnectedMatch=s.call(a,"div"),s.call(a,"[s!='']:x"),r.push("!=",O)}),q=q.length&amp;&amp;new RegExp(q.join("|")),r=r.length&amp;&amp;new RegExp(r.join("|")),b=Z.test(o.compareDocumentPosition),t=b||Z.test(o.contains)?function(a,b){var c=9===a.nodeType?a.documentElement:a,d=b&amp;&amp;b.parentNode;return a===d||!(!d||1!==d.nodeType||!(c.contains?c.contains(d):a.compareDocumentPosition&amp;&amp;16&amp;a.compareDocumentPosition(d)))}:function(a,b){if(b)while(b=b.parentNode)if(b===a)return!0;return!1},B=b?function(a,b){if(a===b)return l=!0,0;var d=!a.compareDocumentPosition-!b.compareDocumentPosition;return d?d:(d=(a.ownerDocument||a)===(b.ownerDocument||b)?a.compareDocumentPosition(b):1,1&amp;d||!c.sortDetached&amp;&amp;b.compareDocumentPosition(a)===d?a===n||a.ownerDocument===v&amp;&amp;t(v,a)?-1:b===n||b.ownerDocument===v&amp;&amp;t(v,b)?1:k?J(k,a)-J(k,b):0:4&amp;d?-1:1)}:function(a,b){if(a===b)return l=!0,0;var c,d=0,e=a.parentNode,f=b.parentNode,g=[a],h=[b];if(!e||!f)return a===n?-1:b===n?1:e?-1:f?1:k?J(k,a)-J(k,b):0;if(e===f)return ka(a,b);c=a;while(c=c.parentNode)g.unshift(c);c=b;while(c=c.parentNode)h.unshift(c);while(g[d]===h[d])d++;return d?ka(g[d],h[d]):g[d]===v?-1:h[d]===v?1:0},n):n},fa.matches=function(a,b){return fa(a,null,null,b)},fa.matchesSelector=function(a,b){if((a.ownerDocument||a)!==n&amp;&amp;m(a),b=b.replace(T,"='$1']"),c.matchesSelector&amp;&amp;p&amp;&amp;!A[b+" "]&amp;&amp;(!r||!r.test(b))&amp;&amp;(!q||!q.test(b)))try{var d=s.call(a,b);if(d||c.disconnectedMatch||a.document&amp;&amp;11!==a.document.nodeType)return d}catch(e){}return fa(b,n,null,[a]).length&gt;0},fa.contains=function(a,b){return(a.ownerDocument||a)!==n&amp;&amp;m(a),t(a,b)},fa.attr=function(a,b){(a.ownerDocument||a)!==n&amp;&amp;m(a);var e=d.attrHandle[b.toLowerCase()],f=e&amp;&amp;D.call(d.attrHandle,b.toLowerCase())?e(a,b,!p):void 0;return void 0!==f?f:c.attributes||!p?a.getAttribute(b):(f=a.getAttributeNode(b))&amp;&amp;f.specified?f.value:null},fa.error=function(a){throw new Error("Syntax error, unrecognized expression: "+a)},fa.uniqueSort=function(a){var b,d=[],e=0,f=0;if(l=!c.detectDuplicates,k=!c.sortStable&amp;&amp;a.slice(0),a.sort(B),l){while(b=a[f++])b===a[f]&amp;&amp;(e=d.push(f));while(e--)a.splice(d[e],1)}return k=null,a},e=fa.getText=function(a){var b,c="",d=0,f=a.nodeType;if(f){if(1===f||9===f||11===f){if("string"==typeof a.textContent)return a.textContent;for(a=a.firstChild;a;a=a.nextSibling)c+=e(a)}else if(3===f||4===f)return a.nodeValue}else while(b=a[d++])c+=e(b);return c},d=fa.selectors={cacheLength:50,createPseudo:ha,match:W,attrHandle:{},find:{},relative:{"&gt;":{dir:"parentNode",first:!0}," ":{dir:"parentNode"},"+":{dir:"previousSibling",first:!0},"~":{dir:"previousSibling"}},preFilter:{ATTR:function(a){return a[1]=a[1].replace(ba,ca),a[3]=(a[3]||a[4]||a[5]||"").replace(ba,ca),"~="===a[2]&amp;&amp;(a[3]=" "+a[3]+" "),a.slice(0,4)},CHILD:function(a){return a[1]=a[1].toLowerCase(),"nth"===a[1].slice(0,3)?(a[3]||fa.error(a[0]),a[4]=+(a[4]?a[5]+(a[6]||1):2*("even"===a[3]||"odd"===a[3])),a[5]=+(a[7]+a[8]||"odd"===a[3])):a[3]&amp;&amp;fa.error(a[0]),a},PSEUDO:function(a){var b,c=!a[6]&amp;&amp;a[2];return W.CHILD.test(a[0])?null:(a[3]?a[2]=a[4]||a[5]||"":c&amp;&amp;U.test(c)&amp;&amp;(b=g(c,!0))&amp;&amp;(b=c.indexOf(")",c.length-b)-c.length)&amp;&amp;(a[0]=a[0].slice(0,b),a[2]=c.slice(0,b)),a.slice(0,3))}},filter:{TAG:function(a){var b=a.replace(ba,ca).toLowerCase();return"*"===a?function(){return!0}:function(a){return a.nodeName&amp;&amp;a.nodeName.toLowerCase()===b}},CLASS:function(a){var b=y[a+" "];return b||(b=new RegExp("(^|"+L+")"+a+"("+L+"|$)"))&amp;&amp;y(a,function(a){return b.test("string"==typeof a.className&amp;&amp;a.className||"undefined"!=typeof a.getAttribute&amp;&amp;a.getAttribute("class")||"")})},ATTR:function(a,b,c){return function(d){var e=fa.attr(d,a);return null==e?"!="===b:b?(e+="","="===b?e===c:"!="===b?e!==c:"^="===b?c&amp;&amp;0===e.indexOf(c):"*="===b?c&amp;&amp;e.indexOf(c)&gt;-1:"$="===b?c&amp;&amp;e.slice(-c.length)===c:"~="===b?(" "+e.replace(P," ")+" ").indexOf(c)&gt;-1:"|="===b?e===c||e.slice(0,c.length+1)===c+"-":!1):!0}},CHILD:function(a,b,c,d,e){var f="nth"!==a.slice(0,3),g="last"!==a.slice(-4),h="of-type"===b;return 1===d&amp;&amp;0===e?function(a){return!!a.parentNode}:function(b,c,i){var j,k,l,m,n,o,p=f!==g?"nextSibling":"previousSibling",q=b.parentNode,r=h&amp;&amp;b.nodeName.toLowerCase(),s=!i&amp;&amp;!h,t=!1;if(q){if(f){while(p){m=b;while(m=m[p])if(h?m.nodeName.toLowerCase()===r:1===m.nodeType)return!1;o=p="only"===a&amp;&amp;!o&amp;&amp;"nextSibling"}return!0}if(o=[g?q.firstChild:q.lastChild],g&amp;&amp;s){m=q,l=m[u]||(m[u]={}),k=l[m.uniqueID]||(l[m.uniqueID]={}),j=k[a]||[],n=j[0]===w&amp;&amp;j[1],t=n&amp;&amp;j[2],m=n&amp;&amp;q.childNodes[n];while(m=++n&amp;&amp;m&amp;&amp;m[p]||(t=n=0)||o.pop())if(1===m.nodeType&amp;&amp;++t&amp;&amp;m===b){k[a]=[w,n,t];break}}else if(s&amp;&amp;(m=b,l=m[u]||(m[u]={}),k=l[m.uniqueID]||(l[m.uniqueID]={}),j=k[a]||[],n=j[0]===w&amp;&amp;j[1],t=n),t===!1)while(m=++n&amp;&amp;m&amp;&amp;m[p]||(t=n=0)||o.pop())if((h?m.nodeName.toLowerCase()===r:1===m.nodeType)&amp;&amp;++t&amp;&amp;(s&amp;&amp;(l=m[u]||(m[u]={}),k=l[m.uniqueID]||(l[m.uniqueID]={}),k[a]=[w,t]),m===b))break;return t-=e,t===d||t%d===0&amp;&amp;t/d&gt;=0}}},PSEUDO:function(a,b){var c,e=d.pseudos[a]||d.setFilters[a.toLowerCase()]||fa.error("unsupported pseudo: "+a);return e[u]?e(b):e.length&gt;1?(c=[a,a,"",b],d.setFilters.hasOwnProperty(a.toLowerCase())?ha(function(a,c){var d,f=e(a,b),g=f.length;while(g--)d=J(a,f[g]),a[d]=!(c[d]=f[g])}):function(a){return e(a,0,c)}):e}},pseudos:{not:ha(function(a){var b=[],c=[],d=h(a.replace(Q,"$1"));return d[u]?ha(function(a,b,c,e){var f,g=d(a,null,e,[]),h=a.length;while(h--)(f=g[h])&amp;&amp;(a[h]=!(b[h]=f))}):function(a,e,f){return b[0]=a,d(b,null,f,c),b[0]=null,!c.pop()}}),has:ha(function(a){return function(b){return fa(a,b).length&gt;0}}),contains:ha(function(a){return a=a.replace(ba,ca),function(b){return(b.textContent||b.innerText||e(b)).indexOf(a)&gt;-1}}),lang:ha(function(a){return V.test(a||"")||fa.error("unsupported lang: "+a),a=a.replace(ba,ca).toLowerCase(),function(b){var c;do if(c=p?b.lang:b.getAttribute("xml:lang")||b.getAttribute("lang"))return c=c.toLowerCase(),c===a||0===c.indexOf(a+"-");while((b=b.parentNode)&amp;&amp;1===b.nodeType);return!1}}),target:function(b){var c=a.location&amp;&amp;a.location.hash;return c&amp;&amp;c.slice(1)===b.id},root:function(a){return a===o},focus:function(a){return a===n.activeElement&amp;&amp;(!n.hasFocus||n.hasFocus())&amp;&amp;!!(a.type||a.href||~a.tabIndex)},enabled:function(a){return a.disabled===!1},disabled:function(a){return a.disabled===!0},checked:function(a){var b=a.nodeName.toLowerCase();return"input"===b&amp;&amp;!!a.checked||"option"===b&amp;&amp;!!a.selected},selected:function(a){return a.parentNode&amp;&amp;a.parentNode.selectedIndex,a.selected===!0},empty:function(a){for(a=a.firstChild;a;a=a.nextSibling)if(a.nodeType&lt;6)return!1;return!0},parent:function(a){return!d.pseudos.empty(a)},header:function(a){return Y.test(a.nodeName)},input:function(a){return X.test(a.nodeName)},button:function(a){var b=a.nodeName.toLowerCase();return"input"===b&amp;&amp;"button"===a.type||"button"===b},text:function(a){var b;return"input"===a.nodeName.toLowerCase()&amp;&amp;"text"===a.type&amp;&amp;(null==(b=a.getAttribute("type"))||"text"===b.toLowerCase())},first:na(function(){return[0]}),last:na(function(a,b){return[b-1]}),eq:na(function(a,b,c){return[0&gt;c?c+b:c]}),even:na(function(a,b){for(var c=0;b&gt;c;c+=2)a.push(c);return a}),odd:na(function(a,b){for(var c=1;b&gt;c;c+=2)a.push(c);return a}),lt:na(function(a,b,c){for(var d=0&gt;c?c+b:c;--d&gt;=0;)a.push(d);return a}),gt:na(function(a,b,c){for(var d=0&gt;c?c+b:c;++d&lt;b;)a.push(d);return a})}},d.pseudos.nth=d.pseudos.eq;for(b in{radio:!0,checkbox:!0,file:!0,password:!0,image:!0})d.pseudos[b]=la(b);for(b in{submit:!0,reset:!0})d.pseudos[b]=ma(b);function pa(){}pa.prototype=d.filters=d.pseudos,d.setFilters=new pa,g=fa.tokenize=function(a,b){var c,e,f,g,h,i,j,k=z[a+" "];if(k)return b?0:k.slice(0);h=a,i=[],j=d.preFilter;while(h){(!c||(e=R.exec(h)))&amp;&amp;(e&amp;&amp;(h=h.slice(e[0].length)||h),i.push(f=[])),c=!1,(e=S.exec(h))&amp;&amp;(c=e.shift(),f.push({value:c,type:e[0].replace(Q," ")}),h=h.slice(c.length));for(g in d.filter)!(e=W[g].exec(h))||j[g]&amp;&amp;!(e=j[g](e))||(c=e.shift(),f.push({value:c,type:g,matches:e}),h=h.slice(c.length));if(!c)break}return b?h.length:h?fa.error(a):z(a,i).slice(0)};function qa(a){for(var b=0,c=a.length,d="";c&gt;b;b++)d+=a[b].value;return d}function ra(a,b,c){var d=b.dir,e=c&amp;&amp;"parentNode"===d,f=x++;return b.first?function(b,c,f){while(b=b[d])if(1===b.nodeType||e)return a(b,c,f)}:function(b,c,g){var h,i,j,k=[w,f];if(g){while(b=b[d])if((1===b.nodeType||e)&amp;&amp;a(b,c,g))return!0}else while(b=b[d])if(1===b.nodeType||e){if(j=b[u]||(b[u]={}),i=j[b.uniqueID]||(j[b.uniqueID]={}),(h=i[d])&amp;&amp;h[0]===w&amp;&amp;h[1]===f)return k[2]=h[2];if(i[d]=k,k[2]=a(b,c,g))return!0}}}function sa(a){return a.length&gt;1?function(b,c,d){var e=a.length;while(e--)if(!a[e](b,c,d))return!1;return!0}:a[0]}function ta(a,b,c){for(var d=0,e=b.length;e&gt;d;d++)fa(a,b[d],c);return c}function ua(a,b,c,d,e){for(var f,g=[],h=0,i=a.length,j=null!=b;i&gt;h;h++)(f=a[h])&amp;&amp;(!c||c(f,d,e))&amp;&amp;(g.push(f),j&amp;&amp;b.push(h));return g}function va(a,b,c,d,e,f){return d&amp;&amp;!d[u]&amp;&amp;(d=va(d)),e&amp;&amp;!e[u]&amp;&amp;(e=va(e,f)),ha(function(f,g,h,i){var j,k,l,m=[],n=[],o=g.length,p=f||ta(b||"*",h.nodeType?[h]:h,[]),q=!a||!f&amp;&amp;b?p:ua(p,m,a,h,i),r=c?e||(f?a:o||d)?[]:g:q;if(c&amp;&amp;c(q,r,h,i),d){j=ua(r,n),d(j,[],h,i),k=j.length;while(k--)(l=j[k])&amp;&amp;(r[n[k]]=!(q[n[k]]=l))}if(f){if(e||a){if(e){j=[],k=r.length;while(k--)(l=r[k])&amp;&amp;j.push(q[k]=l);e(null,r=[],j,i)}k=r.length;while(k--)(l=r[k])&amp;&amp;(j=e?J(f,l):m[k])&gt;-1&amp;&amp;(f[j]=!(g[j]=l))}}else r=ua(r===g?r.splice(o,r.length):r),e?e(null,g,r,i):H.apply(g,r)})}function wa(a){for(var b,c,e,f=a.length,g=d.relative[a[0].type],h=g||d.relative[" "],i=g?1:0,k=ra(function(a){return a===b},h,!0),l=ra(function(a){return J(b,a)&gt;-1},h,!0),m=[function(a,c,d){var e=!g&amp;&amp;(d||c!==j)||((b=c).nodeType?k(a,c,d):l(a,c,d));return b=null,e}];f&gt;i;i++)if(c=d.relative[a[i].type])m=[ra(sa(m),c)];else{if(c=d.filter[a[i].type].apply(null,a[i].matches),c[u]){for(e=++i;f&gt;e;e++)if(d.relative[a[e].type])break;return va(i&gt;1&amp;&amp;sa(m),i&gt;1&amp;&amp;qa(a.slice(0,i-1).concat({value:" "===a[i-2].type?"*":""})).replace(Q,"$1"),c,e&gt;i&amp;&amp;wa(a.slice(i,e)),f&gt;e&amp;&amp;wa(a=a.slice(e)),f&gt;e&amp;&amp;qa(a))}m.push(c)}return sa(m)}function xa(a,b){var c=b.length&gt;0,e=a.length&gt;0,f=function(f,g,h,i,k){var l,o,q,r=0,s="0",t=f&amp;&amp;[],u=[],v=j,x=f||e&amp;&amp;d.find.TAG("*",k),y=w+=null==v?1:Math.random()||.1,z=x.length;for(k&amp;&amp;(j=g===n||g||k);s!==z&amp;&amp;null!=(l=x[s]);s++){if(e&amp;&amp;l){o=0,g||l.ownerDocument===n||(m(l),h=!p);while(q=a[o++])if(q(l,g||n,h)){i.push(l);break}k&amp;&amp;(w=y)}c&amp;&amp;((l=!q&amp;&amp;l)&amp;&amp;r--,f&amp;&amp;t.push(l))}if(r+=s,c&amp;&amp;s!==r){o=0;while(q=b[o++])q(t,u,g,h);if(f){if(r&gt;0)while(s--)t[s]||u[s]||(u[s]=F.call(i));u=ua(u)}H.apply(i,u),k&amp;&amp;!f&amp;&amp;u.length&gt;0&amp;&amp;r+b.length&gt;1&amp;&amp;fa.uniqueSort(i)}return k&amp;&amp;(w=y,j=v),t};return c?ha(f):f}return h=fa.compile=function(a,b){var c,d=[],e=[],f=A[a+" "];if(!f){b||(b=g(a)),c=b.length;while(c--)f=wa(b[c]),f[u]?d.push(f):e.push(f);f=A(a,xa(e,d)),f.selector=a}return f},i=fa.select=function(a,b,e,f){var i,j,k,l,m,n="function"==typeof a&amp;&amp;a,o=!f&amp;&amp;g(a=n.selector||a);if(e=e||[],1===o.length){if(j=o[0]=o[0].slice(0),j.length&gt;2&amp;&amp;"ID"===(k=j[0]).type&amp;&amp;c.getById&amp;&amp;9===b.nodeType&amp;&amp;p&amp;&amp;d.relative[j[1].type]){if(b=(d.find.ID(k.matches[0].replace(ba,ca),b)||[])[0],!b)return e;n&amp;&amp;(b=b.parentNode),a=a.slice(j.shift().value.length)}i=W.needsContext.test(a)?0:j.length;while(i--){if(k=j[i],d.relative[l=k.type])break;if((m=d.find[l])&amp;&amp;(f=m(k.matches[0].replace(ba,ca),_.test(j[0].type)&amp;&amp;oa(b.parentNode)||b))){if(j.splice(i,1),a=f.length&amp;&amp;qa(j),!a)return H.apply(e,f),e;break}}}return(n||h(a,o))(f,b,!p,e,!b||_.test(a)&amp;&amp;oa(b.parentNode)||b),e},c.sortStable=u.split("").sort(B).join("")===u,c.detectDuplicates=!!l,m(),c.sortDetached=ia(function(a){return 1&amp;a.compareDocumentPosition(n.createElement("div"))}),ia(function(a){return a.innerHTML="&lt;a href='#'&gt;&lt;/a&gt;","#"===a.firstChild.getAttribute("href")})||ja("type|href|height|width",function(a,b,c){return c?void 0:a.getAttribute(b,"type"===b.toLowerCase()?1:2)}),c.attributes&amp;&amp;ia(function(a){return a.innerHTML="&lt;input/&gt;",a.firstChild.setAttribute("value",""),""===a.firstChild.getAttribute("value")})||ja("value",function(a,b,c){return c||"input"!==a.nodeName.toLowerCase()?void 0:a.defaultValue}),ia(function(a){return null==a.getAttribute("disabled")})||ja(K,function(a,b,c){var d;return c?void 0:a[b]===!0?b.toLowerCase():(d=a.getAttributeNode(b))&amp;&amp;d.specified?d.value:null}),fa}(a);n.find=t,n.expr=t.selectors,n.expr[":"]=n.expr.pseudos,n.uniqueSort=n.unique=t.uniqueSort,n.text=t.getText,n.isXMLDoc=t.isXML,n.contains=t.contains;var u=function(a,b,c){var d=[],e=void 0!==c;while((a=a[b])&amp;&amp;9!==a.nodeType)if(1===a.nodeType){if(e&amp;&amp;n(a).is(c))break;d.push(a)}return d},v=function(a,b){for(var c=[];a;a=a.nextSibling)1===a.nodeType&amp;&amp;a!==b&amp;&amp;c.push(a);return c},w=n.expr.match.needsContext,x=/^&lt;([\w-]+)\s*\/?&gt;(?:&lt;\/\1&gt;|)$/,y=/^.[^:#\[\.,]*$/;function z(a,b,c){if(n.isFunction(b))return n.grep(a,function(a,d){return!!b.call(a,d,a)!==c});if(b.nodeType)return n.grep(a,function(a){return a===b!==c});if("string"==typeof b){if(y.test(b))return n.filter(b,a,c);b=n.filter(b,a)}return n.grep(a,function(a){return n.inArray(a,b)&gt;-1!==c})}n.filter=function(a,b,c){var d=b[0];return c&amp;&amp;(a=":not("+a+")"),1===b.length&amp;&amp;1===d.nodeType?n.find.matchesSelector(d,a)?[d]:[]:n.find.matches(a,n.grep(b,function(a){return 1===a.nodeType}))},n.fn.extend({find:function(a){var b,c=[],d=this,e=d.length;if("string"!=typeof a)return this.pushStack(n(a).filter(function(){for(b=0;e&gt;b;b++)if(n.contains(d[b],this))return!0}));for(b=0;e&gt;b;b++)n.find(a,d[b],c);return c=this.pushStack(e&gt;1?n.unique(c):c),c.selector=this.selector?this.selector+" "+a:a,c},filter:function(a){return this.pushStack(z(this,a||[],!1))},not:function(a){return this.pushStack(z(this,a||[],!0))},is:function(a){return!!z(this,"string"==typeof a&amp;&amp;w.test(a)?n(a):a||[],!1).length}});var A,B=/^(?:\s*(&lt;[\w\W]+&gt;)[^&gt;]*|#([\w-]*))$/,C=n.fn.init=function(a,b,c){var e,f;if(!a)return this;if(c=c||A,"string"==typeof a){if(e="&lt;"===a.charAt(0)&amp;&amp;"&gt;"===a.charAt(a.length-1)&amp;&amp;a.length&gt;=3?[null,a,null]:B.exec(a),!e||!e[1]&amp;&amp;b)return!b||b.jquery?(b||c).find(a):this.constructor(b).find(a);if(e[1]){if(b=b instanceof n?b[0]:b,n.merge(this,n.parseHTML(e[1],b&amp;&amp;b.nodeType?b.ownerDocument||b:d,!0)),x.test(e[1])&amp;&amp;n.isPlainObject(b))for(e in b)n.isFunction(this[e])?this[e](b[e]):this.attr(e,b[e]);return this}if(f=d.getElementById(e[2]),f&amp;&amp;f.parentNode){if(f.id!==e[2])return A.find(a);this.length=1,this[0]=f}return this.context=d,this.selector=a,this}return a.nodeType?(this.context=this[0]=a,this.length=1,this):n.isFunction(a)?"undefined"!=typeof c.ready?c.ready(a):a(n):(void 0!==a.selector&amp;&amp;(this.selector=a.selector,this.context=a.context),n.makeArray(a,this))};C.prototype=n.fn,A=n(d);var D=/^(?:parents|prev(?:Until|All))/,E={children:!0,contents:!0,next:!0,prev:!0};n.fn.extend({has:function(a){var b,c=n(a,this),d=c.length;return this.filter(function(){for(b=0;d&gt;b;b++)if(n.contains(this,c[b]))return!0})},closest:function(a,b){for(var c,d=0,e=this.length,f=[],g=w.test(a)||"string"!=typeof a?n(a,b||this.context):0;e&gt;d;d++)for(c=this[d];c&amp;&amp;c!==b;c=c.parentNode)if(c.nodeType&lt;11&amp;&amp;(g?g.index(c)&gt;-1:1===c.nodeType&amp;&amp;n.find.matchesSelector(c,a))){f.push(c);break}return this.pushStack(f.length&gt;1?n.uniqueSort(f):f)},index:function(a){return a?"string"==typeof a?n.inArray(this[0],n(a)):n.inArray(a.jquery?a[0]:a,this):this[0]&amp;&amp;this[0].parentNode?this.first().prevAll().length:-1},add:function(a,b){return this.pushStack(n.uniqueSort(n.merge(this.get(),n(a,b))))},addBack:function(a){return this.add(null==a?this.prevObject:this.prevObject.filter(a))}});function F(a,b){do a=a[b];while(a&amp;&amp;1!==a.nodeType);return a}n.each({parent:function(a){var b=a.parentNode;return b&amp;&amp;11!==b.nodeType?b:null},parents:function(a){return u(a,"parentNode")},parentsUntil:function(a,b,c){return u(a,"parentNode",c)},next:function(a){return F(a,"nextSibling")},prev:function(a){return F(a,"previousSibling")},nextAll:function(a){return u(a,"nextSibling")},prevAll:function(a){return u(a,"previousSibling")},nextUntil:function(a,b,c){return u(a,"nextSibling",c)},prevUntil:function(a,b,c){return u(a,"previousSibling",c)},siblings:function(a){return v((a.parentNode||{}).firstChild,a)},children:function(a){return v(a.firstChild)},contents:function(a){return n.nodeName(a,"iframe")?a.contentDocument||a.contentWindow.document:n.merge([],a.childNodes)}},function(a,b){n.fn[a]=function(c,d){var e=n.map(this,b,c);return"Until"!==a.slice(-5)&amp;&amp;(d=c),d&amp;&amp;"string"==typeof d&amp;&amp;(e=n.filter(d,e)),this.length&gt;1&amp;&amp;(E[a]||(e=n.uniqueSort(e)),D.test(a)&amp;&amp;(e=e.reverse())),this.pushStack(e)}});var G=/\S+/g;function H(a){var b={};return n.each(a.match(G)||[],function(a,c){b[c]=!0}),b}n.Callbacks=function(a){a="string"==typeof a?H(a):n.extend({},a);var b,c,d,e,f=[],g=[],h=-1,i=function(){for(e=a.once,d=b=!0;g.length;h=-1){c=g.shift();while(++h&lt;f.length)f[h].apply(c[0],c[1])===!1&amp;&amp;a.stopOnFalse&amp;&amp;(h=f.length,c=!1)}a.memory||(c=!1),b=!1,e&amp;&amp;(f=c?[]:"")},j={add:function(){return f&amp;&amp;(c&amp;&amp;!b&amp;&amp;(h=f.length-1,g.push(c)),function d(b){n.each(b,function(b,c){n.isFunction(c)?a.unique&amp;&amp;j.has(c)||f.push(c):c&amp;&amp;c.length&amp;&amp;"string"!==n.type(c)&amp;&amp;d(c)})}(arguments),c&amp;&amp;!b&amp;&amp;i()),this},remove:function(){return n.each(arguments,function(a,b){var c;while((c=n.inArray(b,f,c))&gt;-1)f.splice(c,1),h&gt;=c&amp;&amp;h--}),this},has:function(a){return a?n.inArray(a,f)&gt;-1:f.length&gt;0},empty:function(){return f&amp;&amp;(f=[]),this},disable:function(){return e=g=[],f=c="",this},disabled:function(){return!f},lock:function(){return e=!0,c||j.disable(),this},locked:function(){return!!e},fireWith:function(a,c){return e||(c=c||[],c=[a,c.slice?c.slice():c],g.push(c),b||i()),this},fire:function(){return j.fireWith(this,arguments),this},fired:function(){return!!d}};return j},n.extend({Deferred:function(a){var b=[["resolve","done",n.Callbacks("once memory"),"resolved"],["reject","fail",n.Callbacks("once memory"),"rejected"],["notify","progress",n.Callbacks("memory")]],c="pending",d={state:function(){return c},always:function(){return e.done(arguments).fail(arguments),this},then:function(){var a=arguments;return n.Deferred(function(c){n.each(b,function(b,f){var g=n.isFunction(a[b])&amp;&amp;a[b];e[f[1]](function(){var a=g&amp;&amp;g.apply(this,arguments);a&amp;&amp;n.isFunction(a.promise)?a.promise().progress(c.notify).done(c.resolve).fail(c.reject):c[f[0]+"With"](this===d?c.promise():this,g?[a]:arguments)})}),a=null}).promise()},promise:function(a){return null!=a?n.extend(a,d):d}},e={};return d.pipe=d.then,n.each(b,function(a,f){var g=f[2],h=f[3];d[f[1]]=g.add,h&amp;&amp;g.add(function(){c=h},b[1^a][2].disable,b[2][2].lock),e[f[0]]=function(){return e[f[0]+"With"](this===e?d:this,arguments),this},e[f[0]+"With"]=g.fireWith}),d.promise(e),a&amp;&amp;a.call(e,e),e},when:function(a){var b=0,c=e.call(arguments),d=c.length,f=1!==d||a&amp;&amp;n.isFunction(a.promise)?d:0,g=1===f?a:n.Deferred(),h=function(a,b,c){return function(d){b[a]=this,c[a]=arguments.length&gt;1?e.call(arguments):d,c===i?g.notifyWith(b,c):--f||g.resolveWith(b,c)}},i,j,k;if(d&gt;1)for(i=new Array(d),j=new Array(d),k=new Array(d);d&gt;b;b++)c[b]&amp;&amp;n.isFunction(c[b].promise)?c[b].promise().progress(h(b,j,i)).done(h(b,k,c)).fail(g.reject):--f;return f||g.resolveWith(k,c),g.promise()}});var I;n.fn.ready=function(a){return n.ready.promise().done(a),this},n.extend({isReady:!1,readyWait:1,holdReady:function(a){a?n.readyWait++:n.ready(!0)},ready:function(a){(a===!0?--n.readyWait:n.isReady)||(n.isReady=!0,a!==!0&amp;&amp;--n.readyWait&gt;0||(I.resolveWith(d,[n]),n.fn.triggerHandler&amp;&amp;(n(d).triggerHandler("ready"),n(d).off("ready"))))}});function J(){d.addEventListener?(d.removeEventListener("DOMContentLoaded",K),a.removeEventListener("load",K)):(d.detachEvent("onreadystatechange",K),a.detachEvent("onload",K))}function K(){(d.addEventListener||"load"===a.event.type||"complete"===d.readyState)&amp;&amp;(J(),n.ready())}n.ready.promise=function(b){if(!I)if(I=n.Deferred(),"complete"===d.readyState||"loading"!==d.readyState&amp;&amp;!d.documentElement.doScroll)a.setTimeout(n.ready);else if(d.addEventListener)d.addEventListener("DOMContentLoaded",K),a.addEventListener("load",K);else{d.attachEvent("onreadystatechange",K),a.attachEvent("onload",K);var c=!1;try{c=null==a.frameElement&amp;&amp;d.documentElement}catch(e){}c&amp;&amp;c.doScroll&amp;&amp;!function f(){if(!n.isReady){try{c.doScroll("left")}catch(b){return a.setTimeout(f,50)}J(),n.ready()}}()}return I.promise(b)},n.ready.promise();var L;for(L in n(l))break;l.ownFirst="0"===L,l.inlineBlockNeedsLayout=!1,n(function(){var a,b,c,e;c=d.getElementsByTagName("body")[0],c&amp;&amp;c.style&amp;&amp;(b=d.createElement("div"),e=d.createElement("div"),e.style.cssText="position:absolute;border:0;width:0;height:0;top:0;left:-9999px",c.appendChild(e).appendChild(b),"undefined"!=typeof b.style.zoom&amp;&amp;(b.style.cssText="display:inline;margin:0;border:0;padding:1px;width:1px;zoom:1",l.inlineBlockNeedsLayout=a=3===b.offsetWidth,a&amp;&amp;(c.style.zoom=1)),c.removeChild(e))}),function(){var a=d.createElement("div");l.deleteExpando=!0;try{delete a.test}catch(b){l.deleteExpando=!1}a=null}();var M=function(a){var b=n.noData[(a.nodeName+" ").toLowerCase()],c=+a.nodeType||1;return 1!==c&amp;&amp;9!==c?!1:!b||b!==!0&amp;&amp;a.getAttribute("classid")===b},N=/^(?:\{[\w\W]*\}|\[[\w\W]*\])$/,O=/([A-Z])/g;function P(a,b,c){if(void 0===c&amp;&amp;1===a.nodeType){var d="data-"+b.replace(O,"-$1").toLowerCase();if(c=a.getAttribute(d),"string"==typeof c){try{c="true"===c?!0:"false"===c?!1:"null"===c?null:+c+""===c?+c:N.test(c)?n.parseJSON(c):c}catch(e){}n.data(a,b,c)}else c=void 0;
 				
@@ -3229,11 +5235,10 @@ $( function() {
             </xsl:if>
         </script>
 
-  </xsl:template>
-  <xsl:template xmlns:xs="http://www.w3.org/2001/XMLSchema" name="jquery-ui">
-    <script type="text/javascript">
-            /*! jQuery UI - v1.12.0 - 2016-08-01 */
-            <xsl:if test="2 &gt; 1">
+    </xsl:template>
+    <xsl:template xmlns:xs="http://www.w3.org/2001/XMLSchema" name="jquery-ui">
+        <script type="text/javascript">
+        /*! jQuery UI - v1.12.0 - 2016-08-01 */<xsl:if test="2 &gt; 1">
                 
 (function(t){"function"==typeof define&amp;&amp;define.amd?define(["jquery"],t):t(jQuery)})(function(t){function e(t){for(var e=t.css("visibility");"inherit"===e;)t=t.parent(),e=t.css("visibility");return"hidden"!==e}function i(t){for(var e,i;t.length&amp;&amp;t[0]!==document;){if(e=t.css("position"),("absolute"===e||"relative"===e||"fixed"===e)&amp;&amp;(i=parseInt(t.css("zIndex"),10),!isNaN(i)&amp;&amp;0!==i))return i;t=t.parent()}return 0}function s(){this._curInst=null,this._keyEvent=!1,this._disabledInputs=[],this._datepickerShowing=!1,this._inDialog=!1,this._mainDivId="ui-datepicker-div",this._inlineClass="ui-datepicker-inline",this._appendClass="ui-datepicker-append",this._triggerClass="ui-datepicker-trigger",this._dialogClass="ui-datepicker-dialog",this._disableClass="ui-datepicker-disabled",this._unselectableClass="ui-datepicker-unselectable",this._currentClass="ui-datepicker-current-day",this._dayOverClass="ui-datepicker-days-cell-over",this.regional=[],this.regional[""]={closeText:"Done",prevText:"Prev",nextText:"Next",currentText:"Today",monthNames:["January","February","March","April","May","June","July","August","September","October","November","December"],monthNamesShort:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],dayNames:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],dayNamesShort:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],dayNamesMin:["Su","Mo","Tu","We","Th","Fr","Sa"],weekHeader:"Wk",dateFormat:"mm/dd/yy",firstDay:0,isRTL:!1,showMonthAfterYear:!1,yearSuffix:""},this._defaults={showOn:"focus",showAnim:"fadeIn",showOptions:{},defaultDate:null,appendText:"",buttonText:"...",buttonImage:"",buttonImageOnly:!1,hideIfNoPrevNext:!1,navigationAsDateFormat:!1,gotoCurrent:!1,changeMonth:!1,changeYear:!1,yearRange:"c-10:c+10",showOtherMonths:!1,selectOtherMonths:!1,showWeek:!1,calculateWeek:this.iso8601Week,shortYearCutoff:"+10",minDate:null,maxDate:null,duration:"fast",beforeShowDay:null,beforeShow:null,onSelect:null,onChangeMonthYear:null,onClose:null,numberOfMonths:1,showCurrentAtPos:0,stepMonths:1,stepBigMonths:12,altField:"",altFormat:"",constrainInput:!0,showButtonPanel:!1,autoSize:!1,disabled:!1},t.extend(this._defaults,this.regional[""]),this.regional.en=t.extend(!0,{},this.regional[""]),this.regional["en-US"]=t.extend(!0,{},this.regional.en),this.dpDiv=n(t("&lt;div id='"+this._mainDivId+"' class='ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'&gt;&lt;/div&gt;"))}function n(e){var i="button, .ui-datepicker-prev, .ui-datepicker-next, .ui-datepicker-calendar td a";return e.on("mouseout",i,function(){t(this).removeClass("ui-state-hover"),-1!==this.className.indexOf("ui-datepicker-prev")&amp;&amp;t(this).removeClass("ui-datepicker-prev-hover"),-1!==this.className.indexOf("ui-datepicker-next")&amp;&amp;t(this).removeClass("ui-datepicker-next-hover")}).on("mouseover",i,o)}function o(){t.datepicker._isDisabledDatepicker(p.inline?p.dpDiv.parent()[0]:p.input[0])||(t(this).parents(".ui-datepicker-calendar").find("a").removeClass("ui-state-hover"),t(this).addClass("ui-state-hover"),-1!==this.className.indexOf("ui-datepicker-prev")&amp;&amp;t(this).addClass("ui-datepicker-prev-hover"),-1!==this.className.indexOf("ui-datepicker-next")&amp;&amp;t(this).addClass("ui-datepicker-next-hover"))}function a(e,i){t.extend(e,i);for(var s in i)null==i[s]&amp;&amp;(e[s]=i[s]);return e}function r(t){return function(){var e=this.element.val();t.apply(this,arguments),this._refresh(),e!==this.element.val()&amp;&amp;this._trigger("change")}}t.ui=t.ui||{},t.ui.version="1.12.0";var h=0,l=Array.prototype.slice;t.cleanData=function(e){return function(i){var s,n,o;for(o=0;null!=(n=i[o]);o++)try{s=t._data(n,"events"),s&amp;&amp;s.remove&amp;&amp;t(n).triggerHandler("remove")}catch(a){}e(i)}}(t.cleanData),t.widget=function(e,i,s){var n,o,a,r={},h=e.split(".")[0];e=e.split(".")[1];var l=h+"-"+e;return s||(s=i,i=t.Widget),t.isArray(s)&amp;&amp;(s=t.extend.apply(null,[{}].concat(s))),t.expr[":"][l.toLowerCase()]=function(e){return!!t.data(e,l)},t[h]=t[h]||{},n=t[h][e],o=t[h][e]=function(t,e){return this._createWidget?(arguments.length&amp;&amp;this._createWidget(t,e),void 0):new o(t,e)},t.extend(o,n,{version:s.version,_proto:t.extend({},s),_childConstructors:[]}),a=new i,a.options=t.widget.extend({},a.options),t.each(s,function(e,s){return t.isFunction(s)?(r[e]=function(){function t(){return i.prototype[e].apply(this,arguments)}function n(t){return i.prototype[e].apply(this,t)}return function(){var e,i=this._super,o=this._superApply;return this._super=t,this._superApply=n,e=s.apply(this,arguments),this._super=i,this._superApply=o,e}}(),void 0):(r[e]=s,void 0)}),o.prototype=t.widget.extend(a,{widgetEventPrefix:n?a.widgetEventPrefix||e:e},r,{constructor:o,namespace:h,widgetName:e,widgetFullName:l}),n?(t.each(n._childConstructors,function(e,i){var s=i.prototype;t.widget(s.namespace+"."+s.widgetName,o,i._proto)}),delete n._childConstructors):i._childConstructors.push(o),t.widget.bridge(e,o),o},t.widget.extend=function(e){for(var i,s,n=l.call(arguments,1),o=0,a=n.length;a&gt;o;o++)for(i in n[o])s=n[o][i],n[o].hasOwnProperty(i)&amp;&amp;void 0!==s&amp;&amp;(e[i]=t.isPlainObject(s)?t.isPlainObject(e[i])?t.widget.extend({},e[i],s):t.widget.extend({},s):s);return e},t.widget.bridge=function(e,i){var s=i.prototype.widgetFullName||e;t.fn[e]=function(n){var o="string"==typeof n,a=l.call(arguments,1),r=this;return o?this.each(function(){var i,o=t.data(this,s);return"instance"===n?(r=o,!1):o?t.isFunction(o[n])&amp;&amp;"_"!==n.charAt(0)?(i=o[n].apply(o,a),i!==o&amp;&amp;void 0!==i?(r=i&amp;&amp;i.jquery?r.pushStack(i.get()):i,!1):void 0):t.error("no such method '"+n+"' for "+e+" widget instance"):t.error("cannot call methods on "+e+" prior to initialization; "+"attempted to call method '"+n+"'")}):(a.length&amp;&amp;(n=t.widget.extend.apply(null,[n].concat(a))),this.each(function(){var e=t.data(this,s);e?(e.option(n||{}),e._init&amp;&amp;e._init()):t.data(this,s,new i(n,this))})),r}},t.Widget=function(){},t.Widget._childConstructors=[],t.Widget.prototype={widgetName:"widget",widgetEventPrefix:"",defaultElement:"&lt;div&gt;",options:{classes:{},disabled:!1,create:null},_createWidget:function(e,i){i=t(i||this.defaultElement||this)[0],this.element=t(i),this.uuid=h++,this.eventNamespace="."+this.widgetName+this.uuid,this.bindings=t(),this.hoverable=t(),this.focusable=t(),this.classesElementLookup={},i!==this&amp;&amp;(t.data(i,this.widgetFullName,this),this._on(!0,this.element,{remove:function(t){t.target===i&amp;&amp;this.destroy()}}),this.document=t(i.style?i.ownerDocument:i.document||i),this.window=t(this.document[0].defaultView||this.document[0].parentWindow)),this.options=t.widget.extend({},this.options,this._getCreateOptions(),e),this._create(),this.options.disabled&amp;&amp;this._setOptionDisabled(this.options.disabled),this._trigger("create",null,this._getCreateEventData()),this._init()},_getCreateOptions:function(){return{}},_getCreateEventData:t.noop,_create:t.noop,_init:t.noop,destroy:function(){var e=this;this._destroy(),t.each(this.classesElementLookup,function(t,i){e._removeClass(i,t)}),this.element.off(this.eventNamespace).removeData(this.widgetFullName),this.widget().off(this.eventNamespace).removeAttr("aria-disabled"),this.bindings.off(this.eventNamespace)},_destroy:t.noop,widget:function(){return this.element},option:function(e,i){var s,n,o,a=e;if(0===arguments.length)return t.widget.extend({},this.options);if("string"==typeof e)if(a={},s=e.split("."),e=s.shift(),s.length){for(n=a[e]=t.widget.extend({},this.options[e]),o=0;s.length-1&gt;o;o++)n[s[o]]=n[s[o]]||{},n=n[s[o]];if(e=s.pop(),1===arguments.length)return void 0===n[e]?null:n[e];n[e]=i}else{if(1===arguments.length)return void 0===this.options[e]?null:this.options[e];a[e]=i}return this._setOptions(a),this},_setOptions:function(t){var e;for(e in t)this._setOption(e,t[e]);return this},_setOption:function(t,e){return"classes"===t&amp;&amp;this._setOptionClasses(e),this.options[t]=e,"disabled"===t&amp;&amp;this._setOptionDisabled(e),this},_setOptionClasses:function(e){var i,s,n;for(i in e)n=this.classesElementLookup[i],e[i]!==this.options.classes[i]&amp;&amp;n&amp;&amp;n.length&amp;&amp;(s=t(n.get()),this._removeClass(n,i),s.addClass(this._classes({element:s,keys:i,classes:e,add:!0})))},_setOptionDisabled:function(t){this._toggleClass(this.widget(),this.widgetFullName+"-disabled",null,!!t),t&amp;&amp;(this._removeClass(this.hoverable,null,"ui-state-hover"),this._removeClass(this.focusable,null,"ui-state-focus"))},enable:function(){return this._setOptions({disabled:!1})},disable:function(){return this._setOptions({disabled:!0})},_classes:function(e){function i(i,o){var a,r;for(r=0;i.length&gt;r;r++)a=n.classesElementLookup[i[r]]||t(),a=e.add?t(t.unique(a.get().concat(e.element.get()))):t(a.not(e.element).get()),n.classesElementLookup[i[r]]=a,s.push(i[r]),o&amp;&amp;e.classes[i[r]]&amp;&amp;s.push(e.classes[i[r]])}var s=[],n=this;return e=t.extend({element:this.element,classes:this.options.classes||{}},e),e.keys&amp;&amp;i(e.keys.match(/\S+/g)||[],!0),e.extra&amp;&amp;i(e.extra.match(/\S+/g)||[]),s.join(" ")},_removeClass:function(t,e,i){return this._toggleClass(t,e,i,!1)},_addClass:function(t,e,i){return this._toggleClass(t,e,i,!0)},_toggleClass:function(t,e,i,s){s="boolean"==typeof s?s:i;var n="string"==typeof t||null===t,o={extra:n?e:i,keys:n?t:e,element:n?this.element:t,add:s};return o.element.toggleClass(this._classes(o),s),this},_on:function(e,i,s){var n,o=this;"boolean"!=typeof e&amp;&amp;(s=i,i=e,e=!1),s?(i=n=t(i),this.bindings=this.bindings.add(i)):(s=i,i=this.element,n=this.widget()),t.each(s,function(s,a){function r(){return e||o.options.disabled!==!0&amp;&amp;!t(this).hasClass("ui-state-disabled")?("string"==typeof a?o[a]:a).apply(o,arguments):void 0}"string"!=typeof a&amp;&amp;(r.guid=a.guid=a.guid||r.guid||t.guid++);var h=s.match(/^([\w:-]*)\s*(.*)$/),l=h[1]+o.eventNamespace,c=h[2];c?n.on(l,c,r):i.on(l,r)})},_off:function(e,i){i=(i||"").split(" ").join(this.eventNamespace+" ")+this.eventNamespace,e.off(i).off(i),this.bindings=t(this.bindings.not(e).get()),this.focusable=t(this.focusable.not(e).get()),this.hoverable=t(this.hoverable.not(e).get())},_delay:function(t,e){function i(){return("string"==typeof t?s[t]:t).apply(s,arguments)}var s=this;return setTimeout(i,e||0)},_hoverable:function(e){this.hoverable=this.hoverable.add(e),this._on(e,{mouseenter:function(e){this._addClass(t(e.currentTarget),null,"ui-state-hover")},mouseleave:function(e){this._removeClass(t(e.currentTarget),null,"ui-state-hover")}})},_focusable:function(e){this.focusable=this.focusable.add(e),this._on(e,{focusin:function(e){this._addClass(t(e.currentTarget),null,"ui-state-focus")},focusout:function(e){this._removeClass(t(e.currentTarget),null,"ui-state-focus")}})},_trigger:function(e,i,s){var n,o,a=this.options[e];if(s=s||{},i=t.Event(i),i.type=(e===this.widgetEventPrefix?e:this.widgetEventPrefix+e).toLowerCase(),i.target=this.element[0],o=i.originalEvent)for(n in o)n in i||(i[n]=o[n]);return this.element.trigger(i,s),!(t.isFunction(a)&amp;&amp;a.apply(this.element[0],[i].concat(s))===!1||i.isDefaultPrevented())}},t.each({show:"fadeIn",hide:"fadeOut"},function(e,i){t.Widget.prototype["_"+e]=function(s,n,o){"string"==typeof n&amp;&amp;(n={effect:n});var a,r=n?n===!0||"number"==typeof n?i:n.effect||i:e;n=n||{},"number"==typeof n&amp;&amp;(n={duration:n}),a=!t.isEmptyObject(n),n.complete=o,n.delay&amp;&amp;s.delay(n.delay),a&amp;&amp;t.effects&amp;&amp;t.effects.effect[r]?s[e](n):r!==e&amp;&amp;s[r]?s[r](n.duration,n.easing,o):s.queue(function(i){t(this)[e](),o&amp;&amp;o.call(s[0]),i()})}}),t.widget,function(){function e(t,e,i){return[parseFloat(t[0])*(p.test(t[0])?e/100:1),parseFloat(t[1])*(p.test(t[1])?i/100:1)]}function i(e,i){return parseInt(t.css(e,i),10)||0}function s(e){var i=e[0];return 9===i.nodeType?{width:e.width(),height:e.height(),offset:{top:0,left:0}}:t.isWindow(i)?{width:e.width(),height:e.height(),offset:{top:e.scrollTop(),left:e.scrollLeft()}}:i.preventDefault?{width:0,height:0,offset:{top:i.pageY,left:i.pageX}}:{width:e.outerWidth(),height:e.outerHeight(),offset:e.offset()}}var n,o,a=Math.max,r=Math.abs,h=Math.round,l=/left|center|right/,c=/top|center|bottom/,u=/[\+\-]\d+(\.[\d]+)?%?/,d=/^\w+/,p=/%$/,f=t.fn.position;o=function(){var e=t("&lt;div&gt;").css("position","absolute").appendTo("body").offset({top:1.5,left:1.5}),i=1.5===e.offset().top;return e.remove(),o=function(){return i},i},t.position={scrollbarWidth:function(){if(void 0!==n)return n;var e,i,s=t("&lt;div style='display:block;position:absolute;width:50px;height:50px;overflow:hidden;'&gt;&lt;div style='height:100px;width:auto;'&gt;&lt;/div&gt;&lt;/div&gt;"),o=s.children()[0];return t("body").append(s),e=o.offsetWidth,s.css("overflow","scroll"),i=o.offsetWidth,e===i&amp;&amp;(i=s[0].clientWidth),s.remove(),n=e-i},getScrollInfo:function(e){var i=e.isWindow||e.isDocument?"":e.element.css("overflow-x"),s=e.isWindow||e.isDocument?"":e.element.css("overflow-y"),n="scroll"===i||"auto"===i&amp;&amp;e.width&lt;e.element[0].scrollWidth,o="scroll"===s||"auto"===s&amp;&amp;e.height&lt;e.element[0].scrollHeight;return{width:o?t.position.scrollbarWidth():0,height:n?t.position.scrollbarWidth():0}},getWithinInfo:function(e){var i=t(e||window),s=t.isWindow(i[0]),n=!!i[0]&amp;&amp;9===i[0].nodeType,o=!s&amp;&amp;!n;return{element:i,isWindow:s,isDocument:n,offset:o?t(e).offset():{left:0,top:0},scrollLeft:i.scrollLeft(),scrollTop:i.scrollTop(),width:i.outerWidth(),height:i.outerHeight()}}},t.fn.position=function(n){if(!n||!n.of)return f.apply(this,arguments);n=t.extend({},n);var p,g,m,_,v,b,y=t(n.of),w=t.position.getWithinInfo(n.within),k=t.position.getScrollInfo(w),D=(n.collision||"flip").split(" "),x={};return b=s(y),y[0].preventDefault&amp;&amp;(n.at="left top"),g=b.width,m=b.height,_=b.offset,v=t.extend({},_),t.each(["my","at"],function(){var t,e,i=(n[this]||"").split(" ");1===i.length&amp;&amp;(i=l.test(i[0])?i.concat(["center"]):c.test(i[0])?["center"].concat(i):["center","center"]),i[0]=l.test(i[0])?i[0]:"center",i[1]=c.test(i[1])?i[1]:"center",t=u.exec(i[0]),e=u.exec(i[1]),x[this]=[t?t[0]:0,e?e[0]:0],n[this]=[d.exec(i[0])[0],d.exec(i[1])[0]]}),1===D.length&amp;&amp;(D[1]=D[0]),"right"===n.at[0]?v.left+=g:"center"===n.at[0]&amp;&amp;(v.left+=g/2),"bottom"===n.at[1]?v.top+=m:"center"===n.at[1]&amp;&amp;(v.top+=m/2),p=e(x.at,g,m),v.left+=p[0],v.top+=p[1],this.each(function(){var s,l,c=t(this),u=c.outerWidth(),d=c.outerHeight(),f=i(this,"marginLeft"),b=i(this,"marginTop"),C=u+f+i(this,"marginRight")+k.width,I=d+b+i(this,"marginBottom")+k.height,M=t.extend({},v),T=e(x.my,c.outerWidth(),c.outerHeight());"right"===n.my[0]?M.left-=u:"center"===n.my[0]&amp;&amp;(M.left-=u/2),"bottom"===n.my[1]?M.top-=d:"center"===n.my[1]&amp;&amp;(M.top-=d/2),M.left+=T[0],M.top+=T[1],o()||(M.left=h(M.left),M.top=h(M.top)),s={marginLeft:f,marginTop:b},t.each(["left","top"],function(e,i){t.ui.position[D[e]]&amp;&amp;t.ui.position[D[e]][i](M,{targetWidth:g,targetHeight:m,elemWidth:u,elemHeight:d,collisionPosition:s,collisionWidth:C,collisionHeight:I,offset:[p[0]+T[0],p[1]+T[1]],my:n.my,at:n.at,within:w,elem:c})}),n.using&amp;&amp;(l=function(t){var e=_.left-M.left,i=e+g-u,s=_.top-M.top,o=s+m-d,h={target:{element:y,left:_.left,top:_.top,width:g,height:m},element:{element:c,left:M.left,top:M.top,width:u,height:d},horizontal:0&gt;i?"left":e&gt;0?"right":"center",vertical:0&gt;o?"top":s&gt;0?"bottom":"middle"};u&gt;g&amp;&amp;g&gt;r(e+i)&amp;&amp;(h.horizontal="center"),d&gt;m&amp;&amp;m&gt;r(s+o)&amp;&amp;(h.vertical="middle"),h.important=a(r(e),r(i))&gt;a(r(s),r(o))?"horizontal":"vertical",n.using.call(this,t,h)}),c.offset(t.extend(M,{using:l}))})},t.ui.position={fit:{left:function(t,e){var i,s=e.within,n=s.isWindow?s.scrollLeft:s.offset.left,o=s.width,r=t.left-e.collisionPosition.marginLeft,h=n-r,l=r+e.collisionWidth-o-n;e.collisionWidth&gt;o?h&gt;0&amp;&amp;0&gt;=l?(i=t.left+h+e.collisionWidth-o-n,t.left+=h-i):t.left=l&gt;0&amp;&amp;0&gt;=h?n:h&gt;l?n+o-e.collisionWidth:n:h&gt;0?t.left+=h:l&gt;0?t.left-=l:t.left=a(t.left-r,t.left)},top:function(t,e){var i,s=e.within,n=s.isWindow?s.scrollTop:s.offset.top,o=e.within.height,r=t.top-e.collisionPosition.marginTop,h=n-r,l=r+e.collisionHeight-o-n;e.collisionHeight&gt;o?h&gt;0&amp;&amp;0&gt;=l?(i=t.top+h+e.collisionHeight-o-n,t.top+=h-i):t.top=l&gt;0&amp;&amp;0&gt;=h?n:h&gt;l?n+o-e.collisionHeight:n:h&gt;0?t.top+=h:l&gt;0?t.top-=l:t.top=a(t.top-r,t.top)}},flip:{left:function(t,e){var i,s,n=e.within,o=n.offset.left+n.scrollLeft,a=n.width,h=n.isWindow?n.scrollLeft:n.offset.left,l=t.left-e.collisionPosition.marginLeft,c=l-h,u=l+e.collisionWidth-a-h,d="left"===e.my[0]?-e.elemWidth:"right"===e.my[0]?e.elemWidth:0,p="left"===e.at[0]?e.targetWidth:"right"===e.at[0]?-e.targetWidth:0,f=-2*e.offset[0];0&gt;c?(i=t.left+d+p+f+e.collisionWidth-a-o,(0&gt;i||r(c)&gt;i)&amp;&amp;(t.left+=d+p+f)):u&gt;0&amp;&amp;(s=t.left-e.collisionPosition.marginLeft+d+p+f-h,(s&gt;0||u&gt;r(s))&amp;&amp;(t.left+=d+p+f))},top:function(t,e){var i,s,n=e.within,o=n.offset.top+n.scrollTop,a=n.height,h=n.isWindow?n.scrollTop:n.offset.top,l=t.top-e.collisionPosition.marginTop,c=l-h,u=l+e.collisionHeight-a-h,d="top"===e.my[1],p=d?-e.elemHeight:"bottom"===e.my[1]?e.elemHeight:0,f="top"===e.at[1]?e.targetHeight:"bottom"===e.at[1]?-e.targetHeight:0,g=-2*e.offset[1];0&gt;c?(s=t.top+p+f+g+e.collisionHeight-a-o,(0&gt;s||r(c)&gt;s)&amp;&amp;(t.top+=p+f+g)):u&gt;0&amp;&amp;(i=t.top-e.collisionPosition.marginTop+p+f+g-h,(i&gt;0||u&gt;r(i))&amp;&amp;(t.top+=p+f+g))}},flipfit:{left:function(){t.ui.position.flip.left.apply(this,arguments),t.ui.position.fit.left.apply(this,arguments)},top:function(){t.ui.position.flip.top.apply(this,arguments),t.ui.position.fit.top.apply(this,arguments)}}}}(),t.ui.position,t.extend(t.expr[":"],{data:t.expr.createPseudo?t.expr.createPseudo(function(e){return function(i){return!!t.data(i,e)}}):function(e,i,s){return!!t.data(e,s[3])}}),t.fn.extend({disableSelection:function(){var t="onselectstart"in document.createElement("div")?"selectstart":"mousedown";return function(){return this.on(t+".ui-disableSelection",function(t){t.preventDefault()})}}(),enableSelection:function(){return this.off(".ui-disableSelection")}}),t.ui.focusable=function(i,s){var n,o,a,r,h,l=i.nodeName.toLowerCase();return"area"===l?(n=i.parentNode,o=n.name,i.href&amp;&amp;o&amp;&amp;"map"===n.nodeName.toLowerCase()?(a=t("img[usemap='#"+o+"']"),a.length&gt;0&amp;&amp;a.is(":visible")):!1):(/^(input|select|textarea|button|object)$/.test(l)?(r=!i.disabled,r&amp;&amp;(h=t(i).closest("fieldset")[0],h&amp;&amp;(r=!h.disabled))):r="a"===l?i.href||s:s,r&amp;&amp;t(i).is(":visible")&amp;&amp;e(t(i)))},t.extend(t.expr[":"],{focusable:function(e){return t.ui.focusable(e,null!=t.attr(e,"tabindex"))}}),t.ui.focusable,t.fn.form=function(){return"string"==typeof this[0].form?this.closest("form"):t(this[0].form)},t.ui.formResetMixin={_formResetHandler:function(){var e=t(this);setTimeout(function(){var i=e.data("ui-form-reset-instances");t.each(i,function(){this.refresh()})})},_bindFormResetHandler:function(){if(this.form=this.element.form(),this.form.length){var t=this.form.data("ui-form-reset-instances")||[];t.length||this.form.on("reset.ui-form-reset",this._formResetHandler),t.push(this),this.form.data("ui-form-reset-instances",t)}},_unbindFormResetHandler:function(){if(this.form.length){var e=this.form.data("ui-form-reset-instances");e.splice(t.inArray(this,e),1),e.length?this.form.data("ui-form-reset-instances",e):this.form.removeData("ui-form-reset-instances").off("reset.ui-form-reset")}}},"1.7"===t.fn.jquery.substring(0,3)&amp;&amp;(t.each(["Width","Height"],function(e,i){function s(e,i,s,o){return t.each(n,function(){i-=parseFloat(t.css(e,"padding"+this))||0,s&amp;&amp;(i-=parseFloat(t.css(e,"border"+this+"Width"))||0),o&amp;&amp;(i-=parseFloat(t.css(e,"margin"+this))||0)}),i}var n="Width"===i?["Left","Right"]:["Top","Bottom"],o=i.toLowerCase(),a={innerWidth:t.fn.innerWidth,innerHeight:t.fn.innerHeight,outerWidth:t.fn.outerWidth,outerHeight:t.fn.outerHeight};t.fn["inner"+i]=function(e){return void 0===e?a["inner"+i].call(this):this.each(function(){t(this).css(o,s(this,e)+"px")})},t.fn["outer"+i]=function(e,n){return"number"!=typeof e?a["outer"+i].call(this,e):this.each(function(){t(this).css(o,s(this,e,!0,n)+"px")})}}),t.fn.addBack=function(t){return this.add(null==t?this.prevObject:this.prevObject.filter(t))}),t.ui.keyCode={BACKSPACE:8,COMMA:188,DELETE:46,DOWN:40,END:35,ENTER:13,ESCAPE:27,HOME:36,LEFT:37,PAGE_DOWN:34,PAGE_UP:33,PERIOD:190,RIGHT:39,SPACE:32,TAB:9,UP:38},t.ui.escapeSelector=function(){var t=/([!"#$%&amp;'()*+,./:;&lt;=&gt;?@[\]^`{|}~])/g;return function(e){return e.replace(t,"\\$1")}}(),t.fn.labels=function(){var e,i,s,n,o;return this[0].labels&amp;&amp;this[0].labels.length?this.pushStack(this[0].labels):(n=this.eq(0).parents("label"),s=this.attr("id"),s&amp;&amp;(e=this.eq(0).parents().last(),o=e.add(e.length?e.siblings():this.siblings()),i="label[for='"+t.ui.escapeSelector(s)+"']",n=n.add(o.find(i).addBack(i))),this.pushStack(n))},t.fn.scrollParent=function(e){var i=this.css("position"),s="absolute"===i,n=e?/(auto|scroll|hidden)/:/(auto|scroll)/,o=this.parents().filter(function(){var e=t(this);return s&amp;&amp;"static"===e.css("position")?!1:n.test(e.css("overflow")+e.css("overflow-y")+e.css("overflow-x"))}).eq(0);return"fixed"!==i&amp;&amp;o.length?o:t(this[0].ownerDocument||document)},t.extend(t.expr[":"],{tabbable:function(e){var i=t.attr(e,"tabindex"),s=null!=i;return(!s||i&gt;=0)&amp;&amp;t.ui.focusable(e,s)}}),t.fn.extend({uniqueId:function(){var t=0;return function(){return this.each(function(){this.id||(this.id="ui-id-"+ ++t)})}}(),removeUniqueId:function(){return this.each(function(){/^ui-id-\d+$/.test(this.id)&amp;&amp;t(this).removeAttr("id")})}}),t.ui.ie=!!/msie [\w.]+/.exec(navigator.userAgent.toLowerCase());var c=!1;t(document).on("mouseup",function(){c=!1}),t.widget("ui.mouse",{version:"1.12.0",options:{cancel:"input, textarea, button, select, option",distance:1,delay:0},_mouseInit:function(){var e=this;this.element.on("mousedown."+this.widgetName,function(t){return e._mouseDown(t)}).on("click."+this.widgetName,function(i){return!0===t.data(i.target,e.widgetName+".preventClickEvent")?(t.removeData(i.target,e.widgetName+".preventClickEvent"),i.stopImmediatePropagation(),!1):void 0}),this.started=!1},_mouseDestroy:function(){this.element.off("."+this.widgetName),this._mouseMoveDelegate&amp;&amp;this.document.off("mousemove."+this.widgetName,this._mouseMoveDelegate).off("mouseup."+this.widgetName,this._mouseUpDelegate)},_mouseDown:function(e){if(!c){this._mouseMoved=!1,this._mouseStarted&amp;&amp;this._mouseUp(e),this._mouseDownEvent=e;var i=this,s=1===e.which,n="string"==typeof this.options.cancel&amp;&amp;e.target.nodeName?t(e.target).closest(this.options.cancel).length:!1;return s&amp;&amp;!n&amp;&amp;this._mouseCapture(e)?(this.mouseDelayMet=!this.options.delay,this.mouseDelayMet||(this._mouseDelayTimer=setTimeout(function(){i.mouseDelayMet=!0},this.options.delay)),this._mouseDistanceMet(e)&amp;&amp;this._mouseDelayMet(e)&amp;&amp;(this._mouseStarted=this._mouseStart(e)!==!1,!this._mouseStarted)?(e.preventDefault(),!0):(!0===t.data(e.target,this.widgetName+".preventClickEvent")&amp;&amp;t.removeData(e.target,this.widgetName+".preventClickEvent"),this._mouseMoveDelegate=function(t){return i._mouseMove(t)},this._mouseUpDelegate=function(t){return i._mouseUp(t)},this.document.on("mousemove."+this.widgetName,this._mouseMoveDelegate).on("mouseup."+this.widgetName,this._mouseUpDelegate),e.preventDefault(),c=!0,!0)):!0}},_mouseMove:function(e){if(this._mouseMoved){if(t.ui.ie&amp;&amp;(!document.documentMode||9&gt;document.documentMode)&amp;&amp;!e.button)return this._mouseUp(e);if(!e.which)if(e.originalEvent.altKey||e.originalEvent.ctrlKey||e.originalEvent.metaKey||e.originalEvent.shiftKey)this.ignoreMissingWhich=!0;else if(!this.ignoreMissingWhich)return this._mouseUp(e)}return(e.which||e.button)&amp;&amp;(this._mouseMoved=!0),this._mouseStarted?(this._mouseDrag(e),e.preventDefault()):(this._mouseDistanceMet(e)&amp;&amp;this._mouseDelayMet(e)&amp;&amp;(this._mouseStarted=this._mouseStart(this._mouseDownEvent,e)!==!1,this._mouseStarted?this._mouseDrag(e):this._mouseUp(e)),!this._mouseStarted)},_mouseUp:function(e){this.document.off("mousemove."+this.widgetName,this._mouseMoveDelegate).off("mouseup."+this.widgetName,this._mouseUpDelegate),this._mouseStarted&amp;&amp;(this._mouseStarted=!1,e.target===this._mouseDownEvent.target&amp;&amp;t.data(e.target,this.widgetName+".preventClickEvent",!0),this._mouseStop(e)),this._mouseDelayTimer&amp;&amp;(clearTimeout(this._mouseDelayTimer),delete this._mouseDelayTimer),this.ignoreMissingWhich=!1,c=!1,e.preventDefault()},_mouseDistanceMet:function(t){return Math.max(Math.abs(this._mouseDownEvent.pageX-t.pageX),Math.abs(this._mouseDownEvent.pageY-t.pageY))&gt;=this.options.distance},_mouseDelayMet:function(){return this.mouseDelayMet},_mouseStart:function(){},_mouseDrag:function(){},_mouseStop:function(){},_mouseCapture:function(){return!0}}),t.ui.plugin={add:function(e,i,s){var n,o=t.ui[e].prototype;for(n in s)o.plugins[n]=o.plugins[n]||[],o.plugins[n].push([i,s[n]])},call:function(t,e,i,s){var n,o=t.plugins[e];if(o&amp;&amp;(s||t.element[0].parentNode&amp;&amp;11!==t.element[0].parentNode.nodeType))for(n=0;o.length&gt;n;n++)t.options[o[n][0]]&amp;&amp;o[n][1].apply(t.element,i)}},t.ui.safeActiveElement=function(t){var e;try{e=t.activeElement}catch(i){e=t.body}return e||(e=t.body),e.nodeName||(e=t.body),e},t.ui.safeBlur=function(e){e&amp;&amp;"body"!==e.nodeName.toLowerCase()&amp;&amp;t(e).trigger("blur")},t.widget("ui.draggable",t.ui.mouse,{version:"1.12.0",widgetEventPrefix:"drag",options:{addClasses:!0,appendTo:"parent",axis:!1,connectToSortable:!1,containment:!1,cursor:"auto",cursorAt:!1,grid:!1,handle:!1,helper:"original",iframeFix:!1,opacity:!1,refreshPositions:!1,revert:!1,revertDuration:500,scope:"default",scroll:!0,scrollSensitivity:20,scrollSpeed:20,snap:!1,snapMode:"both",snapTolerance:20,stack:!1,zIndex:!1,drag:null,start:null,stop:null},_create:function(){"original"===this.options.helper&amp;&amp;this._setPositionRelative(),this.options.addClasses&amp;&amp;this._addClass("ui-draggable"),this._setHandleClassName(),this._mouseInit()},_setOption:function(t,e){this._super(t,e),"handle"===t&amp;&amp;(this._removeHandleClassName(),this._setHandleClassName())},_destroy:function(){return(this.helper||this.element).is(".ui-draggable-dragging")?(this.destroyOnClear=!0,void 0):(this._removeHandleClassName(),this._mouseDestroy(),void 0)},_mouseCapture:function(e){var i=this.options;return this._blurActiveElement(e),this.helper||i.disabled||t(e.target).closest(".ui-resizable-handle").length&gt;0?!1:(this.handle=this._getHandle(e),this.handle?(this._blockFrames(i.iframeFix===!0?"iframe":i.iframeFix),!0):!1)},_blockFrames:function(e){this.iframeBlocks=this.document.find(e).map(function(){var e=t(this);return t("&lt;div&gt;").css("position","absolute").appendTo(e.parent()).outerWidth(e.outerWidth()).outerHeight(e.outerHeight()).offset(e.offset())[0]})},_unblockFrames:function(){this.iframeBlocks&amp;&amp;(this.iframeBlocks.remove(),delete this.iframeBlocks)},_blurActiveElement:function(e){var i=t.ui.safeActiveElement(this.document[0]),s=t(e.target);this._getHandle(e)&amp;&amp;s.closest(i).length||t.ui.safeBlur(i)},_mouseStart:function(e){var i=this.options;return this.helper=this._createHelper(e),this._addClass(this.helper,"ui-draggable-dragging"),this._cacheHelperProportions(),t.ui.ddmanager&amp;&amp;(t.ui.ddmanager.current=this),this._cacheMargins(),this.cssPosition=this.helper.css("position"),this.scrollParent=this.helper.scrollParent(!0),this.offsetParent=this.helper.offsetParent(),this.hasFixedAncestor=this.helper.parents().filter(function(){return"fixed"===t(this).css("position")}).length&gt;0,this.positionAbs=this.element.offset(),this._refreshOffsets(e),this.originalPosition=this.position=this._generatePosition(e,!1),this.originalPageX=e.pageX,this.originalPageY=e.pageY,i.cursorAt&amp;&amp;this._adjustOffsetFromHelper(i.cursorAt),this._setContainment(),this._trigger("start",e)===!1?(this._clear(),!1):(this._cacheHelperProportions(),t.ui.ddmanager&amp;&amp;!i.dropBehaviour&amp;&amp;t.ui.ddmanager.prepareOffsets(this,e),this._mouseDrag(e,!0),t.ui.ddmanager&amp;&amp;t.ui.ddmanager.dragStart(this,e),!0)},_refreshOffsets:function(t){this.offset={top:this.positionAbs.top-this.margins.top,left:this.positionAbs.left-this.margins.left,scroll:!1,parent:this._getParentOffset(),relative:this._getRelativeOffset()},this.offset.click={left:t.pageX-this.offset.left,top:t.pageY-this.offset.top}},_mouseDrag:function(e,i){if(this.hasFixedAncestor&amp;&amp;(this.offset.parent=this._getParentOffset()),this.position=this._generatePosition(e,!0),this.positionAbs=this._convertPositionTo("absolute"),!i){var s=this._uiHash();if(this._trigger("drag",e,s)===!1)return this._mouseUp(new t.Event("mouseup",e)),!1;this.position=s.position}return this.helper[0].style.left=this.position.left+"px",this.helper[0].style.top=this.position.top+"px",t.ui.ddmanager&amp;&amp;t.ui.ddmanager.drag(this,e),!1},_mouseStop:function(e){var i=this,s=!1;return t.ui.ddmanager&amp;&amp;!this.options.dropBehaviour&amp;&amp;(s=t.ui.ddmanager.drop(this,e)),this.dropped&amp;&amp;(s=this.dropped,this.dropped=!1),"invalid"===this.options.revert&amp;&amp;!s||"valid"===this.options.revert&amp;&amp;s||this.options.revert===!0||t.isFunction(this.options.revert)&amp;&amp;this.options.revert.call(this.element,s)?t(this.helper).animate(this.originalPosition,parseInt(this.options.revertDuration,10),function(){i._trigger("stop",e)!==!1&amp;&amp;i._clear()}):this._trigger("stop",e)!==!1&amp;&amp;this._clear(),!1},_mouseUp:function(e){return this._unblockFrames(),t.ui.ddmanager&amp;&amp;t.ui.ddmanager.dragStop(this,e),this.handleElement.is(e.target)&amp;&amp;this.element.trigger("focus"),t.ui.mouse.prototype._mouseUp.call(this,e)},cancel:function(){return this.helper.is(".ui-draggable-dragging")?this._mouseUp(new t.Event("mouseup",{target:this.element[0]})):this._clear(),this},_getHandle:function(e){return this.options.handle?!!t(e.target).closest(this.element.find(this.options.handle)).length:!0},_setHandleClassName:function(){this.handleElement=this.options.handle?this.element.find(this.options.handle):this.element,this._addClass(this.handleElement,"ui-draggable-handle")},_removeHandleClassName:function(){this._removeClass(this.handleElement,"ui-draggable-handle")},_createHelper:function(e){var i=this.options,s=t.isFunction(i.helper),n=s?t(i.helper.apply(this.element[0],[e])):"clone"===i.helper?this.element.clone().removeAttr("id"):this.element;return n.parents("body").length||n.appendTo("parent"===i.appendTo?this.element[0].parentNode:i.appendTo),s&amp;&amp;n[0]===this.element[0]&amp;&amp;this._setPositionRelative(),n[0]===this.element[0]||/(fixed|absolute)/.test(n.css("position"))||n.css("position","absolute"),n},_setPositionRelative:function(){/^(?:r|a|f)/.test(this.element.css("position"))||(this.element[0].style.position="relative")},_adjustOffsetFromHelper:function(e){"string"==typeof e&amp;&amp;(e=e.split(" ")),t.isArray(e)&amp;&amp;(e={left:+e[0],top:+e[1]||0}),"left"in e&amp;&amp;(this.offset.click.left=e.left+this.margins.left),"right"in e&amp;&amp;(this.offset.click.left=this.helperProportions.width-e.right+this.margins.left),"top"in e&amp;&amp;(this.offset.click.top=e.top+this.margins.top),"bottom"in e&amp;&amp;(this.offset.click.top=this.helperProportions.height-e.bottom+this.margins.top)},_isRootNode:function(t){return/(html|body)/i.test(t.tagName)||t===this.document[0]},_getParentOffset:function(){var e=this.offsetParent.offset(),i=this.document[0];return"absolute"===this.cssPosition&amp;&amp;this.scrollParent[0]!==i&amp;&amp;t.contains(this.scrollParent[0],this.offsetParent[0])&amp;&amp;(e.left+=this.scrollParent.scrollLeft(),e.top+=this.scrollParent.scrollTop()),this._isRootNode(this.offsetParent[0])&amp;&amp;(e={top:0,left:0}),{top:e.top+(parseInt(this.offsetParent.css("borderTopWidth"),10)||0),left:e.left+(parseInt(this.offsetParent.css("borderLeftWidth"),10)||0)}},_getRelativeOffset:function(){if("relative"!==this.cssPosition)return{top:0,left:0};var t=this.element.position(),e=this._isRootNode(this.scrollParent[0]);return{top:t.top-(parseInt(this.helper.css("top"),10)||0)+(e?0:this.scrollParent.scrollTop()),left:t.left-(parseInt(this.helper.css("left"),10)||0)+(e?0:this.scrollParent.scrollLeft())}},_cacheMargins:function(){this.margins={left:parseInt(this.element.css("marginLeft"),10)||0,top:parseInt(this.element.css("marginTop"),10)||0,right:parseInt(this.element.css("marginRight"),10)||0,bottom:parseInt(this.element.css("marginBottom"),10)||0}},_cacheHelperProportions:function(){this.helperProportions={width:this.helper.outerWidth(),height:this.helper.outerHeight()}},_setContainment:function(){var e,i,s,n=this.options,o=this.document[0];return this.relativeContainer=null,n.containment?"window"===n.containment?(this.containment=[t(window).scrollLeft()-this.offset.relative.left-this.offset.parent.left,t(window).scrollTop()-this.offset.relative.top-this.offset.parent.top,t(window).scrollLeft()+t(window).width()-this.helperProportions.width-this.margins.left,t(window).scrollTop()+(t(window).height()||o.body.parentNode.scrollHeight)-this.helperProportions.height-this.margins.top],void 0):"document"===n.containment?(this.containment=[0,0,t(o).width()-this.helperProportions.width-this.margins.left,(t(o).height()||o.body.parentNode.scrollHeight)-this.helperProportions.height-this.margins.top],void 0):n.containment.constructor===Array?(this.containment=n.containment,void 0):("parent"===n.containment&amp;&amp;(n.containment=this.helper[0].parentNode),i=t(n.containment),s=i[0],s&amp;&amp;(e=/(scroll|auto)/.test(i.css("overflow")),this.containment=[(parseInt(i.css("borderLeftWidth"),10)||0)+(parseInt(i.css("paddingLeft"),10)||0),(parseInt(i.css("borderTopWidth"),10)||0)+(parseInt(i.css("paddingTop"),10)||0),(e?Math.max(s.scrollWidth,s.offsetWidth):s.offsetWidth)-(parseInt(i.css("borderRightWidth"),10)||0)-(parseInt(i.css("paddingRight"),10)||0)-this.helperProportions.width-this.margins.left-this.margins.right,(e?Math.max(s.scrollHeight,s.offsetHeight):s.offsetHeight)-(parseInt(i.css("borderBottomWidth"),10)||0)-(parseInt(i.css("paddingBottom"),10)||0)-this.helperProportions.height-this.margins.top-this.margins.bottom],this.relativeContainer=i),void 0):(this.containment=null,void 0)
 				
@@ -3274,10 +5279,10 @@ break;default:M+=" ui-datepicker-group-middle",I=""}M+="'&gt;"}for(M+="&lt;div c
 				
             </xsl:if>
         </script>
-  </xsl:template>
-  <xsl:template xmlns:xs="http://www.w3.org/2001/XMLSchema" name="bootstrap-css">
-    <style type="text/css">
-      /*!
+    </xsl:template>
+    <xsl:template xmlns:xs="http://www.w3.org/2001/XMLSchema" name="bootstrap-css">
+        <style type="text/css">
+            /*!
             * Bootstrap v3.3.5 (http://getbootstrap.com)
             * Copyright 2011-2015 Twitter, Inc.
             * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
@@ -3297,18 +5302,911 @@ a.list-group-item:focus,a.list-group-item:hover,button.list-group-item:focus,but
 				
             </xsl:if>
         </style>
-  </xsl:template>
-  <xsl:template xmlns:xs="http://www.w3.org/2001/XMLSchema" name="bootstrap-javascript">
-    <script type="text/javascript">
-            /*!
-            * Bootstrap v3.3.6 (http://getbootstrap.com)
-            * Copyright 2011-2015 Twitter, Inc.
-            * Licensed under the MIT license
-            */
-            
-if("undefined"==typeof jQuery)throw new Error("Bootstrap's JavaScript requires jQuery");+function(a){"use strict";var b=a.fn.jquery.split(" ")[0].split(".");if(b[0]&lt;2&amp;&amp;b[1]&lt;9||1==b[0]&amp;&amp;9==b[1]&amp;&amp;b[2]&lt;1||b[0]&gt;2)throw new Error("Bootstrap's JavaScript requires jQuery version 1.9.1 or higher, but lower than version 3")}(jQuery),+function(a){"use strict";function b(){var a=document.createElement("bootstrap"),b={WebkitTransition:"webkitTransitionEnd",MozTransition:"transitionend",OTransition:"oTransitionEnd otransitionend",transition:"transitionend"};for(var c in b)if(void 0!==a.style[c])return{end:b[c]};return!1}a.fn.emulateTransitionEnd=function(b){var c=!1,d=this;a(this).one("bsTransitionEnd",function(){c=!0});var e=function(){c||a(d).trigger(a.support.transition.end)};return setTimeout(e,b),this},a(function(){a.support.transition=b(),a.support.transition&amp;&amp;(a.event.special.bsTransitionEnd={bindType:a.support.transition.end,delegateType:a.support.transition.end,handle:function(b){return a(b.target).is(this)?b.handleObj.handler.apply(this,arguments):void 0}})})}(jQuery),+function(a){"use strict";function b(b){return this.each(function(){var c=a(this),e=c.data("bs.alert");e||c.data("bs.alert",e=new d(this)),"string"==typeof b&amp;&amp;e[b].call(c)})}var c='[data-dismiss="alert"]',d=function(b){a(b).on("click",c,this.close)};d.VERSION="3.3.6",d.TRANSITION_DURATION=150,d.prototype.close=function(b){function c(){g.detach().trigger("closed.bs.alert").remove()}var e=a(this),f=e.attr("data-target");f||(f=e.attr("href"),f=f&amp;&amp;f.replace(/.*(?=#[^\s]*$)/,""));var g=a(f);b&amp;&amp;b.preventDefault(),g.length||(g=e.closest(".alert")),g.trigger(b=a.Event("close.bs.alert")),b.isDefaultPrevented()||(g.removeClass("in"),a.support.transition&amp;&amp;g.hasClass("fade")?g.one("bsTransitionEnd",c).emulateTransitionEnd(d.TRANSITION_DURATION):c())};var e=a.fn.alert;a.fn.alert=b,a.fn.alert.Constructor=d,a.fn.alert.noConflict=function(){return a.fn.alert=e,this},a(document).on("click.bs.alert.data-api",c,d.prototype.close)}(jQuery),+function(a){"use strict";function b(b){return this.each(function(){var d=a(this),e=d.data("bs.button"),f="object"==typeof b&amp;&amp;b;e||d.data("bs.button",e=new c(this,f)),"toggle"==b?e.toggle():b&amp;&amp;e.setState(b)})}var c=function(b,d){this.$element=a(b),this.options=a.extend({},c.DEFAULTS,d),this.isLoading=!1};c.VERSION="3.3.6",c.DEFAULTS={loadingText:"loading..."},c.prototype.setState=function(b){var c="disabled",d=this.$element,e=d.is("input")?"val":"html",f=d.data();b+="Text",null==f.resetText&amp;&amp;d.data("resetText",d[e]()),setTimeout(a.proxy(function(){d[e](null==f[b]?this.options[b]:f[b]),"loadingText"==b?(this.isLoading=!0,d.addClass(c).attr(c,c)):this.isLoading&amp;&amp;(this.isLoading=!1,d.removeClass(c).removeAttr(c))},this),0)},c.prototype.toggle=function(){var a=!0,b=this.$element.closest('[data-toggle="buttons"]');if(b.length){var c=this.$element.find("input");"radio"==c.prop("type")?(c.prop("checked")&amp;&amp;(a=!1),b.find(".active").removeClass("active"),this.$element.addClass("active")):"checkbox"==c.prop("type")&amp;&amp;(c.prop("checked")!==this.$element.hasClass("active")&amp;&amp;(a=!1),this.$element.toggleClass("active")),c.prop("checked",this.$element.hasClass("active")),a&amp;&amp;c.trigger("change")}else this.$element.attr("aria-pressed",!this.$element.hasClass("active")),this.$element.toggleClass("active")};var d=a.fn.button;a.fn.button=b,a.fn.button.Constructor=c,a.fn.button.noConflict=function(){return a.fn.button=d,this},a(document).on("click.bs.button.data-api",'[data-toggle^="button"]',function(c){var d=a(c.target);d.hasClass("btn")||(d=d.closest(".btn")),b.call(d,"toggle"),a(c.target).is('input[type="radio"]')||a(c.target).is('input[type="checkbox"]')||c.preventDefault()}).on("focus.bs.button.data-api blur.bs.button.data-api",'[data-toggle^="button"]',function(b){a(b.target).closest(".btn").toggleClass("focus",/^focus(in)?$/.test(b.type))})}(jQuery),+function(a){"use strict";function b(b){return this.each(function(){var d=a(this),e=d.data("bs.carousel"),f=a.extend({},c.DEFAULTS,d.data(),"object"==typeof b&amp;&amp;b),g="string"==typeof b?b:f.slide;e||d.data("bs.carousel",e=new c(this,f)),"number"==typeof b?e.to(b):g?e[g]():f.interval&amp;&amp;e.pause().cycle()})}var c=function(b,c){this.$element=a(b),this.$indicators=this.$element.find(".carousel-indicators"),this.options=c,this.paused=null,this.sliding=null,this.interval=null,this.$active=null,this.$items=null,this.options.keyboard&amp;&amp;this.$element.on("keydown.bs.carousel",a.proxy(this.keydown,this)),"hover"==this.options.pause&amp;&amp;!("ontouchstart"in document.documentElement)&amp;&amp;this.$element.on("mouseenter.bs.carousel",a.proxy(this.pause,this)).on("mouseleave.bs.carousel",a.proxy(this.cycle,this))};c.VERSION="3.3.6",c.TRANSITION_DURATION=600,c.DEFAULTS={interval:5e3,pause:"hover",wrap:!0,keyboard:!0},c.prototype.keydown=function(a){if(!/input|textarea/i.test(a.target.tagName)){switch(a.which){case 37:this.prev();break;case 39:this.next();break;default:return}a.preventDefault()}},c.prototype.cycle=function(b){return b||(this.paused=!1),this.interval&amp;&amp;clearInterval(this.interval),this.options.interval&amp;&amp;!this.paused&amp;&amp;(this.interval=setInterval(a.proxy(this.next,this),this.options.interval)),this},c.prototype.getItemIndex=function(a){return this.$items=a.parent().children(".item"),this.$items.index(a||this.$active)},c.prototype.getItemForDirection=function(a,b){var c=this.getItemIndex(b),d="prev"==a&amp;&amp;0===c||"next"==a&amp;&amp;c==this.$items.length-1;if(d&amp;&amp;!this.options.wrap)return b;var e="prev"==a?-1:1,f=(c+e)%this.$items.length;return this.$items.eq(f)},c.prototype.to=function(a){var b=this,c=this.getItemIndex(this.$active=this.$element.find(".item.active"));return a&gt;this.$items.length-1||0&gt;a?void 0:this.sliding?this.$element.one("slid.bs.carousel",function(){b.to(a)}):c==a?this.pause().cycle():this.slide(a&gt;c?"next":"prev",this.$items.eq(a))},c.prototype.pause=function(b){return b||(this.paused=!0),this.$element.find(".next, .prev").length&amp;&amp;a.support.transition&amp;&amp;(this.$element.trigger(a.support.transition.end),this.cycle(!0)),this.interval=clearInterval(this.interval),this},c.prototype.next=function(){return this.sliding?void 0:this.slide("next")},c.prototype.prev=function(){return this.sliding?void 0:this.slide("prev")},c.prototype.slide=function(b,d){var e=this.$element.find(".item.active"),f=d||this.getItemForDirection(b,e),g=this.interval,h="next"==b?"left":"right",i=this;if(f.hasClass("active"))return this.sliding=!1;var j=f[0],k=a.Event("slide.bs.carousel",{relatedTarget:j,direction:h});if(this.$element.trigger(k),!k.isDefaultPrevented()){if(this.sliding=!0,g&amp;&amp;this.pause(),this.$indicators.length){this.$indicators.find(".active").removeClass("active");var l=a(this.$indicators.children()[this.getItemIndex(f)]);l&amp;&amp;l.addClass("active")}var m=a.Event("slid.bs.carousel",{relatedTarget:j,direction:h});return a.support.transition&amp;&amp;this.$element.hasClass("slide")?(f.addClass(b),f[0].offsetWidth,e.addClass(h),f.addClass(h),e.one("bsTransitionEnd",function(){f.removeClass([b,h].join(" ")).addClass("active"),e.removeClass(["active",h].join(" ")),i.sliding=!1,setTimeout(function(){i.$element.trigger(m)},0)}).emulateTransitionEnd(c.TRANSITION_DURATION)):(e.removeClass("active"),f.addClass("active"),this.sliding=!1,this.$element.trigger(m)),g&amp;&amp;this.cycle(),this}};var d=a.fn.carousel;a.fn.carousel=b,a.fn.carousel.Constructor=c,a.fn.carousel.noConflict=function(){return a.fn.carousel=d,this};var e=function(c){var d,e=a(this),f=a(e.attr("data-target")||(d=e.attr("href"))&amp;&amp;d.replace(/.*(?=#[^\s]+$)/,""));if(f.hasClass("carousel")){var g=a.extend({},f.data(),e.data()),h=e.attr("data-slide-to");h&amp;&amp;(g.interval=!1),b.call(f,g),h&amp;&amp;f.data("bs.carousel").to(h),c.preventDefault()}};a(document).on("click.bs.carousel.data-api","[data-slide]",e).on("click.bs.carousel.data-api","[data-slide-to]",e),a(window).on("load",function(){a('[data-ride="carousel"]').each(function(){var c=a(this);b.call(c,c.data())})})}(jQuery),+function(a){"use strict";function b(b){var c,d=b.attr("data-target")||(c=b.attr("href"))&amp;&amp;c.replace(/.*(?=#[^\s]+$)/,"");return a(d)}function c(b){return this.each(function(){var c=a(this),e=c.data("bs.collapse"),f=a.extend({},d.DEFAULTS,c.data(),"object"==typeof b&amp;&amp;b);!e&amp;&amp;f.toggle&amp;&amp;/show|hide/.test(b)&amp;&amp;(f.toggle=!1),e||c.data("bs.collapse",e=new d(this,f)),"string"==typeof b&amp;&amp;e[b]()})}var d=function(b,c){this.$element=a(b),this.options=a.extend({},d.DEFAULTS,c),this.$trigger=a('[data-toggle="collapse"][href="#'+b.id+'"],[data-toggle="collapse"][data-target="#'+b.id+'"]'),this.transitioning=null,this.options.parent?this.$parent=this.getParent():this.addAriaAndCollapsedClass(this.$element,this.$trigger),this.options.toggle&amp;&amp;this.toggle()};d.VERSION="3.3.6",d.TRANSITION_DURATION=350,d.DEFAULTS={toggle:!0},d.prototype.dimension=function(){var a=this.$element.hasClass("width");return a?"width":"height"},d.prototype.show=function(){if(!this.transitioning&amp;&amp;!this.$element.hasClass("in")){var b,e=this.$parent&amp;&amp;this.$parent.children(".panel").children(".in, .collapsing");if(!(e&amp;&amp;e.length&amp;&amp;(b=e.data("bs.collapse"),b&amp;&amp;b.transitioning))){var f=a.Event("show.bs.collapse");if(this.$element.trigger(f),!f.isDefaultPrevented()){e&amp;&amp;e.length&amp;&amp;(c.call(e,"hide"),b||e.data("bs.collapse",null));var g=this.dimension();this.$element.removeClass("collapse").addClass("collapsing")[g](0).attr("aria-expanded",!0),this.$trigger.removeClass("collapsed").attr("aria-expanded",!0),this.transitioning=1;var h=function(){this.$element.removeClass("collapsing").addClass("collapse in")[g](""),this.transitioning=0,this.$element.trigger("shown.bs.collapse")};if(!a.support.transition)return h.call(this);var i=a.camelCase(["scroll",g].join("-"));this.$element.one("bsTransitionEnd",a.proxy(h,this)).emulateTransitionEnd(d.TRANSITION_DURATION)[g](this.$element[0][i])}}}},d.prototype.hide=function(){if(!this.transitioning&amp;&amp;this.$element.hasClass("in")){var b=a.Event("hide.bs.collapse");if(this.$element.trigger(b),!b.isDefaultPrevented()){var c=this.dimension();this.$element[c](this.$element[c]())[0].offsetHeight,this.$element.addClass("collapsing").removeClass("collapse in").attr("aria-expanded",!1),this.$trigger.addClass("collapsed").attr("aria-expanded",!1),this.transitioning=1;var e=function(){this.transitioning=0,this.$element.removeClass("collapsing").addClass("collapse").trigger("hidden.bs.collapse")};return a.support.transition?void this.$element[c](0).one("bsTransitionEnd",a.proxy(e,this)).emulateTransitionEnd(d.TRANSITION_DURATION):e.call(this)}}},d.prototype.toggle=function(){this[this.$element.hasClass("in")?"hide":"show"]()},d.prototype.getParent=function(){return a(this.options.parent).find('[data-toggle="collapse"][data-parent="'+this.options.parent+'"]').each(a.proxy(function(c,d){var e=a(d);this.addAriaAndCollapsedClass(b(e),e)},this)).end()},d.prototype.addAriaAndCollapsedClass=function(a,b){var c=a.hasClass("in");a.attr("aria-expanded",c),b.toggleClass("collapsed",!c).attr("aria-expanded",c)};var e=a.fn.collapse;a.fn.collapse=c,a.fn.collapse.Constructor=d,a.fn.collapse.noConflict=function(){return a.fn.collapse=e,this},a(document).on("click.bs.collapse.data-api",'[data-toggle="collapse"]',function(d){var e=a(this);e.attr("data-target")||d.preventDefault();var f=b(e),g=f.data("bs.collapse"),h=g?"toggle":e.data();c.call(f,h)})}(jQuery),+function(a){"use strict";function b(b){var c=b.attr("data-target");c||(c=b.attr("href"),c=c&amp;&amp;/#[A-Za-z]/.test(c)&amp;&amp;c.replace(/.*(?=#[^\s]*$)/,""));var d=c&amp;&amp;a(c);return d&amp;&amp;d.length?d:b.parent()}function c(c){c&amp;&amp;3===c.which||(a(e).remove(),a(f).each(function(){var d=a(this),e=b(d),f={relatedTarget:this};e.hasClass("open")&amp;&amp;(c&amp;&amp;"click"==c.type&amp;&amp;/input|textarea/i.test(c.target.tagName)&amp;&amp;a.contains(e[0],c.target)||(e.trigger(c=a.Event("hide.bs.dropdown",f)),c.isDefaultPrevented()||(d.attr("aria-expanded","false"),e.removeClass("open").trigger(a.Event("hidden.bs.dropdown",f)))))}))}function d(b){return this.each(function(){var c=a(this),d=c.data("bs.dropdown");d||c.data("bs.dropdown",d=new g(this)),"string"==typeof b&amp;&amp;d[b].call(c)})}var e=".dropdown-backdrop",f='[data-toggle="dropdown"]',g=function(b){a(b).on("click.bs.dropdown",this.toggle)};g.VERSION="3.3.6",g.prototype.toggle=function(d){var e=a(this);if(!e.is(".disabled, :disabled")){var f=b(e),g=f.hasClass("open");if(c(),!g){"ontouchstart"in document.documentElement&amp;&amp;!f.closest(".navbar-nav").length&amp;&amp;a(document.createElement("div")).addClass("dropdown-backdrop").insertAfter(a(this)).on("click",c);var h={relatedTarget:this};if(f.trigger(d=a.Event("show.bs.dropdown",h)),d.isDefaultPrevented())return;e.trigger("focus").attr("aria-expanded","true"),f.toggleClass("open").trigger(a.Event("shown.bs.dropdown",h))}return!1}},g.prototype.keydown=function(c){if(/(38|40|27|32)/.test(c.which)&amp;&amp;!/input|textarea/i.test(c.target.tagName)){var d=a(this);if(c.preventDefault(),c.stopPropagation(),!d.is(".disabled, :disabled")){var e=b(d),g=e.hasClass("open");if(!g&amp;&amp;27!=c.which||g&amp;&amp;27==c.which)return 27==c.which&amp;&amp;e.find(f).trigger("focus"),d.trigger("click");var h=" li:not(.disabled):visible a",i=e.find(".dropdown-menu"+h);if(i.length){var j=i.index(c.target);38==c.which&amp;&amp;j&gt;0&amp;&amp;j--,40==c.which&amp;&amp;j&lt;i.length-1&amp;&amp;j++,~j||(j=0),i.eq(j).trigger("focus")}}}};var h=a.fn.dropdown;a.fn.dropdown=d,a.fn.dropdown.Constructor=g,a.fn.dropdown.noConflict=function(){return a.fn.dropdown=h,this},a(document).on("click.bs.dropdown.data-api",c).on("click.bs.dropdown.data-api",".dropdown form",function(a){a.stopPropagation()}).on("click.bs.dropdown.data-api",f,g.prototype.toggle).on("keydown.bs.dropdown.data-api",f,g.prototype.keydown).on("keydown.bs.dropdown.data-api",".dropdown-menu",g.prototype.keydown)}(jQuery),+function(a){"use strict";function b(b,d){return this.each(function(){var e=a(this),f=e.data("bs.modal"),g=a.extend({},c.DEFAULTS,e.data(),"object"==typeof b&amp;&amp;b);f||e.data("bs.modal",f=new c(this,g)),"string"==typeof b?f[b](d):g.show&amp;&amp;f.show(d)})}var c=function(b,c){this.options=c,this.$body=a(document.body),this.$element=a(b),this.$dialog=this.$element.find(".modal-dialog"),this.$backdrop=null,this.isShown=null,this.originalBodyPad=null,this.scrollbarWidth=0,this.ignoreBackdropClick=!1,this.options.remote&amp;&amp;this.$element.find(".modal-content").load(this.options.remote,a.proxy(function(){this.$element.trigger("loaded.bs.modal")},this))};c.VERSION="3.3.6",c.TRANSITION_DURATION=300,c.BACKDROP_TRANSITION_DURATION=150,c.DEFAULTS={backdrop:!0,keyboard:!0,show:!0},c.prototype.toggle=function(a){return this.isShown?this.hide():this.show(a)},c.prototype.show=function(b){var d=this,e=a.Event("show.bs.modal",{relatedTarget:b});this.$element.trigger(e),this.isShown||e.isDefaultPrevented()||(this.isShown=!0,this.checkScrollbar(),this.setScrollbar(),this.$body.addClass("modal-open"),this.escape(),this.resize(),this.$element.on("click.dismiss.bs.modal",'[data-dismiss="modal"]',a.proxy(this.hide,this)),this.$dialog.on("mousedown.dismiss.bs.modal",function(){d.$element.one("mouseup.dismiss.bs.modal",function(b){a(b.target).is(d.$element)&amp;&amp;(d.ignoreBackdropClick=!0)})}),this.backdrop(function(){var e=a.support.transition&amp;&amp;d.$element.hasClass("fade");d.$element.parent().length||d.$element.appendTo(d.$body),d.$element.show().scrollTop(0),d.adjustDialog(),e&amp;&amp;d.$element[0].offsetWidth,d.$element.addClass("in"),d.enforceFocus();var f=a.Event("shown.bs.modal",{relatedTarget:b});e?d.$dialog.one("bsTransitionEnd",function(){d.$element.trigger("focus").trigger(f)}).emulateTransitionEnd(c.TRANSITION_DURATION):d.$element.trigger("focus").trigger(f)}))},c.prototype.hide=function(b){b&amp;&amp;b.preventDefault(),b=a.Event("hide.bs.modal"),this.$element.trigger(b),this.isShown&amp;&amp;!b.isDefaultPrevented()&amp;&amp;(this.isShown=!1,this.escape(),this.resize(),a(document).off("focusin.bs.modal"),this.$element.removeClass("in").off("click.dismiss.bs.modal").off("mouseup.dismiss.bs.modal"),this.$dialog.off("mousedown.dismiss.bs.modal"),a.support.transition&amp;&amp;this.$element.hasClass("fade")?this.$element.one("bsTransitionEnd",a.proxy(this.hideModal,this)).emulateTransitionEnd(c.TRANSITION_DURATION):this.hideModal())},c.prototype.enforceFocus=function(){a(document).off("focusin.bs.modal").on("focusin.bs.modal",a.proxy(function(a){this.$element[0]===a.target||this.$element.has(a.target).length||this.$element.trigger("focus")},this))},c.prototype.escape=function(){this.isShown&amp;&amp;this.options.keyboard?this.$element.on("keydown.dismiss.bs.modal",a.proxy(function(a){27==a.which&amp;&amp;this.hide()},this)):this.isShown||this.$element.off("keydown.dismiss.bs.modal")},c.prototype.resize=function(){this.isShown?a(window).on("resize.bs.modal",a.proxy(this.handleUpdate,this)):a(window).off("resize.bs.modal")},c.prototype.hideModal=function(){var a=this;this.$element.hide(),this.backdrop(function(){a.$body.removeClass("modal-open"),a.resetAdjustments(),a.resetScrollbar(),a.$element.trigger("hidden.bs.modal")})},c.prototype.removeBackdrop=function(){this.$backdrop&amp;&amp;this.$backdrop.remove(),this.$backdrop=null},c.prototype.backdrop=function(b){var d=this,e=this.$element.hasClass("fade")?"fade":"";if(this.isShown&amp;&amp;this.options.backdrop){var f=a.support.transition&amp;&amp;e;if(this.$backdrop=a(document.createElement("div")).addClass("modal-backdrop "+e).appendTo(this.$body),this.$element.on("click.dismiss.bs.modal",a.proxy(function(a){return this.ignoreBackdropClick?void(this.ignoreBackdropClick=!1):void(a.target===a.currentTarget&amp;&amp;("static"==this.options.backdrop?this.$element[0].focus():this.hide()))},this)),f&amp;&amp;this.$backdrop[0].offsetWidth,this.$backdrop.addClass("in"),!b)return;f?this.$backdrop.one("bsTransitionEnd",b).emulateTransitionEnd(c.BACKDROP_TRANSITION_DURATION):b()}else if(!this.isShown&amp;&amp;this.$backdrop){this.$backdrop.removeClass("in");var g=function(){d.removeBackdrop(),b&amp;&amp;b()};a.support.transition&amp;&amp;this.$element.hasClass("fade")?this.$backdrop.one("bsTransitionEnd",g).emulateTransitionEnd(c.BACKDROP_TRANSITION_DURATION):g()}else b&amp;&amp;b()},c.prototype.handleUpdate=function(){this.adjustDialog()},c.prototype.adjustDialog=function(){var a=this.$element[0].scrollHeight&gt;document.documentElement.clientHeight;this.$element.css({paddingLeft:!this.bodyIsOverflowing&amp;&amp;a?this.scrollbarWidth:"",paddingRight:this.bodyIsOverflowing&amp;&amp;!a?this.scrollbarWidth:""})},c.prototype.resetAdjustments=function(){this.$element.css({paddingLeft:"",paddingRight:""})},c.prototype.checkScrollbar=function(){var a=window.innerWidth;if(!a){var b=document.documentElement.getBoundingClientRect();a=b.right-Math.abs(b.left)}this.bodyIsOverflowing=document.body.clientWidth&lt;a,this.scrollbarWidth=this.measureScrollbar()},c.prototype.setScrollbar=function(){var a=parseInt(this.$body.css("padding-right")||0,10);this.originalBodyPad=document.body.style.paddingRight||"",this.bodyIsOverflowing&amp;&amp;this.$body.css("padding-right",a+this.scrollbarWidth)},c.prototype.resetScrollbar=function(){this.$body.css("padding-right",this.originalBodyPad)},c.prototype.measureScrollbar=function(){var a=document.createElement("div");a.className="modal-scrollbar-measure",this.$body.append(a);var b=a.offsetWidth-a.clientWidth;return this.$body[0].removeChild(a),b};var d=a.fn.modal;a.fn.modal=b,a.fn.modal.Constructor=c,a.fn.modal.noConflict=function(){return a.fn.modal=d,this},a(document).on("click.bs.modal.data-api",'[data-toggle="modal"]',function(c){var d=a(this),e=d.attr("href"),f=a(d.attr("data-target")||e&amp;&amp;e.replace(/.*(?=#[^\s]+$)/,"")),g=f.data("bs.modal")?"toggle":a.extend({remote:!/#/.test(e)&amp;&amp;e},f.data(),d.data());d.is("a")&amp;&amp;c.preventDefault(),f.one("show.bs.modal",function(a){a.isDefaultPrevented()||f.one("hidden.bs.modal",function(){d.is(":visible")&amp;&amp;d.trigger("focus")})}),b.call(f,g,this)})}(jQuery),+function(a){"use strict";function b(b){return this.each(function(){var d=a(this),e=d.data("bs.tooltip"),f="object"==typeof b&amp;&amp;b;(e||!/destroy|hide/.test(b))&amp;&amp;(e||d.data("bs.tooltip",e=new c(this,f)),"string"==typeof b&amp;&amp;e[b]())})}var c=function(a,b){this.type=null,this.options=null,this.enabled=null,this.timeout=null,this.hoverState=null,this.$element=null,this.inState=null,this.init("tooltip",a,b)};c.VERSION="3.3.6",c.TRANSITION_DURATION=150,c.DEFAULTS={animation:!0,placement:"top",selector:!1,template:'&lt;div class="tooltip" role="tooltip"&gt;&lt;div class="tooltip-arrow"&gt;&lt;/div&gt;&lt;div class="tooltip-inner"&gt;&lt;/div&gt;&lt;/div&gt;',trigger:"hover focus",title:"",delay:0,html:!1,container:!1,viewport:{selector:"body",padding:0}},c.prototype.init=function(b,c,d){if(this.enabled=!0,this.type=b,this.$element=a(c),this.options=this.getOptions(d),this.$viewport=this.options.viewport&amp;&amp;a(a.isFunction(this.options.viewport)?this.options.viewport.call(this,this.$element):this.options.viewport.selector||this.options.viewport),this.inState={click:!1,hover:!1,focus:!1},this.$element[0]instanceof document.constructor&amp;&amp;!this.options.selector)throw new Error("`selector` option must be specified when initializing "+this.type+" on the window.document object!");for(var e=this.options.trigger.split(" "),f=e.length;f--;){var g=e[f];if("click"==g)this.$element.on("click."+this.type,this.options.selector,a.proxy(this.toggle,this));else if("manual"!=g){var h="hover"==g?"mouseenter":"focusin",i="hover"==g?"mouseleave":"focusout";this.$element.on(h+"."+this.type,this.options.selector,a.proxy(this.enter,this)),this.$element.on(i+"."+this.type,this.options.selector,a.proxy(this.leave,this))}}this.options.selector?this._options=a.extend({},this.options,{trigger:"manual",selector:""}):this.fixTitle()},c.prototype.getDefaults=function(){return c.DEFAULTS},c.prototype.getOptions=function(b){return b=a.extend({},this.getDefaults(),this.$element.data(),b),b.delay&amp;&amp;"number"==typeof b.delay&amp;&amp;(b.delay={show:b.delay,hide:b.delay}),b},c.prototype.getDelegateOptions=function(){var b={},c=this.getDefaults();return this._options&amp;&amp;a.each(this._options,function(a,d){c[a]!=d&amp;&amp;(b[a]=d)}),b},c.prototype.enter=function(b){var c=b instanceof this.constructor?b:a(b.currentTarget).data("bs."+this.type);return c||(c=new this.constructor(b.currentTarget,this.getDelegateOptions()),a(b.currentTarget).data("bs."+this.type,c)),b instanceof a.Event&amp;&amp;(c.inState["focusin"==b.type?"focus":"hover"]=!0),c.tip().hasClass("in")||"in"==c.hoverState?void(c.hoverState="in"):(clearTimeout(c.timeout),c.hoverState="in",c.options.delay&amp;&amp;c.options.delay.show?void(c.timeout=setTimeout(function(){"in"==c.hoverState&amp;&amp;c.show()},c.options.delay.show)):c.show())},c.prototype.isInStateTrue=function(){for(var a in this.inState)if(this.inState[a])return!0;return!1},c.prototype.leave=function(b){var c=b instanceof this.constructor?b:a(b.currentTarget).data("bs."+this.type);return c||(c=new this.constructor(b.currentTarget,this.getDelegateOptions()),a(b.currentTarget).data("bs."+this.type,c)),b instanceof a.Event&amp;&amp;(c.inState["focusout"==b.type?"focus":"hover"]=!1),c.isInStateTrue()?void 0:(clearTimeout(c.timeout),c.hoverState="out",c.options.delay&amp;&amp;c.options.delay.hide?void(c.timeout=setTimeout(function(){"out"==c.hoverState&amp;&amp;c.hide()},c.options.delay.hide)):c.hide())},c.prototype.show=function(){var b=a.Event("show.bs."+this.type);if(this.hasContent()&amp;&amp;this.enabled){this.$element.trigger(b);var d=a.contains(this.$element[0].ownerDocument.documentElement,this.$element[0]);if(b.isDefaultPrevented()||!d)return;var e=this,f=this.tip(),g=this.getUID(this.type);this.setContent(),f.attr("id",g),this.$element.attr("aria-describedby",g),this.options.animation&amp;&amp;f.addClass("fade");var h="function"==typeof this.options.placement?this.options.placement.call(this,f[0],this.$element[0]):this.options.placement,i=/\s?auto?\s?/i,j=i.test(h);j&amp;&amp;(h=h.replace(i,"")||"top"),f.detach().css({top:0,left:0,display:"block"}).addClass(h).data("bs."+this.type,this),this.options.container?f.appendTo(this.options.container):f.insertAfter(this.$element),this.$element.trigger("inserted.bs."+this.type);var k=this.getPosition(),l=f[0].offsetWidth,m=f[0].offsetHeight;if(j){var n=h,o=this.getPosition(this.$viewport);h="bottom"==h&amp;&amp;k.bottom+m&gt;o.bottom?"top":"top"==h&amp;&amp;k.top-m&lt;o.top?"bottom":"right"==h&amp;&amp;k.right+l&gt;o.width?"left":"left"==h&amp;&amp;k.left-l&lt;o.left?"right":h,f.removeClass(n).addClass(h)}var p=this.getCalculatedOffset(h,k,l,m);this.applyPlacement(p,h);var q=function(){var a=e.hoverState;e.$element.trigger("shown.bs."+e.type),e.hoverState=null,"out"==a&amp;&amp;e.leave(e)};a.support.transition&amp;&amp;this.$tip.hasClass("fade")?f.one("bsTransitionEnd",q).emulateTransitionEnd(c.TRANSITION_DURATION):q()}},c.prototype.applyPlacement=function(b,c){var d=this.tip(),e=d[0].offsetWidth,f=d[0].offsetHeight,g=parseInt(d.css("margin-top"),10),h=parseInt(d.css("margin-left"),10);isNaN(g)&amp;&amp;(g=0),isNaN(h)&amp;&amp;(h=0),b.top+=g,b.left+=h,a.offset.setOffset(d[0],a.extend({using:function(a){d.css({top:Math.round(a.top),left:Math.round(a.left)})}},b),0),d.addClass("in");var i=d[0].offsetWidth,j=d[0].offsetHeight;"top"==c&amp;&amp;j!=f&amp;&amp;(b.top=b.top+f-j);var k=this.getViewportAdjustedDelta(c,b,i,j);k.left?b.left+=k.left:b.top+=k.top;var l=/top|bottom/.test(c),m=l?2*k.left-e+i:2*k.top-f+j,n=l?"offsetWidth":"offsetHeight";d.offset(b),this.replaceArrow(m,d[0][n],l)},c.prototype.replaceArrow=function(a,b,c){this.arrow().css(c?"left":"top",50*(1-a/b)+"%").css(c?"top":"left","")},c.prototype.setContent=function(){var a=this.tip(),b=this.getTitle();a.find(".tooltip-inner")[this.options.html?"html":"text"](b),a.removeClass("fade in top bottom left right")},c.prototype.hide=function(b){function d(){"in"!=e.hoverState&amp;&amp;f.detach(),e.$element.removeAttr("aria-describedby").trigger("hidden.bs."+e.type),b&amp;&amp;b()}var e=this,f=a(this.$tip),g=a.Event("hide.bs."+this.type);return this.$element.trigger(g),g.isDefaultPrevented()?void 0:(f.removeClass("in"),a.support.transition&amp;&amp;f.hasClass("fade")?f.one("bsTransitionEnd",d).emulateTransitionEnd(c.TRANSITION_DURATION):d(),this.hoverState=null,this)},c.prototype.fixTitle=function(){var a=this.$element;(a.attr("title")||"string"!=typeof a.attr("data-original-title"))&amp;&amp;a.attr("data-original-title",a.attr("title")||"").attr("title","")},c.prototype.hasContent=function(){return this.getTitle()},c.prototype.getPosition=function(b){b=b||this.$element;var c=b[0],d="BODY"==c.tagName,e=c.getBoundingClientRect();null==e.width&amp;&amp;(e=a.extend({},e,{width:e.right-e.left,height:e.bottom-e.top}));var f=d?{top:0,left:0}:b.offset(),g={scroll:d?document.documentElement.scrollTop||document.body.scrollTop:b.scrollTop()},h=d?{width:a(window).width(),height:a(window).height()}:null;return a.extend({},e,g,h,f)},c.prototype.getCalculatedOffset=function(a,b,c,d){return"bottom"==a?{top:b.top+b.height,left:b.left+b.width/2-c/2}:"top"==a?{top:b.top-d,left:b.left+b.width/2-c/2}:"left"==a?{top:b.top+b.height/2-d/2,left:b.left-c}:{top:b.top+b.height/2-d/2,left:b.left+b.width}},c.prototype.getViewportAdjustedDelta=function(a,b,c,d){var e={top:0,left:0};if(!this.$viewport)return e;var f=this.options.viewport&amp;&amp;this.options.viewport.padding||0,g=this.getPosition(this.$viewport);if(/right|left/.test(a)){var h=b.top-f-g.scroll,i=b.top+f-g.scroll+d;h&lt;g.top?e.top=g.top-h:i&gt;g.top+g.height&amp;&amp;(e.top=g.top+g.height-i)}else{var j=b.left-f,k=b.left+f+c;j&lt;g.left?e.left=g.left-j:k&gt;g.right&amp;&amp;(e.left=g.left+g.width-k)}return e},c.prototype.getTitle=function(){var a,b=this.$element,c=this.options;return a=b.attr("data-original-title")||("function"==typeof c.title?c.title.call(b[0]):c.title)},c.prototype.getUID=function(a){do a+=~~(1e6*Math.random());while(document.getElementById(a));return a},c.prototype.tip=function(){if(!this.$tip&amp;&amp;(this.$tip=a(this.options.template),1!=this.$tip.length))throw new Error(this.type+" `template` option must consist of exactly 1 top-level element!");return this.$tip},c.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".tooltip-arrow")},c.prototype.enable=function(){this.enabled=!0},c.prototype.disable=function(){this.enabled=!1},c.prototype.toggleEnabled=function(){this.enabled=!this.enabled},c.prototype.toggle=function(b){var c=this;b&amp;&amp;(c=a(b.currentTarget).data("bs."+this.type),c||(c=new this.constructor(b.currentTarget,this.getDelegateOptions()),a(b.currentTarget).data("bs."+this.type,c))),b?(c.inState.click=!c.inState.click,c.isInStateTrue()?c.enter(c):c.leave(c)):c.tip().hasClass("in")?c.leave(c):c.enter(c)},c.prototype.destroy=function(){var a=this;clearTimeout(this.timeout),this.hide(function(){a.$element.off("."+a.type).removeData("bs."+a.type),a.$tip&amp;&amp;a.$tip.detach(),a.$tip=null,a.$arrow=null,a.$viewport=null})};var d=a.fn.tooltip;a.fn.tooltip=b,a.fn.tooltip.Constructor=c,a.fn.tooltip.noConflict=function(){return a.fn.tooltip=d,this}}(jQuery),+function(a){"use strict";function b(b){return this.each(function(){var d=a(this),e=d.data("bs.popover"),f="object"==typeof b&amp;&amp;b;(e||!/destroy|hide/.test(b))&amp;&amp;(e||d.data("bs.popover",e=new c(this,f)),"string"==typeof b&amp;&amp;e[b]())})}var c=function(a,b){this.init("popover",a,b)};if(!a.fn.tooltip)throw new Error("Popover requires tooltip.js");c.VERSION="3.3.6",c.DEFAULTS=a.extend({},a.fn.tooltip.Constructor.DEFAULTS,{placement:"right",trigger:"click",content:"",template:'&lt;div class="popover" role="tooltip"&gt;&lt;div class="arrow"&gt;&lt;/div&gt;&lt;h3 class="popover-title"&gt;&lt;/h3&gt;&lt;div class="popover-content"&gt;&lt;/div&gt;&lt;/div&gt;'}),c.prototype=a.extend({},a.fn.tooltip.Constructor.prototype),c.prototype.constructor=c,c.prototype.getDefaults=function(){return c.DEFAULTS},c.prototype.setContent=function(){var a=this.tip(),b=this.getTitle(),c=this.getContent();a.find(".popover-title")[this.options.html?"html":"text"](b),a.find(".popover-content").children().detach().end()[this.options.html?"string"==typeof c?"html":"append":"text"](c),a.removeClass("fade top bottom left right in"),a.find(".popover-title").html()||a.find(".popover-title").hide()},c.prototype.hasContent=function(){return this.getTitle()||this.getContent()},c.prototype.getContent=function(){var a=this.$element,b=this.options;return a.attr("data-content")||("function"==typeof b.content?b.content.call(a[0]):b.content)},c.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".arrow")};var d=a.fn.popover;a.fn.popover=b,a.fn.popover.Constructor=c,a.fn.popover.noConflict=function(){return a.fn.popover=d,this}}(jQuery),+function(a){"use strict";function b(c,d){this.$body=a(document.body),this.$scrollElement=a(a(c).is(document.body)?window:c),this.options=a.extend({},b.DEFAULTS,d),this.selector=(this.options.target||"")+" .nav li &gt; a",this.offsets=[],this.targets=[],this.activeTarget=null,this.scrollHeight=0,this.$scrollElement.on("scroll.bs.scrollspy",a.proxy(this.process,this)),this.refresh(),this.process()}function c(c){return this.each(function(){var d=a(this),e=d.data("bs.scrollspy"),f="object"==typeof c&amp;&amp;c;e||d.data("bs.scrollspy",e=new b(this,f)),"string"==typeof c&amp;&amp;e[c]()})}b.VERSION="3.3.6",b.DEFAULTS={offset:10},b.prototype.getScrollHeight=function(){return this.$scrollElement[0].scrollHeight||Math.max(this.$body[0].scrollHeight,document.documentElement.scrollHeight)},b.prototype.refresh=function(){var b=this,c="offset",d=0;this.offsets=[],this.targets=[],this.scrollHeight=this.getScrollHeight(),a.isWindow(this.$scrollElement[0])||(c="position",d=this.$scrollElement.scrollTop()),this.$body.find(this.selector).map(function(){var b=a(this),e=b.data("target")||b.attr("href"),f=/^#./.test(e)&amp;&amp;a(e);return f&amp;&amp;f.length&amp;&amp;f.is(":visible")&amp;&amp;[[f[c]().top+d,e]]||null}).sort(function(a,b){return a[0]-b[0]}).each(function(){b.offsets.push(this[0]),b.targets.push(this[1])})},b.prototype.process=function(){var a,b=this.$scrollElement.scrollTop()+this.options.offset,c=this.getScrollHeight(),d=this.options.offset+c-this.$scrollElement.height(),e=this.offsets,f=this.targets,g=this.activeTarget;if(this.scrollHeight!=c&amp;&amp;this.refresh(),b&gt;=d)return g!=(a=f[f.length-1])&amp;&amp;this.activate(a);if(g&amp;&amp;b&lt;e[0])return this.activeTarget=null,this.clear();for(a=e.length;a--;)g!=f[a]&amp;&amp;b&gt;=e[a]&amp;&amp;(void 0===e[a+1]||b&lt;e[a+1])&amp;&amp;this.activate(f[a])},b.prototype.activate=function(b){this.activeTarget=b,this.clear();var c=this.selector+'[data-target="'+b+'"],'+this.selector+'[href="'+b+'"]',d=a(c).parents("li").addClass("active");
-d.parent(".dropdown-menu").length&amp;&amp;(d=d.closest("li.dropdown").addClass("active")),d.trigger("activate.bs.scrollspy")},b.prototype.clear=function(){a(this.selector).parentsUntil(this.options.target,".active").removeClass("active")};var d=a.fn.scrollspy;a.fn.scrollspy=c,a.fn.scrollspy.Constructor=b,a.fn.scrollspy.noConflict=function(){return a.fn.scrollspy=d,this},a(window).on("load.bs.scrollspy.data-api",function(){a('[data-spy="scroll"]').each(function(){var b=a(this);c.call(b,b.data())})})}(jQuery),+function(a){"use strict";function b(b){return this.each(function(){var d=a(this),e=d.data("bs.tab");e||d.data("bs.tab",e=new c(this)),"string"==typeof b&amp;&amp;e[b]()})}var c=function(b){this.element=a(b)};c.VERSION="3.3.6",c.TRANSITION_DURATION=150,c.prototype.show=function(){var b=this.element,c=b.closest("ul:not(.dropdown-menu)"),d=b.data("target");if(d||(d=b.attr("href"),d=d&amp;&amp;d.replace(/.*(?=#[^\s]*$)/,"")),!b.parent("li").hasClass("active")){var e=c.find(".active:last a"),f=a.Event("hide.bs.tab",{relatedTarget:b[0]}),g=a.Event("show.bs.tab",{relatedTarget:e[0]});if(e.trigger(f),b.trigger(g),!g.isDefaultPrevented()&amp;&amp;!f.isDefaultPrevented()){var h=a(d);this.activate(b.closest("li"),c),this.activate(h,h.parent(),function(){e.trigger({type:"hidden.bs.tab",relatedTarget:b[0]}),b.trigger({type:"shown.bs.tab",relatedTarget:e[0]})})}}},c.prototype.activate=function(b,d,e){function f(){g.removeClass("active").find("&gt; .dropdown-menu &gt; .active").removeClass("active").end().find('[data-toggle="tab"]').attr("aria-expanded",!1),b.addClass("active").find('[data-toggle="tab"]').attr("aria-expanded",!0),h?(b[0].offsetWidth,b.addClass("in")):b.removeClass("fade"),b.parent(".dropdown-menu").length&amp;&amp;b.closest("li.dropdown").addClass("active").end().find('[data-toggle="tab"]').attr("aria-expanded",!0),e&amp;&amp;e()}var g=d.find("&gt; .active"),h=e&amp;&amp;a.support.transition&amp;&amp;(g.length&amp;&amp;g.hasClass("fade")||!!d.find("&gt; .fade").length);g.length&amp;&amp;h?g.one("bsTransitionEnd",f).emulateTransitionEnd(c.TRANSITION_DURATION):f(),g.removeClass("in")};var d=a.fn.tab;a.fn.tab=b,a.fn.tab.Constructor=c,a.fn.tab.noConflict=function(){return a.fn.tab=d,this};var e=function(c){c.preventDefault(),b.call(a(this),"show")};a(document).on("click.bs.tab.data-api",'[data-toggle="tab"]',e).on("click.bs.tab.data-api",'[data-toggle="pill"]',e)}(jQuery),+function(a){"use strict";function b(b){return this.each(function(){var d=a(this),e=d.data("bs.affix"),f="object"==typeof b&amp;&amp;b;e||d.data("bs.affix",e=new c(this,f)),"string"==typeof b&amp;&amp;e[b]()})}var c=function(b,d){this.options=a.extend({},c.DEFAULTS,d),this.$target=a(this.options.target).on("scroll.bs.affix.data-api",a.proxy(this.checkPosition,this)).on("click.bs.affix.data-api",a.proxy(this.checkPositionWithEventLoop,this)),this.$element=a(b),this.affixed=null,this.unpin=null,this.pinnedOffset=null,this.checkPosition()};c.VERSION="3.3.6",c.RESET="affix affix-top affix-bottom",c.DEFAULTS={offset:0,target:window},c.prototype.getState=function(a,b,c,d){var e=this.$target.scrollTop(),f=this.$element.offset(),g=this.$target.height();if(null!=c&amp;&amp;"top"==this.affixed)return c&gt;e?"top":!1;if("bottom"==this.affixed)return null!=c?e+this.unpin&lt;=f.top?!1:"bottom":a-d&gt;=e+g?!1:"bottom";var h=null==this.affixed,i=h?e:f.top,j=h?g:b;return null!=c&amp;&amp;c&gt;=e?"top":null!=d&amp;&amp;i+j&gt;=a-d?"bottom":!1},c.prototype.getPinnedOffset=function(){if(this.pinnedOffset)return this.pinnedOffset;this.$element.removeClass(c.RESET).addClass("affix");var a=this.$target.scrollTop(),b=this.$element.offset();return this.pinnedOffset=b.top-a},c.prototype.checkPositionWithEventLoop=function(){setTimeout(a.proxy(this.checkPosition,this),1)},c.prototype.checkPosition=function(){if(this.$element.is(":visible")){var b=this.$element.height(),d=this.options.offset,e=d.top,f=d.bottom,g=Math.max(a(document).height(),a(document.body).height());"object"!=typeof d&amp;&amp;(f=e=d),"function"==typeof e&amp;&amp;(e=d.top(this.$element)),"function"==typeof f&amp;&amp;(f=d.bottom(this.$element));var h=this.getState(g,b,e,f);if(this.affixed!=h){null!=this.unpin&amp;&amp;this.$element.css("top","");var i="affix"+(h?"-"+h:""),j=a.Event(i+".bs.affix");if(this.$element.trigger(j),j.isDefaultPrevented())return;this.affixed=h,this.unpin="bottom"==h?this.getPinnedOffset():null,this.$element.removeClass(c.RESET).addClass(i).trigger(i.replace("affix","affixed")+".bs.affix")}"bottom"==h&amp;&amp;this.$element.offset({top:g-b-f})}};var d=a.fn.affix;a.fn.affix=b,a.fn.affix.Constructor=c,a.fn.affix.noConflict=function(){return a.fn.affix=d,this},a(window).on("load",function(){a('[data-spy="affix"]').each(function(){var c=a(this),d=c.data();d.offset=d.offset||{},null!=d.offsetBottom&amp;&amp;(d.offset.bottom=d.offsetBottom),null!=d.offsetTop&amp;&amp;(d.offset.top=d.offsetTop),b.call(c,d)})})}(jQuery);
-			
-        </script>
-  </xsl:template>
+    </xsl:template>
+    <xsl:template xmlns:xs="http://www.w3.org/2001/XMLSchema" name="bootstrap-javascript">
+        <script type="text/javascript">
+        /*!
+         * Bootstrap v3.3.6 (http://getbootstrap.com)
+         * Copyright 2011-2015 Twitter, Inc.
+         * Licensed under the MIT license
+         */
+        
+        if ("undefined" == typeof jQuery) throw new Error("Bootstrap's JavaScript requires jQuery"); + function (a) {
+            "use strict";
+            var b = a.fn.jquery.split(" ")[0].split(".");
+            if (b[0] &amp;lt; 2 &amp;&amp; b[1] &amp;lt; 9 || 1 == b[0] &amp;&amp; 9 == b[1] &amp;&amp; b[2] &amp;lt; 1 || b[0] &amp;gt; 2) throw new Error("Bootstrap's JavaScript requires jQuery version 1.9.1 or higher, but lower than version 3")
+        }
+        (jQuery), + function (a) {
+            "use strict";
+            function b() {
+                var a = document.createElement("bootstrap"), b = {
+                    WebkitTransition: "webkitTransitionEnd", MozTransition: "transitionend", OTransition: "oTransitionEnd otransitionend", transition: "transitionend"
+                };
+                for (var c in b) if (void 0 !== a.style[c]) return {
+                    end: b[c]
+                };
+                return ! 1
+            }
+            a.fn.emulateTransitionEnd = function (b) {
+                var c = ! 1, d = this;
+                a(this).one("bsTransitionEnd", function () {
+                    c = ! 0
+                });
+                var e = function () {
+                    c || a(d).trigger(a.support.transition.end)
+                };
+                return setTimeout(e, b), this
+            },
+            a(function () {
+                a.support.transition = b(), a.support.transition &amp;&amp;(a.event.special.bsTransitionEnd = {
+                    bindType: a.support.transition.end, delegateType: a.support.transition.end, handle: function (b) {
+                        return a(b.target).is(this) ? b.handleObj.handler.apply(this, arguments): void 0
+                    }
+                })
+            })
+        }
+        (jQuery), + function (a) {
+            "use strict";
+            function b(b) {
+                return this.each(function () {
+                    var c = a(this), e = c.data("bs.alert");
+                    e || c.data("bs.alert", e = new d(this)), "string" == typeof b &amp;&amp; e[b].call(c)
+                })
+            }
+            var c = '[data-dismiss="alert"]', d = function (b) {
+                a(b).on("click", c, this.close)
+            };
+            d.VERSION = "3.3.6", d.TRANSITION_DURATION = 150, d.prototype.close = function (b) {
+                function c() {
+                    g.detach().trigger("closed.bs.alert").remove()
+                }
+                var e = a(this), f = e.attr("data-target");
+                f ||(f = e.attr("href"), f = f &amp;&amp; f.replace(/.*(?=#[^\s]*$)/, ""));
+                var g = a(f);
+                b &amp;&amp; b.preventDefault(), g.length ||(g = e.closest(".alert")), g.trigger(b = a.Event("close.bs.alert")), b.isDefaultPrevented() ||(g.removeClass("in"), a.support.transition &amp;&amp; g.hasClass("fade") ? g.one("bsTransitionEnd", c).emulateTransitionEnd(d.TRANSITION_DURATION): c())
+            };
+            var e = a.fn.alert;
+            a.fn.alert = b, a.fn.alert. Constructor = d, a.fn.alert.noConflict = function () {
+                return a.fn.alert = e, this
+            },
+            a(document).on("click.bs.alert.data-api", c, d.prototype.close)
+        }
+        (jQuery), + function (a) {
+            "use strict";
+            function b(b) {
+                return this.each(function () {
+                    var d = a(this), e = d.data("bs.button"), f = "object" == typeof b &amp;&amp; b; e || d.data("bs.button", e = new c(this, f)), "toggle" == b ? e.toggle(): b &amp;&amp; e.setState(b)
+                })
+            }
+            var c = function (b, d) {
+                this.$element = a(b), this.options = a.extend({
+                },
+                c.DEFAULTS, d), this.isLoading = ! 1
+            };
+            c.VERSION = "3.3.6", c.DEFAULTS = {
+                loadingText: "loading..."
+            },
+            c.prototype.setState = function (b) {
+                var c = "disabled", d = this.$element, e = d.is("input") ? "val": "html", f = d.data();
+                b += "Text", null == f.resetText &amp;&amp; d.data("resetText", d[e]()), setTimeout(a.proxy(function () {
+                    d[e](null == f[b] ? this.options[b]: f[b]), "loadingText" == b ?(this.isLoading = ! 0, d.addClass(c).attr(c, c)): this.isLoading &amp;&amp;(this.isLoading = ! 1, d.removeClass(c).removeAttr(c))
+                },
+                this), 0)
+            },
+            c.prototype.toggle = function () {
+                var a = ! 0, b = this.$element.closest('[data-toggle="buttons"]');
+                if (b.length) {
+                    var c = this.$element.find("input");
+                    "radio" == c.prop("type") ?(c.prop("checked") &amp;&amp;(a = ! 1), b.find(".active").removeClass("active"), this.$element.addClass("active")): "checkbox" == c.prop("type") &amp;&amp;(c.prop("checked") !== this.$element.hasClass("active") &amp;&amp;(a = ! 1), this.$element.toggleClass("active")), c.prop("checked", this.$element.hasClass("active")), a &amp;&amp; c.trigger("change")
+                } else this.$element.attr("aria-pressed", ! this.$element.hasClass("active")), this.$element.toggleClass("active")
+            };
+            var d = a.fn.button;
+            a.fn.button = b, a.fn.button. Constructor = c, a.fn.button.noConflict = function () {
+                return a.fn.button = d, this
+            },
+            a(document).on("click.bs.button.data-api", '[data-toggle^="button"]', function (c) {
+                var d = a(c.target);
+                d.hasClass("btn") ||(d = d.closest(".btn")), b.call(d, "toggle"), a(c.target).is('input[type="radio"]') || a(c.target).is('input[type="checkbox"]') || c.preventDefault()
+            }).on("focus.bs.button.data-api blur.bs.button.data-api", '[data-toggle^="button"]', function (b) {
+                a(b.target).closest(".btn").toggleClass("focus", /^focus(in)?$/.test(b.type))
+            })
+        }
+        (jQuery), + function (a) {
+            "use strict";
+            function b(b) {
+                return this.each(function () {
+                    var d = a(this), e = d.data("bs.carousel"), f = a.extend({
+                    },
+                    c.DEFAULTS, d.data(), "object" == typeof b &amp;&amp; b), g = "string" == typeof b ? b: f.slide; e || d.data("bs.carousel", e = new c(this, f)), "number" == typeof b ? e.to(b): g ? e[g](): f.interval &amp;&amp; e.pause().cycle()
+                })
+            }
+            var c = function (b, c) {
+                this.$element = a(b), this.$indicators = this.$element.find(".carousel-indicators"), this.options = c, this.paused = null, this.sliding = null, this.interval = null, this.$active = null, this.$items = null, this.options.keyboard &amp;&amp; this.$element.on("keydown.bs.carousel", a.proxy(this.keydown, this)), "hover" == this.options.pause &amp;&amp; !("ontouchstart" in document.documentElement) &amp;&amp; this.$element.on("mouseenter.bs.carousel", a.proxy(this.pause, this)).on("mouseleave.bs.carousel", a.proxy(this.cycle, this))
+            };
+            c.VERSION = "3.3.6", c.TRANSITION_DURATION = 600, c.DEFAULTS = {
+                interval: 5e3, pause: "hover", wrap: ! 0, keyboard: ! 0
+            },
+            c.prototype.keydown = function (a) {
+                if (! /input|textarea/i.test(a.target.tagName)) {
+                    switch (a.which) {
+                        case 37: this.prev();
+                        break;
+                        case 39: this.next();
+                        break;
+                        default: return
+                    }
+                    a.preventDefault()
+                }
+            },
+            c.prototype.cycle = function (b) {
+                return b ||(this.paused = ! 1), this.interval &amp;&amp; clearInterval(this.interval), this.options.interval &amp;&amp; ! this.paused &amp;&amp;(this.interval = setInterval(a.proxy(this.next, this), this.options.interval)), this
+            },
+            c.prototype.getItemIndex = function (a) {
+                return this.$items = a.parent().children(".item"), this.$items.index(a || this.$active)
+            },
+            c.prototype.getItemForDirection = function (a, b) {
+                var c = this.getItemIndex(b), d = "prev" == a &amp;&amp; 0 === c || "next" == a &amp;&amp; c == this.$items.length -1;
+                if (d &amp;&amp; ! this.options.wrap) return b;
+                var e = "prev" == a ? -1: 1, f =(c + e) % this.$items.length;
+                return this.$items.eq(f)
+            },
+            c.prototype.to = function (a) {
+                var b = this, c = this.getItemIndex(this.$active = this.$element.find(".item.active"));
+                return a &amp;gt; this.$items.length -1 || 0 &amp;gt; a ? void 0: this.sliding ? this.$element.one("slid.bs.carousel", function () {
+                    b.to(a)
+                }): c == a ? this.pause().cycle(): this.slide(a &amp;gt; c ? "next": "prev", this.$items.eq(a))
+            },
+            c.prototype.pause = function (b) {
+                return b ||(this.paused = ! 0), this.$element.find(".next, .prev").length &amp;&amp; a.support.transition &amp;&amp;(this.$element.trigger(a.support.transition.end), this.cycle(! 0)), this.interval = clearInterval(this.interval), this
+            },
+            c.prototype.next = function () {
+                return this.sliding ? void 0: this.slide("next")
+            },
+            c.prototype.prev = function () {
+                return this.sliding ? void 0: this.slide("prev")
+            },
+            c.prototype.slide = function (b, d) {
+                var e = this.$element.find(".item.active"), f = d || this.getItemForDirection(b, e), g = this.interval, h = "next" == b ? "left": "right", i = this;
+                if (f.hasClass("active")) return this.sliding = ! 1;
+                var j = f[0], k = a.Event("slide.bs.carousel", {
+                    relatedTarget: j, direction: h
+                });
+                if (this.$element.trigger(k), ! k.isDefaultPrevented()) {
+                    if (this.sliding = ! 0, g &amp;&amp; this.pause(), this.$indicators.length) {
+                        this.$indicators.find(".active").removeClass("active");
+                        var l = a(this.$indicators.children()[ this.getItemIndex(f)]);
+                        l &amp;&amp; l.addClass("active")
+                    }
+                    var m = a.Event("slid.bs.carousel", {
+                        relatedTarget: j, direction: h
+                    });
+                    return a.support.transition &amp;&amp; this.$element.hasClass("slide") ?(f.addClass(b), f[0].offsetWidth, e.addClass(h), f.addClass(h), e.one("bsTransitionEnd", function () {
+                        f.removeClass([b, h].join(" ")).addClass("active"), e.removeClass([ "active", h].join(" ")), i.sliding = ! 1, setTimeout(function () {
+                            i.$element.trigger(m)
+                        },
+                        0)
+                    }).emulateTransitionEnd(c.TRANSITION_DURATION)):(e.removeClass("active"), f.addClass("active"), this.sliding = ! 1, this.$element.trigger(m)), g &amp;&amp; this.cycle(), this
+                }
+            };
+            var d = a.fn.carousel;
+            a.fn.carousel = b, a.fn.carousel. Constructor = c, a.fn.carousel.noConflict = function () {
+                return a.fn.carousel = d, this
+            };
+            var e = function (c) {
+                var d, e = a(this), f = a(e.attr("data-target") ||(d = e.attr("href")) &amp;&amp; d.replace(/.*(?=#[^\s]+$)/, ""));
+                if (f.hasClass("carousel")) {
+                    var g = a.extend({
+                    },
+                    f.data(), e.data()), h = e.attr("data-slide-to");
+                    h &amp;&amp;(g.interval = ! 1), b.call(f, g), h &amp;&amp; f.data("bs.carousel").to(h), c.preventDefault()
+                }
+            };
+            a(document).on("click.bs.carousel.data-api", "[data-slide]", e).on("click.bs.carousel.data-api", "[data-slide-to]", e), a(window).on("load", function () {
+                a('[data-ride="carousel"]').each(function () {
+                    var c = a(this);
+                    b.call(c, c.data())
+                })
+            })
+        }
+        (jQuery), + function (a) {
+            "use strict";
+            function b(b) {
+                var c, d = b.attr("data-target") ||(c = b.attr("href")) &amp;&amp; c.replace(/.*(?=#[^\s]+$)/, "");
+                return a(d)
+            }
+            function c(b) {
+                return this.each(function () {
+                    var c = a(this), e = c.data("bs.collapse"), f = a.extend({
+                    },
+                    d.DEFAULTS, c.data(), "object" == typeof b &amp;&amp; b);! e &amp;&amp; f.toggle &amp;&amp; /show|hide/.test(b) &amp;&amp;(f.toggle = ! 1), e || c.data("bs.collapse", e = new d(this, f)), "string" == typeof b &amp;&amp; e[b]()
+                })
+            }
+            var d = function (b, c) {
+                this.$element = a(b), this.options = a.extend({
+                },
+                d.DEFAULTS, c), this.$trigger = a('[data-toggle="collapse"][href="#' + b.id + '"],[data-toggle="collapse"][data-target="#' + b.id + '"]'), this.transitioning = null, this.options.parent ? this.$parent = this.getParent(): this.addAriaAndCollapsedClass(this.$element, this.$trigger), this.options.toggle &amp;&amp; this.toggle()
+            };
+            d.VERSION = "3.3.6", d.TRANSITION_DURATION = 350, d.DEFAULTS = {
+                toggle: ! 0
+            },
+            d.prototype.dimension = function () {
+                var a = this.$element.hasClass("width");
+                return a ? "width": "height"
+            },
+            d.prototype.show = function () {
+                if (! this.transitioning &amp;&amp; ! this.$element.hasClass("in")) {
+                    var b, e = this.$parent &amp;&amp; this.$parent.children(".panel").children(".in, .collapsing");
+                    if (!(e &amp;&amp; e.length &amp;&amp;(b = e.data("bs.collapse"), b &amp;&amp; b.transitioning))) {
+                        var f = a.Event("show.bs.collapse");
+                        if (this.$element.trigger(f), ! f.isDefaultPrevented()) {
+                            e &amp;&amp; e.length &amp;&amp;(c.call(e, "hide"), b || e.data("bs.collapse", null));
+                            var g = this.dimension();
+                            this.$element.removeClass("collapse").addClass("collapsing")[g](0).attr("aria-expanded", ! 0), this.$trigger.removeClass("collapsed").attr("aria-expanded", ! 0), this.transitioning = 1;
+                            var h = function () {
+                                this.$element.removeClass("collapsing").addClass("collapse in")[g](""), this.transitioning = 0, this.$element.trigger("shown.bs.collapse")
+                            };
+                            if (! a.support.transition) return h.call(this);
+                            var i = a.camelCase([ "scroll", g].join("-"));
+                            this.$element.one("bsTransitionEnd", a.proxy(h, this)).emulateTransitionEnd(d.TRANSITION_DURATION)[g](this.$element[0][i])
+                        }
+                    }
+                }
+            },
+            d.prototype.hide = function () {
+                if (! this.transitioning &amp;&amp; this.$element.hasClass("in")) {
+                    var b = a.Event("hide.bs.collapse");
+                    if (this.$element.trigger(b), ! b.isDefaultPrevented()) {
+                        var c = this.dimension();
+                        this.$element[c](this.$element[c]())[0].offsetHeight, this.$element.addClass("collapsing").removeClass("collapse in").attr("aria-expanded", ! 1), this.$trigger.addClass("collapsed").attr("aria-expanded", ! 1), this.transitioning = 1;
+                        var e = function () {
+                            this.transitioning = 0, this.$element.removeClass("collapsing").addClass("collapse").trigger("hidden.bs.collapse")
+                        };
+                        return a.support.transition ? void this.$element[c](0).one("bsTransitionEnd", a.proxy(e, this)).emulateTransitionEnd(d.TRANSITION_DURATION): e.call(this)
+                    }
+                }
+            },
+            d.prototype.toggle = function () {
+                this[ this.$element.hasClass("in") ? "hide": "show"]()
+            },
+            d.prototype.getParent = function () {
+                return a(this.options.parent).find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]').each(a.proxy(function (c, d) {
+                    var e = a(d);
+                    this.addAriaAndCollapsedClass(b(e), e)
+                },
+                this)).end()
+            },
+            d.prototype.addAriaAndCollapsedClass = function (a, b) {
+                var c = a.hasClass("in");
+                a.attr("aria-expanded", c), b.toggleClass("collapsed", ! c).attr("aria-expanded", c)
+            };
+            var e = a.fn.collapse;
+            a.fn.collapse = c, a.fn.collapse. Constructor = d, a.fn.collapse.noConflict = function () {
+                return a.fn.collapse = e, this
+            },
+            a(document).on("click.bs.collapse.data-api", '[data-toggle="collapse"]', function (d) {
+                var e = a(this);
+                e.attr("data-target") || d.preventDefault();
+                var f = b(e), g = f.data("bs.collapse"), h = g ? "toggle": e.data();
+                c.call(f, h)
+            })
+        }
+        (jQuery), + function (a) {
+            "use strict";
+            function b(b) {
+                var c = b.attr("data-target");
+                c ||(c = b.attr("href"), c = c &amp;&amp; /#[A-Za-z]/.test(c) &amp;&amp; c.replace(/.*(?=#[^\s]*$)/, ""));
+                var d = c &amp;&amp; a(c);
+                return d &amp;&amp; d.length ? d: b.parent()
+            }
+            function c(c) {
+                c &amp;&amp; 3 === c.which ||(a(e).remove(), a(f).each(function () {
+                    var d = a(this), e = b(d), f = {
+                        relatedTarget: this
+                    };
+                    e.hasClass("open") &amp;&amp;(c &amp;&amp; "click" == c.type &amp;&amp; /input|textarea/i.test(c.target.tagName) &amp;&amp; a.contains(e[0], c.target) ||(e.trigger(c = a.Event("hide.bs.dropdown", f)), c.isDefaultPrevented() ||(d.attr("aria-expanded", "false"), e.removeClass("open").trigger(a.Event("hidden.bs.dropdown", f)))))
+                }))
+            }
+            function d(b) {
+                return this.each(function () {
+                    var c = a(this), d = c.data("bs.dropdown");
+                    d || c.data("bs.dropdown", d = new g(this)), "string" == typeof b &amp;&amp; d[b].call(c)
+                })
+            }
+            var e = ".dropdown-backdrop", f = '[data-toggle="dropdown"]', g = function (b) {
+                a(b).on("click.bs.dropdown", this.toggle)
+            };
+            g.VERSION = "3.3.6", g.prototype.toggle = function (d) {
+                var e = a(this);
+                if (! e.is(".disabled, :disabled")) {
+                    var f = b(e), g = f.hasClass("open");
+                    if (c(), ! g) {
+                        "ontouchstart" in document.documentElement &amp;&amp; ! f.closest(".navbar-nav").length &amp;&amp; a(document.createElement("div")).addClass("dropdown-backdrop").insertAfter(a(this)).on("click", c);
+                        var h = {
+                            relatedTarget: this
+                        };
+                        if (f.trigger(d = a.Event("show.bs.dropdown", h)), d.isDefaultPrevented()) return;
+                        e.trigger("focus").attr("aria-expanded", "true"), f.toggleClass("open").trigger(a.Event("shown.bs.dropdown", h))
+                    }
+                    return ! 1
+                }
+            },
+            g.prototype.keydown = function (c) {
+                if (/(38|40|27|32)/.test(c.which) &amp;&amp; ! /input|textarea/i.test(c.target.tagName)) {
+                    var d = a(this);
+                    if (c.preventDefault(), c.stopPropagation(), ! d.is(".disabled, :disabled")) {
+                        var e = b(d), g = e.hasClass("open");
+                        if (! g &amp;&amp; 27 != c.which || g &amp;&amp; 27 == c.which) return 27 == c.which &amp;&amp; e.find(f).trigger("focus"), d.trigger("click");
+                        var h = " li:not(.disabled):visible a", i = e.find(".dropdown-menu" + h);
+                        if (i.length) {
+                            var j = i.index(c.target);
+                            38 == c.which &amp;&amp; j &amp;gt; 0 &amp;&amp; j--, 40 == c.which &amp;&amp; j &amp;lt; i.length -1 &amp;&amp; j++, ~ j ||(j = 0), i.eq(j).trigger("focus")
+                        }
+                    }
+                }
+            };
+            var h = a.fn.dropdown;
+            a.fn.dropdown = d, a.fn.dropdown. Constructor = g, a.fn.dropdown.noConflict = function () {
+                return a.fn.dropdown = h, this
+            },
+            a(document).on("click.bs.dropdown.data-api", c).on("click.bs.dropdown.data-api", ".dropdown form", function (a) {
+                a.stopPropagation()
+            }).on("click.bs.dropdown.data-api", f, g.prototype.toggle).on("keydown.bs.dropdown.data-api", f, g.prototype.keydown).on("keydown.bs.dropdown.data-api", ".dropdown-menu", g.prototype.keydown)
+        }
+        (jQuery), + function (a) {
+            "use strict";
+            function b(b, d) {
+                return this.each(function () {
+                    var e = a(this), f = e.data("bs.modal"), g = a.extend({
+                    },
+                    c.DEFAULTS, e.data(), "object" == typeof b &amp;&amp; b);
+                    f || e.data("bs.modal", f = new c(this, g)), "string" == typeof b ? f[b](d): g.show &amp;&amp; f.show(d)
+                })
+            }
+            var c = function (b, c) {
+                this.options = c, this.$body = a(document.body), this.$element = a(b), this.$dialog = this.$element.find(".modal-dialog"), this.$backdrop = null, this.isShown = null, this.originalBodyPad = null, this.scrollbarWidth = 0, this.ignoreBackdropClick = ! 1, this.options.remote &amp;&amp; this.$element.find(".modal-content").load(this.options.remote, a.proxy(function () {
+                    this.$element.trigger("loaded.bs.modal")
+                },
+                this))
+            };
+            c.VERSION = "3.3.6", c.TRANSITION_DURATION = 300, c.BACKDROP_TRANSITION_DURATION = 150, c.DEFAULTS = {
+                backdrop: ! 0, keyboard: ! 0, show: ! 0
+            },
+            c.prototype.toggle = function (a) {
+                return this.isShown ? this.hide(): this.show(a)
+            },
+            c.prototype.show = function (b) {
+                var d = this, e = a.Event("show.bs.modal", {
+                    relatedTarget: b
+                });
+                this.$element.trigger(e), this.isShown || e.isDefaultPrevented() ||(this.isShown = ! 0, this.checkScrollbar(), this.setScrollbar(), this.$body.addClass("modal-open"), this.escape(), this.resize(), this.$element.on("click.dismiss.bs.modal", '[data-dismiss="modal"]', a.proxy(this.hide, this)), this.$dialog.on("mousedown.dismiss.bs.modal", function () {
+                    d.$element.one("mouseup.dismiss.bs.modal", function (b) {
+                        a(b.target).is(d.$element) &amp;&amp;(d.ignoreBackdropClick = ! 0)
+                    })
+                }), this.backdrop(function () {
+                    var e = a.support.transition &amp;&amp; d.$element.hasClass("fade");
+                    d.$element.parent().length || d.$element.appendTo(d.$body), d.$element.show().scrollTop(0), d.adjustDialog(), e &amp;&amp; d.$element[0].offsetWidth, d.$element.addClass("in"), d.enforceFocus();
+                    var f = a.Event("shown.bs.modal", {
+                        relatedTarget: b
+                    });
+                    e ? d.$dialog.one("bsTransitionEnd", function () {
+                        d.$element.trigger("focus").trigger(f)
+                    }).emulateTransitionEnd(c.TRANSITION_DURATION): d.$element.trigger("focus").trigger(f)
+                }))
+            },
+            c.prototype.hide = function (b) {
+                b &amp;&amp; b.preventDefault(), b = a.Event("hide.bs.modal"), this.$element.trigger(b), this.isShown &amp;&amp; ! b.isDefaultPrevented() &amp;&amp;(this.isShown = ! 1, this.escape(), this.resize(), a(document).off("focusin.bs.modal"), this.$element.removeClass("in").off("click.dismiss.bs.modal").off("mouseup.dismiss.bs.modal"), this.$dialog.off("mousedown.dismiss.bs.modal"), a.support.transition &amp;&amp; this.$element.hasClass("fade") ? this.$element.one("bsTransitionEnd", a.proxy(this.hideModal, this)).emulateTransitionEnd(c.TRANSITION_DURATION): this.hideModal())
+            },
+            c.prototype.enforceFocus = function () {
+                a(document).off("focusin.bs.modal").on("focusin.bs.modal", a.proxy(function (a) {
+                    this.$element[0] === a.target || this.$element.has(a.target).length || this.$element.trigger("focus")
+                },
+                this))
+            },
+            c.prototype.escape = function () {
+                this.isShown &amp;&amp; this.options.keyboard ? this.$element.on("keydown.dismiss.bs.modal", a.proxy(function (a) {
+                    27 == a.which &amp;&amp; this.hide()
+                },
+                this)): this.isShown || this.$element.off("keydown.dismiss.bs.modal")
+            },
+            c.prototype.resize = function () {
+                this.isShown ? a(window).on("resize.bs.modal", a.proxy(this.handleUpdate, this)): a(window).off("resize.bs.modal")
+            },
+            c.prototype.hideModal = function () {
+                var a = this;
+                this.$element.hide(), this.backdrop(function () {
+                    a.$body.removeClass("modal-open"), a.resetAdjustments(), a.resetScrollbar(), a.$element.trigger("hidden.bs.modal")
+                })
+            },
+            c.prototype.removeBackdrop = function () {
+                this.$backdrop &amp;&amp; this.$backdrop.remove(), this.$backdrop = null
+            },
+            c.prototype.backdrop = function (b) {
+                var d = this, e = this.$element.hasClass("fade") ? "fade": "";
+                if (this.isShown &amp;&amp; this.options.backdrop) {
+                    var f = a.support.transition &amp;&amp; e;
+                    if (this.$backdrop = a(document.createElement("div")).addClass("modal-backdrop " + e).appendTo(this.$body), this.$element.on("click.dismiss.bs.modal", a.proxy(function (a) {
+                        return this.ignoreBackdropClick ? void (this.ignoreBackdropClick = ! 1): void (a.target === a.currentTarget &amp;&amp;("static" == this.options.backdrop ? this.$element[0].focus(): this.hide()))
+                    },
+                    this)), f &amp;&amp; this.$backdrop[0].offsetWidth, this.$backdrop.addClass("in"), ! b) return;
+                    f ? this.$backdrop.one("bsTransitionEnd", b).emulateTransitionEnd(c.BACKDROP_TRANSITION_DURATION): b()
+                } else if (! this.isShown &amp;&amp; this.$backdrop) {
+                    this.$backdrop.removeClass("in");
+                    var g = function () {
+                        d.removeBackdrop(), b &amp;&amp; b()
+                    };
+                    a.support.transition &amp;&amp; this.$element.hasClass("fade") ? this.$backdrop.one("bsTransitionEnd", g).emulateTransitionEnd(c.BACKDROP_TRANSITION_DURATION): g()
+                } else b &amp;&amp; b()
+            },
+            c.prototype.handleUpdate = function () {
+                this.adjustDialog()
+            },
+            c.prototype.adjustDialog = function () {
+                var a = this.$element[0].scrollHeight &amp;gt; document.documentElement.clientHeight;
+                this.$element.css({
+                    paddingLeft: ! this.bodyIsOverflowing &amp;&amp; a ? this.scrollbarWidth: "", paddingRight: this.bodyIsOverflowing &amp;&amp; ! a ? this.scrollbarWidth: ""
+                })
+            },
+            c.prototype.resetAdjustments = function () {
+                this.$element.css({
+                    paddingLeft: "", paddingRight: ""
+                })
+            },
+            c.prototype.checkScrollbar = function () {
+                var a = window.innerWidth;
+                if (! a) {
+                    var b = document.documentElement.getBoundingClientRect();
+                    a = b.right - Math.abs(b.left)
+                }
+                this.bodyIsOverflowing = document.body.clientWidth &amp;lt; a, this.scrollbarWidth = this.measureScrollbar()
+            },
+            c.prototype.setScrollbar = function () {
+                var a = parseInt(this.$body.css("padding-right") || 0, 10);
+                this.originalBodyPad = document.body.style.paddingRight || "", this.bodyIsOverflowing &amp;&amp; this.$body.css("padding-right", a + this.scrollbarWidth)
+            },
+            c.prototype.resetScrollbar = function () {
+                this.$body.css("padding-right", this.originalBodyPad)
+            },
+            c.prototype.measureScrollbar = function () {
+                var a = document.createElement("div");
+                a.className = "modal-scrollbar-measure", this.$body.append(a);
+                var b = a.offsetWidth - a.clientWidth;
+                return this.$body[0].removeChild(a), b
+            };
+            var d = a.fn.modal;
+            a.fn.modal = b, a.fn.modal. Constructor = c, a.fn.modal.noConflict = function () {
+                return a.fn.modal = d, this
+            },
+            a(document).on("click.bs.modal.data-api", '[data-toggle="modal"]', function (c) {
+                var d = a(this), e = d.attr("href"), f = a(d.attr("data-target") || e &amp;&amp; e.replace(/.*(?=#[^\s]+$)/, "")), g = f.data("bs.modal") ? "toggle": a.extend({
+                    remote: ! /#/.test(e) &amp;&amp; e
+                },
+                f.data(), d.data());
+                d.is("a") &amp;&amp; c.preventDefault(), f.one("show.bs.modal", function (a) {
+                    a.isDefaultPrevented() || f.one("hidden.bs.modal", function () {
+                        d.is(":visible") &amp;&amp; d.trigger("focus")
+                    })
+                }), b.call(f, g, this)
+            })
+        }
+        (jQuery), + function (a) {
+            "use strict";
+            function b(b) {
+                return this.each(function () {
+                    var d = a(this), e = d.data("bs.tooltip"), f = "object" == typeof b &amp;&amp; b;(e || ! /destroy|hide/.test(b)) &amp;&amp;(e || d.data("bs.tooltip", e = new c(this, f)), "string" == typeof b &amp;&amp; e[b]())
+                })
+            }
+            var c = function (a, b) {
+                this.type = null, this.options = null, this.enabled = null, this.timeout = null, this.hoverState = null, this.$element = null, this.inState = null, this.init("tooltip", a, b)
+            };
+            c.VERSION = "3.3.6", c.TRANSITION_DURATION = 150, c.DEFAULTS = {
+                animation: ! 0, placement: "top", selector: ! 1, template: '&amp;lt;div class="tooltip" role="tooltip"&amp;gt;&amp;lt;div class="tooltip-arrow"&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;div class="tooltip-inner"&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;/div&amp;gt;', trigger: "hover focus", title: "", delay: 0, html: ! 1, container: ! 1, viewport: {
+                    selector: "body", padding: 0
+                }
+            },
+            c.prototype.init = function (b, c, d) {
+                if (this.enabled = ! 0, this.type = b, this.$element = a(c), this.options = this.getOptions(d), this.$viewport = this.options.viewport &amp;&amp; a(a.isFunction(this.options.viewport) ? this.options.viewport.call(this, this.$element): this.options.viewport.selector || this.options.viewport), this.inState = {
+                    click: ! 1, hover: ! 1, focus: ! 1
+                },
+                this.$element[0] instanceof document. constructor &amp;&amp; ! this.options.selector) throw new Error("`selector` option must be specified when initializing " + this.type + " on the window.document object!");
+                for (var e = this.options.trigger.split(" "), f = e.length; f--;) {
+                    var g = e[f];
+                    if ("click" == g) this.$element.on("click." + this.type, this.options.selector, a.proxy(this.toggle, this)); else if ("manual" != g) {
+                        var h = "hover" == g ? "mouseenter": "focusin", i = "hover" == g ? "mouseleave": "focusout";
+                        this.$element.on(h + "." + this.type, this.options.selector, a.proxy(this.enter, this)), this.$element.on(i + "." + this.type, this.options.selector, a.proxy(this.leave, this))
+                    }
+                }
+                this.options.selector ? this._options = a.extend({
+                },
+                this.options, {
+                    trigger: "manual", selector: ""
+                }): this.fixTitle()
+            },
+            c.prototype.getDefaults = function () {
+                return c.DEFAULTS
+            },
+            c.prototype.getOptions = function (b) {
+                return b = a.extend({
+                },
+                this.getDefaults(), this.$element.data(), b), b.delay &amp;&amp; "number" == typeof b.delay &amp;&amp;(b.delay = {
+                    show: b.delay, hide: b.delay
+                }), b
+            },
+            c.prototype.getDelegateOptions = function () {
+                var b = {
+                },
+                c = this.getDefaults();
+                return this._options &amp;&amp; a.each(this._options, function (a, d) {
+                    c[a] != d &amp;&amp;(b[a] = d)
+                }), b
+            },
+            c.prototype.enter = function (b) {
+                var c = b instanceof this. constructor ? b: a(b.currentTarget).data("bs." + this.type);
+                return c ||(c = new this. constructor (b.currentTarget, this.getDelegateOptions()), a(b.currentTarget).data("bs." + this.type, c)), b instanceof a.Event &amp;&amp;(c.inState[ "focusin" == b.type ? "focus": "hover"] = ! 0), c.tip().hasClass("in") || "in" == c.hoverState ? void (c.hoverState = "in"):(clearTimeout(c.timeout), c.hoverState = "in", c.options.delay &amp;&amp; c.options.delay.show ? void (c.timeout = setTimeout(function () {
+                    "in" == c.hoverState &amp;&amp; c.show()
+                },
+                c.options.delay.show)): c.show())
+            },
+            c.prototype.isInStateTrue = function () {
+                for (var a in this.inState) if (this.inState[a]) return ! 0;
+                return ! 1
+            },
+            c.prototype.leave = function (b) {
+                var c = b instanceof this. constructor ? b: a(b.currentTarget).data("bs." + this.type);
+                return c ||(c = new this. constructor (b.currentTarget, this.getDelegateOptions()), a(b.currentTarget).data("bs." + this.type, c)), b instanceof a.Event &amp;&amp;(c.inState[ "focusout" == b.type ? "focus": "hover"] = ! 1), c.isInStateTrue() ? void 0:(clearTimeout(c.timeout), c.hoverState = "out", c.options.delay &amp;&amp; c.options.delay.hide ? void (c.timeout = setTimeout(function () {
+                    "out" == c.hoverState &amp;&amp; c.hide()
+                },
+                c.options.delay.hide)): c.hide())
+            },
+            c.prototype.show = function () {
+                var b = a.Event("show.bs." + this.type);
+                if (this.hasContent() &amp;&amp; this.enabled) {
+                    this.$element.trigger(b);
+                    var d = a.contains(this.$element[0].ownerDocument.documentElement, this.$element[0]);
+                    if (b.isDefaultPrevented() || ! d) return;
+                    var e = this, f = this.tip(), g = this.getUID(this.type);
+                    this.setContent(), f.attr("id", g), this.$element.attr("aria-describedby", g), this.options.animation &amp;&amp; f.addClass("fade");
+                    var h = "function" == typeof this.options.placement ? this.options.placement.call(this, f[0], this.$element[0]): this.options.placement, i = /\s?auto?\s?/i, j = i.test(h);
+                    j &amp;&amp;(h = h.replace(i, "") || "top"), f.detach().css({
+                        top: 0, left: 0, display: "block"
+                    }).addClass(h).data("bs." + this.type, this), this.options.container ? f.appendTo(this.options.container): f.insertAfter(this.$element), this.$element.trigger("inserted.bs." + this.type);
+                    var k = this.getPosition(), l = f[0].offsetWidth, m = f[0].offsetHeight;
+                    if (j) {
+                        var n = h, o = this.getPosition(this.$viewport);
+                        h = "bottom" == h &amp;&amp; k.bottom + m &amp;gt; o.bottom ? "top": "top" == h &amp;&amp; k.top - m &amp;lt; o.top ? "bottom": "right" == h &amp;&amp; k.right + l &amp;gt; o.width ? "left": "left" == h &amp;&amp; k.left - l &amp;lt; o.left ? "right": h, f.removeClass(n).addClass(h)
+                    }
+                    var p = this.getCalculatedOffset(h, k, l, m);
+                    this.applyPlacement(p, h);
+                    var q = function () {
+                        var a = e.hoverState;
+                        e.$element.trigger("shown.bs." + e.type), e.hoverState = null, "out" == a &amp;&amp; e.leave(e)
+                    };
+                    a.support.transition &amp;&amp; this.$tip.hasClass("fade") ? f.one("bsTransitionEnd", q).emulateTransitionEnd(c.TRANSITION_DURATION): q()
+                }
+            },
+            c.prototype.applyPlacement = function (b, c) {
+                var d = this.tip(), e = d[0].offsetWidth, f = d[0].offsetHeight, g = parseInt(d.css("margin-top"), 10), h = parseInt(d.css("margin-left"), 10);
+                isNaN(g) &amp;&amp;(g = 0), isNaN(h) &amp;&amp;(h = 0), b.top += g, b.left += h, a.offset.setOffset(d[0], a.extend({
+                    using: function (a) {
+                        d.css({
+                            top: Math.round(a.top), left: Math.round(a.left)
+                        })
+                    }
+                },
+                b), 0), d.addClass("in");
+                var i = d[0].offsetWidth, j = d[0].offsetHeight;
+                "top" == c &amp;&amp; j != f &amp;&amp;(b.top = b.top + f - j);
+                var k = this.getViewportAdjustedDelta(c, b, i, j);
+                k.left ? b.left += k.left: b.top += k.top;
+                var l = /top|bottom/.test(c), m = l ? 2 * k.left - e + i: 2 * k.top - f + j, n = l ? "offsetWidth": "offsetHeight";
+                d.offset(b), this.replaceArrow(m, d[0][n], l)
+            },
+            c.prototype.replaceArrow = function (a, b, c) {
+                this.arrow().css(c ? "left": "top", 50 *(1 - a / b) + "%").css(c ? "top": "left", "")
+            },
+            c.prototype.setContent = function () {
+                var a = this.tip(), b = this.getTitle();
+                a.find(".tooltip-inner")[ this.options.html ? "html": "text"](b), a.removeClass("fade in top bottom left right")
+            },
+            c.prototype.hide = function (b) {
+                function d() {
+                    "in" != e.hoverState &amp;&amp; f.detach(), e.$element.removeAttr("aria-describedby").trigger("hidden.bs." + e.type), b &amp;&amp; b()
+                }
+                var e = this, f = a(this.$tip), g = a.Event("hide.bs." + this.type);
+                return this.$element.trigger(g), g.isDefaultPrevented() ? void 0:(f.removeClass("in"), a.support.transition &amp;&amp; f.hasClass("fade") ? f.one("bsTransitionEnd", d).emulateTransitionEnd(c.TRANSITION_DURATION): d(), this.hoverState = null, this)
+            },
+            c.prototype.fixTitle = function () {
+                var a = this.$element;
+                (a.attr("title") || "string" != typeof a.attr("data-original-title")) &amp;&amp; a.attr("data-original-title", a.attr("title") || "").attr("title", "")
+            },
+            c.prototype.hasContent = function () {
+                return this.getTitle()
+            },
+            c.prototype.getPosition = function (b) {
+                b = b || this.$element;
+                var c = b[0], d = "BODY" == c.tagName, e = c.getBoundingClientRect();
+                null == e.width &amp;&amp;(e = a.extend({
+                },
+                e, {
+                    width: e.right - e.left, height: e.bottom - e.top
+                }));
+                var f = d ? {
+                    top: 0, left: 0
+                }: b.offset(), g = {
+                    scroll: d ? document.documentElement.scrollTop || document.body.scrollTop: b.scrollTop()
+                },
+                h = d ? {
+                    width: a(window).width(), height: a(window).height()
+                }: null;
+                return a.extend({
+                },
+                e, g, h, f)
+            },
+            c.prototype.getCalculatedOffset = function (a, b, c, d) {
+                return "bottom" == a ? {
+                    top: b.top + b.height, left: b.left + b.width / 2 - c / 2
+                }: "top" == a ? {
+                    top: b.top - d, left: b.left + b.width / 2 - c / 2
+                }: "left" == a ? {
+                    top: b.top + b.height / 2 - d / 2, left: b.left - c
+                }: {
+                    top: b.top + b.height / 2 - d / 2, left: b.left + b.width
+                }
+            },
+            c.prototype.getViewportAdjustedDelta = function (a, b, c, d) {
+                var e = {
+                    top: 0, left: 0
+                };
+                if (! this.$viewport) return e;
+                var f = this.options.viewport &amp;&amp; this.options.viewport.padding || 0, g = this.getPosition(this.$viewport);
+                if (/right|left/.test(a)) {
+                    var h = b.top - f - g.scroll, i = b.top + f - g.scroll + d;
+                    h &amp;lt; g.top ? e.top = g.top - h: i &amp;gt; g.top + g.height &amp;&amp;(e.top = g.top + g.height - i)
+                } else {
+                    var j = b.left - f, k = b.left + f + c;
+                    j &amp;lt; g.left ? e.left = g.left - j: k &amp;gt; g.right &amp;&amp;(e.left = g.left + g.width - k)
+                }
+                return e
+            },
+            c.prototype.getTitle = function () {
+                var a, b = this.$element, c = this.options;
+                return a = b.attr("data-original-title") ||("function" == typeof c.title ? c.title.call(b[0]): c.title)
+            },
+            c.prototype.getUID = function (a) {
+                do a += ~ ~(1e6 * Math.random());
+                while (document.getElementById(a));
+                return a
+            },
+            c.prototype.tip = function () {
+                if (! this.$tip &amp;&amp;(this.$tip = a(this.options.template), 1 != this.$tip.length)) throw new Error(this.type + " `template` option must consist of exactly 1 top-level element!");
+                return this.$tip
+            },
+            c.prototype.arrow = function () {
+                return this.$arrow = this.$arrow || this.tip().find(".tooltip-arrow")
+            },
+            c.prototype.enable = function () {
+                this.enabled = ! 0
+            },
+            c.prototype.disable = function () {
+                this.enabled = ! 1
+            },
+            c.prototype.toggleEnabled = function () {
+                this.enabled = ! this.enabled
+            },
+            c.prototype.toggle = function (b) {
+                var c = this;
+                b &amp;&amp;(c = a(b.currentTarget).data("bs." + this.type), c ||(c = new this. constructor (b.currentTarget, this.getDelegateOptions()), a(b.currentTarget).data("bs." + this.type, c))), b ?(c.inState.click = ! c.inState.click, c.isInStateTrue() ? c.enter(c): c.leave(c)): c.tip().hasClass("in") ? c.leave(c): c.enter(c)
+            },
+            c.prototype.destroy = function () {
+                var a = this;
+                clearTimeout(this.timeout), this.hide(function () {
+                    a.$element.off("." + a.type).removeData("bs." + a.type), a.$tip &amp;&amp; a.$tip.detach(), a.$tip = null, a.$arrow = null, a.$viewport = null
+                })
+            };
+            var d = a.fn.tooltip;
+            a.fn.tooltip = b, a.fn.tooltip. Constructor = c, a.fn.tooltip.noConflict = function () {
+                return a.fn.tooltip = d, this
+            }
+        }
+        (jQuery), + function (a) {
+            "use strict";
+            function b(b) {
+                return this.each(function () {
+                    var d = a(this), e = d.data("bs.popover"), f = "object" == typeof b &amp;&amp; b;(e || ! /destroy|hide/.test(b)) &amp;&amp;(e || d.data("bs.popover", e = new c(this, f)), "string" == typeof b &amp;&amp; e[b]())
+                })
+            }
+            var c = function (a, b) {
+                this.init("popover", a, b)
+            };
+            if (! a.fn.tooltip) throw new Error("Popover requires tooltip.js");
+            c.VERSION = "3.3.6", c.DEFAULTS = a.extend({
+            },
+            a.fn.tooltip. Constructor.DEFAULTS, {
+                placement: "right", trigger: "click", content: "", template: '&amp;lt;div class="popover" role="tooltip"&amp;gt;&amp;lt;div class="arrow"&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;h3 class="popover-title"&amp;gt;&amp;lt;/h3&amp;gt;&amp;lt;div class="popover-content"&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;/div&amp;gt;'
+            }), c.prototype = a.extend({
+            },
+            a.fn.tooltip. Constructor.prototype), c.prototype. constructor = c, c.prototype.getDefaults = function () {
+                return c.DEFAULTS
+            },
+            c.prototype.setContent = function () {
+                var a = this.tip(), b = this.getTitle(), c = this.getContent();
+                a.find(".popover-title")[ this.options.html ? "html": "text"](b), a.find(".popover-content").children().detach().end()[ this.options.html ? "string" == typeof c ? "html": "append": "text"](c), a.removeClass("fade top bottom left right in"), a.find(".popover-title").html() || a.find(".popover-title").hide()
+            },
+            c.prototype.hasContent = function () {
+                return this.getTitle() || this.getContent()
+            },
+            c.prototype.getContent = function () {
+                var a = this.$element, b = this.options;
+                return a.attr("data-content") ||("function" == typeof b.content ? b.content.call(a[0]): b.content)
+            },
+            c.prototype.arrow = function () {
+                return this.$arrow = this.$arrow || this.tip().find(".arrow")
+            };
+            var d = a.fn.popover;
+            a.fn.popover = b, a.fn.popover. Constructor = c, a.fn.popover.noConflict = function () {
+                return a.fn.popover = d, this
+            }
+        }
+        (jQuery), + function (a) {
+            "use strict";
+            function b(c, d) {
+                this.$body = a(document.body), this.$scrollElement = a(a(c).is(document.body) ? window: c), this.options = a.extend({
+                },
+                b.DEFAULTS, d), this.selector =(this.options.target || "") + " .nav li &amp;gt; a", this.offsets =[], this.targets =[], this.activeTarget = null, this.scrollHeight = 0, this.$scrollElement.on("scroll.bs.scrollspy", a.proxy(this.process, this)), this.refresh(), this.process()
+            }
+            function c(c) {
+                return this.each(function () {
+                    var d = a(this), e = d.data("bs.scrollspy"), f = "object" == typeof c &amp;&amp; c; e || d.data("bs.scrollspy", e = new b(this, f)), "string" == typeof c &amp;&amp; e[c]()
+                })
+            }
+            b.VERSION = "3.3.6", b.DEFAULTS = {
+                offset: 10
+            },
+            b.prototype.getScrollHeight = function () {
+                return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+            },
+            b.prototype.refresh = function () {
+                var b = this, c = "offset", d = 0;
+                this.offsets =[], this.targets =[], this.scrollHeight = this.getScrollHeight(), a.isWindow(this.$scrollElement[0]) ||(c = "position", d = this.$scrollElement.scrollTop()), this.$body.find(this.selector).map(function () {
+                    var b = a(this), e = b.data("target") || b.attr("href"), f = /^#./.test(e) &amp;&amp; a(e);
+                    return f &amp;&amp; f.length &amp;&amp; f.is(":visible") &amp;&amp;[[f[c]().top + d, e]] || null
+                }).sort(function (a, b) {
+                    return a[0] - b[0]
+                }).each(function () {
+                    b.offsets.push(this[0]), b.targets.push(this[1])
+                })
+            },
+            b.prototype.process = function () {
+                var a, b = this.$scrollElement.scrollTop() + this.options.offset, c = this.getScrollHeight(), d = this.options.offset + c - this.$scrollElement.height(), e = this.offsets, f = this.targets, g = this.activeTarget;
+                if (this.scrollHeight != c &amp;&amp; this.refresh(), b &amp;gt;= d) return g !=(a = f[f.length -1]) &amp;&amp; this.activate(a);
+                if (g &amp;&amp; b &amp;lt; e[0]) return this.activeTarget = null, this.clear();
+                for (a = e.length; a--;) g != f[a] &amp;&amp; b &amp;gt;= e[a] &amp;&amp;(void 0 === e[a + 1] || b &amp;lt; e[a + 1]) &amp;&amp; this.activate(f[a])
+            },
+            b.prototype.activate = function (b) {
+                this.activeTarget = b, this.clear();
+                var c = this.selector + '[data-target="' + b + '"],' + this.selector + '[href="' + b + '"]', d = a(c).parents("li").addClass("active");
+                d.parent(".dropdown-menu").length &amp;&amp;(d = d.closest("li.dropdown").addClass("active")), d.trigger("activate.bs.scrollspy")
+            },
+            b.prototype.clear = function () {
+                a(this.selector).parentsUntil(this.options.target, ".active").removeClass("active")
+            };
+            var d = a.fn.scrollspy;
+            a.fn.scrollspy = c, a.fn.scrollspy. Constructor = b, a.fn.scrollspy.noConflict = function () {
+                return a.fn.scrollspy = d, this
+            },
+            a(window).on("load.bs.scrollspy.data-api", function () {
+                a('[data-spy="scroll"]').each(function () {
+                    var b = a(this);
+                    c.call(b, b.data())
+                })
+            })
+        }
+        (jQuery), + function (a) {
+            "use strict";
+            function b(b) {
+                return this.each(function () {
+                    var d = a(this), e = d.data("bs.tab");
+                    e || d.data("bs.tab", e = new c(this)), "string" == typeof b &amp;&amp; e[b]()
+                })
+            }
+            var c = function (b) {
+                this.element = a(b)
+            };
+            c.VERSION = "3.3.6", c.TRANSITION_DURATION = 150, c.prototype.show = function () {
+                var b = this.element, c = b.closest("ul:not(.dropdown-menu)"), d = b.data("target");
+                if (d ||(d = b.attr("href"), d = d &amp;&amp; d.replace(/.*(?=#[^\s]*$)/, "")), ! b.parent("li").hasClass("active")) {
+                    var e = c.find(".active:last a"), f = a.Event("hide.bs.tab", {
+                        relatedTarget: b[0]
+                    }), g = a.Event("show.bs.tab", {
+                        relatedTarget: e[0]
+                    });
+                    if (e.trigger(f), b.trigger(g), ! g.isDefaultPrevented() &amp;&amp; ! f.isDefaultPrevented()) {
+                        var h = a(d);
+                        this.activate(b.closest("li"), c), this.activate(h, h.parent(), function () {
+                            e.trigger({
+                                type: "hidden.bs.tab", relatedTarget: b[0]
+                            }), b.trigger({
+                                type: "shown.bs.tab", relatedTarget: e[0]
+                            })
+                        })
+                    }
+                }
+            },
+            c.prototype.activate = function (b, d, e) {
+                function f() {
+                    g.removeClass("active").find("&amp;gt; .dropdown-menu &amp;gt; .active").removeClass("active").end().find('[data-toggle="tab"]').attr("aria-expanded", ! 1), b.addClass("active").find('[data-toggle="tab"]').attr("aria-expanded", ! 0), h ?(b[0].offsetWidth, b.addClass("in")): b.removeClass("fade"), b.parent(".dropdown-menu").length &amp;&amp; b.closest("li.dropdown").addClass("active").end().find('[data-toggle="tab"]').attr("aria-expanded", ! 0), e &amp;&amp; e()
+                }
+                var g = d.find("&amp;gt; .active"), h = e &amp;&amp; a.support.transition &amp;&amp;(g.length &amp;&amp; g.hasClass("fade") || ! ! d.find("&amp;gt; .fade").length);
+                g.length &amp;&amp; h ? g.one("bsTransitionEnd", f).emulateTransitionEnd(c.TRANSITION_DURATION): f(), g.removeClass("in")
+            };
+            var d = a.fn.tab;
+            a.fn.tab = b, a.fn.tab. Constructor = c, a.fn.tab.noConflict = function () {
+                return a.fn.tab = d, this
+            };
+            var e = function (c) {
+                c.preventDefault(), b.call(a(this), "show")
+            };
+            a(document).on("click.bs.tab.data-api", '[data-toggle="tab"]', e).on("click.bs.tab.data-api", '[data-toggle="pill"]', e)
+        }
+        (jQuery), + function (a) {
+            "use strict";
+            function b(b) {
+                return this.each(function () {
+                    var d = a(this), e = d.data("bs.affix"), f = "object" == typeof b &amp;&amp; b; e || d.data("bs.affix", e = new c(this, f)), "string" == typeof b &amp;&amp; e[b]()
+                })
+            }
+            var c = function (b, d) {
+                this.options = a.extend({
+                },
+                c.DEFAULTS, d), this.$target = a(this.options.target).on("scroll.bs.affix.data-api", a.proxy(this.checkPosition, this)).on("click.bs.affix.data-api", a.proxy(this.checkPositionWithEventLoop, this)), this.$element = a(b), this.affixed = null, this.unpin = null, this.pinnedOffset = null, this.checkPosition()
+            };
+            c.VERSION = "3.3.6", c.RESET = "affix affix-top affix-bottom", c.DEFAULTS = {
+                offset: 0, target: window
+            },
+            c.prototype.getState = function (a, b, c, d) {
+                var e = this.$target.scrollTop(), f = this.$element.offset(), g = this.$target.height();
+                if (null != c &amp;&amp; "top" == this.affixed) return c &amp;gt; e ? "top": ! 1;
+                if ("bottom" == this.affixed) return null != c ? e + this.unpin &amp;lt;= f.top ? ! 1: "bottom": a - d &amp;gt;= e + g ? ! 1: "bottom";
+                var h = null == this.affixed, i = h ? e: f.top, j = h ? g: b;
+                return null != c &amp;&amp; c &amp;gt;= e ? "top": null != d &amp;&amp; i + j &amp;gt;= a - d ? "bottom": ! 1
+            },
+            c.prototype.getPinnedOffset = function () {
+                if (this.pinnedOffset) return this.pinnedOffset;
+                this.$element.removeClass(c.RESET).addClass("affix");
+                var a = this.$target.scrollTop(), b = this.$element.offset();
+                return this.pinnedOffset = b.top - a
+            },
+            c.prototype.checkPositionWithEventLoop = function () {
+                setTimeout(a.proxy(this.checkPosition, this), 1)
+            },
+            c.prototype.checkPosition = function () {
+                if (this.$element.is(":visible")) {
+                    var b = this.$element.height(), d = this.options.offset, e = d.top, f = d.bottom, g = Math.max(a(document).height(), a(document.body).height());
+                    "object" != typeof d &amp;&amp;(f = e = d), "function" == typeof e &amp;&amp;(e = d.top(this.$element)), "function" == typeof f &amp;&amp;(f = d.bottom(this.$element));
+                    var h = this.getState(g, b, e, f);
+                    if (this.affixed != h) {
+                        null != this.unpin &amp;&amp; this.$element.css("top", "");
+                        var i = "affix" +(h ? "-" + h: ""), j = a.Event(i + ".bs.affix");
+                        if (this.$element.trigger(j), j.isDefaultPrevented()) return;
+                        this.affixed = h, this.unpin = "bottom" == h ? this.getPinnedOffset(): null, this.$element.removeClass(c.RESET).addClass(i).trigger(i.replace("affix", "affixed") + ".bs.affix")
+                    }
+                    "bottom" == h &amp;&amp; this.$element.offset({
+                        top: g - b - f
+                    })
+                }
+            };
+            var d = a.fn.affix;
+            a.fn.affix = b, a.fn.affix. Constructor = c, a.fn.affix.noConflict = function () {
+                return a.fn.affix = d, this
+            },
+            a(window).on("load", function () {
+                a('[data-spy="affix"]').each(function () {
+                    var c = a(this), d = c.data();
+                    d.offset = d.offset || {
+                    },
+                    null != d.offsetBottom &amp;&amp;(d.offset.bottom = d.offsetBottom), null != d.offsetTop &amp;&amp;(d.offset.top = d.offsetTop), b.call(c, d)
+                })
+            })
+        }
+        (jQuery);</script>
+    </xsl:template>
 </xsl:stylesheet>
