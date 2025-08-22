@@ -177,6 +177,27 @@
             color: #6b7280;
             font-style: italic;
         }
+        
+        /* Lab Evidence Repeatable UI */
+        .lab-evidence-controls {
+            margin-bottom: 20px;
+        }
+        .lab-evidence-row {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #f9fafb;
+        }
+        .lab-evidence-row h4 {
+            margin: 0 0 15px 0;
+            color: #374151;
+            border-bottom: 1px solid #d1d5db;
+            padding-bottom: 8px;
+        }
+        .hidden {
+            display: none !important;
+        }
         .result-item:last-child {
             border-bottom: none;
         }
@@ -785,6 +806,110 @@
                     <input type="text" id="labTest2ReferenceRange" value="Negative-Positive">
                 </div>
             </div>
+        </div>
+
+        <!-- Lab Orders and Results Section -->
+        <div class="section">
+            <h2 class="section-title">Lab Orders and Results <span class="trigger-indicator">RCTC COMPATIBLE</span></h2>
+            
+            <div class="lab-evidence-controls">
+                <button class="btn btn-primary" type="button" onclick="addLabEvidence()">➕ Add Lab Order and Result</button>
+            </div>
+            
+            <div id="labEvidenceList"></div>
+            
+            <template id="labEvidenceTemplate">
+                <div class="lab-evidence-row">
+                    <h4>Lab Order and Result Entry</h4>
+                    <div class="form-grid">
+                        <!-- Test Information -->
+                        <div class="input-group">
+                            <label>Test Code (LOINC) <span class="trigger-indicator">RCTC TRIGGER</span></label>
+                            <div class="code-search">
+                                <input type="text" class="le-test-code" placeholder="ex. 94310-0">
+                                <button class="btn btn-secondary" type="button" onclick="searchRCTCForTest(this)">🔍</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Test Name</label>
+                            <div class="code-search">
+                                <input type="text" class="le-test-name" placeholder="SARS-like Coronavirus N gene">
+                                <button class="btn btn-secondary" type="button" onclick="searchRCTCForTestByName(this)">🔍</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Result Value Type Selector -->
+                        <div class="input-group">
+                            <label>Result Kind</label>
+                            <select class="le-value-kind" onchange="toggleValueEditors(this)">
+                                <option value="coded" selected>Coded (organism/substance)</option>
+                                <option value="quantity">Quantity</option>
+                                <option value="text">Text</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Coded Value (SNOMED CT) -->
+                        <div class="input-group le-coded">
+                            <label>Organism/Substance Code (SNOMED CT)</label>
+                            <div class="code-search">
+                                <input type="text" class="le-value-code" placeholder="ex. 840539006">
+                                <button class="btn btn-secondary" type="button" onclick="searchRCTCForOrganism(this)">🔍</button>
+                            </div>
+                        </div>
+                        <div class="input-group le-coded">
+                            <label>Organism/Substance Name</label>
+                            <div class="code-search">
+                                <input type="text" class="le-value-name" placeholder="Disease caused by 2019-nCoV">
+                                <button class="btn btn-secondary" type="button" onclick="searchRCTCForOrganismByName(this)">🔍</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Quantity Value -->
+                        <div class="input-group le-qty hidden">
+                            <label>Value</label>
+                            <input type="number" step="0.01" class="le-qty-value" placeholder="ex. 100">
+                        </div>
+                        <div class="input-group le-qty hidden">
+                            <label>Unit</label>
+                            <input type="text" class="le-qty-unit" placeholder="[iU]/mL">
+                        </div>
+                        
+                        <!-- Text Value -->
+                        <div class="input-group le-text hidden">
+                            <label>Text Result</label>
+                            <input type="text" class="le-text-value" placeholder="Detected / Not detected">
+                        </div>
+                        
+                        <!-- Timing/Status -->
+                        <div class="input-group">
+                            <label>Result Time (YYYYMMDDHHMMSS)</label>
+                            <input type="text" class="le-time" placeholder="20240615103000">
+                        </div>
+                        <div class="input-group">
+                            <label>Status</label>
+                            <select class="le-status">
+                                <option value="completed" selected>completed</option>
+                                <option value="active">active</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Interpretation</label>
+                            <select class="le-interpretation">
+                                <option value=""></option>
+                                <option value="A">Abnormal</option>
+                                <option value="N">Normal</option>
+                                <option value="H">High</option>
+                                <option value="L">Low</option>
+                            </select>
+                        </div>
+                        
+                        
+                        <div>
+                            <button class="btn btn-warning" type="button" onclick="removeLabEvidence(this)">🗑 Remove</button>
+                        </div>
+                    </div>
+                </div>
+            </template>
         </div>
 
 <!-- ░░░  MEDICATIONS  ░░░================================================ -->
@@ -1668,6 +1793,12 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
         let diagnosisData = [];
         let diagnosisLoaded = false;
 
+        // Global variables for new lab order and organism data
+        let labOrderData = [];
+        let labOrderLoaded = false;
+        let organismData = [];
+        let organismLoaded = false;
+
         // Load lab observations from RCTC Excel file
         async function loadLabObsFromRCTC() {
             try {
@@ -1748,64 +1879,47 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
         }
 
         // Load diagnosis data from RCTC Excel file
-        async function loadDiagnosisFromRCTC() {
-            try {
-                const response = await fetch('./assets/xslt/RCTC_Release (2025-03-18).xlsx');
-                if (!response.ok) {
-                    throw new Error(`Failed to load RCTC Excel file: ${response.status}`);
-                }
-                
-                const arrayBuffer = await response.arrayBuffer();
-                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-                
-                const allDiagnosis = [];
-                
-                // Look for "diagnosis_problem s1" sheet
-                const targetSheetName = workbook.SheetNames.find(name => 
-                    name.toLowerCase().includes('diagnosis_problem s1') || 
-                    name.toLowerCase().includes('diagnosis_problem_s1') ||
-                    name.toLowerCase().includes('diagnosis problem s1')
-                );
-                
-                if (targetSheetName) {
-                    const worksheet = workbook.Sheets[targetSheetName];
-                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                    
-                    // Debug: log the first few rows to see the actual structure
-                    console.log('Diagnosis sheet name:', targetSheetName);
-                    console.log('First 3 diagnosis rows:', jsonData.slice(0, 4));
-                    
-                    // Skip empty sheets
-                    if (jsonData.length > 1) {
-                        // Process data rows - Column B for code, Column C for name
-                        for (let i = 1; i < jsonData.length; i++) {
-                            const row = jsonData[i];
-                            if (row && row.length > 2 && row[1] && row[2]) {
-                                allDiagnosis.push({
-                                    code: row[1] || '', // Column B for code
-                                    name: row[2] || '', // Column C for name
-                                    description: row[0] || '' // Column A for description (if available)
-                                });
-                            }
-                        }
-                    }
-                }
-                
-                diagnosisData = allDiagnosis;
-                diagnosisLoaded = true;
-                
-                console.log(`Loaded ${diagnosisData.length} diagnoses from RCTC file`);
-                console.log('Sample diagnosis data:', diagnosisData.slice(0, 3));
-                return diagnosisData;
-                
-            } catch (error) {
-                console.warn('Failed to load diagnoses from RCTC file:', error);
-                // Fallback to hardcoded values if RCTC file can't be loaded
-                diagnosisData = getHardcodedDiagnosis();
-                diagnosisLoaded = true;
-                return diagnosisData;
-            }
-        }
+       // STRICT loader: uses ONLY "diagnosis_problem s1" (B=code, C=name)
+async function loadDiagnosisFromRCTC() {
+  try {
+    const res = await fetch('./assets/xslt/RCTC_Release (2025-03-18).xlsx');
+    if (!res.ok) throw new Error(`Failed to load RCTC Excel file: ${res.status}`);
+
+    const ab = await res.arrayBuffer();
+    const wb = XLSX.read(ab, { type: 'array' });
+
+    const SHEET_NAME = 'diagnosis_problem s1';
+    const ws = wb.Sheets[SHEET_NAME];
+    if (!ws) throw new Error(`Sheet "${SHEET_NAME}" not found in RCTC release.`);
+
+    const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+
+    // normalize helper: trims & removes NBSPs
+    const norm = v => String(v ?? '').replace(/\u00A0/g, ' ').trim();
+
+    const allDiagnosis = [];
+    // Row 0 = header; start from 1. B (idx 1) = code, C (idx 2) = name. A (idx 0) optional description.
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      if (!r || r.length < 3) continue;
+      const code = norm(r[1]);
+      const name = norm(r[2]);
+      const description = norm(r[0]);
+      if (code && name) allDiagnosis.push({ code, name, description });
+    }
+
+    diagnosisData = allDiagnosis;
+    diagnosisLoaded = true;
+    console.log(`Loaded ${diagnosisData.length} diagnoses from "${SHEET_NAME}"`);
+    return diagnosisData;
+  } catch (error) {
+    console.warn('Failed to load diagnoses from RCTC file:', error);
+    diagnosisData = getHardcodedDiagnosis(); // keep your existing fallback
+    diagnosisLoaded = true;
+    return diagnosisData;
+  }
+}
+
 
         // Fallback hardcoded diagnosis data
         function getHardcodedDiagnosis() {
@@ -1816,133 +1930,238 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
             ];
         }
 
-        // Search RCTC codes function
-        async function searchRCTCCodes(fieldId) {
-            // Debug for Lab Test 2
-            if (fieldId === 'labTest2Name') {
-                console.log('Searching labTest2Name with fieldId:', fieldId);
-            }
-            
-            // Determine if this is a diagnosis field or lab test field
-            let searchData;
-            if (fieldId.includes('diagnosis')) {
-                // Load diagnosis data if not already loaded
-                if (!diagnosisLoaded) {
-                    await loadDiagnosisFromRCTC();
+        // Load lab order data from RCTC Excel file - Lab Order Test Name S3 tab
+        async function loadLabOrderFromRCTC() {
+            try {
+                const response = await fetch('./assets/xslt/RCTC_Release (2025-03-18).xlsx');
+                if (!response.ok) {
+                    throw new Error(`Failed to load RCTC Excel file: ${response.status}`);
                 }
-                searchData = diagnosisData;
-            } else {
-                // Load lab observations if not already loaded
-                if (!labObsLoaded) {
-                    await loadLabObsFromRCTC();
-                }
-                searchData = labObsData;
-            }
-            
-            const searchTerm = document.getElementById(fieldId).value.toLowerCase();
-            const resultsDiv = document.getElementById(fieldId + '_results');
-            
-            if (!resultsDiv) return;
-            
-            // Clear previous results
-            resultsDiv.innerHTML = '';
-            
-            if (!searchTerm) {
-                resultsDiv.style.display = 'none';
-                return;
-            }
-            
-            // Filter lab observations based on search term
-            let matches;
-            
-            if (fieldId.includes('Name')) {
-                // When searching by name, prioritize name matches and ignore short matches in code/description
-                matches = searchData.filter(obs => {
-                    const nameMatch = obs.name.toLowerCase().includes(searchTerm);
-                    const codeMatch = obs.code.toLowerCase().includes(searchTerm);
-                    
-                    // For name searches, prioritize name matches
-                    if (nameMatch) return true;
-                    
-                    // Only include code matches if search term is long enough (avoid OID matches)
-                    if (codeMatch && searchTerm.length >= 5) return true;
-                    
-                    return false;
-                });
-            } else {
-                // When searching by code, prioritize code matches
-                matches = searchData.filter(obs => {
-                    const codeMatch = obs.code.toLowerCase().includes(searchTerm);
-                    const nameMatch = obs.name.toLowerCase().includes(searchTerm);
-                    
-                    // For code searches, prioritize code matches
-                    if (codeMatch) return true;
-                    
-                    // Include name matches for broader search
-                    if (nameMatch) return true;
-                    
-                    return false;
-                });
-            }
-            
-            if (matches.length > 0) {
-                resultsDiv.style.display = 'block';
-                const resultsList = document.createElement('div');
-                resultsList.className = 'search-results-list';
                 
-                matches.slice(0, 10).forEach(obs => { // Limit to first 10 results
-                    const resultItem = document.createElement('div');
-                    resultItem.className = 'search-result-item';
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                
+                const allLabOrders = [];
+                
+                // Look for "Lab Order Test Name S3" sheet
+                const targetSheetName = workbook.SheetNames.find(name => 
+                    name.toLowerCase().includes('lab order test name s3') || 
+                    name.toLowerCase().includes('lab_order_test_name_s3') ||
+                    name.toLowerCase().includes('lab order test name s3')
+                );
+                
+                if (targetSheetName) {
+                    const worksheet = workbook.Sheets[targetSheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
                     
-                    // Show different display format based on which field we're searching from
-                    if (fieldId.includes('Code')) {
-                        // Searching from Code field - show code prominently
-                        resultItem.innerHTML = `
-                            <strong>${obs.code}</strong>: ${obs.name}
-                            ${obs.description ? `<br><small>${obs.description}</small>` : ''}
-                        `;
-                    } else if (fieldId.includes('Name')) {
-                        // Debug for Lab Test 2
-                        if (fieldId === 'labTest2Name') {
-                            console.log('labTest2Name - obs.name:', obs.name, 'obs.code:', obs.code);
+                    console.log('Lab Order sheet name:', targetSheetName);
+                    console.log('First 3 lab order rows:', jsonData.slice(0, 4));
+                    
+                    if (jsonData.length > 1) {
+                        // Process data rows - Column B for code, Column C for name
+                        for (let i = 1; i < jsonData.length; i++) {
+                            const row = jsonData[i];
+                            if (row && row.length > 2 && row[1] && row[2]) {
+                                allLabOrders.push({
+                                    code: row[1] || '', // Column B for code
+                                    name: row[2] || '', // Column C for name
+                                    description: row[0] || '' // Column A for description (if available)
+                                });
+                            }
                         }
-                        
-                        // Searching from Name field - show name prominently
-                        resultItem.innerHTML = `
-                            <strong>${obs.name}</strong>
-                            <br><small>Code: ${obs.code}</small>
-                        `;
                     }
-                    resultItem.onclick = () => {
-                        // Check if we're searching from a Code field or Name field
-                        if (fieldId.includes('Code')) {
-                            // Searching from Code field - populate code and corresponding name
-                            document.getElementById(fieldId).value = obs.code;
-                            const nameFieldId = fieldId.replace('Code', 'Name');
-                            const nameField = document.getElementById(nameFieldId);
-                            if (nameField) {
-                                nameField.value = obs.name;
-                            }
-                        } else if (fieldId.includes('Name')) {
-                            // Searching from Name field - populate name and corresponding code
-                            document.getElementById(fieldId).value = obs.name;
-                            const codeFieldId = fieldId.replace('Name', 'Code');
-                            const codeField = document.getElementById(codeFieldId);
-                            if (codeField) {
-                                codeField.value = obs.code;
-                            }
-                        }
-                        resultsDiv.style.display = 'none';
-                    };
-                    resultsList.appendChild(resultItem);
-                });
+                }
                 
-                resultsDiv.appendChild(resultsList);
-            } else {
-                resultsDiv.style.display = 'block';
-                resultsDiv.innerHTML = '<div class="no-results">No matching codes found</div>';
+                labOrderData = allLabOrders;
+                labOrderLoaded = true;
+                
+                console.log(`Loaded ${labOrderData.length} lab orders from RCTC file`);
+                return labOrderData;
+                
+            } catch (error) {
+                console.warn('Failed to load lab orders from RCTC file:', error);
+                labOrderData = getHardcodedLabOrders();
+                labOrderLoaded = true;
+                return labOrderData;
             }
         }
+
+        // Fallback hardcoded lab orders
+        function getHardcodedLabOrders() {
+            return [
+                { code: "94310-0", name: "SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection", description: "LOINC" },
+                { code: "34487-9", name: "Influenza virus A RNA [Presence] in Respiratory specimen by NAA with probe detection", description: "LOINC" },
+                { code: "19080-1", name: "Choriogonadotropin.beta subunit [Units/volume] in Serum or Plasma", description: "LOINC" }
+            ];
+        }
+
+        // Load organism data from RCTC Excel file - Organism_Substance S2 tab
+        async function loadOrganismFromRCTC() {
+            try {
+                const response = await fetch('./assets/xslt/RCTC_Release (2025-03-18).xlsx');
+                if (!response.ok) {
+                    throw new Error(`Failed to load RCTC Excel file: ${response.status}`);
+                }
+                
+                const arrayBuffer = await response.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                
+                const allOrganisms = [];
+                
+                // Look for "Organism_Substance S2" sheet
+                const targetSheetName = workbook.SheetNames.find(name => 
+                    name.toLowerCase().includes('organism_substance s2') || 
+                    name.toLowerCase().includes('organism substance s2') ||
+                    name.toLowerCase().includes('organism_substance_s2')
+                );
+                
+                if (targetSheetName) {
+                    const worksheet = workbook.Sheets[targetSheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                    
+                    console.log('Organism sheet name:', targetSheetName);
+                    console.log('First 3 organism rows:', jsonData.slice(0, 4));
+                    
+                    if (jsonData.length > 1) {
+                        // Process data rows - Column B for code, Column C for name
+                        for (let i = 1; i < jsonData.length; i++) {
+                            const row = jsonData[i];
+                            if (row && row.length > 2 && row[1] && row[2]) {
+                                allOrganisms.push({
+                                    code: row[1] || '', // Column B for code
+                                    name: row[2] || '', // Column C for name
+                                    description: row[0] || '' // Column A for description (if available)
+                                });
+                            }
+                        }
+                    }
+                }
+                
+                organismData = allOrganisms;
+                organismLoaded = true;
+                
+                console.log(`Loaded ${organismData.length} organisms from RCTC file`);
+                return organismData;
+                
+            } catch (error) {
+                console.warn('Failed to load organisms from RCTC file:', error);
+                organismData = getHardcodedOrganisms();
+                organismLoaded = true;
+                return organismData;
+            }
+        }
+
+        // Fallback hardcoded organisms
+        function getHardcodedOrganisms() {
+            return [
+                { code: "840539006", name: "Disease caused by 2019-nCoV", description: "SNOMEDCT" },
+                { code: "409822003", name: "Domain Bacteria", description: "SNOMEDCT" },
+                { code: "84676004", name: "Severe acute respiratory syndrome coronavirus", description: "SNOMEDCT" }
+            ];
+        }
+
+        // Search RCTC codes function
+       // Tailored search: for any *diagnosis* field, search ONLY diagnosis_problem s1 data.
+// Clicking a result fills BOTH Code & Name from the same row.
+async function searchRCTCCodes(fieldId) {
+  const el = document.getElementById(fieldId);
+  if (!el) return;
+
+  // Decide dataset
+  let data;
+  if (fieldId.toLowerCase().includes('diagnosis')) {
+    if (!diagnosisLoaded) await loadDiagnosisFromRCTC();
+    data = diagnosisData || [];
+  } else {
+    if (!labObsLoaded) await loadLabObsFromRCTC(); // keep your existing lab behavior
+    data = labObsData || [];
+  }
+
+  // results container
+  const resultsDiv = document.getElementById(fieldId + '_results');
+  if (!resultsDiv) return;
+  resultsDiv.innerHTML = '';
+  resultsDiv.style.display = 'none';
+
+  const q = String(el.value ?? '').replace(/\u00A0/g, ' ').trim().toLowerCase();
+  if (!q || data.length === 0) return;
+
+  const asCode = r => String(r.code ?? '').toLowerCase();
+  const asName = r => String((r.name ?? r.description ?? '')).toLowerCase();
+
+  const searchingName = /Name$/i.test(fieldId);
+  const digitsOnly = /^[0-9]+$/.test(q);
+
+  let matches = [];
+  if (!searchingName && digitsOnly) {
+    // Code box, numeric: try exact match first
+    const exact = data.filter(r => asCode(r) === q);
+    const fuzzy = data.filter(r => asCode(r).includes(q) || asName(r).includes(q));
+    const seen = new Set();
+    matches = [...exact, ...fuzzy].filter(r => {
+      const k = r.code + '|' + r.name;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+  } else {
+    // General contains; prioritize the field’s primary dimension
+    const primary   = data.filter(r => (searchingName ? asName(r) : asCode(r)).includes(q));
+    const secondary = data.filter(r => (searchingName ? asCode(r) : asName(r)).includes(q));
+    const seen = new Set();
+    matches = [...primary, ...secondary].filter(r => {
+      const k = r.code + '|' + r.name;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+  }
+
+  if (matches.length === 0) {
+    resultsDiv.style.display = 'block';
+    resultsDiv.innerHTML = '<div class="no-results">No matching codes found</div>';
+    return;
+  }
+
+  const list = document.createElement('div');
+  list.className = 'search-results-list';
+
+  matches.slice(0, 10).forEach(row => {
+    const item = document.createElement('div');
+    item.className = 'search-result-item';
+
+    // Show code + name; keep your light description if present
+    item.innerHTML = searchingName
+      ? `<strong>${row.name}</strong><br><small>Code: ${row.code}</small>${row.description ? `<br><small>${row.description}</small>` : ''}`
+      : `<strong>${row.code}</strong>: ${row.name}${row.description ? `<br><small>${row.description}</small>` : ''}`;
+
+    item.onclick = () => {
+      if (searchingName) {
+        // Fill Name + its paired Code
+        el.value = row.name;
+        const codeField = document.getElementById(fieldId.replace('Name', 'Code'));
+        if (codeField) {
+          codeField.value = row.code;
+          // keep your trigger validation semantics on the code field
+          if (typeof validateTriggerCode === 'function') validateTriggerCode(codeField.id);
+        }
+      } else {
+        // Fill Code + its paired Name
+        el.value = row.code;
+        const nameField = document.getElementById(fieldId.replace('Code', 'Name'));
+        if (nameField) nameField.value = row.name;
+        if (typeof validateTriggerCode === 'function') validateTriggerCode(el.id);
+      }
+      resultsDiv.style.display = 'none';
+    };
+
+    list.appendChild(item);
+  });
+
+  resultsDiv.appendChild(list);
+  resultsDiv.style.display = 'block';
+}
+
 
         // Fetch local XSLT files (no CORS issues)
         async function fetchXslt(url) {
@@ -2302,6 +2521,10 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                     data[field] = element.value;
                 }
             });
+            
+            // ADD THIS: Collect lab evidence
+            data.labEvidence = collectLabEvidence();
+            
             return data;
         }
 
@@ -2646,6 +2869,7 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
 
         function validateDQTriggerCodes() {
             const errors = [];
+            const data = getFormData();
             const triggerFields = [
                 'diagnosis1Code', 'diagnosis2Code', 'diagnosis3Code',
                 'labTest1Code', 'labTest2Code', 'labOrder1Code',
@@ -2653,12 +2877,23 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
             ];
             
             let hasTriggerCode = false;
+            
+            // Check existing fields
             triggerFields.forEach(fieldId => {
                 const element = document.getElementById(fieldId);
                 if (element?.value?.trim()) {
                     hasTriggerCode = true;
                 }
             });
+            
+            // NEW: Check lab evidence
+            if (!hasTriggerCode && Array.isArray(data.labEvidence)) {
+                hasTriggerCode = data.labEvidence.some(ev => 
+                    ev.isRCTC || 
+                    isRCTCTriggerCode(ev.testCode) || 
+                    isRCTCTriggerCode(ev.valueCode)
+                );
+            }
             
             if (!hasTriggerCode) {
                 errors.push('FATAL: At least one trigger code template must be present (eICR requirement)');
@@ -2924,6 +3159,7 @@ function xmlEscape(str = '') {
 
 function buildRRXml () {
   const d = getFormData();
+  const labEvidence = (d.labEvidence || []);
   const x = s => xmlEscape(s || '');       // one-letter alias = escape **everything**
   const guid = () => generateGUID();
 
@@ -2995,6 +3231,25 @@ function buildRRXml () {
                      displayName="${x(c.name)}"/>
             </observation>
           </entryRelationship>
+          ${labEvidence.map(ev => `
+          <entryRelationship typeCode="SPRT">
+            <observation classCode="OBS" moodCode="EVN">
+              <id root="${guid()}"/>
+              <statusCode code="completed"/>
+              ${ev.time ? `<effectiveTime value="${x(ev.time)}"/>` : ''}
+              ${(ev.testCode || ev.testName) ? `
+                <code code="${x(ev.testCode||'')}" codeSystem="2.16.840.1.113883.6.1" displayName="${x(ev.testName||'Laboratory test')}"/>` : `
+                <code nullFlavor="UNK"/>`}
+              ${(ev.valueKind==='coded' && (ev.valueCode || ev.valueName)) ? `
+                <value xsi:type="CD" code="${x(ev.valueCode||'')}" codeSystem="2.16.840.1.113883.6.96" displayName="${x(ev.valueName||'')}"/>` : ''}
+              ${(ev.valueKind==='quantity' && ev.qtyValue) ? `
+                <value xsi:type="PQ" value="${x(ev.qtyValue)}"${ev.qtyUnit?` unit="${x(ev.qtyUnit)}"`:''}/>` : ''}
+              ${(ev.valueKind==='text' && ev.textValue) ? `
+                <value xsi:type="ST">${x(ev.textValue)}</value>` : ''}
+              ${mapInterp(ev.interpretation) ? `
+                <interpretationCode code="${mapInterp(ev.interpretation)}" codeSystem="2.16.840.1.113883.5.83"/>` : ''}
+            </observation>
+          </entryRelationship>`).join('')}
           <participant typeCode="DST">
             <participantRole classCode="AGNT">
               <addr><state>${x(d.patientState)}</state></addr>
@@ -3605,6 +3860,277 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
             return entries;
         }
 
+        // Lab Evidence Repeater Functions
+        function addLabEvidence(prefill = {}) {
+            const template = document.getElementById('labEvidenceTemplate');
+            const clone = template.content.cloneNode(true);
+            const row = clone.querySelector('.lab-evidence-row');
+            
+            // Populate with prefill data if provided
+            if (prefill.testCode) row.querySelector('.le-test-code').value = prefill.testCode;
+            if (prefill.testName) row.querySelector('.le-test-name').value = prefill.testName;
+            if (prefill.valueKind) {
+                row.querySelector('.le-value-kind').value = prefill.valueKind;
+                toggleValueEditors(row.querySelector('.le-value-kind'));
+            }
+            if (prefill.valueCode) row.querySelector('.le-value-code').value = prefill.valueCode;
+            if (prefill.valueName) row.querySelector('.le-value-name').value = prefill.valueName;
+            if (prefill.qtyValue) row.querySelector('.le-qty-value').value = prefill.qtyValue;
+            if (prefill.qtyUnit) row.querySelector('.le-qty-unit').value = prefill.qtyUnit;
+            if (prefill.textValue) row.querySelector('.le-text-value').value = prefill.textValue;
+            if (prefill.time) row.querySelector('.le-time').value = prefill.time;
+            if (prefill.status) row.querySelector('.le-status').value = prefill.status;
+            if (prefill.interpretation) row.querySelector('.le-interpretation').value = prefill.interpretation;
+            // RCTC flag removed - auto-detect based on RCTC trigger codes
+            
+            document.getElementById('labEvidenceList').appendChild(clone);
+        }
+
+        function removeLabEvidence(btn) {
+            btn.closest('.lab-evidence-row')?.remove();
+        }
+
+        function toggleValueEditors(sel) {
+            const row = sel.closest('.lab-evidence-row');
+            row.querySelectorAll('.le-coded,.le-qty,.le-text').forEach(el => el.classList.add('hidden'));
+            const kind = sel.value;
+            if (kind === 'coded') row.querySelectorAll('.le-coded').forEach(el => el.classList.remove('hidden'));
+            if (kind === 'quantity') row.querySelectorAll('.le-qty').forEach(el => el.classList.remove('hidden'));
+            if (kind === 'text') row.querySelectorAll('.le-text').forEach(el => el.classList.remove('hidden'));
+        }
+
+        // Search functions for lab orders and organisms
+        async function searchRCTCForTest(btn) {
+            const row = btn.closest('.lab-evidence-row');
+            const codeInput = row.querySelector('.le-test-code');
+            const nameInput = row.querySelector('.le-test-name');
+            
+            // Load lab order data if not already loaded
+            if (!labOrderLoaded) await loadLabOrderFromRCTC();
+            
+            const searchTerm = codeInput.value.toLowerCase();
+            const matches = labOrderData.filter(order => 
+                order.code.toLowerCase().includes(searchTerm) || 
+                order.name.toLowerCase().includes(searchTerm)
+            );
+            
+            if (matches.length > 0) {
+                codeInput.value = matches[0].code;
+                nameInput.value = matches[0].name;
+            }
+        }
+
+        async function searchRCTCForOrganism(btn) {
+            const row = btn.closest('.lab-evidence-row');
+            const codeInput = row.querySelector('.le-value-code');
+            const nameInput = row.querySelector('.le-value-name');
+            
+            // Load organism data if not already loaded
+            if (!organismLoaded) await loadOrganismFromRCTC();
+            
+            const searchTerm = codeInput.value.toLowerCase();
+            const matches = organismData.filter(organism => 
+                organism.code.toLowerCase().includes(searchTerm) || 
+                organism.name.toLowerCase().includes(searchTerm)
+            );
+            
+            if (matches.length > 0) {
+                codeInput.value = matches[0].code;
+                nameInput.value = matches[0].name;
+            }
+        }
+
+        // Search by test name
+        async function searchRCTCForTestByName(btn) {
+            const row = btn.closest('.lab-evidence-row');
+            const codeInput = row.querySelector('.le-test-code');
+            const nameInput = row.querySelector('.le-test-name');
+            
+            // Load lab order data if not already loaded
+            if (!labOrderLoaded) await loadLabOrderFromRCTC();
+            
+            const searchTerm = nameInput.value.toLowerCase();
+            const matches = labOrderData.filter(order => 
+                order.name.toLowerCase().includes(searchTerm) || 
+                order.code.toLowerCase().includes(searchTerm)
+            );
+            
+            if (matches.length > 0) {
+                codeInput.value = matches[0].code;
+                nameInput.value = matches[0].name;
+            }
+        }
+
+        // Search by organism name
+        async function searchRCTCForOrganismByName(btn) {
+            const row = btn.closest('.lab-evidence-row');
+            const codeInput = row.querySelector('.le-value-code');
+            const nameInput = row.querySelector('.le-value-name');
+            
+            // Load organism data if not already loaded
+            if (!organismLoaded) await loadOrganismFromRCTC();
+            
+            const searchTerm = nameInput.value.toLowerCase();
+            const matches = organismData.filter(organism => 
+                organism.name.toLowerCase().includes(searchTerm) || 
+                organism.code.toLowerCase().includes(searchTerm)
+            );
+            
+            if (matches.length > 0) {
+                codeInput.value = matches[0].code;
+                nameInput.value = matches[0].name;
+            }
+        }
+
+        function collectLabEvidence() {
+            return Array.from(document.querySelectorAll('.lab-evidence-row')).map(r => {
+                const kind = r.querySelector('.le-value-kind').value;
+                return {
+                    testCode: r.querySelector('.le-test-code').value.trim(),
+                    testName: r.querySelector('.le-test-name').value.trim(),
+                    valueKind: kind,
+                    valueCode: r.querySelector('.le-value-code').value.trim(),
+                    valueName: r.querySelector('.le-value-name').value.trim(),
+                    qtyValue: r.querySelector('.le-qty-value').value.trim(),
+                    qtyUnit: r.querySelector('.le-qty-unit').value.trim(),
+                    textValue: r.querySelector('.le-text-value').value.trim(),
+                    time: r.querySelector('.le-time').value.trim(),
+                    status: r.querySelector('.le-status').value,
+                    interpretation: r.querySelector('.le-interpretation').value,
+                    isRCTC: isRCTCTriggerCode(r.querySelector('.le-test-code').value) || isRCTCTriggerCode(r.querySelector('.le-value-code').value)
+                };
+            }).filter(x => x.testCode || x.testName);
+        }
+
+        // Interpretation mapping
+        function mapInterp(v) {
+            switch ((v||'').toLowerCase()) {
+                case 'positive': return 'POS';
+                case 'negative': return 'NEG';
+                case 'detected': return 'DET';
+                case 'not detected': return 'NDET';
+                case 'a': return 'A';
+                case 'n': return 'N';
+                case 'h': return 'H';
+                case 'l': return 'L';
+                default: return '';
+            }
+        }
+
+        function buildResultsSectionXML(labEvidence, rctcVersion = '2016-12-01') {
+            if (!labEvidence || labEvidence.length === 0) return '';
+            
+            const esc = s => xmlEscape(s || '');
+            
+            const obsXml = labEvidence.map(le => {
+                const id = generateGUID();
+                const vsOID = '2.16.840.1.114222.4.11.7508'; // Default COVID-19 valueset
+                
+                const codeAttrs = [
+                    le.testCode ? `code="${esc(le.testCode)}"` : 'nullFlavor="UNK"',
+                    `codeSystem="2.16.840.1.113883.6.1"`,
+                    `codeSystemName="LOINC"`,
+                    le.testName ? `displayName="${esc(le.testName)}"` : null,
+                    le.isRCTC && le.testCode ? `sdtc:valueSet="${vsOID}" sdtc:valueSetVersion="${esc(rctcVersion)}"` : null
+                ].filter(Boolean).join(' ');
+
+                // vsOID and rctcVersion should already be computed for this observation
+const vsPair = (le.isRCTC && vsOID && rctcVersion)
+  ? ` sdtc:valueSet="${esc(vsOID)}" sdtc:valueSetVersion="${esc(rctcVersion)}"`
+  : '';
+
+let valueXml = `<value xsi:type="CD" nullFlavor="UNK"/>`; // safe default
+
+if (le.valueKind === 'coded') {
+  valueXml = le.valueCode
+    ? `<value xsi:type="CD"
+         code="${esc(le.valueCode)}"
+         ${le.valueName ? `displayName="${esc(le.valueName)}"` : ''}
+         codeSystem="2.16.840.1.113883.6.96"
+         codeSystemName="SNOMED CT"${vsPair}/>`
+    : `<value xsi:type="CD" nullFlavor="UNK"/>`; // avoid code=""
+} else if (le.valueKind === 'quantity' && le.qtyValue) {
+  // Numeric result
+  valueXml = `<value xsi:type="PQ" value="${esc(le.qtyValue)}"${le.qtyUnit ? ` unit="${esc(le.qtyUnit)}"` : ''}/>`;
+  // If this observation is also RCTC-bound, add a coded translation carrying the sdtc pair
+  if (le.isRCTC && le.interpretationCode) {
+    const trans = `<translation xsi:type="CD"
+                     code="${esc(le.interpretationCode)}"
+                     ${le.interpretationName ? `displayName="${esc(le.interpretationName)}"` : ''}
+                     codeSystem="2.16.840.1.113883.6.96"
+                     codeSystemName="SNOMED CT"${vsPair}/>`;
+    valueXml = valueXml.replace('/>', `>${trans}</value>`);
+  }
+} else if (le.valueKind === 'text' && le.textValue) {
+  // Text result
+  valueXml = `<value xsi:type="ST">${esc(le.textValue)}</value>`;
+  // Same idea: optional coded translation to carry the sdtc pair
+  if (le.isRCTC && le.interpretationCode) {
+    const trans = `<translation xsi:type="CD"
+                     code="${esc(le.interpretationCode)}"
+                     ${le.interpretationName ? `displayName="${esc(le.interpretationName)}"` : ''}
+                     codeSystem="2.16.840.1.113883.6.96"
+                     codeSystemName="SNOMED CT"${vsPair}/>`;
+    valueXml = valueXml.replace('</value>', `${trans}</value>`);
+  }
+}
+
+
+                const interp = mapInterp(le.interpretation) ? `<interpretationCode code="${mapInterp(le.interpretation)}" codeSystem="2.16.840.1.113883.5.83"/>` : '';
+
+                return `
+                <entry>
+                    <organizer classCode="CLUSTER" moodCode="EVN">
+                    <!-- Result Organizer (V3) -->
+                    <templateId root="2.16.840.1.113883.10.20.22.4.1" extension="2015-08-01"/>
+                   <id root="${id}"/>
+    <code code="${esc(le.testCode||'')}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="${esc(le.testName||'Laboratory studies')}"/>
+    <statusCode code="completed"/>
+                    <component>
+                        <observation classCode="OBS" moodCode="EVN">
+                        <!-- Result Observation (V3) -->
+                        <templateId root="2.16.840.1.113883.10.20.22.4.2"/>
+                        <templateId root="2.16.840.1.113883.10.20.22.4.2" extension="2015-08-01"/>
+                        <!-- Initial Case Report Trigger Code Result Observation (eICR) -->
+                        <templateId root="2.16.840.1.113883.10.20.15.2.3.2" extension="2016-12-01"/>
+                        <id root="${id}"/>
+                        <code ${codeAttrs}/>
+                        <statusCode code="${esc(le.status||'completed')}"/>
+                        ${le.time ? `<effectiveTime value="${esc(le.time)}"/>` : ''}
+                        ${valueXml}
+                        ${interp}
+                        </observation>
+                    </component>
+                    </organizer>
+                </entry>`;
+            }).join('\n');
+
+            const narrative = labEvidence.map(le => `
+                <tr>
+                <td>${esc(le.testName||le.testCode||'')}</td>
+                <td>${le.valueKind==='coded' ? esc(le.valueName||le.valueCode||'') : le.valueKind==='quantity' ? `${esc(le.qtyValue||'')} ${esc(le.qtyUnit||'')}` : esc(le.textValue||'')}</td>
+                <td>${esc(le.status||'')}</td>
+                <td>${esc(le.time||'')}</td>
+                </tr>`).join('');
+
+            return `
+                <component>
+                <section>
+                    <!-- Results Section (entries required) -->
+                    <templateId root="2.16.840.1.113883.10.20.22.2.3.1" extension="2015-08-01"/>
+                    <code code="30954-2" codeSystem="2.16.840.1.113883.6.1" displayName="Relevant diagnostic tests and/or laboratory data"/>
+                    <title>Results</title>
+                    <text>
+                    <table border="1">
+                        <thead><tr><th>Test</th><th>Value</th><th>Status</th><th>Time</th></tr></thead>
+                        <tbody>${narrative}</tbody>
+                    </table>
+                    </text>
+                    ${obsXml}
+                </section>
+                </component>`;
+        }
+
         function buildEICRXml() {
             // Run comprehensive DQ Schematron validation first
             if (!validateFormData()) {
@@ -3994,10 +4520,15 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
                   </code>
                   <statusCode code="completed" />
                   <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
-                  <value xsi:type="CD" code="${data.diagnosis3Code}" codeSystem="2.16.840.1.113883.6.96"
-                    codeSystemName="SNOMED-CT" displayName="${data.diagnosis3Name}"
-                    sdtc:valueSet="${getConditionSpecificValueSet(data.diagnosis3Code).oid}" 
-                    sdtc:valueSetVersion="${getConditionSpecificValueSet(data.diagnosis3Code).version}" />
+                 ${data.diagnosis3Code 
+  ? `<value xsi:type="CD" code="${data.diagnosis3Code}" codeSystem="2.16.840.1.113883.6.96"
+       codeSystemName="SNOMED-CT" displayName="${data.diagnosis3Name}"
+       sdtc:valueSet="${getConditionSpecificValueSet(data.diagnosis3Code).oid}" 
+       sdtc:valueSetVersion="${getConditionSpecificValueSet(data.diagnosis3Code).version}" />`
+  : `<value xsi:type="CD" nullFlavor="UNK" displayName="${data.diagnosis3Name}"
+       sdtc:valueSet="2.16.840.1.113762.1.4.1146.2260" 
+       sdtc:valueSetVersion="2.0.1" />`
+}
                 </observation>
               </entryRelationship>
             </act>
@@ -4005,89 +4536,96 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
         </section>
       </component>
 
-      <!-- Results Section with RCTC Trigger Codes -->
-      <component>
-        <section>
-          <templateId root="2.16.840.1.113883.10.20.22.2.3" />
-          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.3" />
-          <templateId root="2.16.840.1.113883.10.20.22.2.3.1" />
-          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.3.1" />
-          <code code="30954-2" codeSystem="2.16.840.1.113883.6.1" displayName="Relevant diagnostic tests and/or laboratory data" />
-          <title>Results</title>
-          <text>
-            <table>
-              <thead>
-                <tr><th>Test</th><th>Result</th><th>Date</th><th>RCTC Trigger</th></tr>
-              </thead>
-              <tbody><tr><td>${data.labTest1Name}</td><td>${data.labTest1Result}</td><td>${data.encounterDate}</td><td>Yes</td></tr><tr><td>${data.labTest2Name}</td><td>${data.labTest2Result}</td><td>${data.encounterDate}</td><td>Yes</td></tr></tbody>
-            </table>
-          </text>
-          
-          <!-- COVID-19 Test Result with RCTC Trigger Code Template -->
-          <entry typeCode="DRIV">
-            <organizer classCode="BATTERY" moodCode="EVN">
-              <templateId root="2.16.840.1.113883.10.20.22.4.1" />
-              <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.1" />
-              <id root="2047cca3-559f-45da-8775-406538fa4815" />
-              <code code="${data.labTest1Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
-                displayName="${data.labTest1Name}" />
-              <statusCode code="completed" />
-              <effectiveTime>
-                <low value="${data.encounterDate}" />
-                <high value="${data.encounterDate}" />
-              </effectiveTime>
-              <component>
-                <observation classCode="OBS" moodCode="EVN">
-                  <templateId root="2.16.840.1.113883.10.20.22.4.2" />
-                  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.2" />
-                  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.2" />
-                  <id root="9890e2c3-019a-4168-8403-a0a069994440" />
-                  <code code="${data.labTest1Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
-                    displayName="${data.labTest1Name}"
-                    sdtc:valueSet="${getConditionSpecificValueSet(data.labTest1Code, '2.16.840.1.113883.6.1').oid}" 
-                    sdtc:valueSetVersion="${getConditionSpecificValueSet(data.labTest1Code, '2.16.840.1.113883.6.1').version}" />
-                  <statusCode code="completed" />
-                  <effectiveTime value="${data.encounterDate}" />
-                  <value code="260373001" codeSystem="2.16.840.1.113883.6.96"
-                    codeSystemName="SNOMED-CT" displayName="${data.labTest1Result}" xsi:type="CD" />
-                </observation>
-              </component>
-            </organizer>
-          </entry>
+      <!-- Replace existing Results Section with Lab Evidence -->
+     ${(data.labEvidence && data.labEvidence.length) 
+  ? buildResultsSectionXML(data.labEvidence, '2016-12-01')
+  : `<!-- Fallback Results Section for Legacy Support -->
+     <component>
+       <section>
+         <templateId root="2.16.840.1.113883.10.20.22.2.3" />
+         <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.3" />
+         <templateId root="2.16.840.1.113883.10.20.22.2.3.1" />
+         <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.3.1" />
+         <code code="30954-2" codeSystem="2.16.840.1.113883.6.1" displayName="Relevant diagnostic tests and/or laboratory data" />
+         <title>Results</title>
+         <text>
+           <table>
+             <thead>
+               <tr><th>Test</th><th>Result</th><th>Date</th><th>RCTC Trigger</th></tr>
+             </thead>
+             <tbody>
+               <tr><td>\${data.labTest1Name}</td><td>\${data.labTest1Result}</td><td>\${data.encounterDate}</td><td>Yes</td></tr>
+               <tr><td>\${data.labTest2Name}</td><td>\${data.labTest2Result}</td><td>\${data.encounterDate}</td><td>Yes</td></tr>
+             </tbody>
+           </table>
+         </text>
+         
+         <!-- COVID-19 Test Result with RCTC Trigger Code Template -->
+         <entry typeCode="DRIV">
+           <organizer classCode="BATTERY" moodCode="EVN">
+             <templateId root="2.16.840.1.113883.10.20.22.4.1" />
+             <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.1" />
+             <id root="2047cca3-559f-45da-8775-406538fa4815" />
+             <code code="\${data.labTest1Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+               displayName="\${data.labTest1Name}" />
+             <statusCode code="completed" />
+             <effectiveTime>
+               <low value="\${data.encounterDate}" />
+               <high value="\${data.encounterDate}" />
+             </effectiveTime>
+             <component>
+               <observation classCode="OBS" moodCode="EVN">
+                 <templateId root="2.16.840.1.113883.10.20.22.4.2" />
+                 <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.2" />
+                 <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.2" />
+                 <id root="9890e2c3-019a-4168-8403-a0a069994440" />
+                 <code code="\${data.labTest1Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                   displayName="\${data.labTest1Name}"
+                   sdtc:valueSet="\${getConditionSpecificValueSet(data.labTest1Code, '2.16.840.1.113883.6.1').oid}" 
+                   sdtc:valueSetVersion="\${getConditionSpecificValueSet(data.labTest1Code, '2.16.840.1.113883.6.1').version}" />
+                 <statusCode code="completed" />
+                 <effectiveTime value="\${data.encounterDate}" />
+                 <value code="260373001" codeSystem="2.16.840.1.113883.6.96"
+                   codeSystemName="SNOMED-CT" displayName="\${data.labTest1Result}" xsi:type="CD" />
+               </observation>
+             </component>
+           </organizer>
+         </entry>
 
-          <!-- Influenza Test Result with RCTC Trigger Code Template -->
-          <entry typeCode="DRIV">
-            <organizer classCode="BATTERY" moodCode="EVN">
-              <templateId root="2.16.840.1.113883.10.20.22.4.1" />
-              <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.1" />
-              <id root="3f4b84f1-d3f6-4731-8e61-7c63d8f39a70" />
-              <code code="${data.labTest2Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
-                displayName="${data.labTest2Name}" />
-              <statusCode code="completed" />
-              <effectiveTime>
-                <low value="${data.encounterDate}" />
-                <high value="${data.encounterDate}" />
-              </effectiveTime>
-              <component>
-                <observation classCode="OBS" moodCode="EVN">
-                  <templateId root="2.16.840.1.113883.10.20.22.4.2" />
-                  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.2" />
-                  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.2" />
-                  <id root="6c53c5ff-42a9-4f3c-a2c0-d412f019c0de" />
-                  <code code="${data.labTest2Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
-                    displayName="${data.labTest2Name}"
-                    sdtc:valueSet="${getConditionSpecificValueSet(data.labTest2Code, '2.16.840.1.113883.6.1').oid}" 
-                    sdtc:valueSetVersion="${getConditionSpecificValueSet(data.labTest2Code, '2.16.840.1.113883.6.1').version}" />
-                  <statusCode code="completed" />
-                  <effectiveTime value="${data.encounterDate}" />
-                  <value code="260373001" codeSystem="2.16.840.1.113883.6.96"
-                    codeSystemName="SNOMED-CT" displayName="${data.labTest2Result}" xsi:type="CD" />
-                </observation>
-              </component>
-            </organizer>
-          </entry>
-        </section>
-      </component>
+         <!-- Influenza Test Result with RCTC Trigger Code Template -->
+         <entry typeCode="DRIV">
+           <organizer classCode="BATTERY" moodCode="EVN">
+             <templateId root="2.16.840.1.113883.10.20.22.4.1" />
+             <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.1" />
+             <id root="3f4b84f1-d3f6-4731-8e61-7c63d8f39a70" />
+             <code code="\${data.labTest2Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+               displayName="\${data.labTest2Name}" />
+             <statusCode code="completed" />
+             <effectiveTime>
+               <low value="\${data.encounterDate}" />
+               <high value="\${data.encounterDate}" />
+             </effectiveTime>
+             <component>
+               <observation classCode="OBS" moodCode="EVN">
+                 <templateId root="2.16.840.1.113883.10.20.22.4.2" />
+                 <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.2" />
+                 <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.2" />
+                 <id root="6c53c5ff-42a9-4f3c-a2c0-d412f019c0de" />
+                 <code code="\${data.labTest2Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                   displayName="\${data.labTest2Name}"
+                   sdtc:valueSet="\${getConditionSpecificValueSet(data.labTest2Code, '2.16.840.1.113883.6.1').oid}" 
+                   sdtc:valueSetVersion="\${getConditionSpecificValueSet(data.labTest2Code, '2.16.840.1.113883.6.1').version}" />
+                 <statusCode code="completed" />
+                 <effectiveTime value="\${data.encounterDate}" />
+                 <value code="260373001" codeSystem="2.16.840.1.113883.6.96"
+                   codeSystemName="SNOMED-CT" displayName="\${data.labTest2Result}" xsi:type="CD" />
+               </observation>
+             </component>
+           </organizer>
+         </entry>
+       </section>
+     </component>`
+}
 
       <!-- Social History Section -->
       <component>
@@ -4652,6 +5190,39 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
         }
 
         // Initialize the form
+        function migrateLegacyLabsIntoEvidence() {
+            const d = getFormData();
+            const rows = [];
+            
+            if (d.labTest1Code || d.labTest1Name) {
+                rows.push({
+                    testCode: d.labTest1Code,
+                    testName: d.labTest1Name,
+                    valueKind: 'text',
+                    textValue: d.labTest1Result || '',
+                    time: d.labTest1Time || '',
+                    status: d.labTest1Status || 'completed',
+                    interpretation: d.labTest1Interpretation || '',
+                    isRCTC: isRCTCTriggerCode(d.labTest1Code)
+                });
+            }
+            
+            if (d.labTest2Code || d.labTest2Name) {
+                rows.push({
+                    testCode: d.labTest2Code,
+                    testName: d.labTest2Name,
+                    valueKind: 'text',
+                    textValue: d.labTest2Result || '',
+                    time: d.labTest2Time || '',
+                    status: d.labTest2Status || 'completed',
+                    interpretation: d.labTest2Interpretation || '',
+                    isRCTC: isRCTCTriggerCode(d.labTest2Code)
+                });
+            }
+            
+            rows.forEach(r => addLabEvidence(r));
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             console.log('eICR Generator loaded');
             console.log('RCTC Metadata:', rctcData.metadata);
@@ -4665,6 +5236,14 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
             
             // Initialize document relationship fields
             handleRelationshipTypeChange();
+            
+            // NEW: Initialize lab evidence
+            if (!document.querySelector('.lab-evidence-row')) {
+                addLabEvidence();
+            }
+            
+            // Migration from legacy fields
+            migrateLegacyLabsIntoEvidence();
         });
     </script>
 
