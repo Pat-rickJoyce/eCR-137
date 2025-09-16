@@ -273,7 +273,6 @@
             <div class="buttons">
                 <button class="btn btn-success" onclick="saveFormData()">💾 Save Form Data</button>
                 <button class="btn btn-primary" onclick="generateAndDownloadCDA()">📄 Generate CDA</button>
-                <button class="btn btn-success" onclick="generateAndPostCDA()">🚀 Generate & Post CDA to S3</button>
                 <button class="btn btn-primary" onclick="generateAndDownloadRR()">📨 Generate RR</button>
                 <button class="btn btn-info" onclick="downloadZipOfEICRandRR()">📦 Download ZIP (eICR + RR)</button>
 
@@ -3580,10 +3579,40 @@ async function downloadZipOfEICRandRR() {
 
     console.log('Generating ZIP file...');
     const blob = await zip.generateAsync({ type: 'blob' });
+    const filename = `eCR_Package_${base}.zip`;
+    
+    // Try to use File System Access API (Chrome/Edge) to prompt for save location
+    if ('showSaveFilePicker' in window) {
+      try {
+        const fileHandle = await window.showSaveFilePicker({
+          suggestedName: filename,
+          types: [
+            {
+              description: 'ZIP files',
+              accept: { 'application/zip': ['.zip'] }
+            }
+          ]
+        });
+        const writable = await fileHandle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+        console.log('File saved with user-selected location');
+        return;
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.warn('File System Access API failed, falling back to download:', err);
+        } else {
+          console.log('User cancelled save dialog');
+          return;
+        }
+      }
+    }
+    
+    // Fallback: traditional download (goes to Downloads folder)
     const url = URL.createObjectURL(blob);
     const a = Object.assign(document.createElement('a'), { 
       href: url, 
-      download: `eCR_Package_${base}.zip` 
+      download: filename
     });
     document.body.appendChild(a); 
     a.click(); 
@@ -5186,38 +5215,6 @@ if (le.valueKind === 'coded') {
             }
         }
 
-        async function generateAndPostCDA() {
-            if (!validateFormData()) {
-                return;
-            }
-            
-            try {
-                const cdaContent = generateCDA();
-                
-                // Additional CDA-specific validation
-                if (!cdaContent.includes('<ClinicalDocument')) {
-                    throw new Error('Invalid CDA document structure generated');
-                }
-                const s3Url = 'https://eicr-rr-bucket.s3.us-east-2.amazonaws.com/General/test.xml';
-                
-                const response = await fetch(s3Url, {
-                    method: 'PUT',
-                    body: cdaContent,
-                    headers: {
-                        'Content-Type': 'application/xml'
-                    }
-                });
-                
-                if (response.ok) {
-                    alert('CDA document successfully posted to S3!\n\n✅ Schema Compliance:\n- Patient elements in correct CDA schema order\n- Author elements properly sequenced\n- All required telecom and address elements included\n- US Realm compliance maintained\n\nThe uploaded XML is ready for processing by health information systems.');
-                } else {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-            } catch (error) {
-                console.error('Error posting CDA to S3:', error);
-                alert(`Error posting CDA to S3: ${error.message}\n\nNote: This may fail due to CORS policy or authentication requirements.`);
-            }
-        }
 
         function saveFormData() {
             const data = getFormData();

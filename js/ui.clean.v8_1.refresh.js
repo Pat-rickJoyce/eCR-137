@@ -109,8 +109,7 @@ window.addEventListener('load', () => {
   const bCDA = mk('Generate CDA');
   const bRR  = mk('Generate RR','secondary');
   const bZIP = mk('Download ZIP (eICR + RR)','ghost');
-  const bS3  = mk('Generate & Post CDA to S3');
-  dock.append(bCDA,bRR,bZIP,bS3);
+  dock.append(bCDA,bRR,bZIP);
   document.body.appendChild(dock);
 
   const actionsQuery = () => $$('button, a, [role="button"], input[type="button"], input[type="submit"]');
@@ -137,14 +136,12 @@ window.addEventListener('load', () => {
   wire(bCDA, targets.cda);
   wire(bRR,  targets.rr);
   wire(bZIP, targets.zip);
-  wire(bS3,  targets.s3);
 
   // Hide original toolbar buttons by label, but NEVER hide anything inside our dock
   const hideLabels = [
     /generate\s*cda(?!.*post)/i,
     /generate\s*rr/i,
     /download\s*zip.*eicr.*rr/i,
-    /generate\s*&?\s*post.*s3/i,
     /\bload\s*form\s*data\b/i,
     /\bsave\s*form\s*data\b/i
   ];
