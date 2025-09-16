@@ -628,14 +628,18 @@
                 <div class="input-group">
                     <label>Diagnosis 2 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
                     <div class="code-search">
-                        <select id="diagnosis2Code" onchange="handleDiagnosisSelection('diagnosis2Code', this.value, conditionsData)">
-                            <option value="">Select Diagnosis Code...</option>
-                        </select>
+                        <input type="text" id="diagnosis2Code" value="" onblur="validateTriggerCode('diagnosis2Code')">
+                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis2Code')">🔍</button>
                     </div>
+                    <div id="diagnosis2Code_results" class="search-results"></div>
                 </div>
                 <div class="input-group">
                     <label>Diagnosis 2 Name</label>
-                    <input type="text" id="diagnosis2Name" value="Spina bifida (disorder)">
+                    <div class="code-search">
+                        <input type="text" id="diagnosis2Name" value="Spina bifida (disorder)">
+                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis2Name')">🔍</button>
+                    </div>
+                    <div id="diagnosis2Name_results" class="search-results"></div>
                 </div>
                 <div class="input-group">
                     <label>Date of Diagnosis 2 (YYYYMMDD)</label>
@@ -650,14 +654,18 @@
                 <div class="input-group">
                     <label>Diagnosis 3 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
                     <div class="code-search">
-                        <select id="diagnosis3Code" onchange="handleDiagnosisSelection('diagnosis3Code', this.value, conditionsData)">
-                            <option value="">Select Diagnosis Code...</option>
-                        </select>
+                        <input type="text" id="diagnosis3Code" value="" onblur="validateTriggerCode('diagnosis3Code')">
+                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis3Code')">🔍</button>
                     </div>
+                    <div id="diagnosis3Code_results" class="search-results"></div>
                 </div>
                 <div class="input-group">
                     <label>Diagnosis 3 Name</label>
-                    <input type="text" id="diagnosis3Name" value="Neonatal abstinence syndrome (disorder)">
+                    <div class="code-search">
+                        <input type="text" id="diagnosis3Name" value="Neonatal abstinence syndrome (disorder)">
+                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis3Name')">🔍</button>
+                    </div>
+                    <div id="diagnosis3Name_results" class="search-results"></div>
                 </div>
                 <div class="input-group">
                     <label>Date of Diagnosis 3 (YYYYMMDD)</label>
@@ -1893,7 +1901,7 @@ async function loadDiagnosisFromRCTC() {
     const ab = await res.arrayBuffer();
     const wb = XLSX.read(ab, { type: 'array' });
 
-    const SHEET_NAME = 'diagnosis_problem s1';
+    const SHEET_NAME = 'Diagnosis_Problem S1';
     const ws = wb.Sheets[SHEET_NAME];
     if (!ws) throw new Error(`Sheet "${SHEET_NAME}" not found in RCTC release.`);
 
@@ -3579,7 +3587,7 @@ async function downloadZipOfEICRandRR() {
 
     console.log('Generating ZIP file...');
     const blob = await zip.generateAsync({ type: 'blob' });
-    const filename = `eCR_Package_${base}.zip`;
+    const filename = generateDynamicFilename('eCR', 'zip');
     
     // Try to use File System Access API (Chrome/Edge) to prompt for save location
     if ('showSaveFilePicker' in window) {
@@ -3631,30 +3639,165 @@ async function downloadZipOfEICRandRR() {
   }
 }
 
-function generateAndDownloadRR() {
+async function generateAndDownloadRR() {
     try {
-      const rrXml = generateRR();          // build the RR XML
-      const blob  = new Blob([rrXml], {type:'application/xml'});
-      const url   = URL.createObjectURL(blob);
-      const a     = document.createElement('a');
+        const rrXml = generateRR();          // build the RR XML
+        const blob = new Blob([rrXml], { type: 'application/xml' });
+        const filename = generateDynamicFilename('RR', 'xml');
 
-      a.href      = url;
-      a.download  = `RR_${getFormData().patientId}_${new Date().toISOString().split('T')[0]}.xml`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+        // Try to use File System Access API (Chrome/Edge) to prompt for save location
+        if ('showSaveFilePicker' in window) {
+            try {
+                const fileHandle = await window.showSaveFilePicker({
+                    suggestedName: filename,
+                    types: [
+                        {
+                            description: 'XML files',
+                            accept: { 'application/xml': ['.xml'] }
+                        }
+                    ]
+                });
+                const writable = await fileHandle.createWritable();
+                await writable.write(blob);
+                await writable.close();
+                console.log('RR file saved with user-selected location');
+                return;
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    console.warn('File System Access API failed for RR, falling back to download:', err);
+                } else {
+                    console.log('User cancelled RR save dialog');
+                    return;
+                }
+            }
+        }
+
+        // Fallback to traditional download
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     } catch (e) {
-      alert(`RR build failed: ${e.message}`);
-      console.error(e);
+        alert(`RR build failed: ${e.message}`);
+        console.error(e);
     }
-  }
+}
         
         function generateGUID() {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
                 var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
                 return v.toString(16);
             });
+        }
+
+        // Utility function to extract condition names from form data
+        function extractConditionNames() {
+            const data = getFormData();
+            const conditions = [];
+
+            // Extract all diagnosis entries that have both code and name
+            if (data.diagnosis1Code && data.diagnosis1Name) {
+                conditions.push(data.diagnosis1Name);
+            }
+            if (data.diagnosis2Code && data.diagnosis2Name) {
+                conditions.push(data.diagnosis2Name);
+            }
+            if (data.diagnosis3Code && data.diagnosis3Name) {
+                conditions.push(data.diagnosis3Name);
+            }
+
+            return conditions;
+        }
+
+        // Utility function to sanitize and format condition name for filename
+        function sanitizeConditionName(conditionNames) {
+            if (!conditionNames || conditionNames.length === 0) {
+                return 'Unknown';
+            }
+
+            let result;
+            if (conditionNames.length === 1) {
+                result = conditionNames[0];
+            } else {
+                // Multiple conditions - use first + "Multi"
+                result = conditionNames[0] + '_Multi';
+            }
+
+            // Apply common abbreviations
+            const abbreviations = {
+                'COVID-19': 'COVID19',
+                'Coronavirus Disease 2019': 'COVID19',
+                'Severe Acute Respiratory Syndrome Coronavirus 2': 'SARS_CoV2',
+                'Tuberculosis': 'TB',
+                'Human Immunodeficiency Virus': 'HIV',
+                'Acquired Immunodeficiency Syndrome': 'AIDS',
+                'Hepatitis A': 'HepA',
+                'Hepatitis B': 'HepB',
+                'Hepatitis C': 'HepC',
+                'Influenza': 'Flu',
+                'Pertussis': 'Whooping_Cough',
+                'Salmonella': 'Salmonella',
+                'Escherichia coli': 'E_coli',
+                'Streptococcus': 'Strep',
+                'Meningitis': 'Meningitis',
+                'Down syndrome': 'Down_Syndrome',
+                'Spina bifida': 'Spina_Bifida',
+                'Tetralogy of Fallot': 'TOF'
+            };
+
+            // Check for exact matches first
+            for (const [full, abbrev] of Object.entries(abbreviations)) {
+                if (result.toLowerCase().includes(full.toLowerCase())) {
+                    result = result.replace(new RegExp(full, 'gi'), abbrev);
+                    break;
+                }
+            }
+
+            // Remove disorder/disease/syndrome suffixes
+            result = result.replace(/\s*\(disorder\)$/i, '')
+                          .replace(/\s*\(disease\)$/i, '')
+                          .replace(/\s*syndrome$/i, '')
+                          .replace(/\s*disease$/i, '');
+
+            // Sanitize for filename: remove invalid characters and spaces
+            result = result.replace(/[\/\\:*?"<>|]/g, '')  // Remove invalid filename chars
+                          .replace(/\s+/g, '_')             // Replace spaces with underscores
+                          .replace(/[^\w\-_]/g, '')         // Keep only alphanumeric, dash, underscore
+                          .replace(/_+/g, '_')              // Collapse multiple underscores
+                          .replace(/^_|_$/g, '');           // Trim leading/trailing underscores
+
+            // Limit length to ~20 characters
+            if (result.length > 20) {
+                result = result.substring(0, 20).replace(/_$/, '');
+            }
+
+            return result || 'Unknown';
+        }
+
+        // Utility function to generate timestamp in YYYYMMDD_HHMMSS format
+        function generateTimestamp() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            return `${year}${month}${day}_${hours}${minutes}${seconds}`;
+        }
+
+        // Utility function to generate dynamic filename
+        function generateDynamicFilename(fileType, extension) {
+            const conditionNames = extractConditionNames();
+            const conditionName = sanitizeConditionName(conditionNames);
+            const timestamp = generateTimestamp();
+
+            return `${fileType}_${conditionName}_${timestamp}.${extension}`;
         }
 
         /* ---------- Vital-signs & anthropometrics ---------- */
@@ -5184,25 +5327,55 @@ if (le.valueKind === 'coded') {
             return buildEICRXml();
         }
 
-        function generateAndDownloadCDA() {
+        async function generateAndDownloadCDA() {
             if (!validateFormData()) {
                 return;
             }
-            
+
             try {
                 const cdaContent = generateCDA();
                 const data = getFormData();
-                
+
                 // Additional CDA-specific validation
                 if (!cdaContent.includes('<ClinicalDocument')) {
                     throw new Error('Invalid CDA document structure generated');
                 }
-                
+
                 const blob = new Blob([cdaContent], { type: 'application/xml' });
+                const filename = generateDynamicFilename('eICR', 'xml');
+
+                // Try to use File System Access API (Chrome/Edge) to prompt for save location
+                if ('showSaveFilePicker' in window) {
+                    try {
+                        const fileHandle = await window.showSaveFilePicker({
+                            suggestedName: filename,
+                            types: [
+                                {
+                                    description: 'XML files',
+                                    accept: { 'application/xml': ['.xml'] }
+                                }
+                            ]
+                        });
+                        const writable = await fileHandle.createWritable();
+                        await writable.write(blob);
+                        await writable.close();
+                        console.log('CDA file saved with user-selected location');
+                        return;
+                    } catch (err) {
+                        if (err.name !== 'AbortError') {
+                            console.warn('File System Access API failed for CDA, falling back to download:', err);
+                        } else {
+                            console.log('User cancelled CDA save dialog');
+                            return;
+                        }
+                    }
+                }
+
+                // Fallback to traditional download
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `RCTC_eICR_${data.patientId}_${new Date().toISOString().split('T')[0]}.xml`;
+                a.download = filename;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
