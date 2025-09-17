@@ -929,6 +929,42 @@
 
   <div class="form-grid">
 
+   <!-- Administering Provider (single provider for ALL administered meds) -->
+<div class="input-group">
+  <label>Administering Provider NPI</label>
+  <input type="text" id="administeringProviderNPI" inputmode="numeric" pattern="\d{10}" placeholder="10-digit NPI">
+</div>
+
+<div class="input-group">
+  <label>First</label>
+  <input type="text" id="administeringProviderGiven">
+</div>
+
+<div class="input-group">
+  <label>Last</label>
+  <input type="text" id="administeringProviderFamily">
+</div>
+
+<div class="input-group">
+  <label>Phone (opt)</label>
+  <input type="tel" id="administeringProviderPhone" placeholder="555-555-5555">
+</div>
+
+<div class="input-group">
+  <label>Organization (opt)</label>
+  <input type="text" id="administeringProviderOrgName">
+</div>
+
+<div class="input-group">
+  <label>Org ID (extension) (opt)</label>
+  <input type="text" id="administeringProviderOrgId" placeholder="Facility ID/Code">
+</div>
+
+<div class="input-group">
+  <label>Org ID Root (OID) (opt)</label>
+  <input type="text" id="administeringProviderOrgIdRoot" value="2.16.840.1.113883.19">
+</div>
+
     <!-- ───────────── Administered Medication 1 ───────────── -->
     <div class="input-group">
       <label>Administered Medication 1 Code</label>
@@ -2541,6 +2577,25 @@ async function searchRCTCCodes(fieldId) {
 'adminMed2Code', 'adminMed2Name', 'adminMed2Id', 'adminMed2Status', 'adminMed2Time',
 'adminMed2Route',
 'adminMed2DoseValue', 'adminMed2DoseUnit', 'adminMed2VolValue', 'adminMed2VolUnit', 'adminMed2Negated',
+
+// Medications
+'adminMed1Code', 'adminMed1Name', 'adminMed1Id', 'adminMed1Status', 'adminMed1Time',
+'adminMed1Route',
+'adminMed1DoseValue', 'adminMed1DoseUnit', 'adminMed1VolValue', 'adminMed1VolUnit', 'adminMed1Negated',
+
+'adminMed2Code', 'adminMed2Name', 'adminMed2Id', 'adminMed2Status', 'adminMed2Time',
+'adminMed2Route',
+'adminMed2DoseValue', 'adminMed2DoseUnit', 'adminMed2VolValue', 'adminMed2VolUnit', 'adminMed2Negated',
+
+// Administering Provider (applies to ALL administered meds)
+'administeringProviderNPI',
+'administeringProviderGiven',
+'administeringProviderMiddle',
+'administeringProviderFamily',
+'administeringProviderPhone',
+'administeringProviderOrgName',
+'administeringProviderOrgId',
+'administeringProviderOrgIdRoot',
 
 // Planned medication stays as-is
 'plannedMed1Code', 'plannedMed1Name', 'plannedMed1Instructions',
@@ -4865,13 +4920,135 @@ if (le.valueKind === 'coded') {
 
       <!-- Medications Administered Section -->
       <component>
-        <section nullFlavor="NI">
+        <section>
           <templateId root="2.16.840.1.113883.10.20.22.2.38" />
           <templateId extension="2014-06-09" root="2.16.840.1.113883.10.20.22.2.38" />
           <code code="29549-3" codeSystem="2.16.840.1.113883.6.1"
             codeSystemName="LOINC" displayName="Medications Administered" />
           <title>Medications Administered</title>
-          <text>No medications administered</text>
+          <text>
+      <table border="1" width="100%">
+        <thead>
+          <tr>
+            <th>Medication</th>
+            <th>Dose</th>
+            <th>Route</th>
+            <th>Administration Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <content ID="MedAdministered_1">${data.adminMed1Name}</content>
+            </td>
+            <td>${data.adminMed1DoseValue} ${data.adminMed1DoseUnit}${data.adminMed1VolValue ? ` (${data.adminMed1VolValue} ${data.adminMed1VolUnit})` : ''}</td>
+            <td>${data.adminMed1Route}</td>
+            <td>${data.adminMed1Time}</td>
+            <td>${data.adminMed1Negated ? 'Not Given' : data.adminMed1Status}</td>
+          </tr>
+          <tr>
+            <td>
+              <content ID="MedAdministered_2">${data.adminMed2Name}</content>
+            </td>
+            <td>${data.adminMed2DoseValue} ${data.adminMed2DoseUnit}${data.adminMed2VolValue ? ` (${data.adminMed2VolValue} ${data.adminMed2VolUnit})` : ''}</td>
+            <td>${data.adminMed2Route}</td>
+            <td>${data.adminMed2Time}</td>
+            <td>${data.adminMed2Negated ? 'Not Given' : data.adminMed2Status}</td>
+          </tr>
+        </tbody>
+      </table>
+    </text>
+    
+    <!-- First Medication Entry -->
+    <entry typeCode="DRIV">
+      <substanceAdministration classCode="SBADM" moodCode="EVN" ${data.adminMed1Negated ? 'negationInd="true"' : ''}>
+        <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09" />
+        <id extension="${data.adminMed1Id}" root="2.16.840.1.113883.19.5.99999.1" />
+        <statusCode code="${data.adminMed1Status}" />
+        <effectiveTime value="${data.adminMed1Time}" />
+        <routeCode code="${data.adminMed1Route}" codeSystem="2.16.840.1.113883.5.112" />
+        <doseQuantity value="${data.adminMed1DoseValue}" unit="${data.adminMed1DoseUnit}" />
+        ${data.adminMed1VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed1VolValue}" unit="${data.adminMed1VolUnit}" /></maxDoseQuantity>` : ''}
+        <consumable>
+          <manufacturedProduct classCode="MANU">
+            <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
+            <manufacturedMaterial>
+              <code code="${data.adminMed1Code}" codeSystem="2.16.840.1.113883.6.88">
+                <originalText>
+                  <reference value="#MedAdministered_1" />
+                </originalText>
+              </code>
+              <name>${data.adminMed1Name}</name>
+            </manufacturedMaterial>
+          </manufacturedProduct>
+        </consumable>
+         ${ (data.administeringProviderNPI || data.administeringProviderGiven || data.administeringProviderFamily) ? `
+    <performer typeCode="PRF">
+      <assignedEntity>
+        ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}"/>` : ''}
+        ${data.administeringProviderPhone ? `<telecom use="WP" value="tel:${data.administeringProviderPhone}"/>` : ''}
+        <assignedPerson>
+          <name>
+            ${data.administeringProviderGiven ? `<given>${data.administeringProviderGiven}</given>` : ''}
+            ${data.administeringProviderMiddle ? `<given>${data.administeringProviderMiddle}</given>` : ''}
+            ${data.administeringProviderFamily ? `<family>${data.administeringProviderFamily}</family>` : ''}
+          </name>
+        </assignedPerson>
+        ${data.administeringProviderOrgName ? `
+        <representedOrganization>
+          ${data.administeringProviderOrgId ? `<id root="${data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19'}" extension="${data.administeringProviderOrgId}"/>` : ''}
+          <name>${data.administeringProviderOrgName}</name>
+        </representedOrganization>` : ''}
+      </assignedEntity>
+    </performer>` : '' }
+      </substanceAdministration>
+    </entry>
+    
+    <!-- Second Medication Entry -->
+    <entry typeCode="DRIV">
+      <substanceAdministration classCode="SBADM" moodCode="EVN" ${data.adminMed2Negated ? 'negationInd="true"' : ''}>
+        <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09" />
+        <id extension="${data.adminMed2Id}" root="2.16.840.1.113883.19.5.99999.1" />
+        <statusCode code="${data.adminMed2Status}" />
+        <effectiveTime value="${data.adminMed2Time}" />
+        <routeCode code="${data.adminMed2Route}" codeSystem="2.16.840.1.113883.5.112" />
+        <doseQuantity value="${data.adminMed2DoseValue}" unit="${data.adminMed2DoseUnit}" />
+        ${data.adminMed2VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed2VolValue}" unit="${data.adminMed2VolUnit}" /></maxDoseQuantity>` : ''}
+        <consumable>
+          <manufacturedProduct classCode="MANU">
+            <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
+            <manufacturedMaterial>
+              <code code="${data.adminMed2Code}" codeSystem="2.16.840.1.113883.6.88">
+                <originalText>
+                  <reference value="#MedAdministered_2" />
+                </originalText>
+              </code>
+              <name>${data.adminMed2Name}</name>
+            </manufacturedMaterial>
+          </manufacturedProduct>
+        </consumable>
+         ${ (data.administeringProviderNPI || data.administeringProviderGiven || data.administeringProviderFamily) ? `
+    <performer typeCode="PRF">
+      <assignedEntity>
+        ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}"/>` : ''}
+        ${data.administeringProviderPhone ? `<telecom use="WP" value="tel:${data.administeringProviderPhone}"/>` : ''}
+        <assignedPerson>
+          <name>
+            ${data.administeringProviderGiven ? `<given>${data.administeringProviderGiven}</given>` : ''}
+            ${data.administeringProviderMiddle ? `<given>${data.administeringProviderMiddle}</given>` : ''}
+            ${data.administeringProviderFamily ? `<family>${data.administeringProviderFamily}</family>` : ''}
+          </name>
+        </assignedPerson>
+        ${data.administeringProviderOrgName ? `
+        <representedOrganization>
+          ${data.administeringProviderOrgId ? `<id root="${data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19'}" extension="${data.administeringProviderOrgId}"/>` : ''}
+          <name>${data.administeringProviderOrgName}</name>
+        </representedOrganization>` : ''}
+      </assignedEntity>
+    </performer>` : '' }
+      </substanceAdministration>
+    </entry>
         </section>
       </component>
 
