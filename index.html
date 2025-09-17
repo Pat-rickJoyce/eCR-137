@@ -421,6 +421,134 @@
                     <label>Date of Death (YYYYMMDD)</label>
                     <input type="text" id="patientDeathDate" placeholder="Leave blank if alive">
                 </div>
+                <div class="input-group">
+                    <label>Disability Status</label>
+                    <select id="disabilityStatus">
+                        <option value="21134002" selected>Disabled</option>
+                        <option value="405159006">Not disabled</option>
+                        <option value="261665006">Unknown</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Disability Type</label>
+                    <input type="text" id="disabilityType" value="Spina bifida - congenital neural tube defect">
+                </div>
+                <div class="input-group">
+                    <label>Tribal Affiliation</label>
+                    <input type="text" id="tribalAffiliation" value="Not applicable">
+                </div>
+                <div class="input-group">
+                    <label>Tribal Enrollment</label>
+                    <select id="tribalEnrollment">
+                        <option value="true">Yes</option>
+                        <option value="false" selected>No</option>
+                        <option value="UNK">Unknown</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Country of Nationality</label>
+                    <input type="text" id="countryOfNationality" value="United States">
+                </div>
+                <div class="input-group">
+                    <label>Country of Nationality Code</label>
+                    <input type="text" id="countryOfNationalityCode" value="US">
+                </div>
+                <div class="input-group">
+                    <label>Country of Residence</label>
+                    <input type="text" id="countryOfResidence" value="United States">
+                </div>
+                <div class="input-group">
+                    <label>Country of Residence Code</label>
+                    <input type="text" id="countryOfResidenceCode" value="US">
+                </div>
+                <div class="input-group">
+                    <label>Immigration Status</label>
+                    <select id="immigrationStatus">
+                        <option value="160542002" selected>US Citizen</option>
+                        <option value="160540005">Permanent Resident</option>
+                        <option value="160541006">Temporary Resident</option>
+                        <option value="160543007">Undocumented</option>
+                        <option value="261665006">Unknown</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Preferred Language</label>
+                    <input type="text" id="preferredLanguage" value="English">
+                </div>
+                <div class="input-group">
+                    <label>Interpreter Needed</label>
+                    <select id="interpreterNeeded">
+                        <option value="Y">Yes</option>
+                        <option value="N" selected>No</option>
+                        <option value="UNK">Unknown</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Insurance Status</label>
+                    <select id="insuranceStatus">
+                        <option value="48758009" selected>Insured</option>
+                        <option value="182890002">Uninsured</option>
+                        <option value="182891003">Self-pay</option>
+                        <option value="261665006">Unknown</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Occupation Information</h2>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Current Occupation</label>
+                    <input type="text" id="currentOccupation" value="Marketing Manager">
+                </div>
+                <div class="input-group">
+                    <label>Usual Occupation</label>
+                    <input type="text" id="usualOccupation" value="Marketing Manager">
+                </div>
+                <div class="input-group">
+                    <label>Current Industry</label>
+                    <input type="text" id="currentIndustry" value="Healthcare Services">
+                </div>
+                <div class="input-group">
+                    <label>Usual Industry</label>
+                    <input type="text" id="usualIndustry" value="Healthcare Services">
+                </div>
+                <div class="input-group">
+                    <label>Current Job Title</label>
+                    <input type="text" id="currentJobTitle" value="Senior Marketing Manager">
+                </div>
+                <div class="input-group">
+                    <label>Current Employer Name</label>
+                    <input type="text" id="currentEmployerName" value="Springfield Medical Center">
+                </div>
+                <div class="input-group">
+                    <label>Current Employer Phone</label>
+                    <input type="text" id="currentEmployerPhone" value="+1-217-555-0155">
+                </div>
+                <div class="input-group">
+                    <label>Current Employer Address</label>
+                    <input type="text" id="currentEmployerAddress" value="800 E Capitol Ave, Springfield, IL 62701">
+                </div>
+                <div class="input-group">
+                    <label>Occupational Exposure</label>
+                    <select id="occupationalExposure">
+                        <option value="Y">Yes</option>
+                        <option value="N" selected>No</option>
+                        <option value="UNK">Unknown</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Employment Status</label>
+                    <select id="employmentStatus">
+                        <option value="1" selected>Employed</option>
+                        <option value="2">Unemployed</option>
+                        <option value="3">Not in labor force</option>
+                        <option value="4">Retired</option>
+                        <option value="5">Student</option>
+                        <option value="UNK">Unknown</option>
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -1355,63 +1483,6 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
         </div>
 
         <div class="section">
-            <h2 class="section-title">Occupation Information</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Current Occupation</label>
-                    <input type="text" id="currentOccupation" value="Marketing Manager">
-                </div>
-                <div class="input-group">
-                    <label>Usual Occupation</label>
-                    <input type="text" id="usualOccupation" value="Marketing Manager">
-                </div>
-                <div class="input-group">
-                    <label>Current Industry</label>
-                    <input type="text" id="currentIndustry" value="Healthcare Services">
-                </div>
-                <div class="input-group">
-                    <label>Usual Industry</label>
-                    <input type="text" id="usualIndustry" value="Healthcare Services">
-                </div>
-                <div class="input-group">
-                    <label>Current Job Title</label>
-                    <input type="text" id="currentJobTitle" value="Senior Marketing Manager">
-                </div>
-                <div class="input-group">
-                    <label>Current Employer Name</label>
-                    <input type="text" id="currentEmployerName" value="Springfield Medical Center">
-                </div>
-                <div class="input-group">
-                    <label>Current Employer Phone</label>
-                    <input type="text" id="currentEmployerPhone" value="+1-217-555-0155">
-                </div>
-                <div class="input-group">
-                    <label>Current Employer Address</label>
-                    <input type="text" id="currentEmployerAddress" value="800 E Capitol Ave, Springfield, IL 62701">
-                </div>
-                <div class="input-group">
-                    <label>Occupational Exposure</label>
-                    <select id="occupationalExposure">
-                        <option value="Y">Yes</option>
-                        <option value="N" selected>No</option>
-                        <option value="UNK">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Employment Status</label>
-                    <select id="employmentStatus">
-                        <option value="1" selected>Employed</option>
-                        <option value="2">Unemployed</option>
-                        <option value="3">Not in labor force</option>
-                        <option value="4">Retired</option>
-                        <option value="5">Student</option>
-                        <option value="UNK">Unknown</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="section">
             <h2 class="section-title">Specimen Information</h2>
             <div class="form-grid">
                 <div class="input-group">
@@ -1628,82 +1699,6 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
             </div>
         </div>
 
-        <div class="section">
-            <h2 class="section-title">Special Populations and Demographics</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Disability Status</label>
-                    <select id="disabilityStatus">
-                        <option value="21134002" selected>Disabled</option>
-                        <option value="405159006">Not disabled</option>
-                        <option value="261665006">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Disability Type</label>
-                    <input type="text" id="disabilityType" value="Spina bifida - congenital neural tube defect">
-                </div>
-                <div class="input-group">
-                    <label>Tribal Affiliation</label>
-                    <input type="text" id="tribalAffiliation" value="Not applicable">
-                </div>
-                <div class="input-group">
-                    <label>Tribal Enrollment</label>
-                    <select id="tribalEnrollment">
-                        <option value="true">Yes</option>
-                        <option value="false" selected>No</option>
-                        <option value="UNK">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Country of Nationality</label>
-                    <input type="text" id="countryOfNationality" value="United States">
-                </div>
-                <div class="input-group">
-                    <label>Country of Nationality Code</label>
-                    <input type="text" id="countryOfNationalityCode" value="US">
-                </div>
-                <div class="input-group">
-                    <label>Country of Residence</label>
-                    <input type="text" id="countryOfResidence" value="United States">
-                </div>
-                <div class="input-group">
-                    <label>Country of Residence Code</label>
-                    <input type="text" id="countryOfResidenceCode" value="US">
-                </div>
-                <div class="input-group">
-                    <label>Immigration Status</label>
-                    <select id="immigrationStatus">
-                        <option value="160542002" selected>US Citizen</option>
-                        <option value="160540005">Permanent Resident</option>
-                        <option value="160541006">Temporary Resident</option>
-                        <option value="160543007">Undocumented</option>
-                        <option value="261665006">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Preferred Language</label>
-                    <input type="text" id="preferredLanguage" value="English">
-                </div>
-                <div class="input-group">
-                    <label>Interpreter Needed</label>
-                    <select id="interpreterNeeded">
-                        <option value="Y">Yes</option>
-                        <option value="N" selected>No</option>
-                        <option value="UNK">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Insurance Status</label>
-                    <select id="insuranceStatus">
-                        <option value="48758009" selected>Insured</option>
-                        <option value="182890002">Uninsured</option>
-                        <option value="182891003">Self-pay</option>
-                        <option value="261665006">Unknown</option>
-                    </select>
-                </div>
-            </div>
-        </div>
 
         <div class="section">
             <h2 class="section-title">Emergency and Public Health</h2>
