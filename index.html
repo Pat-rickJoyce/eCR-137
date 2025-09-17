@@ -284,7 +284,7 @@
             <h2 class="section-title">Patient Demographics</h2>
             <div class="form-grid">
                 <div class="input-group">
-                    <label>Patient ID</label>
+                    <label>Patient ID <span class="help-tooltip" title="Unique identifier that stays the same across all versions of the same logical document. Documents with the same Set ID represent different versions of the same document.">ℹ️</span></label>
                     <input type="text" id="patientId" value="MRN-00234567">
                 </div>
                 <div class="input-group">
@@ -4915,14 +4915,24 @@ if (le.valueKind === 'coded') {
                   </code>
                   <statusCode code="completed" />
                   <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
-                  <value xsi:type="CD" code="${data.diagnosis1Code}" codeSystem="2.16.840.1.113883.6.96"
-                    codeSystemName="SNOMED-CT" displayName="${data.diagnosis1Name}"
-                    sdtc:valueSet="${getConditionSpecificValueSet(data.diagnosis1Code).oid}" 
-                    sdtc:valueSetVersion="${getConditionSpecificValueSet(data.diagnosis1Code).version}" />
+                   ${data.diagnosis1Code
+  ? `<value xsi:type="CD"
+            code="${data.diagnosis1Code}"
+            codeSystem="2.16.840.1.113883.6.96"
+            codeSystemName="SNOMED CT"
+            displayName="${data.diagnosis1Name}"
+            sdtc:valueSet="${getConditionSpecificValueSet(data.diagnosis1Code).oid}"
+            sdtc:valueSetVersion="${getConditionSpecificValueSet(data.diagnosis1Code).version}" />`
+  : `<value xsi:type="CD"
+            nullFlavor="UNK"
+            displayName="${data.diagnosis1Name}" 
+             sdtc:valueSet="2.16.840.1.113762.1.4.1146.2260" 
+       sdtc:valueSetVersion="2.0.1" />`
+}
                 </observation>
               </entryRelationship>
 
-              <!-- Influenza Diagnosis with RCTC Trigger Code Template -->
+              <!-- Diagnosis with RCTC Trigger Code Template -->
               <entryRelationship typeCode="SUBJ">
                 <observation classCode="OBS" moodCode="EVN" negationInd="false">
                   <templateId root="2.16.840.1.113883.10.20.22.4.4" />
@@ -4936,14 +4946,24 @@ if (le.valueKind === 'coded') {
                   </code>
                   <statusCode code="completed" />
                   <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
-                  <value xsi:type="CD" code="${data.diagnosis2Code}" codeSystem="2.16.840.1.113883.6.96"
-                    codeSystemName="SNOMED-CT" displayName="${data.diagnosis2Name}"
-                    sdtc:valueSet="${getConditionSpecificValueSet(data.diagnosis2Code).oid}" 
-                    sdtc:valueSetVersion="${getConditionSpecificValueSet(data.diagnosis2Code).version}" />
+                 ${data.diagnosis2Code
+  ? `<value xsi:type="CD"
+            code="${data.diagnosis2Code}"
+            codeSystem="2.16.840.1.113883.6.96"
+            codeSystemName="SNOMED CT"
+            displayName="${data.diagnosis2Name}"
+            sdtc:valueSet="${getConditionSpecificValueSet(data.diagnosis2Code).oid}"
+            sdtc:valueSetVersion="${getConditionSpecificValueSet(data.diagnosis2Code).version}" />`
+  : `<value xsi:type="CD"
+            nullFlavor="UNK"
+            displayName="${data.diagnosis2Name}" 
+             sdtc:valueSet="2.16.840.1.113762.1.4.1146.2260" 
+       sdtc:valueSetVersion="2.0.1" />`
+}
                 </observation>
               </entryRelationship>
 
-              <!-- Zika Diagnosis with RCTC Trigger Code Template -->
+              <!-- Diagnosis with RCTC Trigger Code Template -->
               <entryRelationship typeCode="SUBJ">
                 <observation classCode="OBS" moodCode="EVN" negationInd="false">
                   <templateId root="2.16.840.1.113883.10.20.22.4.4" />
@@ -4991,9 +5011,9 @@ if (le.valueKind === 'coded') {
                <tr><th>Test</th><th>Result</th><th>Date</th><th>RCTC Trigger</th></tr>
              </thead>
              <tbody>
-               <tr><td>\${data.labTest1Name}</td><td>\${data.labTest1Result}</td><td>\${data.encounterDate}</td><td>Yes</td></tr>
-               <tr><td>\${data.labTest2Name}</td><td>\${data.labTest2Result}</td><td>\${data.encounterDate}</td><td>Yes</td></tr>
-             </tbody>
+               <tr><td>${data.labTest1Name || ''}</td><td>${data.labTest1Result || ''}</td><td>${data.encounterDate || ''}</td><td>Yes</td></tr>
+               <tr><td>${data.labTest2Name || ''}</td><td>${data.labTest2Result || ''}</td><td>${data.encounterDate || ''}</td><td>Yes</td></tr>
+             </tbody>  
            </table>
          </text>
          
@@ -5003,12 +5023,12 @@ if (le.valueKind === 'coded') {
              <templateId root="2.16.840.1.113883.10.20.22.4.1" />
              <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.1" />
              <id root="2047cca3-559f-45da-8775-406538fa4815" />
-             <code code="\${data.labTest1Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
-               displayName="\${data.labTest1Name}" />
+             <code code="${data.labTest1Code || ''}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+               displayName="${data.labTest1Name || ''}" />
              <statusCode code="completed" />
              <effectiveTime>
-               <low value="\${data.encounterDate}" />
-               <high value="\${data.encounterDate}" />
+               <low value="${data.encounterDate || ''}" />
+               <high value="${data.encounterDate || ''}" />
              </effectiveTime>
              <component>
                <observation classCode="OBS" moodCode="EVN">
@@ -5016,14 +5036,14 @@ if (le.valueKind === 'coded') {
                  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.2" />
                  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.2" />
                  <id root="9890e2c3-019a-4168-8403-a0a069994440" />
-                 <code code="\${data.labTest1Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
-                   displayName="\${data.labTest1Name}"
-                   sdtc:valueSet="\${getConditionSpecificValueSet(data.labTest1Code, '2.16.840.1.113883.6.1').oid}" 
-                   sdtc:valueSetVersion="\${getConditionSpecificValueSet(data.labTest1Code, '2.16.840.1.113883.6.1').version}" />
+                 <code code="${data.labTest1Code || ''}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                   displayName="${data.labTest1Name || ''}"
+                   sdtc:valueSet="${getConditionSpecificValueSet(data.labTest1Code, '2.16.840.1.113883.6.1').oid}"
+                   sdtc:valueSetVersion="${getConditionSpecificValueSet(data.labTest1Code, '2.16.840.1.113883.6.1').version}" />
                  <statusCode code="completed" />
-                 <effectiveTime value="\${data.encounterDate}" />
+                 <effectiveTime value="${data.encounterDate || ''}" />
                  <value code="260373001" codeSystem="2.16.840.1.113883.6.96"
-                   codeSystemName="SNOMED-CT" displayName="\${data.labTest1Result}" xsi:type="CD" />
+                   codeSystemName="SNOMED-CT" displayName="${data.labTest1Result || ''}" xsi:type="CD" />
                </observation>
              </component>
            </organizer>
@@ -5035,12 +5055,12 @@ if (le.valueKind === 'coded') {
              <templateId root="2.16.840.1.113883.10.20.22.4.1" />
              <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.1" />
              <id root="3f4b84f1-d3f6-4731-8e61-7c63d8f39a70" />
-             <code code="\${data.labTest2Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
-               displayName="\${data.labTest2Name}" />
+             <code code="${data.labTest2Code || ''}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+               displayName="${data.labTest2Name || ''}" />
              <statusCode code="completed" />
              <effectiveTime>
-               <low value="\${data.encounterDate}" />
-               <high value="\${data.encounterDate}" />
+               <low value="${data.encounterDate || ''}" />
+               <high value="${data.encounterDate || ''}" />
              </effectiveTime>
              <component>
                <observation classCode="OBS" moodCode="EVN">
@@ -5048,14 +5068,14 @@ if (le.valueKind === 'coded') {
                  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.2" />
                  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.2" />
                  <id root="6c53c5ff-42a9-4f3c-a2c0-d412f019c0de" />
-                 <code code="\${data.labTest2Code}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
-                   displayName="\${data.labTest2Name}"
-                   sdtc:valueSet="\${getConditionSpecificValueSet(data.labTest2Code, '2.16.840.1.113883.6.1').oid}" 
-                   sdtc:valueSetVersion="\${getConditionSpecificValueSet(data.labTest2Code, '2.16.840.1.113883.6.1').version}" />
+                 <code code="${data.labTest2Code || ''}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                   displayName="${data.labTest2Name || ''}"
+                   sdtc:valueSet="${getConditionSpecificValueSet(data.labTest2Code, '2.16.840.1.113883.6.1').oid}"
+                   sdtc:valueSetVersion="${getConditionSpecificValueSet(data.labTest2Code, '2.16.840.1.113883.6.1').version}" />
                  <statusCode code="completed" />
-                 <effectiveTime value="\${data.encounterDate}" />
+                 <effectiveTime value="${data.encounterDate || ''}" />
                  <value code="260373001" codeSystem="2.16.840.1.113883.6.96"
-                   codeSystemName="SNOMED-CT" displayName="\${data.labTest2Result}" xsi:type="CD" />
+                   codeSystemName="SNOMED-CT" displayName="${data.labTest2Result || ''}" xsi:type="CD" />
                </observation>
              </component>
            </organizer>
