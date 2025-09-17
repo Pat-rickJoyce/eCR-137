@@ -950,7 +950,51 @@
             <div class="lab-evidence-controls">
                 <button class="btn btn-primary" type="button" onclick="addLabEvidence()">➕ Add Lab Order and Result</button>
             </div>
-            
+
+            <!-- ── Results Providers (applies to *all* result observations) ── -->
+            <div class="subsection">
+                <h4>Performing Laboratory & Ordering Physician</h4>
+                <div class="form-grid">
+                    <!-- Performing lab (organization) -->
+                    <div class="input-group">
+                        <label>Performing Lab • CLIA (opt)</label>
+                        <input type="text" id="resultLabCLIA" value="12D3456789">
+                    </div>
+                    <div class="input-group">
+                        <label>Performing Lab • Name (opt)</label>
+                        <input type="text" id="resultLabName" value="Good Health Lab">
+                    </div>
+
+                    <!-- Resulting performer (person) -->
+                    <div class="input-group">
+                        <label>Resulting Performer • NPI (opt)</label>
+                        <input type="text" id="resultPerformerNPI" inputmode="numeric" pattern="\d{10}">
+                    </div>
+                    <div class="input-group">
+                        <label>Resulting Performer • First (opt)</label>
+                        <input type="text" id="resultPerformerGiven">
+                    </div>
+                    <div class="input-group">
+                        <label>Resulting Performer • Last (opt)</label>
+                        <input type="text" id="resultPerformerFamily">
+                    </div>
+
+                    <!-- Ordering provider (author) -->
+                    <div class="input-group">
+                        <label>Ordering Provider • NPI (opt)</label>
+                        <input type="text" id="resultOrderingNPI" inputmode="numeric" pattern="\d{10}">
+                    </div>
+                    <div class="input-group">
+                        <label>Ordering Provider • First (opt)</label>
+                        <input type="text" id="resultOrderingGiven">
+                    </div>
+                    <div class="input-group">
+                        <label>Ordering Provider • Last (opt)</label>
+                        <input type="text" id="resultOrderingFamily">
+                    </div>
+                </div>
+            </div>
+
             <div id="labEvidenceList"></div>
             
             <template id="labEvidenceTemplate">
@@ -4525,119 +4569,193 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
             }
         }
 
-        function buildResultsSectionXML(labEvidence, rctcVersion = '2016-12-01') {
-            if (!labEvidence || labEvidence.length === 0) return '';
-            
-            const esc = s => xmlEscape(s || '');
-            
-            const obsXml = labEvidence.map(le => {
-                const id = generateGUID();
-                const vsOID = '2.16.840.1.114222.4.11.7508'; // Default COVID-19 valueset
-                
-                const codeAttrs = [
-                    le.testCode ? `code="${esc(le.testCode)}"` : 'nullFlavor="UNK"',
-                    `codeSystem="2.16.840.1.113883.6.1"`,
-                    `codeSystemName="LOINC"`,
-                    le.testName ? `displayName="${esc(le.testName)}"` : null,
-                    le.isRCTC && le.testCode ? `sdtc:valueSet="${vsOID}" sdtc:valueSetVersion="${esc(rctcVersion)}"` : null
-                ].filter(Boolean).join(' ');
+        function getGlobalResultsProviders() {
+            const v = id => (document.getElementById(id)?.value || '').trim();
+            return {
+                // Performing lab (organization)
+                labCLIA:  v('resultLabCLIA'),
+                labName:  v('resultLabName'),
 
-                // vsOID and rctcVersion should already be computed for this observation
-const vsPair = (le.isRCTC && vsOID && rctcVersion)
-  ? ` sdtc:valueSet="${esc(vsOID)}" sdtc:valueSetVersion="${esc(rctcVersion)}"`
-  : '';
+                // Resulting performer (person)
+                perfNPI:   v('resultPerformerNPI'),
+                perfGiven: v('resultPerformerGiven'),
+                perfFamily:v('resultPerformerFamily'),
 
-let valueXml = `<value xsi:type="CD" nullFlavor="UNK"/>`; // safe default
+                // Ordering provider (author)
+                ordNPI:    v('resultOrderingNPI'),
+                ordGiven:  v('resultOrderingGiven'),
+                ordFamily: v('resultOrderingFamily'),
+                ordTime:   v('resultAuthorTime')
+            };
+        }
 
-if (le.valueKind === 'coded') {
-  valueXml = le.valueCode
-    ? `<value xsi:type="CD"
-         code="${esc(le.valueCode)}"
-         ${le.valueName ? `displayName="${esc(le.valueName)}"` : ''}
-         codeSystem="2.16.840.1.113883.6.96"
-         codeSystemName="SNOMED CT"${vsPair}/>`
-    : `<value xsi:type="CD" nullFlavor="UNK"/>`; // avoid code=""
-} else if (le.valueKind === 'quantity' && le.qtyValue) {
-  // Numeric result
-  valueXml = `<value xsi:type="PQ" value="${esc(le.qtyValue)}"${le.qtyUnit ? ` unit="${esc(le.qtyUnit)}"` : ''}/>`;
-  // If this observation is also RCTC-bound, add a coded translation carrying the sdtc pair
-  if (le.isRCTC && le.interpretationCode) {
-    const trans = `<translation xsi:type="CD"
-                     code="${esc(le.interpretationCode)}"
-                     ${le.interpretationName ? `displayName="${esc(le.interpretationName)}"` : ''}
-                     codeSystem="2.16.840.1.113883.6.96"
-                     codeSystemName="SNOMED CT"${vsPair}/>`;
-    valueXml = valueXml.replace('/>', `>${trans}</value>`);
-  }
-} else if (le.valueKind === 'text' && le.textValue) {
-  // Text result
-  valueXml = `<value xsi:type="ST">${esc(le.textValue)}</value>`;
-  // Same idea: optional coded translation to carry the sdtc pair
-  if (le.isRCTC && le.interpretationCode) {
-    const trans = `<translation xsi:type="CD"
-                     code="${esc(le.interpretationCode)}"
-                     ${le.interpretationName ? `displayName="${esc(le.interpretationName)}"` : ''}
-                     codeSystem="2.16.840.1.113883.6.96"
-                     codeSystemName="SNOMED CT"${vsPair}/>`;
-    valueXml = valueXml.replace('</value>', `${trans}</value>`);
-  }
+function normalizeTS(raw) {
+  const digits = String(raw || '').replace(/\D/g, '');
+  if (digits.length >= 14) return digits.slice(0, 14); // YYYYMMDDHHMMSS
+  if (digits.length >= 8)  return digits.slice(0, 8);  // YYYYMMDD
+  // fall back to a safe date if empty/invalid; adjust if you prefer another default
+  return '20240615';
 }
 
+function emitResultAuthorXML(ts) {
+  const t = normalizeTS(ts);
+  return `
+    <author>
+      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+      <time value="${t}"/>
+      <assignedAuthor>
+        <id nullFlavor="UNK"/>
+        <assignedPerson>
+          <name><given>Unknown</given><family>Author</family></name>
+        </assignedPerson>
+      </assignedAuthor>
+    </author>`;
+}
 
-                const interp = mapInterp(le.interpretation) ? `<interpretationCode code="${mapInterp(le.interpretation)}" codeSystem="2.16.840.1.113883.5.83"/>` : '';
+       function buildResultsSectionXML(labEvidence, rctcVersion = '2016-12-01', data = {}) {
+  if (!labEvidence || labEvidence.length === 0) return '';
 
-                return `
-                <entry>
-                    <organizer classCode="CLUSTER" moodCode="EVN">
-                    <!-- Result Organizer (V3) -->
-                    <templateId root="2.16.840.1.113883.10.20.22.4.1" extension="2015-08-01"/>
-                   <id root="${id}"/>
-    <code code="${esc(le.testCode||'')}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="${esc(le.testName||'Laboratory studies')}"/>
-    <statusCode code="completed"/>
-                    <component>
-                        <observation classCode="OBS" moodCode="EVN">
-                        <!-- Result Observation (V3) -->
-                        <templateId root="2.16.840.1.113883.10.20.22.4.2"/>
-                        <templateId root="2.16.840.1.113883.10.20.22.4.2" extension="2015-08-01"/>
-                        <!-- Initial Case Report Trigger Code Result Observation (eICR) -->
-                        <templateId root="2.16.840.1.113883.10.20.15.2.3.2" extension="2016-12-01"/>
-                        <id root="${id}"/>
-                        <code ${codeAttrs}/>
-                        <statusCode code="${esc(le.status||'completed')}"/>
-                        ${le.time ? `<effectiveTime value="${esc(le.time)}"/>` : ''}
-                        ${valueXml}
-                        ${interp}
-                        </observation>
-                    </component>
-                    </organizer>
-                </entry>`;
-            }).join('\n');
+  const esc = s => xmlEscape(s || '');
 
-            const narrative = labEvidence.map(le => `
-                <tr>
-                <td>${esc(le.testName||le.testCode||'')}</td>
-                <td>${le.valueKind==='coded' ? esc(le.valueName||le.valueCode||'') : le.valueKind==='quantity' ? `${esc(le.qtyValue||'')} ${esc(le.qtyUnit||'')}` : esc(le.textValue||'')}</td>
-                <td>${esc(le.status||'')}</td>
-                <td>${esc(le.time||'')}</td>
-                </tr>`).join('');
+  const obsXml = labEvidence.map(le => {
+    const id = generateGUID();
+    const vsOID = '2.16.840.1.114222.4.11.7508'; // Default COVID-19 value set
 
-            return `
-                <component>
-                <section>
-                    <!-- Results Section (entries required) -->
-                    <templateId root="2.16.840.1.113883.10.20.22.2.3.1" extension="2015-08-01"/>
-                    <code code="30954-2" codeSystem="2.16.840.1.113883.6.1" displayName="Relevant diagnostic tests and/or laboratory data"/>
-                    <title>Results</title>
-                    <text>
-                    <table border="1">
-                        <thead><tr><th>Test</th><th>Value</th><th>Status</th><th>Time</th></tr></thead>
-                        <tbody>${narrative}</tbody>
-                    </table>
-                    </text>
-                    ${obsXml}
-                </section>
-                </component>`;
-        }
+    const codeAttrs = [
+      le.testCode ? `code="${esc(le.testCode)}"` : 'nullFlavor="UNK"',
+      `codeSystem="2.16.840.1.113883.6.1"`,
+      `codeSystemName="LOINC"`,
+      le.testName ? `displayName="${esc(le.testName)}"` : null,
+      `sdtc:valueSet="${vsOID}" sdtc:valueSetVersion="${esc(rctcVersion)}"`
+    ].filter(Boolean).join(' ');
+
+    // Attach SDTC pair to coded values when applicable
+    const vsPair = (le.isRCTC && vsOID && rctcVersion)
+      ? ` sdtc:valueSet="${esc(vsOID)}" sdtc:valueSetVersion="${esc(rctcVersion)}"`
+      : '';
+
+    // Build <value>
+    let valueXml = `<value xsi:type="CD" nullFlavor="UNK"/>`; // safe default
+    if (le.valueKind === 'coded') {
+      valueXml = le.valueCode
+        ? `<value xsi:type="CD"
+             code="${esc(le.valueCode)}"
+             ${le.valueName ? `displayName="${esc(le.valueName)}"` : ''}
+             codeSystem="2.16.840.1.113883.6.96"
+             codeSystemName="SNOMED CT"${vsPair}/>`
+        : `<value xsi:type="CD" nullFlavor="UNK"/>`;
+    } else if (le.valueKind === 'quantity' && le.qtyValue) {
+      valueXml = `<value xsi:type="PQ" value="${esc(le.qtyValue)}"${le.qtyUnit ? ` unit="${esc(le.qtyUnit)}"` : ''}/>`;
+    } else if (le.valueKind === 'text' && le.textValue) {
+      valueXml = `<value xsi:type="ST">${esc(le.textValue)}</value>`;
+    }
+
+    // Interpretation
+    const interpCode = mapInterp(le.interpretation);
+    const interp = interpCode
+      ? `<interpretationCode code="${interpCode}" codeSystem="2.16.840.1.113883.5.83"/>`
+      : '';
+
+    // === Author Participation (required ordering!) ===
+    // Author must include <templateId> and <time> BEFORE <assignedAuthor>.
+    // We'll use the lab result time, or fall back to encounter/document time if needed.
+    const authorTime = esc(
+      normalizeTS(le.time || data.encounterDate || data.documentEffectiveTime || '20240101')
+    );
+
+    // Use Provider Info already on your page (NPI, name, phone, facility):
+    const npi = esc(data.providerId || '');
+    const providerName = String(data.providerName || '').trim();
+    const nameParts = providerName.split(/\s+/);
+    const given = esc(nameParts.shift() || 'Unknown');
+    const family = esc(nameParts.join(' ') || 'Author');
+
+    const authorXml = `
+      <author>
+        <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+        <time value="${authorTime}"/>
+        <assignedAuthor>
+          ${npi ? `<id root="2.16.840.1.113883.4.6" extension="${npi}"/>` : `<id nullFlavor="UNK"/>`}
+          ${data.providerPhone ? `<telecom use="WP" value="tel:${esc(data.providerPhone)}"/>` : ''}
+          <assignedPerson>
+            <name>
+              <given>${given}</given><family>${family}</family>
+            </name>
+          </assignedPerson>
+          ${data.facilityName ? `
+          <representedOrganization>
+            <name>${esc(data.facilityName)}</name>
+          </representedOrganization>` : ''}
+        </assignedAuthor>
+      </author>`.trim();
+
+    // === Effective Time (Result Observation) — MUST be present once ===
+    // If we don’t have a specific time, send nullFlavor to satisfy the SHALL.
+    const t = normalizeTS(le.time);
+    const effectiveTimeXml = le.time
+      ? `<effectiveTime value="${esc(t)}"/>`
+      : `<effectiveTime nullFlavor="UNK"/>`;
+
+    return `
+      <entry>
+        <organizer classCode="CLUSTER" moodCode="EVN">
+          <!-- Result Organizer (V3) -->
+          <templateId root="2.16.840.1.113883.10.20.22.4.1" extension="2015-08-01"/>
+          <id root="${id}"/>
+          <code code="${esc(le.testCode||'')}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="${esc(le.testName||'Laboratory studies')}"/>
+          <statusCode code="completed"/>
+          <component>
+            <observation classCode="OBS" moodCode="EVN">
+              <!-- Result Observation (V3) -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.2"/>
+              <templateId root="2.16.840.1.113883.10.20.22.4.2" extension="2015-08-01"/>
+              <!-- Initial Case Report Trigger Code Result Observation (eICR) -->
+              <templateId root="2.16.840.1.113883.10.20.15.2.3.2" extension="2016-12-01"/>
+              <id root="${id}"/>
+              <code ${codeAttrs}/>
+              <statusCode code="${esc(le.status||'completed')}"/>
+              ${effectiveTimeXml}
+              ${valueXml}
+              ${interp}
+              ${authorXml}
+            </observation>
+          </component>
+        </organizer>
+      </entry>`;
+  }).join('\n');
+
+  const narrative = labEvidence.map(le => `
+    <tr>
+      <td>${esc(le.testName||le.testCode||'')}</td>
+      <td>${
+        le.valueKind==='coded'
+          ? esc(le.valueName||le.valueCode||'')
+          : le.valueKind==='quantity'
+            ? `${esc(le.qtyValue||'')} ${esc(le.qtyUnit||'')}`
+            : esc(le.textValue||'')
+      }</td>
+      <td>${esc(le.status||'')}</td>
+      <td>${esc(le.time||'')}</td>
+    </tr>`).join('');
+
+  return `
+    <component>
+      <section>
+        <!-- Results Section (entries required) -->
+        <templateId root="2.16.840.1.113883.10.20.22.2.3.1" extension="2015-08-01"/>
+        <code code="30954-2" codeSystem="2.16.840.1.113883.6.1" displayName="Relevant diagnostic tests and/or laboratory data"/>
+        <title>Results</title>
+        <text>
+          <table border="1">
+            <thead><tr><th>Test</th><th>Value</th><th>Status</th><th>Time</th></tr></thead>
+            <tbody>${narrative}</tbody>
+          </table>
+        </text>
+        ${obsXml}
+      </section>
+    </component>`;
+}
+
 
         function buildEICRXml() {
             // Run comprehensive DQ Schematron validation first
@@ -5188,7 +5306,7 @@ if (le.valueKind === 'coded') {
 
       <!-- Replace existing Results Section with Lab Evidence -->
      ${(data.labEvidence && data.labEvidence.length) 
-  ? buildResultsSectionXML(data.labEvidence, '2016-12-01')
+  ? buildResultsSectionXML(data.labEvidence, '2016-12-01', getGlobalResultsProviders())
   : `<!-- Fallback Results Section for Legacy Support -->
      <component>
        <section>
