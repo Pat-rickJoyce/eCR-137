@@ -116,3 +116,20 @@ input:focus, select:focus, textarea:focus { outline:none; border-color:var(--acc
 /* Push the left Sections list below the brand chip */
 .ui81-sidenav{ top: 70px; }
 
+/* Make Results Providers section float like other sections */
+.subsection {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+  padding: 20px;
+  margin: 16px 0;
+}
+
+.subsection h3 {
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
