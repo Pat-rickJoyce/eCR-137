@@ -2678,6 +2678,13 @@ async function searchRCTCCodes(fieldId) {
                 'triggerProc1Code', 'triggerProc1Name', 'triggerProc1Date', 'triggerProc1Type',
                 'plannedProc1Code', 'plannedProc1Name', 'plannedProc1Date', 'plannedProc1Type',
                 
+                // Results / Lab providers
+'ordProvNPI','ordProvGiven','ordProvMiddle','ordProvFamily','ordProvPhone',
+'ordProvOrgName','ordProvOrgId','ordProvOrgIdRoot','ordProvTime',
+
+'resPerfNPI','resPerfGiven','resPerfMiddle','resPerfFamily','resPerfPhone',
+'resPerfOrgName','resPerfOrgId','resPerfOrgIdRoot',
+
                 // Special Populations and Demographics
                 'disabilityStatus', 'disabilityType', 'tribalAffiliation', 'tribalEnrollment',
                 'countryOfNationality', 'countryOfNationalityCode', 'countryOfResidence', 'countryOfResidenceCode',
@@ -4656,38 +4663,33 @@ function emitResultAuthorXML(ts) {
       ? `<interpretationCode code="${interpCode}" codeSystem="2.16.840.1.113883.5.83"/>`
       : '';
 
-    // === Author Participation (required ordering!) ===
-    // Author must include <templateId> and <time> BEFORE <assignedAuthor>.
-    // We'll use the lab result time, or fall back to encounter/document time if needed.
-    const authorTime = esc(
-      normalizeTS(le.time || data.encounterDate || data.documentEffectiveTime || '20240101')
-    );
+    // === Author Participation (Ordering Provider) ===
+// CDA order inside <author>: <templateId> -> <time> -> <assignedAuthor>
+const authorTime = esc(normalizeTS(
+  data.ordProvTime || le.time || data.encounterDate || data.documentEffectiveTime || '20240101'
+));
 
-    // Use Provider Info already on your page (NPI, name, phone, facility):
-    const npi = esc(data.providerId || '');
-    const providerName = String(data.providerName || '').trim();
-    const nameParts = providerName.split(/\s+/);
-    const given = esc(nameParts.shift() || 'Unknown');
-    const family = esc(nameParts.join(' ') || 'Author');
-
-    const authorXml = `
-      <author>
-        <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-        <time value="${authorTime}"/>
-        <assignedAuthor>
-          ${npi ? `<id root="2.16.840.1.113883.4.6" extension="${npi}"/>` : `<id nullFlavor="UNK"/>`}
-          ${data.providerPhone ? `<telecom use="WP" value="tel:${esc(data.providerPhone)}"/>` : ''}
-          <assignedPerson>
-            <name>
-              <given>${given}</given><family>${family}</family>
-            </name>
-          </assignedPerson>
-          ${data.facilityName ? `
-          <representedOrganization>
-            <name>${esc(data.facilityName)}</name>
-          </representedOrganization>` : ''}
-        </assignedAuthor>
-      </author>`.trim();
+const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily || data.ordProvOrgName) ? `
+  <author>
+    <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+    <time value="${authorTime}"/>
+    <assignedAuthor>
+      ${data.ordProvNPI ? `<id root="2.16.840.1.113883.4.6" extension="${esc(data.ordProvNPI)}"/>` : `<id nullFlavor="UNK"/>`}
+      ${data.ordProvPhone ? `<telecom use="WP" value="tel:${esc(data.ordProvPhone)}"/>` : ''}
+      <assignedPerson>
+        <name>
+          ${data.ordProvGiven ? `<given>${esc(data.ordProvGiven)}</given>` : ''}
+          ${data.ordProvMiddle ? `<given>${esc(data.ordProvMiddle)}</given>` : ''}
+          ${data.ordProvFamily ? `<family>${esc(data.ordProvFamily)}</family>` : ''}
+        </name>
+      </assignedPerson>
+      ${data.ordProvOrgName ? `
+      <representedOrganization>
+        ${data.ordProvOrgId ? `<id root="${esc(data.ordProvOrgIdRoot || '2.16.840.1.113883.19')}" extension="${esc(data.ordProvOrgId)}"/>` : ''}
+        <name>${esc(data.ordProvOrgName)}</name>
+      </representedOrganization>` : ''}
+    </assignedAuthor>
+  </author>` : '';
 
     // === Effective Time (Result Observation) — MUST be present once ===
     // If we don’t have a specific time, send nullFlavor to satisfy the SHALL.
