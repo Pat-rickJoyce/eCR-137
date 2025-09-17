@@ -932,17 +932,17 @@
    <!-- Administering Provider (single provider for ALL administered meds) -->
 <div class="input-group">
   <label>Administering Provider NPI</label>
-  <input type="text" id="administeringProviderNPI" inputmode="numeric" pattern="\d{10}" placeholder="10-digit NPI">
+  <input type="text" id="administeringProviderNPI" inputmode="numeric" pattern="\d{10}" value="1234567890">
 </div>
 
 <div class="input-group">
   <label>First</label>
-  <input type="text" id="administeringProviderGiven">
+  <input type="text" id="administeringProviderGiven" value="Je Suis">
 </div>
 
 <div class="input-group">
   <label>Last</label>
-  <input type="text" id="administeringProviderFamily">
+  <input type="text" id="administeringProviderFamily" value="Médecin">
 </div>
 
 <div class="input-group">
@@ -1175,6 +1175,10 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                     <input type="text" id="vaccine1Name" placeholder="e.g., COVID-19 mRNA vaccine" value="Hepatitis B vaccine, pediatric or pediatric/adolescent dosage">
                 </div>
                 <div class="input-group">
+               <label>Vaccine 1 Lot</label>
+               <input type="text" id="vaccine1Lot" placeholder="e.g., ABC12345">
+               </div>
+                <div class="input-group">
                     <label>Dose Quantity 1</label>
                     <input type="text" id="vaccine1Dose" placeholder="e.g., 0.3 mL" value="0.5 mL">
                 </div>
@@ -1216,6 +1220,10 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                 <div class="input-group">
                     <label>Vaccine 2 Name</label>
                     <input type="text" id="vaccine2Name" placeholder="e.g., Influenza vaccine" value="Vitamin K1 injection (phytonadione)">
+                </div>
+                <div class="input-group">
+                <label>Vaccine 2 Lot</label>
+                <input type="text" id="vaccine2Lot" placeholder="e.g., XYZ98765">
                 </div>
                 <div class="input-group">
                     <label>Dose Quantity 2</label>
@@ -2603,9 +2611,8 @@ async function searchRCTCCodes(fieldId) {
                 
                 // Immunizations
                 'immunization1Status', 'immunization1Id', 'immunization1Date', 'vaccine1Code', 'vaccine1Name',
-                'vaccine1Dose', 'vaccine1Route', 'vaccine1Manufacturer', 'immunization2Status', 'immunization2Id',
-                'immunization2Date', 'vaccine2Code', 'vaccine2Name', 'vaccine2Dose', 'vaccine2Route', 'vaccine2Manufacturer',
-                
+                'vaccine1Dose', 'vaccine1Route', 'vaccine1Manufacturer', 'vaccine1Lot','immunization2Status', 'immunization2Id',
+                'immunization2Date', 'vaccine2Code', 'vaccine2Name', 'vaccine2Dose', 'vaccine2Route', 'vaccine2Manufacturer', 'vaccine2Lot',                
                 // Pregnancy Information
                 'pregnancyStatus', 'pregnancyEffectiveTime', 'estimatedDeliveryDate', 'pregnancyDeterminationMethod',
                 'gestationalAge', 'lastMenstrualPeriod', 'pregnancyOutcome', 'postpartumStatus',
@@ -4027,60 +4034,74 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
 
 
         function generateImmunizationEntries(data) {
-            let entries = '';
-            
-            if (data.vaccine1Code && data.vaccine1Name) {
-                entries += `
-                <entry typeCode="DRIV">
-                    <substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="false">
-                        <templateId root="2.16.840.1.113883.10.20.22.4.52" extension="2015-08-01" />
-                        <id root="${generateGUID()}" />
-                        <statusCode code="${data.immunization1Status || 'completed'}" />
-                        <effectiveTime value="${data.immunization1Date}" />
-                        <routeCode code="${data.vaccine1Route || 'IM'}" codeSystem="2.16.840.1.113883.3.26.1.1" />
-                        <doseQuantity value="${data.vaccine1Dose ? data.vaccine1Dose.split(' ')[0] : ''}" unit="${data.vaccine1Dose ? data.vaccine1Dose.split(' ')[1] || 'mL' : 'mL'}" />
-                        <consumable>
-                            <manufacturedProduct classCode="MANU">
-                                <templateId root="2.16.840.1.113883.10.20.22.4.54" extension="2014-06-09" />
-                                <manufacturedMaterial>
-                                    <code code="${data.vaccine1Code}" codeSystem="2.16.840.1.113883.12.292" displayName="${data.vaccine1Name}" />
-                                </manufacturedMaterial>
-                                <manufacturerOrganization>
-                                    <name>${data.vaccine1Manufacturer}</name>
-                                </manufacturerOrganization>
-                            </manufacturedProduct>
-                        </consumable>
-                    </substanceAdministration>
-                </entry>`;
-            }
-            
-            if (data.vaccine2Code && data.vaccine2Name) {
-                entries += `
-                <entry typeCode="DRIV">
-                    <substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="false">
-                        <templateId root="2.16.840.1.113883.10.20.22.4.52" extension="2015-08-01" />
-                        <id root="${generateGUID()}" />
-                        <statusCode code="${data.immunization2Status || 'completed'}" />
-                        <effectiveTime value="${data.immunization2Date}" />
-                        <routeCode code="${data.vaccine2Route || 'IM'}" codeSystem="2.16.840.1.113883.3.26.1.1" />
-                        <doseQuantity value="${data.vaccine2Dose ? data.vaccine2Dose.split(' ')[0] : ''}" unit="${data.vaccine2Dose ? data.vaccine2Dose.split(' ')[1] || 'mL' : 'mL'}" />
-                        <consumable>
-                            <manufacturedProduct classCode="MANU">
-                                <templateId root="2.16.840.1.113883.10.20.22.4.54" extension="2014-06-09" />
-                                <manufacturedMaterial>
-                                    <code code="${data.vaccine2Code}" codeSystem="2.16.840.1.113883.12.292" displayName="${data.vaccine2Name}" />
-                                </manufacturedMaterial>
-                                <manufacturerOrganization>
-                                    <name>${data.vaccine2Manufacturer}</name>
-                                </manufacturerOrganization>
-                            </manufacturedProduct>
-                        </consumable>
-                    </substanceAdministration>
-                </entry>`;
-            }
-            
-            return entries;
-        }
+  const mkEntry = (i) => {
+    const code  = data[`vaccine${i}Code`];
+    const name  = data[`vaccine${i}Name`];
+    if (!code || !name) return '';
+
+    const status   = data[`immunization${i}Status`] || 'completed';
+    const negation = (status === 'not-done' || status === 'refused') ? 'true' : 'false';
+    const date     = data[`immunization${i}Date`] || '';
+    const route    = data[`vaccine${i}Route`] || 'IM';
+    const doseStr  = (data[`vaccine${i}Dose`] || '').trim();          // e.g., "0.5 mL"
+    const [doseValue, doseUnitRaw] = doseStr.split(/\s+/, 2);
+    const doseUnit = doseUnitRaw || 'mL';
+    const mfr      = data[`vaccine${i}Manufacturer`] || '';
+    const lot      = data[`vaccine${i}Lot`] || '';                    // add inputs if you want to emit lotNumberText
+
+    return `
+    <entry typeCode="DRIV">
+      <substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="${negation}">
+        <templateId root="2.16.840.1.113883.10.20.22.4.52" extension="2015-08-01" />
+        <id root="${generateGUID()}" />
+        <statusCode code="${status}" />
+        <effectiveTime value="${date}" />
+        ${route ? `<routeCode code="${route}" codeSystem="2.16.840.1.113883.3.26.1.1" />` : ''}
+        ${doseValue ? `<doseQuantity value="${doseValue}" unit="${doseUnit}" />` : ''}
+
+        <consumable>
+          <manufacturedProduct classCode="MANU">
+            <templateId root="2.16.840.1.113883.10.20.22.4.54" extension="2014-06-09" />
+            <manufacturedMaterial>
+              <code code="${code}" codeSystem="2.16.840.1.113883.12.292" displayName="${name}" />
+              ${lot ? `<lotNumberText>${lot}</lotNumberText>` : ''}
+            </manufacturedMaterial>
+            ${mfr ? `<manufacturerOrganization><name>${mfr}</name></manufacturerOrganization>` : ''}
+          </manufacturedProduct>
+        </consumable>
+
+        ${(data.administeringProviderNPI
+           || data.administeringProviderGiven
+           || data.administeringProviderMiddle
+           || data.administeringProviderFamily
+           || data.administeringProviderPhone
+           || data.administeringProviderOrgName) ? `
+        <performer typeCode="PRF">
+          <assignedEntity>
+            ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}" />` : ''}
+            ${data.administeringProviderPhone ? `<telecom use="WP" value="tel:${data.administeringProviderPhone}" />` : ''}
+            <assignedPerson>
+              <name>
+                ${data.administeringProviderGiven ? `<given>${data.administeringProviderGiven}</given>` : ''}
+                ${data.administeringProviderMiddle ? `<given>${data.administeringProviderMiddle}</given>` : ''}
+                ${data.administeringProviderFamily ? `<family>${data.administeringProviderFamily}</family>` : ''}
+              </name>
+            </assignedPerson>
+            ${data.administeringProviderOrgName ? `
+            <representedOrganization>
+              ${data.administeringProviderOrgId ? `<id root="${data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19'}" extension="${data.administeringProviderOrgId}" />` : ''}
+              <name>${data.administeringProviderOrgName}</name>
+            </representedOrganization>` : ''}
+          </assignedEntity>
+        </performer>` : ''}
+
+      </substanceAdministration>
+    </entry>`;
+  };
+
+  return mkEntry(1) + mkEntry(2);
+}
+
 
         function generateProcedureEntries(data) {
             let entries = '';
