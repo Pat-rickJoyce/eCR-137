@@ -1965,6 +1965,19 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
             }
         }
 
+        function getRouteTranslation(routeCode) {
+    const routeMap = {
+        'PO': { code: '26643006', display: 'Oral route' },
+        'IV': { code: '47625008', display: 'Intravenous route' },
+        'IM': { code: '78421000', display: 'Intramuscular route' },
+        'SC': { code: '34206005', display: 'Subcutaneous route' },
+        'SL': { code: '37161004', display: 'Sublingual route' },
+        'TOP': { code: '6064005', display: 'Topical route' },
+        'INH': { code: '26643006', display: 'Inhalation route' }
+    };
+    return routeMap[routeCode] || { code: '26643006', display: 'Oral route' };
+}
+
         // Fallback hardcoded lab observations
         function getHardcodedLabObs() {
             return [
@@ -2081,6 +2094,16 @@ async function loadDiagnosisFromRCTC() {
                 return labOrderData;
             }
         }
+
+function getProviderTaxonomyCode(providerType = 'physician') {
+    const taxonomyCodes = {
+        'physician': { code: '207Q00000X', display: 'Family Medicine Physician' },
+        'nurse': { code: '163W00000X', display: 'Registered Nurse' },
+        'pa': { code: '363A00000X', display: 'Physician Assistant' },
+        'np': { code: '363L00000X', display: 'Nurse Practitioner' }
+    };
+    return taxonomyCodes[providerType] || taxonomyCodes['physician'];
+}
 
         // Fallback hardcoded lab orders
         function getHardcodedLabOrders() {
@@ -3930,6 +3953,22 @@ function generateVitalSignsEntries(data) {
           <statusCode code="completed"/>
           <effectiveTime value="${data.encounterDate}"/>
           <value xsi:type="PQ" value="${value}" unit="${unit}"/>
+          <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="${data.encounterDate}"/>
+            <assignedAuthor>
+              <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+              <code code="${getProviderTaxonomyCode('physician').code}" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="${getProviderTaxonomyCode('physician').display}"/>
+              <assignedPerson>
+                <name>
+                  <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+                  <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
         </observation>
       </component>`;
 
@@ -3978,6 +4017,22 @@ function buildSpecimenSection(d) {
         <code code="33747-0" codeSystem="2.16.840.1.113883.6.1" displayName="General procedure" />
         <statusCode code="completed" />
         <effectiveTime value="${xmlEscape(dt)}"/>
+        <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+                <id extension="${d.providerId}" root="2.16.840.1.113883.4.6"/>
+                <code code="${getProviderTaxonomyCode('physician').code}" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="${getProviderTaxonomyCode('physician').display}"/>
+                <assignedPerson>
+                    <name>
+                        <given>${d.providerName.split(' ')[1] || 'Unknown'}</given>
+                        <family>${d.providerName.split(' ')[2] || 'Provider'}</family>
+                    </name>
+                </assignedPerson>
+            </assignedAuthor>
+        </author>
         <targetSiteCode displayName="${xmlEscape(src)}" codeSystem="2.16.840.1.113883.6.96" />
         <participant typeCode="PRD">
           <participantRole classCode="SPEC">
@@ -4104,7 +4159,22 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
         <effectiveTime value="${date}" />
         ${route ? `<routeCode code="${route}" codeSystem="2.16.840.1.113883.3.26.1.1" />` : ''}
         ${doseValue ? `<doseQuantity value="${doseValue}" unit="${doseUnit}" />` : ''}
-
+ <author>
+      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+      <time value="20240615120000"/>
+      <assignedAuthor>
+        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+        <code code="${getProviderTaxonomyCode('physician').code}" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="${getProviderTaxonomyCode('physician').display}"/>
+        <assignedPerson>
+          <name>
+            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+          </name>
+        </assignedPerson>
+      </assignedAuthor>
+    </author>
         <consumable>
           <manufacturedProduct classCode="MANU">
             <templateId root="2.16.840.1.113883.10.20.22.4.54" extension="2014-06-09" />
@@ -4161,6 +4231,22 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
                         <code code="${data.currentProc1Code}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.currentProc1Name}" />
                         <statusCode code="completed" />
                         <effectiveTime value="${data.currentProc1Date}" />
+                        <author>
+                    <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+                    <time value="${data.currentProc2Date}"/>
+                    <assignedAuthor>
+                        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+                        <code code="${getProviderTaxonomyCode('physician').code}" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="${getProviderTaxonomyCode('physician').display}"/>
+                        <assignedPerson>
+                            <name>
+                                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+                                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+                            </name>
+                        </assignedPerson>
+                    </assignedAuthor>
+                </author>
                     </procedure>
                 </entry>`;
             }
@@ -4174,6 +4260,22 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
                         <code code="${data.currentProc2Code}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.currentProc2Name}" />
                         <statusCode code="completed" />
                         <effectiveTime value="${data.currentProc2Date}" />
+                        <author>
+                    <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+                    <time value="${data.currentProc2Date}"/>
+                    <assignedAuthor>
+                        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+                        <code code="${getProviderTaxonomyCode('physician').code}" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="${getProviderTaxonomyCode('physician').display}"/>
+                        <assignedPerson>
+                            <name>
+                                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+                                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+                            </name>
+                        </assignedPerson>
+                    </assignedAuthor>
+                </author>
                     </procedure>
                 </entry>`;
             }
@@ -4847,6 +4949,7 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
           <city>${data.guardianCity || ''}</city>
           <state>${data.guardianState || ''}</state>
           <postalCode>${data.guardianZip || ''}</postalCode>
+          <country>US</country>
         </addr>
         ${data.guardianPhone ? `<telecom use="HP" value="tel:${data.guardianPhone}" />` : ''}
         ${data.guardianEmail ? `<telecom use="WP" value="mailto:${data.guardianEmail}" />` : ''}
@@ -4989,6 +5092,7 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
               <city>${data.patientCity}</city>
               <state>${data.patientState}</state>
               <postalCode>${data.patientZip}</postalCode>
+              <country>US</country>
             </addr>
           </serviceProviderOrganization>
         </healthCareFacility>
@@ -5103,9 +5207,29 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
         <id extension="${data.adminMed1Id}" root="2.16.840.1.113883.19.5.99999.1" />
         <statusCode code="${data.adminMed1Status}" />
         <effectiveTime value="${data.adminMed1Time}" />
-        <routeCode code="${data.adminMed1Route}" codeSystem="2.16.840.1.113883.5.112" />
+        <routeCode code="${data.adminMed1Route}" codeSystem="2.16.840.1.113883.5.112">
+  <translation code="${getRouteTranslation(data.adminMed1Route).code}" 
+               codeSystem="2.16.840.1.113883.6.96" 
+               displayName="${getRouteTranslation(data.adminMed1Route).display}"/>
+</routeCode>
         <doseQuantity value="${data.adminMed1DoseValue}" unit="${data.adminMed1DoseUnit}" />
         ${data.adminMed1VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed1VolValue}" unit="${data.adminMed1VolUnit}" /></maxDoseQuantity>` : ''}
+        <author>
+      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+      <time value="20240615120000"/>
+      <assignedAuthor>
+        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+        <code code="${getProviderTaxonomyCode('physician').code}" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="${getProviderTaxonomyCode('physician').display}"/>
+        <assignedPerson>
+          <name>
+            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+          </name>
+        </assignedPerson>
+      </assignedAuthor>
+    </author>
         <consumable>
           <manufacturedProduct classCode="MANU">
             <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
@@ -5148,9 +5272,29 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
         <id extension="${data.adminMed2Id}" root="2.16.840.1.113883.19.5.99999.1" />
         <statusCode code="${data.adminMed2Status}" />
         <effectiveTime value="${data.adminMed2Time}" />
-        <routeCode code="${data.adminMed2Route}" codeSystem="2.16.840.1.113883.5.112" />
+        <routeCode code="${data.adminMed2Route}" codeSystem="2.16.840.1.113883.5.112">
+  <translation code="${getRouteTranslation(data.adminMed2Route).code}" 
+               codeSystem="2.16.840.1.113883.6.96" 
+               displayName="${getRouteTranslation(data.adminMed2Route).display}"/>
+</routeCode>
         <doseQuantity value="${data.adminMed2DoseValue}" unit="${data.adminMed2DoseUnit}" />
         ${data.adminMed2VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed2VolValue}" unit="${data.adminMed2VolUnit}" /></maxDoseQuantity>` : ''}
+        <author>
+      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+      <time value="20240615120000"/>
+      <assignedAuthor>
+        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+        <code code="${getProviderTaxonomyCode('physician').code}" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="${getProviderTaxonomyCode('physician').display}"/>
+        <assignedPerson>
+          <name>
+            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+          </name>
+        </assignedPerson>
+      </assignedAuthor>
+    </author>
         <consumable>
           <manufacturedProduct classCode="MANU">
             <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
@@ -5459,7 +5603,7 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
               <templateId root="2.16.840.1.113883.10.20.22.4.38" extension="2015-08-01" />
               <id root="${generateGUID()}" />
               <code code="87729-0" codeSystem="2.16.840.1.113883.6.1" displayName="Current occupation" />
-              <statusCode code="active" />
+              <statusCode code="completed" />
               <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
               <value xsi:type="ST">${data.currentOccupation}</value>
               <participant typeCode="IND">
@@ -5591,26 +5735,64 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
       </component>
 
       <!-- Admission Medications Section -->
-      <component>
-        <section nullFlavor="NI">
-          <templateId root="2.16.840.1.113883.10.20.22.2.44" extension="2015-08-01"/>
-          <code code="42346-7" codeSystem="2.16.840.1.113883.6.1" displayName="Medications on admission (narrative) Document"/>
-          <title>Admission Medications</title>
-          <text>See Medications Administered Section for all Medications</text>
-        </section>
-      </component>
+<component>
+  <section>
+    <templateId root="2.16.840.1.113883.10.20.22.2.44" extension="2015-08-01"/>
+    <code code="42346-7" codeSystem="2.16.840.1.113883.6.1" displayName="Medications on admission (narrative) Document"/>
+    <title>Admission Medications</title>
+    <text>
+      <table>
+        <thead>
+          <tr><th>Medication</th><th>Dose</th><th>Route</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>${data.adminMed1Name}</td><td>${data.adminMed1DoseValue} ${data.adminMed1DoseUnit}</td><td>${data.adminMed1Route}</td></tr>
+        </tbody>
+      </table>
+    </text>
+    <entry typeCode="DRIV">
+      <act classCode="ACT" moodCode="EVN">
+        <templateId root="2.16.840.1.113883.10.20.22.4.36" extension="2014-06-09"/>
+        <id root="${generateGUID()}"/>
+        <code code="42346-7" codeSystem="2.16.840.1.113883.6.1" displayName="Medications on admission"/>
+        <statusCode code="active"/>
+        <entryRelationship typeCode="SUBJ">
+          <substanceAdministration classCode="SBADM" moodCode="INT">
+            <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09"/>
+            <id root="${generateGUID()}"/>
+            <statusCode code="active"/>
+            <routeCode code="${data.adminMed1Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
+  <translation code="${getRouteTranslation(data.adminMed1Route).code}" 
+               codeSystem="2.16.840.1.113883.6.96" 
+               displayName="${getRouteTranslation(data.adminMed1Route).display}"/>
+</routeCode>
+            <doseQuantity value="${data.adminMed1DoseValue}" unit="${data.adminMed1DoseUnit}"/>
+            <consumable>
+              <manufacturedProduct classCode="MANU">
+                <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
+                <manufacturedMaterial>
+                  <code code="${data.adminMed1Code}" codeSystem="2.16.840.1.113883.6.88" displayName="${data.adminMed1Name}"/>
+                </manufacturedMaterial>
+              </manufacturedProduct>
+            </consumable>
+          </substanceAdministration>
+        </entryRelationship>
+      </act>
+    </entry>
+  </section>
+</component>
 
-      <!-- Hospital Admission Diagnosis -->
-      <component>
-        <section nullFlavor="NI">
-          <templateId root="2.16.840.1.113883.10.20.22.2.43" extension="2015-08-01"/>
-          <code code="46241-6" codeSystem="2.16.840.1.113883.6.1" displayName="Hospital admission diagnosis Narrative - Reported"/>
-          <translation code="42347-5" codeSystem="2.16.840.1.113883.6.1" displayName="Admission Diagnosis"/>
-          </code>
-          <title>Hospital Admission Diagnosis</title>
-          <text>See Encounters Section and Problems Section</text>
-        </section>
-      </component>
+      <!-- Hospital Admission Diagnosis FIXED VERSION -->
+<component>
+  <section nullFlavor="NI">
+    <templateId root="2.16.840.1.113883.10.20.22.2.43" extension="2015-08-01"/>
+    <code code="46241-6" codeSystem="2.16.840.1.113883.6.1" displayName="Hospital admission diagnosis Narrative - Reported">
+      <translation code="42347-5" codeSystem="2.16.840.1.113883.6.1" displayName="Admission Diagnosis"/>
+    </code>
+    <title>Hospital Admission Diagnosis</title>
+    <text>See Encounters Section and Problems Section</text>
+  </section>
+</component>
 
       <!-- Hospital Discharge Diagnosis -->
       <component>
