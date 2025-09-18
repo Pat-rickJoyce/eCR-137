@@ -309,7 +309,7 @@
                 </div>
                 <div class="input-group">
                     <label>State <span style="color: red;">*</span></label>
-                    <input type="text" id="patientState" value="Illinois" required>
+                    <input type="text" id="patientState" value="IL" required>
                 </div>
                 <div class="input-group">
                     <label>ZIP Code <span style="color: red;">*</span></label>
@@ -577,7 +577,7 @@
                 </div>
                 <div class="input-group">
                     <label>Guardian State</label>
-                    <input type="text" id="guardianState" value="Illinois">
+                    <input type="text" id="guardianState" value="IL">
                 </div>
                 <div class="input-group">
                     <label>Guardian ZIP Code</label>
@@ -1978,6 +1978,12 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
     return routeMap[routeCode] || { code: '26643006', display: 'Oral route' };
 }
 
+function fixDoseUnit(unit) {
+    if (unit === '1' || unit === 'each' || unit === 'tablet') return 'mg';
+    if (unit === 'mcg') return 'ug';
+    return unit;
+}
+
         // Fallback hardcoded lab observations
         function getHardcodedLabObs() {
             return [
@@ -1987,6 +1993,21 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
             ];
         }
 
+        // Simple unit fixer - converts "1" to "{tbl}" for tablets
+function getValidDoseUnit(unit) {
+    if (unit === '1' || unit === 'each' || unit === 'tablet') return '{tbl}';
+    if (unit === 'mcg') return 'ug';
+    return unit; // keep everything else the same
+}
+
+// Simple route fixer for immunizations
+function getImmunizationRouteTranslation(routeCode) {
+    if (routeCode === 'IM') return { code: 'C28161', display: 'Intramuscular route', snomed: '78421000' };
+    if (routeCode === 'SC') return { code: 'C38299', display: 'Subcutaneous route', snomed: '34206005' };
+    if (routeCode === 'PO') return { code: 'C38288', display: 'Oral route', snomed: '26643006' };
+    // default to IM if unknown
+    return { code: 'C28161', display: 'Intramuscular route', snomed: '78421000' };
+}
         // Load diagnosis data from RCTC Excel file
        // STRICT loader: uses ONLY "diagnosis_problem s1" (B=code, C=name)
 async function loadDiagnosisFromRCTC() {
@@ -4078,7 +4099,7 @@ if (d.specimen2Id) {
 
 /* helper to emit dose + optional rate  ---------------------- */
 function buildDoseXML (dVal, dUnit, vVal, vUnit) {
-  let xml = `          <doseQuantity value="${dVal}" unit="${dUnit}"/>\n`;
+  let xml = `          <doseQuantity value="${dVal}" unit="${dUnit === '1' || dUnit === 'each' ? '{tbl}' : dUnit}"/>\n`;
   if (vVal && vUnit) {
     xml += `          <rateQuantity value="${vVal}" unit="${vUnit}"/>\n`;
   }
@@ -4134,7 +4155,19 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
 }
 
 
-        function generateImmunizationEntries(data) {
+ // Fixed route code mapping function using FDA Route of Administration Terminology
+function getImmunizationRouteTranslation(routeCode) {
+    const routeMap = {
+        'IM': { code: 'C28161', display: 'Intramuscular route', snomed: '78421000' },
+        'SC': { code: 'C38299', display: 'Subcutaneous route', snomed: '34206005' }, 
+        'ID': { code: 'C38238', display: 'Intradermal route', snomed: '72607000' },
+        'PO': { code: 'C38288', display: 'Oral route', snomed: '26643006' },
+        'IN': { code: 'C38284', display: 'Intranasal route', snomed: '46713006' }
+    };
+    return routeMap[routeCode] || routeMap['IM'];
+}
+
+function generateImmunizationEntries(data) {
   const mkEntry = (i) => {
     const code  = data[`vaccine${i}Code`];
     const name  = data[`vaccine${i}Name`];
@@ -4144,11 +4177,14 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
     const negation = (status === 'not-done' || status === 'refused') ? 'true' : 'false';
     const date     = data[`immunization${i}Date`] || '';
     const route    = data[`vaccine${i}Route`] || 'IM';
-    const doseStr  = (data[`vaccine${i}Dose`] || '').trim();          // e.g., "0.5 mL"
+    const doseStr  = (data[`vaccine${i}Dose`] || '').trim();
     const [doseValue, doseUnitRaw] = doseStr.split(/\s+/, 2);
-    const doseUnit = doseUnitRaw || 'mL';
+    const doseUnit = (doseUnitRaw === '1' || doseUnitRaw === 'each') ? '{tbl}' : (doseUnitRaw || 'mL');
     const mfr      = data[`vaccine${i}Manufacturer`] || '';
-    const lot      = data[`vaccine${i}Lot`] || '';                    // add inputs if you want to emit lotNumberText
+    const lot      = data[`vaccine${i}Lot`] || '';
+    
+    // Get the correct route translation
+    const routeTranslation = getImmunizationRouteTranslation(route);
 
     return `
     <entry typeCode="DRIV">
@@ -4157,24 +4193,28 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
         <id root="${generateGUID()}" />
         <statusCode code="${status}" />
         <effectiveTime value="${date}" />
-        ${route ? `<routeCode code="${route}" codeSystem="2.16.840.1.113883.3.26.1.1" />` : ''}
+        ${route ? `<routeCode code="${routeTranslation.code}" codeSystem="2.16.840.1.113883.3.26.1.1" displayName="${routeTranslation.display}">
+          <translation code="${routeTranslation.snomed}" 
+                       codeSystem="2.16.840.1.113883.6.96" 
+                       displayName="${routeTranslation.display}"/>
+        </routeCode>` : ''}
         ${doseValue ? `<doseQuantity value="${doseValue}" unit="${doseUnit}" />` : ''}
- <author>
-      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-      <time value="20240615120000"/>
-      <assignedAuthor>
-        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-        <code code="${getProviderTaxonomyCode('physician').code}" 
-      codeSystem="2.16.840.1.113883.6.101" 
-      displayName="${getProviderTaxonomyCode('physician').display}"/>
-        <assignedPerson>
-          <name>
-            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-          </name>
-        </assignedPerson>
-      </assignedAuthor>
-    </author>
+        <author>
+          <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+          <time value="20240615120000"/>
+          <assignedAuthor>
+            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+            <code code="${getProviderTaxonomyCode('physician').code}" 
+                  codeSystem="2.16.840.1.113883.6.101" 
+                  displayName="${getProviderTaxonomyCode('physician').display}"/>
+            <assignedPerson>
+              <name>
+                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+              </name>
+            </assignedPerson>
+          </assignedAuthor>
+        </author>
         <consumable>
           <manufacturedProduct classCode="MANU">
             <templateId root="2.16.840.1.113883.10.20.22.4.54" extension="2014-06-09" />
@@ -4806,7 +4846,8 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
           <!-- Result Organizer (V3) -->
           <templateId root="2.16.840.1.113883.10.20.22.4.1" extension="2015-08-01"/>
           <id root="${id}"/>
-          <code code="${esc(le.testCode||'')}" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="${esc(le.testName||'Laboratory studies')}"/>
+          <code ${codeAttrs}/>
+      sdtc:valueSet="${vsOID}" sdtc:valueSetVersion="${esc(rctcVersion)}"/>
           <statusCode code="completed"/>
           <component>
             <observation classCode="OBS" moodCode="EVN">
@@ -4943,7 +4984,7 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
       ${data.patientDetailedEthnicity ? `<sdtc:ethnicGroupCode code="${data.patientDetailedEthnicity}" codeSystem="2.16.840.1.113883.6.238" />` : ''}
       ${data.guardianName ? `
       <guardian>
-        <code code="${data.guardianCode || 'GUARD'}" codeSystem="2.16.840.1.113883.5.111" />
+        <code code="${data.guardianCode || 'GUARD'}" codeSystem="2.16.840.1.113883.11.20.12.1" />
         <addr use="H">
           <streetAddressLine>${data.guardianAddress || ''}</streetAddressLine>
           <city>${data.guardianCity || ''}</city>
@@ -4961,12 +5002,13 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
         </guardianPerson>
       </guardian>` : ''}
       <birthplace>
-        <place>
-          <addr>
-            <city>${data.patientBirthPlace || data.patientCity}</city>
-          </addr>
-        </place>
-      </birthplace>
+  <place>
+    <addr>
+      <city>${data.patientCity}</city>
+      <state>${data.patientState}</state>
+    </addr>
+  </place>
+</birthplace>
       <languageCommunication>
         <languageCode code="${data.patientLanguage || 'en'}" />
         <preferenceInd value="true" />
@@ -5026,20 +5068,40 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
     </assignedCustodian>
   </custodian>
 
-  <!-- Encounter Information -->
-  <componentOf>
-    <encompassingEncounter>
-      <id extension="${data.encounterId}" root="2.16.840.1.113883.19" />
-      <code code="${data.encounterType}" codeSystem="2.16.840.1.113883.5.4"
-        codeSystemName="HL7 ActEncounterCode" displayName="Ambulatory" />
-      <effectiveTime>
-        <low value="${data.encounterDate}" />
-        <high value="${data.encounterEndDate || data.encounterDate}" />
-      </effectiveTime>
-      ${data.encounterDisposition ? `<dischargeDispositionCode code="${data.encounterDisposition}" codeSystem="2.16.840.1.113883.12.112" />` : ''}
-      <responsibleParty>
-        <assignedEntity>
-          <id extension="${data.providerId}" root="2.16.840.1.113883.4.6" />
+  // Find this section in your buildEICRXml() function and replace it:
+
+<!-- Encounter Information -->
+<componentOf>
+  <encompassingEncounter>
+    <id extension="${data.encounterId}" root="2.16.840.1.113883.19" />
+    <code code="${data.encounterType}" codeSystem="2.16.840.1.113883.5.4"
+      codeSystemName="HL7 ActEncounterCode" displayName="Ambulatory" />
+    <effectiveTime>
+      <low value="${data.encounterDate}" />
+      <high value="${data.encounterEndDate || data.encounterDate}" />
+    </effectiveTime>
+    ${data.encounterDisposition ? `<dischargeDispositionCode code="${data.encounterDisposition}" codeSystem="2.16.840.1.113883.12.112" />` : ''}
+    <responsibleParty>
+      <assignedEntity>
+        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6" />
+        <addr use="WP">
+          <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+          <city>${data.patientCity}</city>
+          <state>${data.patientState}</state>
+          <postalCode>${data.patientZip}</postalCode>
+          <country>US</country>
+        </addr>
+        <telecom use="WP" value="tel:${data.providerPhone}" />
+        ${data.providerEmail ? `<telecom use="WP" value="mailto:${data.providerEmail}" />` : `<telecom use="WP" value="mailto:provider@example.com" />`}
+        ${data.providerFax ? `<telecom use="WP" value="fax:${data.providerFax}" />` : `<telecom use="WP" value="fax:+1-555-777-0124" />`}
+        <assignedPerson>
+          <name>
+            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+          </name>
+        </assignedPerson>
+        <representedOrganization>
+          <name>${data.facilityName}</name>
           <addr use="WP">
             <streetAddressLine>${data.facilityAddress}</streetAddressLine>
             <city>${data.patientCity}</city>
@@ -5047,58 +5109,44 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
             <postalCode>${data.patientZip}</postalCode>
             <country>US</country>
           </addr>
-          <telecom use="WP" value="tel:${data.providerPhone}" />
-          <assignedPerson>
-            <name>
-              <given>${data.providerName.split(' ')[1]}</given>
-              <family>${data.providerName.split(' ')[2]}</family>
-            </name>
-          </assignedPerson>
-          <representedOrganization>
-            <name>${data.facilityName}</name>
-            <addr use="WP">
-              <streetAddressLine>${data.facilityAddress}</streetAddressLine>
-              <city>${data.patientCity}</city>
-              <state>${data.patientState}</state>
-              <postalCode>${data.patientZip}</postalCode>
-              <country>US</country>
-            </addr>
-          </representedOrganization>
-        </assignedEntity>
-      </responsibleParty>
-      <location>
-        <healthCareFacility>
-          <id extension="${data.facilityId || data.providerId}" root="2.16.840.1.113883.4.6" />
-          <code code="${data.facilityTypeCode || 'OF'}" codeSystem="2.16.840.1.113883.5.111"
-            codeSystemName="HL7RoleCode" displayName="Healthcare Facility" />
-          <location>
-            <name>${data.facilityName}</name>
-            <addr use="WP">
-              <streetAddressLine>${data.facilityAddress}</streetAddressLine>
-              <city>${data.patientCity}</city>
-              <state>${data.patientState}</state>
-              <postalCode>${data.patientZip}</postalCode>
-              <country>US</country>
-            </addr>
-          </location>
-          <serviceProviderOrganization>
-            <id extension="${data.organizationId || data.facilityId}" root="2.16.840.1.113883.4.6" />
-            <name>${data.organizationName || data.facilityName}</name>
-            <telecom use="WP" value="tel:${data.organizationPhone || data.providerPhone}" />
-            ${data.organizationEmail ? `<telecom use="WP" value="mailto:${data.organizationEmail}" />` : ''}
-            ${data.organizationFax ? `<telecom use="WP" value="fax:${data.organizationFax}" />` : ''}
-            <addr use="WP">
-              <streetAddressLine>${data.organizationAddress || data.facilityAddress}</streetAddressLine>
-              <city>${data.patientCity}</city>
-              <state>${data.patientState}</state>
-              <postalCode>${data.patientZip}</postalCode>
-              <country>US</country>
-            </addr>
-          </serviceProviderOrganization>
-        </healthCareFacility>
-      </location>
-    </encompassingEncounter>
-  </componentOf>
+          <telecom use="WP" value="tel:${data.organizationPhone || data.providerPhone}" />
+          ${data.organizationEmail ? `<telecom use="WP" value="mailto:${data.organizationEmail}" />` : ''}
+        </representedOrganization>
+      </assignedEntity>
+    </responsibleParty>
+    <location>
+      <healthCareFacility>
+        <id extension="${data.facilityId || data.providerId}" root="2.16.840.1.113883.4.6" />
+        <code code="${data.facilityTypeCode || 'OF'}" codeSystem="2.16.840.1.113883.5.111"
+          codeSystemName="HL7RoleCode" displayName="Healthcare Facility" />
+        <location>
+          <name>${data.facilityName}</name>
+          <addr use="WP">
+            <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+            <city>${data.patientCity}</city>
+            <state>${data.patientState}</state>
+            <postalCode>${data.patientZip}</postalCode>
+            <country>US</country>
+          </addr>
+        </location>
+        <serviceProviderOrganization>
+          <id extension="${data.organizationId || data.facilityId}" root="2.16.840.1.113883.4.6" />
+          <name>${data.organizationName || data.facilityName}</name>
+          <telecom use="WP" value="tel:${data.organizationPhone || data.providerPhone}" />
+          ${data.organizationEmail ? `<telecom use="WP" value="mailto:${data.organizationEmail}" />` : ''}
+          ${data.organizationFax ? `<telecom use="WP" value="fax:${data.organizationFax}" />` : ''}
+          <addr use="WP">
+            <streetAddressLine>${data.organizationAddress || data.facilityAddress}</streetAddressLine>
+            <city>${data.patientCity}</city>
+            <state>${data.patientState}</state>
+            <postalCode>${data.patientZip}</postalCode>
+            <country>US</country>
+          </addr>
+        </serviceProviderOrganization>
+      </healthCareFacility>
+    </location>
+  </encompassingEncounter>
+</componentOf>
 
   <component>
     <structuredBody>
@@ -5207,12 +5255,12 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
         <id extension="${data.adminMed1Id}" root="2.16.840.1.113883.19.5.99999.1" />
         <statusCode code="${data.adminMed1Status}" />
         <effectiveTime value="${data.adminMed1Time}" />
-        <routeCode code="${data.adminMed1Route}" codeSystem="2.16.840.1.113883.5.112">
+        <routeCode code="${data.adminMed1Route === 'PO' ? 'C38288' : data.adminMed1Route === 'IM' ? 'C28161' : 'C38288'}" codeSystem="2.16.840.1.113883.3.26.1.1">
   <translation code="${getRouteTranslation(data.adminMed1Route).code}" 
                codeSystem="2.16.840.1.113883.6.96" 
                displayName="${getRouteTranslation(data.adminMed1Route).display}"/>
 </routeCode>
-        <doseQuantity value="${data.adminMed1DoseValue}" unit="${data.adminMed1DoseUnit}" />
+        <doseQuantity value="${data.adminMed1DoseValue}" unit="${fixDoseUnit(data.adminMed1DoseUnit)}" />
         ${data.adminMed1VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed1VolValue}" unit="${data.adminMed1VolUnit}" /></maxDoseQuantity>` : ''}
         <author>
       <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
@@ -5272,12 +5320,12 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
         <id extension="${data.adminMed2Id}" root="2.16.840.1.113883.19.5.99999.1" />
         <statusCode code="${data.adminMed2Status}" />
         <effectiveTime value="${data.adminMed2Time}" />
-        <routeCode code="${data.adminMed2Route}" codeSystem="2.16.840.1.113883.5.112">
+        <routeCode code="${data.adminMed2Route === 'PO' ? 'C38288' : data.adminMed2Route === 'IM' ? 'C28161' : 'C38288'}" codeSystem="2.16.840.1.113883.3.26.1.1">
   <translation code="${getRouteTranslation(data.adminMed2Route).code}" 
                codeSystem="2.16.840.1.113883.6.96" 
                displayName="${getRouteTranslation(data.adminMed2Route).display}"/>
 </routeCode>
-        <doseQuantity value="${data.adminMed2DoseValue}" unit="${data.adminMed2DoseUnit}" />
+        <doseQuantity value="${data.adminMed2DoseValue}" unit="${data.adminMed2DoseUnit === '1' || data.adminMed2DoseUnit === 'each' ? 'mg' : data.adminMed2DoseUnit}" />
         ${data.adminMed2VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed2VolValue}" unit="${data.adminMed2VolUnit}" /></maxDoseQuantity>` : ''}
         <author>
       <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
@@ -5734,7 +5782,11 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
         </section>
       </component>
 
-      <!-- Admission Medications Section -->
+      // Find this section in your buildEICRXml() function around line 1600+ and replace it:
+
+// Find this section in your buildEICRXml() function around line 1600+ and replace it:
+
+<!-- Admission Medications Section -->
 <component>
   <section>
     <templateId root="2.16.840.1.113883.10.20.22.2.44" extension="2015-08-01"/>
@@ -5756,16 +5808,18 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
         <id root="${generateGUID()}"/>
         <code code="42346-7" codeSystem="2.16.840.1.113883.6.1" displayName="Medications on admission"/>
         <statusCode code="active"/>
+        <effectiveTime value="${data.encounterDate}"/>
         <entryRelationship typeCode="SUBJ">
           <substanceAdministration classCode="SBADM" moodCode="INT">
             <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09"/>
             <id root="${generateGUID()}"/>
             <statusCode code="active"/>
+            <effectiveTime value="${data.encounterDate}"/>
             <routeCode code="${data.adminMed1Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
-  <translation code="${getRouteTranslation(data.adminMed1Route).code}" 
-               codeSystem="2.16.840.1.113883.6.96" 
-               displayName="${getRouteTranslation(data.adminMed1Route).display}"/>
-</routeCode>
+              <translation code="${getRouteTranslation(data.adminMed1Route).code}" 
+                           codeSystem="2.16.840.1.113883.6.96" 
+                           displayName="${getRouteTranslation(data.adminMed1Route).display}"/>
+            </routeCode>
             <doseQuantity value="${data.adminMed1DoseValue}" unit="${data.adminMed1DoseUnit}"/>
             <consumable>
               <manufacturedProduct classCode="MANU">
