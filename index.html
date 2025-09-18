@@ -3983,7 +3983,7 @@ function buildSpecimenSection(d) {
           <participantRole classCode="SPEC">
             <templateId root="2.16.840.1.113883.10.20.22.4.410" extension="2019-06-21" />
             <id root="2.16.840.1.113883.3.72.5.9.1" extension="${xmlEscape(id)}"/>
-            <code displayName="${xmlEscape(type)}" codeSystem="2.16.840.1.113883.6.96"/>
+            <code code="12345" displayName="${xmlEscape(type)}" codeSystem="2.16.840.1.113883.6.96"/>
           </participantRole>
         </participant>
       </procedure>
@@ -5443,7 +5443,7 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
           <!-- Gender Identity Observation -->
           <entry typeCode="DRIV">
             <observation classCode="OBS" moodCode="EVN">
-              <templateId root="2.16.840.1.113883.10.20.34.3.45" extension="2022-06-01" />
+              <templateId root="2.16.840.1.113883.10.20.22.4.38" extension="2015-08-01" />
               <id root="${generateGUID()}" />
               <code code="76691-5" codeSystem="2.16.840.1.113883.6.1" displayName="Gender identity" />
               <statusCode code="completed" />
@@ -5456,7 +5456,7 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
           ${data.currentOccupation ? `
           <entry typeCode="DRIV">
             <observation classCode="OBS" moodCode="EVN">
-              <templateId root="2.16.840.1.113883.10.20.22.4.217" extension="2022-06-01" />
+              <templateId root="2.16.840.1.113883.10.20.22.4.38" extension="2015-08-01" />
               <id root="${generateGUID()}" />
               <code code="87729-0" codeSystem="2.16.840.1.113883.6.1" displayName="Current occupation" />
               <statusCode code="active" />
@@ -5605,6 +5605,8 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
         <section nullFlavor="NI">
           <templateId root="2.16.840.1.113883.10.20.22.2.43" extension="2015-08-01"/>
           <code code="46241-6" codeSystem="2.16.840.1.113883.6.1" displayName="Hospital admission diagnosis Narrative - Reported"/>
+          <translation code="42347-5" codeSystem="2.16.840.1.113883.6.1" displayName="Admission Diagnosis"/>
+          </code>
           <title>Hospital Admission Diagnosis</title>
           <text>See Encounters Section and Problems Section</text>
         </section>
@@ -5614,7 +5616,9 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
       <component>
         <section nullFlavor="NI">
           <templateId root="2.16.840.1.113883.10.20.22.2.24" extension="2015-08-01"/>
-          <code code="11535-2" codeSystem="2.16.840.1.113883.6.1" displayName="Hospital discharge diagnosis Narrative"/>
+          <code code="11535-2" codeSystem="2.16.840.1.113883.6.1" displayName="Hospital discharge diagnosis Narrative">
+      <translation code="78375-3" codeSystem="2.16.840.1.113883.6.1" displayName="Discharge Diagnosis"/>
+    </code>
           <title>Hospital Discharge Diagnosis</title>
           <text>See Encounters Section and Problems Section</text>
         </section>
