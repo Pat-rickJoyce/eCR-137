@@ -6218,8 +6218,8 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
 <component>
   <section>
     <templateId root="2.16.840.1.113883.10.20.22.2.17" extension="2020-09-01"/>
-    <code code="87729-0" codeSystem="2.16.840.1.113883.6.1" 
-          displayName="Occupational Data for Health"/>
+    <code code="29762-2" codeSystem="2.16.840.1.113883.6.1" 
+      displayName="Social History"/>
     <title>Occupational Data for Health</title>
     <text>
       <table border="1">
@@ -6600,23 +6600,21 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
       </table>
     </text>
     
-    <!-- Emergency Outbreak Observation Entry -->
-    ${data.emergencyOutbreakInfo && data.emergencyOutbreakInfo !== 'N/A' 
-      ? `<entry typeCode="DRIV">
-           <observation classCode="OBS" moodCode="EVN">
-             <templateId root="2.16.840.1.113883.10.20.22.4.38"/>
-             <id root="${generateGUID()}"/>
-             <code code="83910-0" codeSystem="2.16.840.1.113883.6.1" 
-                   displayName="Emergency outbreak information"/>
-             <statusCode code="completed"/>
-             <effectiveTime value="${data.encounterDate}"/>
-             <value xsi:type="CD" code="${data.emergencyOutbreakInfo}" 
-                    codeSystem="2.16.840.1.113883.6.96" 
-                    displayName="${getEmergencyOutbreakDisplay(data.emergencyOutbreakInfo)}"/>
-           </observation>
-         </entry>`
-      : ''
-    }
+    <!-- REQUIRED Emergency Outbreak Information Observation -->
+<entry typeCode="DRIV">
+  <observation classCode="OBS" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.15.2.3.40" extension="2021-01-01"/>
+    <id root="${generateGUID()}"/>
+    <code code="83910-0" codeSystem="2.16.840.1.113883.6.1" 
+          displayName="Emergency outbreak information"/>
+    <statusCode code="completed"/>
+    <effectiveTime value="${data.encounterDate}"/>
+    <value xsi:type="CD" 
+           code="${data.emergencyOutbreakInfo || 'N/A'}" 
+           codeSystem="2.16.840.1.113883.6.96" 
+           displayName="${getEmergencyOutbreakDisplay(data.emergencyOutbreakInfo || 'N/A')}"/>
+  </observation>
+</entry>
     
     <!-- Exposure Information Entry -->
     ${data.exposureContactInfo && data.exposureContactInfo !== '373068000' 
