@@ -321,7 +321,7 @@
                 </div>
                 <div class="input-group">
                     <label>Country</label>
-                    <input type="text" id="patientCountry" value="United States">
+                    <input type="text" id="patientCountry" value="US">
                 </div>
                 <div class="input-group">
                     <label>Administrative Gender Code <span style="color: red;">*</span></label>
@@ -447,7 +447,7 @@
                 </div>
                 <div class="input-group">
                     <label>Country of Nationality</label>
-                    <input type="text" id="countryOfNationality" value="United States">
+                    <input type="text" id="countryOfNationality" value="US">
                 </div>
                 <div class="input-group">
                     <label>Country of Nationality Code</label>
@@ -455,7 +455,7 @@
                 </div>
                 <div class="input-group">
                     <label>Country of Residence</label>
-                    <input type="text" id="countryOfResidence" value="United States">
+                    <input type="text" id="countryOfResidence" value="US">
                 </div>
                 <div class="input-group">
                     <label>Country of Residence Code</label>
@@ -756,7 +756,7 @@
                 <div class="input-group">
                     <label>Diagnosis 2 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
                     <div class="code-search">
-                        <input type="text" id="diagnosis2Code" value="" onblur="validateTriggerCode('diagnosis2Code')">
+                        <input type="text" id="diagnosis2Code" value="67531005" onblur="validateTriggerCode('diagnosis2Code')">
                         <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis2Code')">🔍</button>
                     </div>
                     <div id="diagnosis2Code_results" class="search-results"></div>
@@ -782,7 +782,7 @@
                 <div class="input-group">
                     <label>Diagnosis 3 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
                     <div class="code-search">
-                        <input type="text" id="diagnosis3Code" value="" onblur="validateTriggerCode('diagnosis3Code')">
+                        <input type="text" id="diagnosis3Code" value="414819007" onblur="validateTriggerCode('diagnosis3Code')">
                         <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis3Code')">🔍</button>
                     </div>
                     <div id="diagnosis3Code_results" class="search-results"></div>
@@ -1422,14 +1422,14 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
             <h2 class="section-title">Pregnancy Information</h2>
             <div class="form-grid">
                 <div class="input-group">
-                    <label>Pregnancy Status</label>
-                    <select id="pregnancyStatus">
-                        <option value="77386006">Pregnant</option>
-                        <option value="60001007" selected>Not pregnant</option>
-                        <option value="102874004">Possible pregnancy</option>
-                        <option value="261665006">Unknown</option>
-                    </select>
-                </div>
+    <label>Pregnancy Status</label>
+    <select id="pregnancyStatus">
+        <option value="77386006" selected>Pregnant</option>  
+        <option value="60001007">Not pregnant</option>
+        <option value="102874004">Possible pregnancy</option>
+        <option value="261665006">Unknown</option>
+    </select>
+</div>
                 <div class="input-group">
                     <label>Pregnancy Effective Time (YYYYMMDD)</label>
                     <input type="text" id="pregnancyEffectiveTime" placeholder="Date of assessment" value="20240615">
@@ -1985,15 +1985,15 @@ Procedure: Use for therapeutic interventions that alter the patient's physical c
 
         function getRouteTranslation(routeCode) {
     const routeMap = {
-        'PO': { code: '26643006', display: 'Oral route' },
-        'IV': { code: '47625008', display: 'Intravenous route' },
-        'IM': { code: '78421000', display: 'Intramuscular route' },
-        'SC': { code: '34206005', display: 'Subcutaneous route' },
-        'SL': { code: '37161004', display: 'Sublingual route' },
-        'TOP': { code: '6064005', display: 'Topical route' },
-        'INH': { code: '26643006', display: 'Inhalation route' }
+        'PO': { fdaCode: 'C38288', snomedCode: '26643006', display: 'Oral route' },
+        'IV': { fdaCode: 'C28161', snomedCode: '47625008', display: 'Intravenous route' },
+        'IM': { fdaCode: 'C28161', snomedCode: '78421000', display: 'Intramuscular route' },
+        'SC': { fdaCode: 'C38299', snomedCode: '34206005', display: 'Subcutaneous route' },
+        'SL': { fdaCode: 'C38238', snomedCode: '37161004', display: 'Sublingual route' },
+        'TOP': { fdaCode: 'C38675', snomedCode: '6064005', display: 'Topical route' },
+        'INH': { fdaCode: 'C38284', snomedCode: '26643006', display: 'Inhalation route' }
     };
-    return routeMap[routeCode] || { code: '26643006', display: 'Oral route' };
+    return routeMap[routeCode] || routeMap['PO'];
 }
 
 function fixDoseUnit(unit) {
@@ -4021,6 +4021,20 @@ function generateVitalSignsEntries(data) {
               displayName="Vital signs"/>
         <statusCode code="completed"/>
         <effectiveTime value="${data.encounterDate}"/>
+        <author>
+      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+      <time value="20240615"/>
+      <assignedAuthor>
+        <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+        <code code="207Q00000X" codeSystem="2.16.840.1.113883.6.101" displayName="Family Medicine Physician"/>
+        <assignedPerson>
+          <name>
+            <given>Royce</given>
+            <family>Hemlock</family>
+          </name>
+        </assignedPerson>
+      </assignedAuthor>
+    </author>
 
         ${data.temperature         ? vital('8310-5', 'Body temperature',          data.temperature,      '[degF]')     : ''}
         ${data.bloodPressure       ? vital('8480-6', 'Systolic blood pressure',   data.bloodPressure.split('/')[0], 'mm[Hg]') : ''}
@@ -4053,7 +4067,9 @@ function buildSpecimenSection(d) {
       <procedure classCode="PROC" moodCode="EVN">
         <templateId root="2.16.840.1.113883.10.20.22.4.14" extension="2014-06-09" />
         <id root="${generateGUID()}" />
-        <code code="33747-0" codeSystem="2.16.840.1.113883.6.1" displayName="General procedure" />
+         <code code="33747-0" codeSystem="2.16.840.1.113883.6.1" displayName="General procedure">
+      <originalText>General procedure</originalText>
+    </code>
         <statusCode code="completed" />
         <effectiveTime value="${xmlEscape(dt)}"/>
         <author>
@@ -4134,6 +4150,7 @@ if (d.specimen2Id) {
         <!-- *Consolidated CDA* Specimen section -->
         <templateId root="2.16.840.1.113883.10.20.22.2.3"/>
         <code code="30954-2" codeSystem="2.16.840.1.113883.6.1" displayName="Specimen"/>
+
         <title>Specimen Information</title>
         <text>
           <table border="1">
@@ -4307,8 +4324,11 @@ function generateMedicationEntries (d) {
             <effectiveTime xsi:type="IVL_TS">
               <low value="${m.time}"/>
             </effectiveTime>
-            <routeCode code="${m.route}"
-                       codeSystem="2.16.840.1.113883.3.26.1.1"/>
+           <routeCode code="${getRouteTranslation(m.route).fdaCode}" codeSystem="2.16.840.1.113883.3.26.1.1">
+  <translation code="${getRouteTranslation(m.route).snomedCode}" 
+               codeSystem="2.16.840.1.113883.6.96" 
+               displayName="${getRouteTranslation(m.route).display}"/>
+</routeCode>
 ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <!-- ADD THIS AUTHOR PARTICIPATION -->
             <author>
               <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
@@ -4344,34 +4364,42 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <!-- ADD THIS AUTHO
 
 // ... existing functions like generateImmunizationEntries ...
 
-        // ADD THE PREGNANCY FUNCTIONS HERE:
-        function generatePregnancyObservation(data) {
-            // Only generate if patient is female and has pregnancy status
-            if (data.patientGender !== 'F' || !data.pregnancyStatus) {
-                return '';
-            }
+ function generatePregnancyObservation(data) {
+    // Only generate if patient is female and has pregnancy status
+    if (data.patientGender !== 'F' || !data.pregnancyStatus) {
+        return '';
+    }
 
-            return `
-                <entry typeCode="DRIV">
-                    <observation classCode="OBS" moodCode="EVN">
-                        <!-- Pregnancy Observation -->
-                        <templateId root="2.16.840.1.113883.10.20.15.3.8"/>
-                        <id root="${generateGUID()}"/>
-                        <code code="ASSERTION" codeSystem="2.16.840.1.113883.5.4" 
-                              codeSystemName="HL7ActCode" displayName="Assertion"/>
-                        <statusCode code="completed"/>
-                        ${data.pregnancyEffectiveTime ? `<effectiveTime value="${data.pregnancyEffectiveTime}"/>` : ''}
-                        <value xsi:type="CD" 
-                               code="${data.pregnancyStatus}" 
-                               codeSystem="2.16.840.1.113883.6.96" 
-                               codeSystemName="SNOMED CT"
-                               displayName="${getPregnancyStatusDisplay(data.pregnancyStatus)}"/>
-                        
-                        ${data.estimatedDeliveryDate ? generateEstimatedDeliveryDate(data.estimatedDeliveryDate) : ''}
-                        ${data.gestationalAge ? generateGestationalAgeObservation(data.gestationalAge) : ''}
-                    </observation>
-                </entry>`;
-        }
+    // Only include delivery date and gestational age if actually pregnant
+    const isPregnant = data.pregnancyStatus === '77386006';
+    
+    // Ensure we have a properly formatted date (at least 8 characters YYYYMMDD)
+    const effectiveDate = data.pregnancyEffectiveTime || data.encounterDate || '20240615';
+    
+    return `
+        <entry typeCode="DRIV">
+            <observation classCode="OBS" moodCode="EVN">
+                <!-- Pregnancy Observation -->
+                <templateId root="2.16.840.1.113883.10.20.15.3.8"/>
+                <id root="${generateGUID()}"/>
+                <code code="ASSERTION" codeSystem="2.16.840.1.113883.5.4" 
+                      codeSystemName="HL7ActCode" displayName="Assertion"/>
+                <statusCode code="completed"/>
+                <effectiveTime>
+                    <low value="${effectiveDate}"/>
+                    <high nullFlavor="UNK"/>
+                </effectiveTime>
+                <value xsi:type="CD" 
+                       code="${data.pregnancyStatus}" 
+                       codeSystem="2.16.840.1.113883.6.96" 
+                       codeSystemName="SNOMED CT"
+                       displayName="${getPregnancyStatusDisplay(data.pregnancyStatus)}"/>
+                
+                ${isPregnant && data.estimatedDeliveryDate ? generateEstimatedDeliveryDate(data.estimatedDeliveryDate) : ''}
+                ${isPregnant && data.gestationalAge ? generateGestationalAgeObservation(data.gestationalAge) : ''}
+            </observation>
+        </entry>`;
+}
 
         function getPregnancyStatusDisplay(code) {
             const displays = {
@@ -4384,19 +4412,19 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <!-- ADD THIS AUTHO
         }
 
         function generateEstimatedDeliveryDate(deliveryDate) {
-            return `
-                        <entryRelationship typeCode="REFR">
-                            <observation classCode="OBS" moodCode="EVN">
-                                <!-- Estimated Date of Delivery -->
-                                <templateId root="2.16.840.1.113883.10.20.15.3.1"/>
-                                <id root="${generateGUID()}"/>
-                                <code code="11778-8" codeSystem="2.16.840.1.113883.6.1" 
-                                      codeSystemName="LOINC" displayName="Delivery date Estimated"/>
-                                <statusCode code="completed"/>
-                                <value xsi:type="TS" value="${deliveryDate}"/>
-                            </observation>
-                        </entryRelationship>`;
-        }
+    return `
+        <entryRelationship typeCode="REFR">
+            <observation classCode="OBS" moodCode="EVN">
+                <!-- Estimated Date of Delivery -->
+                <templateId root="2.16.840.1.113883.10.20.15.3.1"/>
+                <id root="${generateGUID()}"/>
+                <code code="11778-8" codeSystem="2.16.840.1.113883.6.1" 
+                      codeSystemName="LOINC" displayName="Delivery date Estimated"/>
+                <statusCode code="completed"/>
+                <value xsi:type="TS" value="${deliveryDate}"/>
+            </observation>
+        </entryRelationship>`;
+}
 
         function generateGestationalAgeObservation(gestationalAge) {
             return `
@@ -4536,12 +4564,14 @@ function generateImmunizationEntries(data) {
                     <procedure classCode="PROC" moodCode="EVN">
                         <templateId root="2.16.840.1.113883.10.20.22.4.14" extension="2014-06-09" />
                         <id root="${generateGUID()}" />
-                        <code code="${data.currentProc1Code}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.currentProc1Name}" />
+                        <code code="${data.currentProc1Code}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.currentProc1Name}">
+          <originalText>${data.currentProc1Name}</originalText>
+        </code>
                         <statusCode code="completed" />
                         <effectiveTime value="${data.currentProc1Date}" />
                         <author>
                     <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-                    <time value="${data.currentProc2Date}"/>
+                    <time value="${data.currentProc1Date}"/>
                     <assignedAuthor>
                         <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
                         <code code="${getProviderTaxonomyCode('physician').code}" 
@@ -4555,6 +4585,37 @@ function generateImmunizationEntries(data) {
                         </assignedPerson>
                     </assignedAuthor>
                 </author>
+                <performer>
+        <assignedEntity>
+            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+            <addr use="WP">
+                <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+                <city>${data.patientCity}</city>
+                <state>${data.patientState}</state>
+                <postalCode>${data.patientZip}</postalCode>
+                <country>US</country>
+            </addr>
+            <telecom use="WP" value="tel:${data.providerPhone}"/>
+            <assignedPerson>
+                <name>
+                    <given>${(data.providerName || 'Unknown').split(' ')[0]}</given>
+                    <family>${(data.providerName || 'Unknown').split(' ').slice(1).join(' ') || 'Provider'}</family>
+                </name>
+            </assignedPerson>
+            <representedOrganization>
+                <id extension="${data.organizationId || data.facilityId}" root="2.16.840.1.113883.4.6"/>
+                <name>${data.facilityName}</name>
+                <telecom use="WP" value="tel:${data.organizationPhone || data.providerPhone}"/>
+                <addr use="WP">
+                    <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+                    <city>${data.patientCity}</city>
+                    <state>${data.patientState}</state>
+                    <postalCode>${data.patientZip}</postalCode>
+                    <country>US</country>
+                </addr>
+            </representedOrganization>
+        </assignedEntity>
+    </performer>
                 <targetSiteCode code="421060004" codeSystem="2.16.840.1.113883.6.96" 
                     displayName="Structure of vertebral column"/>
                     </procedure>
@@ -4567,7 +4628,9 @@ function generateImmunizationEntries(data) {
                     <procedure classCode="PROC" moodCode="EVN">
                         <templateId root="2.16.840.1.113883.10.20.22.4.14" extension="2014-06-09" />
                         <id root="${generateGUID()}" />
-                        <code code="${data.currentProc2Code}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.currentProc2Name}" />
+                        <code code="${data.currentProc2Code}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.currentProc2Name}">
+          <originalText>${data.currentProc2Name}</originalText>
+        </code>
                         <statusCode code="completed" />
                         <effectiveTime value="${data.currentProc2Date}" />
                         <author>
@@ -4586,6 +4649,40 @@ function generateImmunizationEntries(data) {
                         </assignedPerson>
                     </assignedAuthor>
                 </author>
+                 <performer>
+            <assignedEntity>
+                <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+                <addr use="WP">
+                    <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+                    <city>${data.patientCity}</city>
+                    <state>${data.patientState}</state>
+                    <postalCode>${data.patientZip}</postalCode>
+                    <country>US</country>
+                </addr>
+                <telecom use="WP" value="tel:${data.providerPhone}"/>
+                <assignedPerson>
+                    <name>
+                        <given>${(data.providerName || 'Unknown').split(' ')[0]}</given>
+                        <family>${(data.providerName || 'Unknown').split(' ').slice(1).join(' ') || 'Provider'}</family>
+                    </name>
+                </assignedPerson>
+                <representedOrganization>
+                    <id extension="${data.organizationId || data.facilityId}" root="2.16.840.1.113883.4.6"/>
+                    <name>${data.facilityName}</name>
+                    <telecom use="WP" value="tel:${data.organizationPhone || data.providerPhone}"/>
+                    <addr use="WP">
+                        <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+                        <city>${data.patientCity}</city>
+                        <state>${data.patientState}</state>
+                        <postalCode>${data.patientZip}</postalCode>
+                        <country>US</country>
+                    </addr>
+                </representedOrganization>
+            </assignedEntity>
+        </performer>
+                 <targetSiteCode code="421060004" 
+                       codeSystem="2.16.840.1.113883.6.96" 
+                       displayName="Structure of vertebral column"/>
                     </procedure>
                 </entry>`;
             }
@@ -4597,7 +4694,9 @@ function generateImmunizationEntries(data) {
                     <procedure classCode="PROC" moodCode="EVN">
                         <templateId root="2.16.840.1.113883.10.20.22.4.415" extension="2019-06-21" />
                         <id root="${generateGUID()}" />
-                        <code code="33747-0" codeSystem="2.16.840.1.113883.6.1" displayName="General procedure" />
+                         <code code="33747-0" codeSystem="2.16.840.1.113883.6.1" displayName="General procedure">
+          <originalText>General procedure</originalText>
+        </code>
                         <statusCode code="completed" />
                         <effectiveTime value="${data.collection1Date}" />
                         <targetSiteCode code="${data.specimen1Source}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.specimen1Type}" />
@@ -4618,7 +4717,9 @@ function generateImmunizationEntries(data) {
                     <procedure classCode="PROC" moodCode="EVN">
                         <templateId root="2.16.840.1.113883.10.20.22.4.415" extension="2019-06-21" />
                         <id root="${generateGUID()}" />
-                        <code code="33747-0" codeSystem="2.16.840.1.113883.6.1" displayName="General procedure" />
+                        <code code="33747-0" codeSystem="2.16.840.1.113883.6.1" displayName="General procedure">
+          <originalText>General procedure</originalText>
+        </code>
                         <statusCode code="completed" />
                         <effectiveTime value="${data.collection2Date}" />
                         <targetSiteCode code="${data.specimen2Source}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.specimen2Type}" />
@@ -5282,9 +5383,12 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
   </place>
 </birthplace>
       <languageCommunication>
-        <languageCode code="${data.patientLanguage || 'en'}" />
-        <preferenceInd value="true" />
-      </languageCommunication>
+  <languageCode code="${data.patientLanguage || 'en'}" />
+  <preferenceInd value="true" />
+  <proficiencyLevelCode code="G" 
+                       codeSystem="2.16.840.1.113883.5.61" 
+                       displayName="Good"/>
+</languageCommunication>
       
     </patient>
     </patientRole>
@@ -5446,7 +5550,9 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
               <templateId root="2.16.840.1.113883.10.20.22.4.49" extension="2015-08-01" />
               <id root="2.16.840.1.113883.19.${data.encounterId}" />
               <code code="99213" codeSystem="2.16.840.1.113883.6.12" codeSystemName="CPT-4"
-                displayName="Office outpatient visit" />
+      displayName="Office outpatient visit">
+    <originalText>Office outpatient visit</originalText>
+</code>
               <effectiveTime>
                 <low value="${data.encounterDate}" />
                 <high value="${data.encounterDate}" />
@@ -5547,7 +5653,7 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
         <id extension="${data.adminMed1Id}" root="2.16.840.1.113883.19.5.99999.1" />
         <statusCode code="${data.adminMed1Status}" />
         <effectiveTime value="${data.adminMed1Time}" />
-        <routeCode code="${data.adminMed1Route === 'PO' ? 'C38288' : data.adminMed1Route === 'IM' ? 'C28161' : 'C38288'}" codeSystem="2.16.840.1.113883.3.26.1.1">
+        <routeCode code="${data.adminMed1Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
   <translation code="${getRouteTranslation(data.adminMed1Route).code}" 
                codeSystem="2.16.840.1.113883.6.96" 
                displayName="${getRouteTranslation(data.adminMed1Route).display}"/>
@@ -5611,8 +5717,8 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
         <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09" />
         <id extension="${data.adminMed2Id}" root="2.16.840.1.113883.19.5.99999.1" />
         <statusCode code="${data.adminMed2Status}" />
-        <effectiveTime value="${data.adminMed2Time}" />
-        <routeCode code="${data.adminMed2Route === 'PO' ? 'C38288' : data.adminMed2Route === 'IM' ? 'C28161' : 'C38288'}" codeSystem="2.16.840.1.113883.3.26.1.1">
+        <effectiveTime value="${data.adminMed2Time}" />      
+  <routeCode code="${data.adminMed2Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
   <translation code="${getRouteTranslation(data.adminMed2Route).code}" 
                codeSystem="2.16.840.1.113883.6.96" 
                displayName="${getRouteTranslation(data.adminMed2Route).display}"/>
@@ -5723,6 +5829,7 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
                   <id root="5e3c9b57-fa2e-48a2-be29-47d9873e3c13" />
                   <code code="75323-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
                     displayName="Condition">
+                     <originalText>Condition</originalText>
                     <translation code="282291009" codeSystem="2.16.840.1.113883.6.96"
                       codeSystemName="SNOMED CT" displayName="Diagnosis" />
                   </code>
@@ -6052,7 +6159,9 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
               <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.1" />
               <id root="79565142-eae0-4213-a3b3-b73cdf474682" />
               <code code="420008001" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED-CT"
-                displayName="Travel" />
+      displayName="Travel">
+    <originalText>Travel</originalText>
+</code>
               <text>Recent travel to ${data.travelLocation}</text>
               <statusCode code="completed" />
               <effectiveTime>
@@ -6062,9 +6171,9 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
               <participant typeCode="LOC">
     <participantRole classCode="TERR">
       <id nullFlavor="UNK"/>
-      <code code="${data.travelLocationCode || 'IL'}" 
-            codeSystem="2.16.840.1.113883.6.92" 
-            displayName="${data.travelLocation}"/>
+      <code code="US" 
+      codeSystem="1.0.3166.1" 
+      displayName="United States"/>
       <addr>
         <streetAddressLine>${data.travelAddress}</streetAddressLine>
         <city>${data.travelLocation.split(',')[0] || data.travelLocation}</city>
