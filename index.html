@@ -1671,7 +1671,11 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                     <input type="text" id="currentProc1Date" placeholder="e.g., 20250216" value="20240615">
                 </div>
                 <div class="input-group">
-                    <label>Current Procedure 1 Type</label>
+                    <label>Current Procedure 1 Type <span class="help-tooltip" title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
+
+Observation: Use for diagnostic activities that gather information about the patient (lab tests, imaging, assessments) without altering their physical condition.
+
+Procedure: Use for therapeutic interventions that alter the patient's physical condition (surgeries, treatments, manipulations).">ℹ️</span></label>
                     <select id="currentProc1Type">
                         <option value="act">Act</option>
                         <option value="observation">Observation</option>
@@ -1691,7 +1695,11 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                     <input type="text" id="currentProc2Date" placeholder="e.g., 20250216" value="20240615">
                 </div>
                 <div class="input-group">
-                    <label>Current Procedure 2 Type</label>
+                    <label>Current Procedure 2 Type <span class="help-tooltip" title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
+
+Observation: Use for diagnostic activities that gather information about the patient (lab tests, imaging, assessments) without altering their physical condition.
+
+Procedure: Use for therapeutic interventions that alter the patient's physical condition (surgeries, treatments, manipulations).">ℹ️</span></label>
                     <select id="currentProc2Type">
                         <option value="act">Act</option>
                         <option value="observation" selected>Observation</option>
@@ -1715,7 +1723,11 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                     <input type="text" id="triggerProc1Date" placeholder="e.g., 20250216" value="20240615">
                 </div>
                 <div class="input-group">
-                    <label>Trigger Procedure 1 Type</label>
+                    <label>Trigger Procedure 1 Type <span class="help-tooltip" title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
+
+Observation: Use for diagnostic activities that gather information about the patient (lab tests, imaging, assessments) without altering their physical condition.
+
+Procedure: Use for therapeutic interventions that alter the patient's physical condition (surgeries, treatments, manipulations).">ℹ️</span></label>
                     <select id="triggerProc1Type">
                         <option value="act">Act</option>
                         <option value="observation" selected>Observation</option>
@@ -1735,7 +1747,11 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                     <input type="text" id="plannedProc1Date" placeholder="e.g., 20250220" value="20240715">
                 </div>
                 <div class="input-group">
-                    <label>Planned Procedure 1 Type</label>
+                    <label>Planned Procedure 1 Type <span class="help-tooltip" title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
+
+Observation: Use for diagnostic activities that gather information about the patient (lab tests, imaging, assessments) without altering their physical condition.
+
+Procedure: Use for therapeutic interventions that alter the patient's physical condition (surgeries, treatments, manipulations).">ℹ️</span></label>
                     <select id="plannedProc1Type">
                         <option value="act" selected>Act</option>
                         <option value="observation">Observation</option>
@@ -4110,7 +4126,6 @@ function buildDoseXML (dVal, dUnit, vVal, vUnit) {
 
        /* ---------- Medication entries (schema-compliant) ---------- */
 function generateMedicationEntries (d) {
-
   const meds = [
     {
       code:d.adminMed1Code, name:d.adminMed1Name, id:d.adminMed1Id,
@@ -4141,7 +4156,25 @@ function generateMedicationEntries (d) {
             </effectiveTime>
             <routeCode code="${m.route}"
                        codeSystem="2.16.840.1.113883.3.26.1.1"/>
-${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
+${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <!-- ADD THIS AUTHOR PARTICIPATION -->
+            <author>
+              <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+              <time value="${m.time}"/>
+              <assignedAuthor>
+                <id extension="${d.providerId || 'UNK'}" root="2.16.840.1.113883.4.6"/>
+                <code code="${getProviderTaxonomyCode('physician').code}" 
+                      codeSystem="2.16.840.1.113883.6.101" 
+                      displayName="${getProviderTaxonomyCode('physician').display}"/>
+                <assignedPerson>
+                  <name>
+                    <given>${(d.providerName || 'Unknown Provider').split(' ')[0]}</given>
+                    <family>${(d.providerName || 'Unknown Provider').split(' ').slice(1).join(' ') || 'Provider'}</family>
+                  </name>
+                </assignedPerson>
+              </assignedAuthor>
+            </author>
+            
+            <consumable>
               <manufacturedProduct classCode="MANU">
                 <templateId root="2.16.840.1.113883.10.20.22.4.23"
                             extension="2014-06-09"/>
@@ -4155,7 +4188,6 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <consumable>
           </substanceAdministration>
         </entry>`).join('');
 }
-
 
  // Fixed route code mapping function using FDA Route of Administration Terminology
 function getImmunizationRouteTranslation(routeCode) {
