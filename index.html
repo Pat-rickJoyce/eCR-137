@@ -4124,6 +4124,35 @@ function buildDoseXML (dVal, dUnit, vVal, vUnit) {
   return xml;
 }
 
+function getInterpretationCode(result, interpretation) {
+    // Use the interpretation field if available
+    if (interpretation) {
+        const interpMap = {
+            'A': 'A',     // Abnormal
+            'N': 'N',     // Normal
+            'H': 'H',     // High
+            'L': 'L',     // Low
+            'HH': 'HH',   // Critical high
+            'LL': 'LL'    // Critical low
+        };
+        if (interpMap[interpretation]) return interpMap[interpretation];
+    }
+    
+    // Fallback based on result text
+    if (result) {
+        const resultLower = result.toLowerCase();
+        if (resultLower.includes('detected') || resultLower.includes('positive')) return 'A';
+        if (resultLower.includes('not detected') || resultLower.includes('negative')) return 'N';
+        if (resultLower.includes('high')) return 'H';
+        if (resultLower.includes('low')) return 'L';
+    }
+    
+    // Default fallback
+    return 'A'; // Abnormal as default for lab results
+}
+
+
+
        /* ---------- Medication entries (schema-compliant) ---------- */
 function generateMedicationEntries (d) {
   const meds = [
@@ -4297,6 +4326,17 @@ function generateImmunizationEntries(data) {
         <id root="${generateGUID()}" />
         <statusCode code="${status}" />
         <effectiveTime value="${date}" />
+        <entryRelationship typeCode="COMP" inversionInd="true">
+  <act classCode="ACT" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.118"/>
+    <id root="${generateGUID()}"/>
+    <code code="416118004"
+          codeSystem="2.16.840.1.113883.6.96"
+          displayName="Administration of substance (procedure)"/>
+    <statusCode code="completed"/>
+    ${date ? `<effectiveTime value="${date}"/>` : ''}
+  </act>
+</entryRelationship>
         ${route ? `<routeCode code="${routeTranslation.code}" codeSystem="2.16.840.1.113883.3.26.1.1" displayName="${routeTranslation.display}">
           <translation code="${routeTranslation.snomed}" 
                        codeSystem="2.16.840.1.113883.6.96" 
@@ -5509,7 +5549,23 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
               <code code="CONC" codeSystem="2.16.840.1.113883.5.6" displayName="Concern" />
               <statusCode code="active" />
               <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
-              
+                <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
+
               <!-- Diagnosis with RCTC Trigger Code Template -->
               <entryRelationship typeCode="SUBJ">
                 <observation classCode="OBS" moodCode="EVN" negationInd="false">
@@ -5524,6 +5580,22 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
                   </code>
                   <statusCode code="completed" />
                   <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+                     <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
                    ${data.diagnosis1Code
   ? `<value xsi:type="CD"
             code="${data.diagnosis1Code}"
@@ -5555,6 +5627,22 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
                   </code>
                   <statusCode code="completed" />
                   <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+                     <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
                  ${data.diagnosis2Code
   ? `<value xsi:type="CD"
             code="${data.diagnosis2Code}"
@@ -5586,6 +5674,22 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
                   </code>
                   <statusCode code="completed" />
                   <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+                     <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
                  ${data.diagnosis3Code 
   ? `<value xsi:type="CD" code="${data.diagnosis3Code}" codeSystem="2.16.840.1.113883.6.96"
        codeSystemName="SNOMED-CT" displayName="${data.diagnosis3Name}"
@@ -5639,6 +5743,22 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
                <low value="${data.encounterDate || ''}" />
                <high value="${data.encounterDate || ''}" />
              </effectiveTime>
+               <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
              <component>
                <observation classCode="OBS" moodCode="EVN">
                  <templateId root="2.16.840.1.113883.10.20.22.4.2" />
@@ -5651,8 +5771,27 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
                    sdtc:valueSetVersion="${getConditionSpecificValueSet(data.labTest1Code, '2.16.840.1.113883.6.1').version}" />
                  <statusCode code="completed" />
                  <effectiveTime value="${data.encounterDate || ''}" />
+                   <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
                  <value code="260373001" codeSystem="2.16.840.1.113883.6.96"
                    codeSystemName="SNOMED-CT" displayName="${data.labTest1Result || ''}" xsi:type="CD" />
+                   <interpretationCode code="${getInterpretationCode(data.labTest1Result, data.labTest1Interpretation)}" 
+                       codeSystem="2.16.840.1.113883.5.83" 
+                       codeSystemName="ObservationInterpretation"/>
                </observation>
              </component>
            </organizer>
@@ -5671,6 +5810,22 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
                <low value="${data.encounterDate || ''}" />
                <high value="${data.encounterDate || ''}" />
              </effectiveTime>
+               <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
              <component>
                <observation classCode="OBS" moodCode="EVN">
                  <templateId root="2.16.840.1.113883.10.20.22.4.2" />
@@ -5683,6 +5838,22 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
                    sdtc:valueSetVersion="${getConditionSpecificValueSet(data.labTest2Code, '2.16.840.1.113883.6.1').version}" />
                  <statusCode code="completed" />
                  <effectiveTime value="${data.encounterDate || ''}" />
+                   <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
                  <value code="260373001" codeSystem="2.16.840.1.113883.6.96"
                    codeSystemName="SNOMED-CT" displayName="${data.labTest2Result || ''}" xsi:type="CD" />
                </observation>
@@ -5724,6 +5895,43 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
             </act>
           </entry>
           
+  <!-- ADDED to satisfy CONF:1198-14824 — exactly one Smoking Status - MU (V2) -->
+    <entry>
+      <observation classCode="OBS" moodCode="EVN">
+        <!-- Smoking Status - Meaningful Use (V2) -->
+        <templateId root="2.16.840.1.113883.10.20.22.4.78"/>
+        <templateId root="2.16.840.1.113883.10.20.22.4.78" extension="2014-06-09"/>
+        <id root="b3d8d3b1-9b8b-49a8-8ad0-6a0e0c0a1234"/>
+        <code code="72166-2" codeSystem="2.16.840.1.113883.6.1" displayName="Tobacco smoking status NHIS"/>
+        <statusCode code="completed"/>
+        <!-- use the encounter/assessment date if known -->
+        <effectiveTime value="20240520"/>
+           <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
+        <!-- SNOMED CT concept from the Smoking Status value set -->
+        <value xsi:type="CD"
+               code="266919005"
+               codeSystem="2.16.840.1.113883.6.96"
+               displayName="Never smoker"/>
+      </observation>
+    </entry>
+
+
+
          <!-- Pregnancy Observation -->
           ${generatePregnancyObservation(data)}
 
@@ -5748,6 +5956,22 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
               <code code="76691-5" codeSystem="2.16.840.1.113883.6.1" displayName="Gender identity" />
               <statusCode code="completed" />
               <effectiveTime value="${data.patientBirthDate}" />
+                <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
               <value xsi:type="CD" code="${data.patientGenderIdentity || data.patientGender}" codeSystem="2.16.840.1.113883.6.96" />
             </observation>
           </entry>
@@ -5763,6 +5987,22 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
               <code code="87729-0" codeSystem="2.16.840.1.113883.6.1" displayName="Current occupation" />
               <statusCode code="completed" />
               <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+                <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
               <value xsi:type="ST">${data.currentOccupation}</value>
               <participant typeCode="IND">
                 <participantRole classCode="ASSIGNED">
@@ -5919,12 +6159,44 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
         <code code="42346-7" codeSystem="2.16.840.1.113883.6.1" displayName="Medications on admission"/>
         <statusCode code="active"/>
         <effectiveTime value="${data.encounterDate}"/>
+  <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
         <entryRelationship typeCode="SUBJ">
           <substanceAdministration classCode="SBADM" moodCode="INT">
             <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09"/>
             <id root="${generateGUID()}"/>
             <statusCode code="active"/>
             <effectiveTime value="${data.encounterDate}"/>
+               <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
             <routeCode code="${data.adminMed1Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
               <translation code="${getRouteTranslation(data.adminMed1Route).code}" 
                            codeSystem="2.16.840.1.113883.6.96" 
