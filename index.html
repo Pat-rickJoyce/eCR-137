@@ -1348,7 +1348,7 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                 </div>
                 <div class="input-group">
                <label>Vaccine 1 Lot</label>
-               <input type="text" id="vaccine1Lot" placeholder="e.g., ABC12345">
+               <input type="text" id="vaccine1Lot" value="ABC12345">
                </div>
                 <div class="input-group">
                     <label>Dose Quantity 1</label>
@@ -1395,7 +1395,7 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                 </div>
                 <div class="input-group">
                 <label>Vaccine 2 Lot</label>
-                <input type="text" id="vaccine2Lot" placeholder="e.g., XYZ98765">
+                <input type="text" id="vaccine2Lot" value="XYZ98765">
                 </div>
                 <div class="input-group">
                     <label>Dose Quantity 2</label>
@@ -4072,6 +4072,37 @@ function buildSpecimenSection(d) {
                 </assignedPerson>
             </assignedAuthor>
         </author>
+        <performer>
+  <assignedEntity>
+    <id extension="${d.providerId}" root="2.16.840.1.113883.4.6"/>
+    <addr use="WP">
+      <streetAddressLine>${d.facilityAddress}</streetAddressLine>
+      <city>${d.patientCity}</city>
+      <state>${d.patientState}</state>
+      <postalCode>${d.patientZip}</postalCode>
+      <country>US</country>
+    </addr>
+    <telecom use="WP" value="tel:${d.providerPhone}"/>
+    <assignedPerson>
+      <name>
+        <given>${(d.providerName || 'Unknown').split(' ')[0]}</given>
+        <family>${(d.providerName || 'Unknown').split(' ').slice(1).join(' ') || 'Provider'}</family>
+      </name>
+    </assignedPerson>
+    <representedOrganization>
+      <id extension="${d.organizationId || d.facilityId}" root="2.16.840.1.113883.4.6"/>
+      <name>${d.facilityName}</name>
+      <telecom use="WP" value="tel:${d.organizationPhone || d.providerPhone}"/>
+      <addr use="WP">
+        <streetAddressLine>${d.facilityAddress}</streetAddressLine>
+        <city>${d.patientCity}</city>
+        <state>${d.patientState}</state>
+        <postalCode>${d.patientZip}</postalCode>
+        <country>US</country>
+      </addr>
+    </representedOrganization>
+  </assignedEntity>
+</performer>
         <targetSiteCode displayName="${xmlEscape(src)}" codeSystem="2.16.840.1.113883.6.96" />
         <participant typeCode="PRD">
           <participantRole classCode="SPEC">
@@ -4151,6 +4182,99 @@ function getInterpretationCode(result, interpretation) {
     return 'A'; // Abnormal as default for lab results
 }
 
+function getEmergencyOutbreakDisplay(code) {
+    const displays = {
+        '443684005': 'Disease outbreak',
+        '410546004': 'Public health emergency', 
+        '261665006': 'Unknown',
+        'N/A': 'Not applicable'
+    };
+    return displays[code] || 'Not specified';
+}
+
+function getReferenceRange(testCode, referenceRangeText) {
+    if (referenceRangeText) {
+        return `
+        <referenceRange>
+          <observationRange>
+            <text>${referenceRangeText}</text>
+          </observationRange>
+        </referenceRange>`;
+    }
+    
+    // Default reference ranges for common tests
+    const defaultRanges = {
+        '94310-0': 'Not Detected', // COVID-19
+        '34487-9': 'Not Detected'  // Influenza
+    };
+    
+    if (defaultRanges[testCode]) {
+        return `
+        <referenceRange>
+          <observationRange>
+            <text>${defaultRanges[testCode]}</text>
+            <value xsi:type="CD" code="260415000" 
+                   codeSystem="2.16.840.1.113883.6.96" 
+                   displayName="Not detected"/>
+          </observationRange>
+        </referenceRange>`;
+    }
+    
+    return '';
+}
+
+function getEmploymentStatusDisplay(status) {
+    const displays = {
+        '1': 'Employed',
+        '2': 'Unemployed', 
+        '3': 'Not in labor force',
+        '4': 'Retired',
+        '5': 'Student',
+        'UNK': 'Unknown'
+    };
+    return displays[status] || 'Unknown';
+}
+
+function getExposureContactDisplay(code) {
+    const displays = {
+        '24932003': 'Exposed',
+        '84100007': 'Contact',
+        '373068000': 'No exposure',
+        '261665006': 'Unknown'
+    };
+    return displays[code] || 'Unknown';
+}
+
+function getExposureTypeDisplay(code) {
+    const displays = {
+        '409822003': 'Direct contact',
+        '417746004': 'Airborne',
+        '418038007': 'Droplet', 
+        '447964005': 'Contact precaution',
+        'OTH': 'Other'
+    };
+    return displays[code] || 'Other';
+}
+
+function getQuarantineStatusDisplay(code) {
+    const displays = {
+        '182856006': 'In quarantine',
+        '182857002': 'Released from quarantine',
+        '405178008': 'Not in quarantine',
+        '261665006': 'Unknown'
+    };
+    return displays[code] || 'Unknown';
+}
+
+function getIsolationStatusDisplay(code) {
+    const displays = {
+        '40174006': 'In isolation',
+        '182840001': 'Released from isolation', 
+        '385432009': 'Not in isolation',
+        '261665006': 'Unknown'
+    };
+    return displays[code] || 'Unknown';
+}
 
 
        /* ---------- Medication entries (schema-compliant) ---------- */
@@ -4431,6 +4555,8 @@ function generateImmunizationEntries(data) {
                         </assignedPerson>
                     </assignedAuthor>
                 </author>
+                <targetSiteCode code="421060004" codeSystem="2.16.840.1.113883.6.96" 
+                    displayName="Structure of vertebral column"/>
                     </procedure>
                 </entry>`;
             }
@@ -5126,6 +5252,8 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
       <ethnicGroupCode code="${data.patientEthnicity}" codeSystem="2.16.840.1.113883.6.238"
         codeSystemName="Race &amp; Ethnicity - CDC" displayName="${getEthnicityDisplayName(data.patientEthnicity)}" />
       ${data.patientDetailedEthnicity ? `<sdtc:ethnicGroupCode code="${data.patientDetailedEthnicity}" codeSystem="2.16.840.1.113883.6.238" />` : ''}
+      <maritalStatusCode code="S" codeSystem="2.16.840.1.113883.5.2" 
+                     codeSystemName="MaritalStatus" displayName="Never Married"/>
       ${data.guardianName ? `
       <guardian>
         <code code="${data.guardianCode || 'GUARD'}" codeSystem="2.16.840.1.113883.11.20.12.1" />
@@ -5323,6 +5451,26 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
                 <low value="${data.encounterDate}" />
                 <high value="${data.encounterDate}" />
               </effectiveTime>
+              <participant typeCode="LOC">
+    <participantRole classCode="SDLOC">
+      <templateId root="2.16.840.1.113883.10.20.22.4.32"/>
+      <id root="2.16.840.1.113883.4.6" extension="${data.facilityId || data.organizationId}"/>
+      <code code="${data.facilityTypeCode || 'OF'}" 
+            codeSystem="2.16.840.1.113883.5.111" 
+            displayName="Outpatient facility"/>
+      <addr use="WP">
+        <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+        <city>${data.patientCity}</city>
+        <state>${data.patientState}</state>
+        <postalCode>${data.patientZip}</postalCode>
+        <country>US</country>
+      </addr>
+      <telecom use="WP" value="tel:${data.organizationPhone || data.providerPhone}"/>
+      <playingEntity classCode="PLC">
+        <name>${data.facilityName}</name>
+      </playingEntity>
+    </participantRole>
+  </participant>
             </encounter>
           </entry>
         </section>
@@ -5792,6 +5940,14 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
                    <interpretationCode code="${getInterpretationCode(data.labTest1Result, data.labTest1Interpretation)}" 
                        codeSystem="2.16.840.1.113883.5.83" 
                        codeSystemName="ObservationInterpretation"/>
+                        <referenceRange>
+      <observationRange>
+        <text>Not Detected</text>
+        <value xsi:type="CD" code="260415000" 
+               codeSystem="2.16.840.1.113883.6.96" 
+               displayName="Not detected"/>
+      </observationRange>
+    </referenceRange>
                </observation>
              </component>
            </organizer>
@@ -5856,6 +6012,17 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
           </author>
                  <value code="260373001" codeSystem="2.16.840.1.113883.6.96"
                    codeSystemName="SNOMED-CT" displayName="${data.labTest2Result || ''}" xsi:type="CD" />
+                   <interpretationCode code="${getInterpretationCode(data.labTest2Result, data.labTest2Interpretation)}" 
+                   codeSystem="2.16.840.1.113883.5.83" codeSystemName="ObservationInterpretation"/>
+
+<referenceRange>
+  <observationRange>
+    <text>${data.labTest1ReferenceRange || 'Not Detected'}</text>
+    <value xsi:type="CD" code="260415000" 
+           codeSystem="2.16.840.1.113883.6.96" 
+           displayName="Not detected"/>
+  </observationRange>
+</referenceRange>
                </observation>
              </component>
            </organizer>
@@ -5892,6 +6059,23 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
                 <low value="${data.travelStartDate}" />
                 <high value="${data.travelEndDate}" />
               </effectiveTime>
+              <participant typeCode="LOC">
+    <participantRole classCode="TERR">
+      <id nullFlavor="UNK"/>
+      <code code="${data.travelLocationCode || 'IL'}" 
+            codeSystem="2.16.840.1.113883.6.92" 
+            displayName="${data.travelLocation}"/>
+      <addr>
+        <streetAddressLine>${data.travelAddress}</streetAddressLine>
+        <city>${data.travelLocation.split(',')[0] || data.travelLocation}</city>
+        <state>${data.travelLocationCode || 'IL'}</state>
+        <country>US</country>
+      </addr>
+      <playingEntity classCode="PLC">
+        <name>${data.travelLocation}</name>
+      </playingEntity>
+    </participantRole>
+  </participant>
             </act>
           </entry>
           
@@ -6029,6 +6213,110 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
           </entry>` : ''}
         </section>
       </component>
+
+<!-- Occupational Data for Health Template Requirements Section -->
+<component>
+  <section>
+    <templateId root="2.16.840.1.113883.10.20.22.2.17" extension="2020-09-01"/>
+    <code code="87729-0" codeSystem="2.16.840.1.113883.6.1" 
+          displayName="Occupational Data for Health"/>
+    <title>Occupational Data for Health</title>
+    <text>
+      <table border="1">
+        <thead>
+          <tr><th>Category</th><th>Value</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Current Occupation</td>
+            <td>${data.currentOccupation}</td>
+            <td>Job Title: ${data.currentJobTitle}</td>
+          </tr>
+          <tr>
+            <td>Current Industry</td>
+            <td>${data.currentIndustry}</td>
+            <td>Employer: ${data.currentEmployerName}</td>
+          </tr>
+          <tr>
+            <td>Employment Status</td>
+            <td>${getEmploymentStatusDisplay(data.employmentStatus)}</td>
+            <td>Occupational Exposure Risk: ${data.occupationalExposure === 'Y' ? 'Yes' : data.occupationalExposure === 'N' ? 'No' : 'Unknown'}</td>
+          </tr>
+        </tbody>
+      </table>
+    </text>
+    
+    <!-- Current Occupation Observation -->
+    <entry typeCode="DRIV">
+      <observation classCode="OBS" moodCode="EVN">
+        <templateId root="2.16.840.1.113883.10.20.22.4.38" extension="2015-08-01" />
+        <id root="${generateGUID()}" />
+        <code code="87729-0" codeSystem="2.16.840.1.113883.6.1" displayName="Current occupation" />
+        <statusCode code="completed" />
+        <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+        <author>
+          <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+          <time value="${data.encounterDate}"/>
+          <assignedAuthor>
+            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+            <code code="${getProviderTaxonomyCode('physician').code}" 
+                  codeSystem="2.16.840.1.113883.6.101" 
+                  displayName="${getProviderTaxonomyCode('physician').display}"/>
+            <assignedPerson>
+              <name>
+                <given>${(data.providerName || 'Unknown').split(' ')[0]}</given>
+                <family>${(data.providerName || 'Unknown').split(' ').slice(1).join(' ') || 'Provider'}</family>
+              </name>
+            </assignedPerson>
+          </assignedAuthor>
+        </author>
+        <value xsi:type="ST">${data.currentOccupation}</value>
+        <participant typeCode="IND">
+          <participantRole classCode="ASSIGNED">
+            ${data.currentEmployerAddress ? `<addr><streetAddressLine>${data.currentEmployerAddress}</streetAddressLine></addr>` : ''}
+            ${data.currentEmployerPhone ? `<telecom value="tel:${data.currentEmployerPhone}" />` : ''}
+            <playingEntity classCode="ORG">
+              <name>${data.currentEmployerName || 'Unknown'}</name>
+            </playingEntity>
+          </participantRole>
+        </participant>
+      </observation>
+    </entry>
+    
+    <!-- Current Industry Observation -->
+    <entry typeCode="DRIV">
+      <observation classCode="OBS" moodCode="EVN">
+        <templateId root="2.16.840.1.113883.10.20.22.4.216" extension="2022-06-01" />
+        <id root="${generateGUID()}" />
+        <code code="21843-8" codeSystem="2.16.840.1.113883.6.1" displayName="History of Occupation industry" />
+        <statusCode code="active" />
+        <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+        <author>
+          <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+          <time value="${data.encounterDate}"/>
+          <assignedAuthor>
+            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+            <code code="${getProviderTaxonomyCode('physician').code}" 
+                  codeSystem="2.16.840.1.113883.6.101" 
+                  displayName="${getProviderTaxonomyCode('physician').display}"/>
+            <assignedPerson>
+              <name>
+                <given>${(data.providerName || 'Unknown').split(' ')[0]}</given>
+                <family>${(data.providerName || 'Unknown').split(' ').slice(1).join(' ') || 'Provider'}</family>
+              </name>
+            </assignedPerson>
+          </assignedAuthor>
+        </author>
+        <value xsi:type="ST">${data.currentIndustry}</value>
+      </observation>
+    </entry>
+  </section>
+</component>
+
+
+
+
+
 
       <!-- Vital Signs Section -->
       <component>
@@ -6271,7 +6559,84 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
           <text>${data.chiefComplaint}</text>
         </section>
       </component>
-
+<!-- Emergency Outbreak Information Section -->
+<component>
+  <section>
+    <templateId root="2.16.840.1.113883.10.20.15.2.2.4" extension="2021-01-01"/>
+    <code code="83910-0" codeSystem="2.16.840.1.113883.6.1" 
+          codeSystemName="LOINC" displayName="Emergency outbreak information"/>
+    <title>Emergency Outbreak Information</title>
+    <text>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Information</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Emergency/Outbreak Status</td>
+            <td>${getEmergencyOutbreakDisplay(data.emergencyOutbreakInfo)}</td>
+            <td>${data.outbreakDetails}</td>
+          </tr>
+          <tr>
+            <td>Exposure/Contact</td>
+            <td>${getExposureContactDisplay(data.exposureContactInfo)}</td>
+            <td>Type: ${getExposureTypeDisplay(data.exposureType)}, Location: ${data.exposureLocation}, Date: ${data.exposureDate}</td>
+          </tr>
+          <tr>
+            <td>Contact Person</td>
+            <td>${data.contactPersonName}</td>
+            <td>Phone: ${data.contactPersonPhone}</td>
+          </tr>
+          <tr>
+            <td>Quarantine/Isolation</td>
+            <td>Quarantine: ${getQuarantineStatusDisplay(data.quarantineStatus)}, Isolation: ${getIsolationStatusDisplay(data.isolationStatus)}</td>
+            <td>Current status as of encounter date</td>
+          </tr>
+        </tbody>
+      </table>
+    </text>
+    
+    <!-- Emergency Outbreak Observation Entry -->
+    ${data.emergencyOutbreakInfo && data.emergencyOutbreakInfo !== 'N/A' 
+      ? `<entry typeCode="DRIV">
+           <observation classCode="OBS" moodCode="EVN">
+             <templateId root="2.16.840.1.113883.10.20.22.4.38"/>
+             <id root="${generateGUID()}"/>
+             <code code="83910-0" codeSystem="2.16.840.1.113883.6.1" 
+                   displayName="Emergency outbreak information"/>
+             <statusCode code="completed"/>
+             <effectiveTime value="${data.encounterDate}"/>
+             <value xsi:type="CD" code="${data.emergencyOutbreakInfo}" 
+                    codeSystem="2.16.840.1.113883.6.96" 
+                    displayName="${getEmergencyOutbreakDisplay(data.emergencyOutbreakInfo)}"/>
+           </observation>
+         </entry>`
+      : ''
+    }
+    
+    <!-- Exposure Information Entry -->
+    ${data.exposureContactInfo && data.exposureContactInfo !== '373068000' 
+      ? `<entry typeCode="DRIV">
+           <observation classCode="OBS" moodCode="EVN">
+             <templateId root="2.16.840.1.113883.10.20.22.4.38"/>
+             <id root="${generateGUID()}"/>
+             <code code="418715001" codeSystem="2.16.840.1.113883.6.96" 
+                   displayName="Exposure to potentially harmful entity"/>
+             <statusCode code="completed"/>
+             <effectiveTime value="${data.exposureDate !== 'Not applicable' ? data.exposureDate : data.encounterDate}"/>
+             <value xsi:type="CD" code="${data.exposureContactInfo}" 
+                    codeSystem="2.16.840.1.113883.6.96" 
+                    displayName="${getExposureContactDisplay(data.exposureContactInfo)}"/>
+           </observation>
+         </entry>`
+      : ''
+    }
+  </section>
+</component>
     </structuredBody>
   </component>
 </ClinicalDocument>`;
