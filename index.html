@@ -4189,6 +4189,76 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <!-- ADD THIS AUTHO
         </entry>`).join('');
 }
 
+// ... existing functions like generateImmunizationEntries ...
+
+        // ADD THE PREGNANCY FUNCTIONS HERE:
+        function generatePregnancyObservation(data) {
+            // Only generate if patient is female and has pregnancy status
+            if (data.patientGender !== 'F' || !data.pregnancyStatus) {
+                return '';
+            }
+
+            return `
+                <entry typeCode="DRIV">
+                    <observation classCode="OBS" moodCode="EVN">
+                        <!-- Pregnancy Observation -->
+                        <templateId root="2.16.840.1.113883.10.20.15.3.8"/>
+                        <id root="${generateGUID()}"/>
+                        <code code="ASSERTION" codeSystem="2.16.840.1.113883.5.4" 
+                              codeSystemName="HL7ActCode" displayName="Assertion"/>
+                        <statusCode code="completed"/>
+                        ${data.pregnancyEffectiveTime ? `<effectiveTime value="${data.pregnancyEffectiveTime}"/>` : ''}
+                        <value xsi:type="CD" 
+                               code="${data.pregnancyStatus}" 
+                               codeSystem="2.16.840.1.113883.6.96" 
+                               codeSystemName="SNOMED CT"
+                               displayName="${getPregnancyStatusDisplay(data.pregnancyStatus)}"/>
+                        
+                        ${data.estimatedDeliveryDate ? generateEstimatedDeliveryDate(data.estimatedDeliveryDate) : ''}
+                        ${data.gestationalAge ? generateGestationalAgeObservation(data.gestationalAge) : ''}
+                    </observation>
+                </entry>`;
+        }
+
+        function getPregnancyStatusDisplay(code) {
+            const displays = {
+                '77386006': 'Pregnant',
+                '60001007': 'Not pregnant', 
+                '102874004': 'Possible pregnancy',
+                '261665006': 'Unknown'
+            };
+            return displays[code] || 'Unknown';
+        }
+
+        function generateEstimatedDeliveryDate(deliveryDate) {
+            return `
+                        <entryRelationship typeCode="REFR">
+                            <observation classCode="OBS" moodCode="EVN">
+                                <!-- Estimated Date of Delivery -->
+                                <templateId root="2.16.840.1.113883.10.20.15.3.1"/>
+                                <id root="${generateGUID()}"/>
+                                <code code="11778-8" codeSystem="2.16.840.1.113883.6.1" 
+                                      codeSystemName="LOINC" displayName="Delivery date Estimated"/>
+                                <statusCode code="completed"/>
+                                <value xsi:type="TS" value="${deliveryDate}"/>
+                            </observation>
+                        </entryRelationship>`;
+        }
+
+        function generateGestationalAgeObservation(gestationalAge) {
+            return `
+                        <entryRelationship typeCode="COMP">
+                            <observation classCode="OBS" moodCode="EVN">
+                                <templateId root="2.16.840.1.113883.10.20.22.4.38"/>
+                                <id root="${generateGUID()}"/>
+                                <code code="18185-9" codeSystem="2.16.840.1.113883.6.1" 
+                                      displayName="Gestational age"/>
+                                <statusCode code="completed"/>
+                                <value xsi:type="PQ" value="${gestationalAge}" unit="wk"/>
+                            </observation>
+                        </entryRelationship>`;
+        }
+
  // Fixed route code mapping function using FDA Route of Administration Terminology
 function getImmunizationRouteTranslation(routeCode) {
     const routeMap = {
@@ -5654,6 +5724,10 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
             </act>
           </entry>
           
+         <!-- Pregnancy Observation -->
+          ${generatePregnancyObservation(data)}
+
+
           <!-- Birth Sex Observation -->
           <entry typeCode="DRIV">
             <observation classCode="OBS" moodCode="EVN">
@@ -5677,6 +5751,8 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
               <value xsi:type="CD" code="${data.patientGenderIdentity || data.patientGender}" codeSystem="2.16.840.1.113883.6.96" />
             </observation>
           </entry>
+
+          
           
           <!-- Occupation Information -->
           ${data.currentOccupation ? `
