@@ -333,8 +333,8 @@
                     </select>
                 </div>
                 <div class="input-group">
-                    <label>Birth Date (YYYYMMDD)</label>
-                    <input type="text" id="patientBirthDate" value="20240615">
+                    <label>Birth Date</label>
+                    <input type="datetime-local" id="patientBirthDate" value="2024-06-15T00:00">
                 </div>
                 <div class="input-group">
                     <label>Race Code <span style="color: red;">*</span></label>
@@ -444,23 +444,7 @@
                         <option value="false" selected>No</option>
                         <option value="UNK">Unknown</option>
                     </select>
-                </div>
-                <div class="input-group">
-                    <label>Country of Nationality</label>
-                    <input type="text" id="countryOfNationality" value="US">
-                </div>
-                <div class="input-group">
-                    <label>Country of Nationality Code</label>
-                    <input type="text" id="countryOfNationalityCode" value="US">
-                </div>
-                <div class="input-group">
-                    <label>Country of Residence</label>
-                    <input type="text" id="countryOfResidence" value="US">
-                </div>
-                <div class="input-group">
-                    <label>Country of Residence Code</label>
-                    <input type="text" id="countryOfResidenceCode" value="US">
-                </div>
+                </div>               
                 <div class="input-group">
                     <label>Immigration Status</label>
                     <select id="immigrationStatus">
@@ -2644,6 +2628,37 @@ async function searchRCTCCodes(fieldId) {
             return valueSetMap[code] || valueSetMap['default'];
         }
 
+        // Convert from CDA format (YYYYMMDDHHMMSS) to datetime-local format (YYYY-MM-DDTHH:MM)
+        function cdaToDatetimeLocal(cdaDateTime) {
+            if (!cdaDateTime || cdaDateTime.length < 8) return '';
+
+            const year = cdaDateTime.substring(0, 4);
+            const month = cdaDateTime.substring(4, 6);
+            const day = cdaDateTime.substring(6, 8);
+            const hour = cdaDateTime.substring(8, 10) || '00';
+            const minute = cdaDateTime.substring(10, 12) || '00';
+
+            return `${year}-${month}-${day}T${hour}:${minute}`;
+        }
+
+        // Convert from datetime-local format to CDA format
+        function datetimeLocalToCda(datetimeLocal) {
+            if (!datetimeLocal) return '';
+
+            // Handle both with and without time
+            const date = new Date(datetimeLocal);
+            if (isNaN(date.getTime())) return '';
+
+            const year = date.getFullYear().toString().padStart(4, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            const hour = date.getHours().toString().padStart(2, '0');
+            const minute = date.getMinutes().toString().padStart(2, '0');
+            const second = date.getSeconds().toString().padStart(2, '0');
+
+            return `${year}${month}${day}${hour}${minute}${second}`;
+        }
+
         function getFormData() {
             const fields = [
                 // Patient Demographics
@@ -2765,7 +2780,12 @@ async function searchRCTCCodes(fieldId) {
             fields.forEach(field => {
                 const element = document.getElementById(field);
                 if (element) {
-                    data[field] = element.value;
+                    // Special handling for datetime fields
+                    if (field === 'patientBirthDate' && element.type === 'datetime-local') {
+                        data[field] = datetimeLocalToCda(element.value);
+                    } else {
+                        data[field] = element.value;
+                    }
                 }
             });
             
@@ -2779,7 +2799,12 @@ async function searchRCTCCodes(fieldId) {
             Object.keys(data).forEach(field => {
                 const element = document.getElementById(field);
                 if (element) {
-                    element.value = data[field];
+                    // Special handling for datetime fields
+                    if (field === 'patientBirthDate' && element.type === 'datetime-local') {
+                        element.value = cdaToDatetimeLocal(data[field]);
+                    } else {
+                        element.value = data[field];
+                    }
                 }
             });
         }
@@ -2907,17 +2932,23 @@ async function searchRCTCCodes(fieldId) {
 
         function validateDateFormat(dateString, fieldName) {
             if (!dateString) return true; // Allow empty dates
-            
-            const datePattern = /^\d{8}$/; // YYYYMMDD
-            const dateTimePattern = /^\d{14}$/; // YYYYMMDDHHMMSS
-            
-            if (!datePattern.test(dateString) && !dateTimePattern.test(dateString)) {
-                alert(`${fieldName} must be in YYYYMMDD or YYYYMMDDHHMMSS format`);
-                return false;
+
+            // Check if it's already in CDA format (YYYYMMDD or YYYYMMDDHHMMSS)
+            const cdaDatePattern = /^\d{8}$/; // YYYYMMDD
+            const cdaDateTimePattern = /^\d{14}$/; // YYYYMMDDHHMMSS
+
+            if (cdaDatePattern.test(dateString) || cdaDateTimePattern.test(dateString)) {
+                return true;
             }
-            
-            // Additional date validation can be added here
-            return true;
+
+            // Check if it's a valid datetime-local format that we can convert
+            const date = new Date(dateString);
+            if (!isNaN(date.getTime())) {
+                return true;
+            }
+
+            alert(`${fieldName} must be a valid date/time format`);
+            return false;
         }
 
         function validateRequiredFields() {
@@ -2967,6 +2998,11 @@ async function searchRCTCCodes(fieldId) {
                 values: ['71341001', '123851003', '181216001', '258435002', '272673000', '362837007']
             }
         };
+
+        // Non-blocking DQ validation errors (still display but don't prevent CDA generation)
+        const NON_BLOCKING_DQ = new Set([
+            'dq-patientName-002/004'
+        ]);
 
         // DQ Validation Functions
         function validateDQPatientName() {
@@ -3332,7 +3368,15 @@ async function searchRCTCCodes(fieldId) {
             
             if (allErrors.length > 0) {
                 displayValidationErrors(allErrors);
-                return false;
+
+                // Check if any errors are blocking (not in NON_BLOCKING_DQ set)
+                const blockingErrors = allErrors.filter(error => {
+                    const errorCode = error.split(':')[0];
+                    return !NON_BLOCKING_DQ.has(errorCode);
+                });
+
+                // Only return false if there are blocking errors
+                return blockingErrors.length === 0;
             }
             
             // Clear any existing errors and show success message
@@ -7102,6 +7146,13 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
             // NEW: Initialize lab evidence
             if (!document.querySelector('.lab-evidence-row')) {
                 addLabEvidence();
+            }
+
+            // Set default birth date to datetime-local format
+            const birthDateInput = document.getElementById('patientBirthDate');
+            if (birthDateInput && birthDateInput.type === 'datetime-local') {
+                // Set default to June 15, 2024 at midnight
+                birthDateInput.value = '2024-06-15T00:00';
             }
 
             // Generate random Document ID
