@@ -271,12 +271,18 @@
                 <p class="subtitle">Electronic Initial Case Report with Reportable Condition Trigger Codes</p>
             </div>
             <div class="buttons">
-                <button class="btn btn-success" onclick="saveFormData()">💾 Save Form Data</button>
-                <button class="btn btn-primary" onclick="generateAndDownloadCDA()">📄 Generate CDA</button>
-                <button class="btn btn-primary" onclick="generateAndDownloadRR()">📨 Generate RR</button>
-                <button class="btn btn-info" onclick="downloadZipOfEICRandRR()">📦 Download ZIP (eICR + RR)</button>
+    <button class="btn btn-success" onclick="saveFormData()">💾 Save Form Data</button>
+    <button class="btn btn-primary" onclick="generateAndDownloadCDA()">📄 Generate CDA</button>
+    <button class="btn btn-primary" onclick="generateAndDownloadRR()">📨 Generate RR</button>
+    <button class="btn btn-info" onclick="downloadZipOfEICRandRR()">📦 Download ZIP (eICR + RR)</button>
+    
+    <!-- Hidden buttons for Clean UI system -->
+    <button onclick="loadFormDataDialog()" style="display:none">Load Form Data</button>
+    <button onclick="saveFormData()" style="display:none">Save Form Data</button>
+</div>
 
-            </div>
+<!-- File input goes outside the buttons div -->
+<input type="file" id="loadFormDataInput" accept=".json" style="display:none" onchange="loadFormData(event)">
         </div>
 
 
@@ -529,6 +535,7 @@
                 <div class="input-group">
                     <label>Occupational Exposure</label>
                     <select id="occupationalExposure">
+                        <option value="">-- Select Occupational Exposure --</option>
                         <option value="Y">Yes</option>
                         <option value="N" selected>No</option>
                         <option value="UNK">Unknown</option>
@@ -537,6 +544,7 @@
                 <div class="input-group">
                     <label>Employment Status</label>
                     <select id="employmentStatus">
+                       <option value="">-- Select Employment Status --</option>
                         <option value="1" selected>Employed</option>
                         <option value="2">Unemployed</option>
                         <option value="3">Not in labor force</option>
@@ -2064,6 +2072,76 @@ async function loadDiagnosisFromRCTC() {
   }
 }
 
+// Save/Load Form Data Functions
+function loadFormDataDialog() {
+    const input = document.getElementById('loadFormDataInput') || createHiddenFileInput();
+    input.click();
+}
+
+function createHiddenFileInput() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.id = 'loadFormDataInput';
+    input.accept = '.json';
+    input.style.display = 'none';
+    input.onchange = loadFormData;
+    document.body.appendChild(input);
+    return input;
+}
+
+function loadFormData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            setFormData(data);
+            
+            // Handle lab evidence if present
+            if (data.labEvidence && Array.isArray(data.labEvidence)) {
+                const labList = document.getElementById('labEvidenceList');
+                if (labList) {
+                    labList.innerHTML = '';
+                    data.labEvidence.forEach(labEntry => {
+                        addLabEvidence(labEntry);
+                    });
+                }
+            }
+            
+            alert('Form data loaded successfully!');
+        } catch (error) {
+            alert('Error loading file: ' + error.message);
+            console.error('Load error:', error);
+        } finally {
+            event.target.value = '';
+        }
+    };
+    reader.readAsText(file);
+}
+
+// Note: saveFormData() function should already exist in your code
+// If it doesn't exist, add this:
+function saveFormData() {
+    const data = getFormData();
+    const dataStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    
+    const patientName = data.patientName ? 
+        data.patientName.replace(/[^a-zA-Z0-9]/g, '_') : 'Patient';
+    const timestamp = new Date().toISOString().split('T')[0];
+    const filename = `eICR_${patientName}_${timestamp}.json`;
+    
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
 
         // Fallback hardcoded diagnosis data
         function getHardcodedDiagnosis() {

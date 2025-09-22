@@ -104,23 +104,28 @@ window.addEventListener('load', () => {
   });
 
   // Floating dock — always visible; wire to originals; don't hide our own buttons
-  const dock = create('div', { class: 'ui81-dock' });
-  const mk = (t, extra='') => create('button', { class: 'ui81-btn '+extra, innerHTML: t });
-  const bCDA = mk('Generate CDA');
-  const bRR  = mk('Generate RR','secondary');
-  const bZIP = mk('Download ZIP (eICR + RR)','ghost');
-  dock.append(bCDA,bRR,bZIP);
+  // Floating dock — always visible; wire to originals; don't hide our own buttons
+const dock = create('div', { class: 'ui81-dock' });
+const mk = (t, extra='') => create('button', { class: 'ui81-btn '+extra, innerHTML: t });
+const bLoad = mk('Load Form', 'ghost');
+const bSave = mk('Save Form', 'secondary');
+const bCDA = mk('Generate CDA');
+const bRR  = mk('Generate RR','secondary');
+const bZIP = mk('Download ZIP (eICR + RR)','ghost');
+dock.append(bLoad, bSave, bCDA, bRR, bZIP);
   document.body.appendChild(dock);
 
   const actionsQuery = () => $$('button, a, [role="button"], input[type="button"], input[type="submit"]');
   const byText = (rx) => actionsQuery().find(el => rx.test((el.textContent || el.value || '').trim()));
 
   const targets = {
-    cda: () => (document.getElementById('generate-cda-btn') || byText(/generate\s*cda(?!.*post)/i)),
-    rr : () => (document.getElementById('generate-rr-btn')  || byText(/generate\s*rr/i)),
-    zip: () => (document.getElementById('zip-btn')          || byText(/download\s*zip.*eicr.*rr/i) || byText(/\bzip\b/i)),
-    s3 : () => (byText(/generate\s*&?\s*post.*s3/i))
-  };
+  load: () => (byText(/load\s*form\s*data/i)),
+  save: () => (byText(/save\s*form\s*data/i)),
+  cda: () => (document.getElementById('generate-cda-btn') || byText(/generate\s*cda(?!.*post)/i)),
+  rr : () => (document.getElementById('generate-rr-btn')  || byText(/generate\s*rr/i)),
+  zip: () => (document.getElementById('zip-btn')          || byText(/download\s*zip.*eicr.*rr/i) || byText(/\bzip\b/i)),
+  s3 : () => (byText(/generate\s*&?\s*post.*s3/i))
+};
 
   const wire = (btn, getter) => {
     let target = getter();
@@ -133,9 +138,11 @@ window.addEventListener('load', () => {
     const mo = new MutationObserver(() => { if (!target) tryBind(); });
     mo.observe(document.body, { childList: true, subtree: true });
   };
-  wire(bCDA, targets.cda);
-  wire(bRR,  targets.rr);
-  wire(bZIP, targets.zip);
+wire(bLoad, targets.load);
+wire(bSave, targets.save);
+wire(bCDA, targets.cda);
+wire(bRR,  targets.rr);
+wire(bZIP, targets.zip);
 
   // Hide original toolbar buttons by label, but NEVER hide anything inside our dock
   const hideLabels = [
