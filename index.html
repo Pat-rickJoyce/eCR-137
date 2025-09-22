@@ -359,9 +359,21 @@
                     </select>
                 </div>
                 <div class="input-group">
-                    <label>Birth Place</label>
-                    <input type="text" id="patientBirthPlace" value="Memorial Hospital, Springfield, IL">
-                </div>
+    <label>Birth Place City</label>
+    <input type="text" id="patientBirthPlaceCity" value="Springfield">
+</div>
+<div class="input-group">
+    <label>Birth Place State</label>
+    <input type="text" id="patientBirthPlaceState" value="IL">
+</div>
+<div class="input-group">
+    <label>Birth Place Country</label>
+    <input type="text" id="patientBirthPlaceCountry" value="US">
+</div>
+<div class="input-group">
+    <label>Birth Place Facility</label>
+    <input type="text" id="patientBirthPlaceFacility" value="Memorial Hospital">
+</div>
                 <div class="input-group">
                     <label>Birth Sex</label>
                     <select id="patientBirthSex">
@@ -2667,6 +2679,7 @@ async function searchRCTCCodes(fieldId) {
                 'patientGender', 'patientBirthDate', 'patientRace', 'patientEthnicity',
                 'patientBirthPlace', 'patientBirthSex', 'patientGenderIdentity', 'patientDetailedRace',
                 'patientDetailedEthnicity', 'patientLanguage', 'patientDeathIndicator', 'patientDeathDate',
+        'patientBirthPlaceCity', 'patientBirthPlaceState', 'patientBirthPlaceCountry', 'patientBirthPlaceFacility',
                 
                 // Guardian Information
                 'guardianName', 'guardianPhone', 'guardianEmail', 'guardianAddress', 'guardianCity',
@@ -5421,9 +5434,12 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
       <birthplace>
   <place>
     <addr>
-      <city>${data.patientCity}</city>
-      <state>${data.patientState}</state>
+      <streetAddressLine>${data.patientBirthPlaceFacility || ''}</streetAddressLine>
+      <city>${data.patientBirthPlaceCity || data.patientCity}</city>
+      <state>${data.patientBirthPlaceState || data.patientState}</state>
+      <country>${data.patientBirthPlaceCountry || data.patientCountry || 'US'}</country>
     </addr>
+    ${data.patientBirthPlaceFacility ? `<name>${data.patientBirthPlaceFacility}</name>` : ''}
   </place>
 </birthplace>
       <languageCommunication>
