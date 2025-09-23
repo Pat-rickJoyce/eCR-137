@@ -42,21 +42,31 @@ window.addEventListener('load', () => {
   }
 
   // Sidenav
-  const headings = $$('h2');
-  if (headings.length) {
-    const nav = create('nav', { class: 'ui81-sidenav' });
-    nav.appendChild(create('h4', { innerHTML: 'Sections' }));
-    const list = create('ul', { class: 'nav-list' });
-    headings.forEach((h,i)=>{
-      if (!h.id) h.id = 'sec-'+(i+1);
-      const label = (h.textContent || '').replace(CLEAN_PHRASE, '').replace(/\s{2,}/g,' ').trim();
-      const a = create('a', { href:'#'+h.id, title: label }, [label]);
-      a.addEventListener('click', e => { e.preventDefault(); document.getElementById(h.id)?.scrollIntoView({ behavior:'smooth', block:'start' }); });
-      list.appendChild(create('li', {}, [a]));
-    });
-    nav.appendChild(list);
-    document.body.appendChild(nav);
-    document.body.classList.add('has-sidenav');
+  // Sidenav
+const headings = $$('h2');
+if (headings.length) {
+  const nav = create('nav', { class: 'ui81-sidenav' });
+  nav.appendChild(create('h4', { innerHTML: 'Sections' }));
+  const list = create('ul', { class: 'nav-list' });
+  headings.forEach((h,i)=>{
+    if (!h.id) h.id = 'sec-'+(i+1);
+    
+    // Extract icon and text separately
+    const iconEl = h.querySelector('i');
+    const icon = iconEl ? iconEl.outerHTML + ' ' : '';
+    const textOnly = (h.textContent || '').replace(CLEAN_PHRASE, '').replace(/\s{2,}/g,' ').trim();
+    const label = icon + textOnly;
+    
+    const a = create('a', { href:'#'+h.id, title: textOnly }, []);
+    a.innerHTML = label; // Use innerHTML to preserve icon
+    a.addEventListener('click', e => { e.preventDefault(); document.getElementById(h.id)?.scrollIntoView({ behavior:'smooth', block:'start' }); });
+    list.appendChild(create('li', {}, [a]));
+  });
+  nav.appendChild(list);
+  document.body.appendChild(nav);
+  document.body.classList.add('has-sidenav');
+  
+  // ... rest of the scrollspy code remains the same
 
     // Scrollspy + fit nav
     const links = $$('a', nav);
