@@ -804,129 +804,6 @@
     </template>
 </div>
 
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-flask"></i> Laboratory Tests with RCTC Trigger Codes</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Lab Test 1 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
-                    <div class="code-search">
-                        <input type="text" id="labTest1Code" value="94310-0" onblur="validateTriggerCode('labTest1Code')">
-                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('labTest1Code')">🔍</button>
-                    </div>
-                    <div id="labTest1Code_results" class="search-results"></div>
-                </div>
-                <div class="input-group">
-                    <label>Lab Test 1 Name</label>
-                    <div class="code-search">
-                        <input type="text" id="labTest1Name" value="SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection">
-                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('labTest1Name')">🔍</button>
-                    </div>
-                    <div id="labTest1Name_results" class="search-results"></div>
-                </div>
-                <div class="input-group">
-                    <label>Lab Test 1 Result</label>
-                    <select id="labTest1Result">
-                        <option value="Detected">Detected</option>
-                        <option value="Not Detected">Not Detected</option>
-                        <option value="Positive">Positive</option>
-                        <option value="Negative">Negative</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Lab Test 2 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
-                    <div class="code-search">
-                        <input type="text" id="labTest2Code" value="34487-9" onblur="validateTriggerCode('labTest2Code')">
-                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('labTest2Code')">🔍</button>
-                    </div>
-                    <div id="labTest2Code_results" class="search-results"></div>
-                </div>
-                <div class="input-group">
-                    <label>Lab Test 2 Name</label>
-                    <div class="code-search">
-                        <input type="text" id="labTest2Name" value="Influenza virus A RNA [Presence] in Respiratory specimen by NAA with probe detection">
-                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('labTest2Name')">🔍</button>
-                    </div>
-                    <div id="labTest2Name_results" class="search-results"></div>
-                </div>
-                <div class="input-group">
-                    <label>Lab Test 2 Result</label>
-                    <select id="labTest2Result">
-                        <option value="Detected">Detected</option>
-                        <option value="Not Detected">Not Detected</option>
-                        <option value="Positive">Positive</option>
-                        <option value="Negative">Negative</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Lab Order 1 Code</label>
-                    <input type="text" id="labOrder1Code" value="19080-1">
-                </div>
-                <div class="input-group">
-                    <label>Lab Order 1 ID</label>
-                    <input type="text" id="labOrder1Id" value="ORD-2024-001">
-                </div>
-                <div class="input-group">
-                    <label>Lab Order 1 Time (YYYYMMDDHHMMSS)</label>
-                    <input type="text" id="labOrder1Time" value="20240615080000">
-                </div>
-                <div class="input-group">
-                    <label>Lab Test 1 Status</label>
-                    <select id="labTest1Status">
-                        <option value="completed">Completed</option>
-                        <option value="active">Active</option>
-                        <option value="cancelled">Cancelled</option>
-                        <option value="pending">Pending</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Lab Test 1 Time (YYYYMMDDHHMMSS)</label>
-                    <input type="text" id="labTest1Time" value="20240615100000">
-                </div>
-                <div class="input-group">
-                    <label>Lab Test 1 Interpretation</label>
-                    <select id="labTest1Interpretation">
-                        <option value="A">Abnormal</option>
-                        <option value="N">Normal</option>
-                        <option value="H">High</option>
-                        <option value="L">Low</option>
-                        <option value="HH">Critical high</option>
-                        <option value="LL">Critical low</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Lab Test 1 Reference Range</label>
-                    <input type="text" id="labTest1ReferenceRange" value="2.5-15.0 ng/mL">
-                </div>
-                <div class="input-group">
-                    <label>Lab Test 2 Status</label>
-                    <select id="labTest2Status">
-                        <option value="completed">Completed</option>
-                        <option value="active">Active</option>
-                        <option value="cancelled">Cancelled</option>
-                        <option value="pending">Pending</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Lab Test 2 Time (YYYYMMDDHHMMSS)</label>
-                    <input type="text" id="labTest2Time" value="20240615110000">
-                </div>
-                <div class="input-group">
-                    <label>Lab Test 2 Interpretation</label>
-                    <select id="labTest2Interpretation">
-                        <option value="A">Abnormal</option>
-                        <option value="N">Normal</option>
-                        <option value="H">High</option>
-                        <option value="L">Low</option>
-                        <option value="HH">Critical high</option>
-                        <option value="LL">Critical low</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Lab Test 2 Reference Range</label>
-                    <input type="text" id="labTest2ReferenceRange" value="Negative-Positive">
-                </div>
-            </div>
-        </div>
 
         <!-- Lab Orders and Results Section -->
         <div class="section">
@@ -986,7 +863,33 @@
                 <div class="lab-evidence-row">
                     <h4>Lab Order and Result Entry</h4>
                     <div class="form-grid">
-                        <!-- Test Information -->
+                        <!-- Order Information -->
+                        <div class="input-group">
+                            <label>Order Code (LOINC) <span class="trigger-indicator">RCTC TRIGGER</span></label>
+                            <div class="code-search">
+                                <input type="text" class="le-order-code" placeholder="ex. 94310-0">
+                                <button class="btn btn-secondary" type="button" onclick="searchRCTCForLabOrder(this)">🔍</button>
+                            </div>
+                            <div class="le-order-code-results search-results"></div>
+                        </div>
+                        <div class="input-group">
+                            <label>Order Name</label>
+                            <div class="code-search">
+                                <input type="text" class="le-order-name" placeholder="SARS-like Coronavirus N gene">
+                                <button class="btn btn-secondary" type="button" onclick="searchRCTCForLabOrderByName(this)">🔍</button>
+                            </div>
+                            <div class="le-order-name-results search-results"></div>
+                        </div>
+                        <div class="input-group">
+                            <label>Order ID</label>
+                            <input type="text" class="le-order-id" placeholder="ORD-2024-001">
+                        </div>
+                        <div class="input-group">
+                            <label>Order Time (YYYYMMDDHHMMSS)</label>
+                            <input type="text" class="le-order-time" placeholder="20240615080000">
+                        </div>
+
+                        <!-- Test/Result Information -->
                         <div class="input-group">
                             <label>Test Code (LOINC) <span class="trigger-indicator">RCTC TRIGGER</span></label>
                             <div class="code-search">
@@ -1003,7 +906,7 @@
                             </div>
                             <div class="le-test-name-results search-results"></div>
                         </div>
-                        
+
                         <!-- Result Value Type Selector -->
                         <div class="input-group">
                             <label>Result Kind</label>
@@ -1013,7 +916,7 @@
                                 <option value="text">Text</option>
                             </select>
                         </div>
-                        
+
                         <!-- Coded Value (SNOMED CT) -->
                         <div class="input-group le-coded">
                             <label>Organism/Substance Code (SNOMED CT)</label>
@@ -1031,7 +934,7 @@
                             </div>
                             <div class="le-value-name-results search-results"></div>
                         </div>
-                        
+
                         <!-- Quantity Value -->
                         <div class="input-group le-qty hidden">
                             <label>Value</label>
@@ -1041,14 +944,14 @@
                             <label>Unit</label>
                             <input type="text" class="le-qty-unit" placeholder="[iU]/mL">
                         </div>
-                        
+
                         <!-- Text Value -->
                         <div class="input-group le-text hidden">
                             <label>Text Result</label>
                             <input type="text" class="le-text-value" placeholder="Detected / Not detected">
                         </div>
-                        
-                        <!-- Timing/Status -->
+
+                        <!-- Timing/Status/Interpretation -->
                         <div class="input-group">
                             <label>Result Time (YYYYMMDDHHMMSS)</label>
                             <input type="text" class="le-time" placeholder="20240615103000">
@@ -1068,12 +971,19 @@
                                 <option value="N">Normal</option>
                                 <option value="H">High</option>
                                 <option value="L">Low</option>
+                                <option value="HH">Critical high</option>
+                                <option value="LL">Critical low</option>
                             </select>
                         </div>
-                        
-                        
+
+                        <!-- Reference Range -->
+                        <div class="input-group">
+                            <label>Reference Range</label>
+                            <input type="text" class="le-reference-range" placeholder="2.5-15.0 ng/mL or Not Detected">
+                        </div>
+
                         <div>
-                            <button class="btn btn-warning" type="button" onclick="removeLabEvidence(this)">🗑 Remove</button>
+                            <button class="btn btn-warning" type="button" onclick="removeLabEvidence(this)">🗑️ Remove</button>
                         </div>
                     </div>
                 </div>
@@ -2775,6 +2685,9 @@ async function searchRCTCCodes(fieldId) {
                 'labOrder1Code', 'labOrder1Id', 'labOrder1Time', 'labTest1Status', 'labTest1Time',
                 'labTest1Interpretation', 'labTest1ReferenceRange', 'labTest2Status', 'labTest2Time',
                 'labTest2Interpretation', 'labTest2ReferenceRange',
+                'resultLabCLIA', 'resultLabName',
+                'resultPerformerNPI', 'resultPerformerGiven', 'resultPerformerFamily',
+                'resultOrderingNPI', 'resultOrderingGiven', 'resultOrderingFamily',
                 
                 // Medications
 'adminMed1Code', 'adminMed1Name', 'adminMed1Id', 'adminMed1Status', 'adminMed1Time',
@@ -5060,8 +4973,12 @@ function collectDiagnosisEvidence() {
             const template = document.getElementById('labEvidenceTemplate');
             const clone = template.content.cloneNode(true);
             const row = clone.querySelector('.lab-evidence-row');
-            
+
             // Populate with prefill data if provided
+            if (prefill.orderCode) row.querySelector('.le-order-code').value = prefill.orderCode;
+            if (prefill.orderName) row.querySelector('.le-order-name').value = prefill.orderName;
+            if (prefill.orderId) row.querySelector('.le-order-id').value = prefill.orderId;
+            if (prefill.orderTime) row.querySelector('.le-order-time').value = prefill.orderTime;
             if (prefill.testCode) row.querySelector('.le-test-code').value = prefill.testCode;
             if (prefill.testName) row.querySelector('.le-test-name').value = prefill.testName;
             if (prefill.valueKind) {
@@ -5076,8 +4993,8 @@ function collectDiagnosisEvidence() {
             if (prefill.time) row.querySelector('.le-time').value = prefill.time;
             if (prefill.status) row.querySelector('.le-status').value = prefill.status;
             if (prefill.interpretation) row.querySelector('.le-interpretation').value = prefill.interpretation;
-            // RCTC flag removed - auto-detect based on RCTC trigger codes
-            
+            if (prefill.referenceRange) row.querySelector('.le-reference-range').value = prefill.referenceRange;
+
             document.getElementById('labEvidenceList').appendChild(clone);
         }
 
@@ -5372,24 +5289,163 @@ function collectDiagnosisEvidence() {
           }
         }
 
+        // Lab Order Search Functions
+        async function searchRCTCForLabOrder(btn) {
+            const row = btn.closest('.lab-evidence-row');
+            const codeInput = row.querySelector('.le-order-code');
+            const nameInput = row.querySelector('.le-order-name');
+            const resultsDiv = row.querySelector('.le-order-code-results');
+
+            btn.textContent = '⏳';
+            btn.disabled = true;
+            if (resultsDiv) { resultsDiv.innerHTML = ''; resultsDiv.style.display = 'none'; }
+
+            try {
+                if (!labOrderLoaded) await loadLabOrderFromRCTC();
+                if (!Array.isArray(labOrderData) || labOrderData.length === 0) {
+                    alert('Lab order list is empty. The RCTC file may not have loaded.');
+                    return;
+                }
+
+                const q = String(codeInput.value || '').trim().toLowerCase();
+                if (!q) { alert('Enter a LOINC code to search'); return; }
+
+                const exact = labOrderData.filter(o => String(o.code || '').toLowerCase() === q);
+                const starts = labOrderData.filter(o => String(o.code || '').toLowerCase().startsWith(q) && !exact.some(e => e.code === o.code));
+                const contains = labOrderData.filter(o => String(o.code || '').toLowerCase().includes(q)
+                    && !exact.some(e => e.code === o.code)
+                    && !starts.some(s => s.code === o.code));
+
+                const matches = [...exact, ...starts, ...contains];
+
+                if (!matches.length) {
+                    if (resultsDiv) {
+                        resultsDiv.style.display = 'block';
+                        resultsDiv.innerHTML = '<div class="no-results">No matching lab order codes found</div>';
+                    }
+                    return;
+                }
+
+                if (resultsDiv) {
+                    const list = document.createElement('div');
+                    list.className = 'search-results-list';
+
+                    matches.slice(0, 10).forEach(o => {
+                        const item = document.createElement('div');
+                        item.className = 'search-result-item';
+                        item.innerHTML = `<strong>${o.code}</strong> — ${o.name}${o.description ? `<br><small>${o.description}</small>` : ''}`;
+                        item.onclick = () => {
+                            codeInput.value = o.code;
+                            nameInput.value = o.name;
+                            resultsDiv.style.display = 'none';
+                        };
+                        list.appendChild(item);
+                    });
+
+                    resultsDiv.appendChild(list);
+                    resultsDiv.style.display = 'block';
+                }
+            } catch (err) {
+                console.error('Lab order code search error:', err);
+                alert('Error searching lab orders. See console for details.');
+            } finally {
+                btn.textContent = '🔍';
+                btn.disabled = false;
+            }
+        }
+
+        async function searchRCTCForLabOrderByName(btn) {
+            const row = btn.closest('.lab-evidence-row');
+            const codeInput = row.querySelector('.le-order-code');
+            const nameInput = row.querySelector('.le-order-name');
+            const resultsDiv = row.querySelector('.le-order-name-results');
+
+            btn.textContent = '⏳';
+            btn.disabled = true;
+            if (resultsDiv) { resultsDiv.innerHTML = ''; resultsDiv.style.display = 'none'; }
+
+            try {
+                if (!labOrderLoaded) await loadLabOrderFromRCTC();
+                if (!Array.isArray(labOrderData) || labOrderData.length === 0) {
+                    alert('Lab order list is empty. The RCTC file may not have loaded.');
+                    return;
+                }
+
+                const q = String(nameInput.value || '').trim().toLowerCase();
+                if (!q) { alert('Enter a lab order name to search'); return; }
+
+                const exact = labOrderData.filter(o => String(o.name || '').toLowerCase() === q);
+                const starts = labOrderData.filter(o => String(o.name || '').toLowerCase().startsWith(q) && !exact.some(e => e.code === o.code));
+                const contains = labOrderData.filter(o => String(o.name || '').toLowerCase().includes(q)
+                    && !exact.some(e => e.code === o.code)
+                    && !starts.some(s => s.code === o.code));
+
+                const matches = [...exact, ...starts, ...contains];
+
+                if (!matches.length) {
+                    if (resultsDiv) {
+                        resultsDiv.style.display = 'block';
+                        resultsDiv.innerHTML = '<div class="no-results">No matching lab order names found</div>';
+                    }
+                    return;
+                }
+
+                if (resultsDiv) {
+                    const list = document.createElement('div');
+                    list.className = 'search-results-list';
+
+                    matches.slice(0, 10).forEach(o => {
+                        const item = document.createElement('div');
+                        item.className = 'search-result-item';
+                        item.innerHTML = `<strong>${o.name}</strong> — ${o.code}${o.description ? `<br><small>${o.description}</small>` : ''}`;
+                        item.onclick = () => {
+                            codeInput.value = o.code;
+                            nameInput.value = o.name;
+                            resultsDiv.style.display = 'none';
+                        };
+                        list.appendChild(item);
+                    });
+
+                    resultsDiv.appendChild(list);
+                    resultsDiv.style.display = 'block';
+                }
+            } catch (err) {
+                console.error('Lab order name search error:', err);
+                alert('Error searching lab order names. See console for details.');
+            } finally {
+                btn.textContent = '🔍';
+                btn.disabled = false;
+            }
+        }
+
         function collectLabEvidence() {
             return Array.from(document.querySelectorAll('.lab-evidence-row')).map(r => {
                 const kind = r.querySelector('.le-value-kind').value;
                 return {
-                    testCode: r.querySelector('.le-test-code').value.trim(),
-                    testName: r.querySelector('.le-test-name').value.trim(),
+                    // Order Information
+                    orderCode: r.querySelector('.le-order-code')?.value.trim() || '',
+                    orderName: r.querySelector('.le-order-name')?.value.trim() || '',
+                    orderId: r.querySelector('.le-order-id')?.value.trim() || '',
+                    orderTime: r.querySelector('.le-order-time')?.value.trim() || '',
+
+                    // Test/Result Information
+                    testCode: r.querySelector('.le-test-code')?.value.trim() || '',
+                    testName: r.querySelector('.le-test-name')?.value.trim() || '',
                     valueKind: kind,
-                    valueCode: r.querySelector('.le-value-code').value.trim(),
-                    valueName: r.querySelector('.le-value-name').value.trim(),
-                    qtyValue: r.querySelector('.le-qty-value').value.trim(),
-                    qtyUnit: r.querySelector('.le-qty-unit').value.trim(),
-                    textValue: r.querySelector('.le-text-value').value.trim(),
-                    time: r.querySelector('.le-time').value.trim(),
-                    status: r.querySelector('.le-status').value,
-                    interpretation: r.querySelector('.le-interpretation').value,
-                    isRCTC: isRCTCTriggerCode(r.querySelector('.le-test-code').value) || isRCTCTriggerCode(r.querySelector('.le-value-code').value)
+                    valueCode: r.querySelector('.le-value-code')?.value.trim() || '',
+                    valueName: r.querySelector('.le-value-name')?.value.trim() || '',
+                    qtyValue: r.querySelector('.le-qty-value')?.value.trim() || '',
+                    qtyUnit: r.querySelector('.le-qty-unit')?.value.trim() || '',
+                    textValue: r.querySelector('.le-text-value')?.value.trim() || '',
+                    time: r.querySelector('.le-time')?.value.trim() || '',
+                    status: r.querySelector('.le-status')?.value || '',
+                    interpretation: r.querySelector('.le-interpretation')?.value || '',
+                    referenceRange: r.querySelector('.le-reference-range')?.value.trim() || '',
+                    isRCTC: isRCTCTriggerCode(r.querySelector('.le-test-code')?.value) ||
+                            isRCTCTriggerCode(r.querySelector('.le-value-code')?.value) ||
+                            isRCTCTriggerCode(r.querySelector('.le-order-code')?.value)
                 };
-            }).filter(x => x.testCode || x.testName);
+            }).filter(x => x.testCode || x.testName || x.orderCode || x.orderName);
         }
 
         // Interpretation mapping
@@ -5517,38 +5573,37 @@ function generateDiagnosisEntries(data) {
               </entryRelationship>`).join('');
 }
 
-       function buildResultsSectionXML(labEvidence, rctcVersion = '2016-12-01', data = {}) {
+function buildResultsSectionXML(labEvidence, rctcVersion = '2016-12-01') {
   if (!labEvidence || labEvidence.length === 0) return '';
 
   const esc = s => xmlEscape(s || '');
+  const data = getFormData(); // Get current form data for provider info
 
   const obsXml = labEvidence.map(le => {
     const id = generateGUID();
-    const vsOID = '2.16.840.1.114222.4.11.7508'; // Default COVID-19 value set
+    const vsOID = '2.16.840.1.114222.4.11.7508';
+
+    // Use test code as primary, fall back to order code
+    const primaryCode = le.testCode || le.orderCode || '';
+    const primaryName = le.testName || le.orderName || '';
 
     const codeAttrs = [
-      le.testCode ? `code="${esc(le.testCode)}"` : 'nullFlavor="UNK"',
-      `codeSystem="2.16.840.1.113883.6.1"`,
-      `codeSystemName="LOINC"`,
-      le.testName ? `displayName="${esc(le.testName)}"` : null,
-      `sdtc:valueSet="${vsOID}" sdtc:valueSetVersion="${esc(rctcVersion)}"`
-    ].filter(Boolean).join(' ');
+  primaryCode ? `code="${esc(primaryCode)}"` : 'nullFlavor="UNK"',
+  `codeSystem="2.16.840.1.113883.6.1"`,
+  `codeSystemName="LOINC"`,
+  primaryName ? `displayName="${esc(primaryName)}"` : null,
+  `sdtc:valueSet="${vsOID}" sdtc:valueSetVersion="${esc(rctcVersion)}"`
+].filter(Boolean).join(' ');
 
-    // Attach SDTC pair to coded values when applicable
-    const vsPair = (le.isRCTC && vsOID && rctcVersion)
-      ? ` sdtc:valueSet="${esc(vsOID)}" sdtc:valueSetVersion="${esc(rctcVersion)}"`
-      : '';
-
-    // Build <value>
-    let valueXml = `<value xsi:type="CD" nullFlavor="UNK"/>`; // safe default
-    if (le.valueKind === 'coded') {
-      valueXml = le.valueCode
-        ? `<value xsi:type="CD"
+    // Build <value> based on valueKind
+    let valueXml = `<value xsi:type="CD" nullFlavor="UNK"/>`;
+    if (le.valueKind === 'coded' && le.valueCode) {
+      const vsPair = le.isRCTC ? ` sdtc:valueSet="${esc(vsOID)}" sdtc:valueSetVersion="${esc(rctcVersion)}"` : '';
+      valueXml = `<value xsi:type="CD"
              code="${esc(le.valueCode)}"
              ${le.valueName ? `displayName="${esc(le.valueName)}"` : ''}
              codeSystem="2.16.840.1.113883.6.96"
-             codeSystemName="SNOMED CT"${vsPair}/>`
-        : `<value xsi:type="CD" nullFlavor="UNK"/>`;
+             codeSystemName="SNOMED CT"${vsPair}/>`;
     } else if (le.valueKind === 'quantity' && le.qtyValue) {
       valueXml = `<value xsi:type="PQ" value="${esc(le.qtyValue)}"${le.qtyUnit ? ` unit="${esc(le.qtyUnit)}"` : ''}/>`;
     } else if (le.valueKind === 'text' && le.textValue) {
@@ -5561,39 +5616,69 @@ function generateDiagnosisEntries(data) {
       ? `<interpretationCode code="${interpCode}" codeSystem="2.16.840.1.113883.5.83"/>`
       : '';
 
-    // === Author Participation (Ordering Provider) ===
-// CDA order inside <author>: <templateId> -> <time> -> <assignedAuthor>
-const authorTime = esc(normalizeTS(
-  data.ordProvTime || le.time || data.encounterDate || data.documentEffectiveTime || '20240101'
-));
+    // Reference Range
+   // Reference Range
+const refRange = le.referenceRange
+  ? `<referenceRange>
+      <observationRange>
+        <text>${esc(le.referenceRange)}</text>
+        <value xsi:type="ST">${esc(le.referenceRange)}</value>
+      </observationRange>
+    </referenceRange>`
+  : '';
 
-const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily || data.ordProvOrgName) ? `
-  <author>
-    <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-    <time value="${authorTime}"/>
-    <assignedAuthor>
-      ${data.ordProvNPI ? `<id root="2.16.840.1.113883.4.6" extension="${esc(data.ordProvNPI)}"/>` : `<id nullFlavor="UNK"/>`}
-      ${data.ordProvPhone ? `<telecom use="WP" value="tel:${esc(data.ordProvPhone)}"/>` : ''}
-      <assignedPerson>
-        <name>
-          ${data.ordProvGiven ? `<given>${esc(data.ordProvGiven)}</given>` : ''}
-          ${data.ordProvMiddle ? `<given>${esc(data.ordProvMiddle)}</given>` : ''}
-          ${data.ordProvFamily ? `<family>${esc(data.ordProvFamily)}</family>` : ''}
-        </name>
-      </assignedPerson>
-      ${data.ordProvOrgName ? `
-      <representedOrganization>
-        ${data.ordProvOrgId ? `<id root="${esc(data.ordProvOrgIdRoot || '2.16.840.1.113883.19')}" extension="${esc(data.ordProvOrgId)}"/>` : ''}
-        <name>${esc(data.ordProvOrgName)}</name>
-      </representedOrganization>` : ''}
-    </assignedAuthor>
-  </author>` : '';
+    // Build Author (Ordering Provider)
+    const orderingAuthor = (data.resultOrderingNPI || data.resultOrderingGiven || data.resultOrderingFamily) ? `
+      <author>
+        <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+        <time value="${esc(normalizeTS(le.orderTime || le.time || data.encounterDate))}"/>
+        <assignedAuthor>
+          ${data.resultOrderingNPI ? `<id extension="${esc(data.resultOrderingNPI)}" root="2.16.840.1.113883.4.6"/>` : `<id nullFlavor="UNK"/>`}
+          <assignedPerson>
+            <name>
+              ${data.resultOrderingGiven ? `<given>${esc(data.resultOrderingGiven)}</given>` : ''}
+              ${data.resultOrderingFamily ? `<family>${esc(data.resultOrderingFamily)}</family>` : ''}
+            </name>
+          </assignedPerson>
+        </assignedAuthor>
+      </author>` : `
+      <author>
+        <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+        <time value="${esc(normalizeTS(le.time || data.encounterDate))}"/>
+        <assignedAuthor>
+          <id extension="${esc(data.providerId || '1234567890')}" root="2.16.840.1.113883.4.6"/>
+          <assignedPerson>
+            <name>
+              <given>${esc((data.providerName || 'Unknown').split(' ')[0])}</given>
+              <family>${esc((data.providerName || 'Unknown').split(' ').slice(1).join(' ') || 'Provider')}</family>
+            </name>
+          </assignedPerson>
+        </assignedAuthor>
+      </author>`;
 
-    // === Effective Time (Result Observation) — MUST be present once ===
-    // If we don’t have a specific time, send nullFlavor to satisfy the SHALL.
-    const t = normalizeTS(le.time);
+    // Build Performer (Lab/Resulting Performer)
+    const performer = (data.resultPerformerNPI || data.resultPerformerGiven || data.resultPerformerFamily || data.resultLabName) ? `
+      <performer typeCode="PRF">
+        <assignedEntity>
+          ${data.resultPerformerNPI ? `<id extension="${esc(data.resultPerformerNPI)}" root="2.16.840.1.113883.4.6"/>` : `<id nullFlavor="UNK"/>`}
+          ${(data.resultPerformerGiven || data.resultPerformerFamily) ? `
+          <assignedPerson>
+            <name>
+              ${data.resultPerformerGiven ? `<given>${esc(data.resultPerformerGiven)}</given>` : ''}
+              ${data.resultPerformerFamily ? `<family>${esc(data.resultPerformerFamily)}</family>` : ''}
+            </name>
+          </assignedPerson>` : ''}
+          ${(data.resultLabName || data.resultLabCLIA) ? `
+          <representedOrganization>
+            ${data.resultLabCLIA ? `<id extension="${esc(data.resultLabCLIA)}" root="2.16.840.1.113883.4.7"/>` : ''}
+            ${data.resultLabName ? `<name>${esc(data.resultLabName)}</name>` : ''}
+          </representedOrganization>` : ''}
+        </assignedEntity>
+      </performer>` : '';
+
+    // Effective Time
     const effectiveTimeXml = le.time
-      ? `<effectiveTime value="${esc(t)}"/>`
+      ? `<effectiveTime value="${esc(normalizeTS(le.time))}"/>`
       : `<effectiveTime nullFlavor="UNK"/>`;
 
     return `
@@ -5603,8 +5688,25 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
           <templateId root="2.16.840.1.113883.10.20.22.4.1" extension="2015-08-01"/>
           <id root="${id}"/>
           <code ${codeAttrs}/>
-      sdtc:valueSet="${vsOID}" sdtc:valueSetVersion="${esc(rctcVersion)}"/>
           <statusCode code="completed"/>
+          ${le.orderTime ? `<effectiveTime><low value="${esc(normalizeTS(le.orderTime))}"/><high value="${esc(normalizeTS(le.orderTime))}"/></effectiveTime>` : ''}
+
+          ${(le.orderCode && le.orderName && le.orderCode !== le.testCode) ? `
+          <!-- Lab Order Information -->
+          <component>
+            <procedure classCode="PROC" moodCode="RQO">
+              <!-- Lab Order Procedure -->
+              <templateId root="2.16.840.1.113883.10.20.22.4.41"/>
+              <id root="${generateGUID()}"${le.orderId ? ` extension="${esc(le.orderId)}"` : ''}/>
+              <code code="${esc(le.orderCode)}" codeSystem="2.16.840.1.113883.6.1"
+                    displayName="${esc(le.orderName)}"/>
+              <statusCode code="completed"/>
+              ${le.orderTime ? `<effectiveTime><low value="${esc(normalizeTS(le.orderTime))}"/></effectiveTime>` : ''}
+              ${orderingAuthor}
+            </procedure>
+          </component>` : ''}
+
+          <!-- Result Observation -->
           <component>
             <observation classCode="OBS" moodCode="EVN">
               <!-- Result Observation (V3) -->
@@ -5614,30 +5716,40 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
               <templateId root="2.16.840.1.113883.10.20.15.2.3.2" extension="2016-12-01"/>
               <id root="${id}"/>
               <code ${codeAttrs}/>
-              <statusCode code="${esc(le.status||'completed')}"/>
+              <statusCode code="${esc(le.status || 'completed')}"/>
               ${effectiveTimeXml}
               ${valueXml}
               ${interp}
-              ${authorXml}
+              ${refRange}
+              ${performer}
+              ${orderingAuthor}
             </observation>
           </component>
         </organizer>
       </entry>`;
   }).join('\n');
 
-  const narrative = labEvidence.map(le => `
+  // Build narrative table that matches the actual data
+  const narrative = labEvidence.map(le => {
+    let displayValue = '';
+    if (le.valueKind === 'coded') {
+      displayValue = le.valueName || le.valueCode || '';
+    } else if (le.valueKind === 'quantity') {
+      displayValue = `${le.qtyValue || ''} ${le.qtyUnit || ''}`.trim();
+    } else if (le.valueKind === 'text') {
+      displayValue = le.textValue || '';
+    }
+
+    return `
     <tr>
-      <td>${esc(le.testName||le.testCode||'')}</td>
-      <td>${
-        le.valueKind==='coded'
-          ? esc(le.valueName||le.valueCode||'')
-          : le.valueKind==='quantity'
-            ? `${esc(le.qtyValue||'')} ${esc(le.qtyUnit||'')}`
-            : esc(le.textValue||'')
-      }</td>
-      <td>${esc(le.status||'')}</td>
-      <td>${esc(le.time||'')}</td>
-    </tr>`).join('');
+      <td>${esc(le.orderName || le.orderCode || 'N/A')}</td>
+      <td>${esc(le.testName || le.testCode || 'N/A')}</td>
+      <td>${esc(displayValue)}</td>
+      <td>${esc(le.referenceRange || 'N/A')}</td>
+      <td>${esc(le.status || 'completed')}</td>
+      <td>${esc(le.time || 'N/A')}</td>
+    </tr>`;
+  }).join('');
 
   return `
     <component>
@@ -5645,10 +5757,19 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
         <!-- Results Section (entries required) -->
         <templateId root="2.16.840.1.113883.10.20.22.2.3.1" extension="2015-08-01"/>
         <code code="30954-2" codeSystem="2.16.840.1.113883.6.1" displayName="Relevant diagnostic tests and/or laboratory data"/>
-        <title>Results</title>
+        <title>Lab Orders and Results</title>
         <text>
           <table border="1">
-            <thead><tr><th>Test</th><th>Value</th><th>Status</th><th>Time</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Test</th>
+                <th>Value</th>
+                <th>Reference Range</th>
+                <th>Status</th>
+                <th>Time</th>
+              </tr>
+            </thead>
             <tbody>${narrative}</tbody>
           </table>
         </text>
@@ -6215,8 +6336,8 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
       </component>
 
       <!-- Replace existing Results Section with Lab Evidence -->
-     ${(data.labEvidence && data.labEvidence.length) 
-  ? buildResultsSectionXML(data.labEvidence, '2016-12-01', getGlobalResultsProviders())
+     ${(data.labEvidence && data.labEvidence.length)
+  ? buildResultsSectionXML(data.labEvidence, '2016-12-01')
   : `<!-- Fallback Results Section for Legacy Support -->
      <component>
        <section>
@@ -7084,21 +7205,47 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
         }
 
         function loadFormData(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const data = JSON.parse(e.target.result);
-                        setFormData(data);
-                        alert('Form data loaded successfully!');
-                    } catch (error) {
-                        alert('Error loading file: Invalid JSON format');
-                    }
-                };
-                reader.readAsText(file);
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            setFormData(data);
+            
+            // Handle lab evidence if present
+            if (data.labEvidence && Array.isArray(data.labEvidence)) {
+                const labList = document.getElementById('labEvidenceList');
+                if (labList) {
+                    labList.innerHTML = ''; // Clear existing entries
+                    data.labEvidence.forEach(labEntry => {
+                        addLabEvidence(labEntry);
+                    });
+                }
             }
+
+            // Handle diagnosis evidence if present
+            if (data.diagnosisEvidence && Array.isArray(data.diagnosisEvidence)) {
+                const diagnosisList = document.getElementById('diagnosisEvidenceList');
+                if (diagnosisList) {
+                    diagnosisList.innerHTML = ''; // Clear existing entries
+                    data.diagnosisEvidence.forEach(diagnosisEntry => {
+                        addDiagnosisEvidence(diagnosisEntry);
+                    });
+                }
+            }
+
+            alert('Form data loaded successfully!');
+        } catch (error) {
+            alert('Error loading file: ' + error.message);
+            console.error('Load error:', error);
+        } finally {
+            event.target.value = '';
         }
+    };
+    reader.readAsText(file);
+}
 
         // Hide search results when clicking outside
         document.addEventListener('click', function(e) {
@@ -7305,37 +7452,39 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
         }
 
         // Initialize the form
-        function migrateLegacyLabsIntoEvidence() {
-            const d = getFormData();
-            const rows = [];
-            
-            if (d.labTest1Code || d.labTest1Name) {
-                rows.push({
-                    testCode: d.labTest1Code,
-                    testName: d.labTest1Name,
+        function migrateLegacyLabsToNewSystem() {
+            const data = getFormData();
+
+            // Add default lab evidence entries from legacy data if they exist
+            if (data.labTest1Code || data.labOrder1Code) {
+                addLabEvidence({
+                    orderCode: data.labOrder1Code || data.labTest1Code,
+                    orderName: data.labTest1Name,
+                    orderId: data.labOrder1Id,
+                    orderTime: data.labOrder1Time,
+                    testCode: data.labTest1Code,
+                    testName: data.labTest1Name,
                     valueKind: 'text',
-                    textValue: d.labTest1Result || '',
-                    time: d.labTest1Time || '',
-                    status: d.labTest1Status || 'completed',
-                    interpretation: d.labTest1Interpretation || '',
-                    isRCTC: isRCTCTriggerCode(d.labTest1Code)
+                    textValue: data.labTest1Result,
+                    time: data.labTest1Time,
+                    status: data.labTest1Status || 'completed',
+                    interpretation: data.labTest1Interpretation,
+                    referenceRange: data.labTest1ReferenceRange
                 });
             }
-            
-            if (d.labTest2Code || d.labTest2Name) {
-                rows.push({
-                    testCode: d.labTest2Code,
-                    testName: d.labTest2Name,
+
+            if (data.labTest2Code) {
+                addLabEvidence({
+                    testCode: data.labTest2Code,
+                    testName: data.labTest2Name,
                     valueKind: 'text',
-                    textValue: d.labTest2Result || '',
-                    time: d.labTest2Time || '',
-                    status: d.labTest2Status || 'completed',
-                    interpretation: d.labTest2Interpretation || '',
-                    isRCTC: isRCTCTriggerCode(d.labTest2Code)
+                    textValue: data.labTest2Result,
+                    time: data.labTest2Time,
+                    status: data.labTest2Status || 'completed',
+                    interpretation: data.labTest2Interpretation,
+                    referenceRange: data.labTest2ReferenceRange
                 });
             }
-            
-            rows.forEach(r => addLabEvidence(r));
         }
 
         document.addEventListener('DOMContentLoaded', function() {
