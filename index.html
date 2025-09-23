@@ -195,6 +195,25 @@
             border-bottom: 1px solid #d1d5db;
             padding-bottom: 8px;
         }
+
+        /* Diagnosis Evidence Repeatable UI */
+        .diagnosis-evidence-controls {
+            margin-bottom: 20px;
+        }
+        .diagnosis-evidence-row {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #f9fafb;
+        }
+        .diagnosis-evidence-row h4 {
+            margin: 0 0 15px 0;
+            color: #374151;
+            border-bottom: 1px solid #d1d5db;
+            padding-bottom: 8px;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -250,6 +269,7 @@
             .container { padding: 15px; }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -287,7 +307,7 @@
 
 
         <div class="section">
-            <h2 class="section-title">Patient Demographics</h2>
+            <h2 class="section-title"><i class="fas fa-user"></i> Patient Demographics</h2>
             <div class="form-grid">
                 <div class="input-group">
                     <label>Patient ID <span class="help-tooltip" title="Unique identifier that stays the same across all versions of the same logical document. Documents with the same Set ID represent different versions of the same document.">ℹ️</span></label>
@@ -498,7 +518,7 @@
         </div>
 
         <div class="section">
-            <h2 class="section-title">Occupation Information</h2>
+            <h2 class="section-title"><i class="fas fa-briefcase"></i> Occupation Information</h2>
             <div class="form-grid">
                 <div class="input-group">
                     <label>Current Occupation</label>
@@ -557,7 +577,7 @@
         </div>
 
         <div class="section">
-            <h2 class="section-title">Guardian/Parent Information</h2>
+            <h2 class="section-title"><i class="fas fa-users"></i> Guardian/Parent Information</h2>
             <div class="form-grid">
                 <div class="input-group">
                     <label>Guardian Name</label>
@@ -602,7 +622,7 @@
         </div>
 
         <div class="section">
-            <h2 class="section-title">Provider Information</h2>
+            <h2 class="section-title"><i class="fas fa-user-md"></i> Provider Information</h2>
             <div class="form-grid">
                 <div class="input-group">
                     <label>Provider ID</label>
@@ -673,7 +693,7 @@
         </div>
 
         <div class="section">
-            <h2 class="section-title">Encounter Information</h2>
+            <h2 class="section-title"><i class="fas fa-hospital"></i> Encounter Information</h2>
             <div class="form-grid">
                 <div class="input-group">
                     <label>Encounter ID</label>
@@ -728,103 +748,64 @@
         </div>
 
         <div class="section">
-            <h2 class="section-title">Diagnoses with RCTC Trigger Codes</h2>
+            <h2 class="section-title"><i class="fas fa-stethoscope"></i> Diagnoses with RCTC Trigger Codes</h2>
+            <div class="diagnosis-evidence-controls">
+        <button class="btn btn-primary" type="button" onclick="addDiagnosisEvidence()">➕ Add Diagnosis</button>
+    </div>
+
+    <div id="diagnosisEvidenceList"></div>
+    
+    <template id="diagnosisEvidenceTemplate">
+        <div class="diagnosis-evidence-row">
+            <h4>Diagnosis Entry</h4>
             <div class="form-grid">
-                <!-- Diagnosis 1: Tetralogy of Fallot (Critical Cardiac Condition) -->
                 <div class="input-group">
-                    <label>Diagnosis 1 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
+                    <label>Diagnosis Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
                     <div class="code-search">
-                        <input type="text" id="diagnosis1Code" value="67531005" onblur="validateTriggerCode('diagnosis1Code')">
-                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis1Code')">🔍</button>
+                        <input type="text" class="de-diagnosis-code" placeholder="ex. 67531005">
+                        <button class="btn btn-secondary" type="button" onclick="searchRCTCForDiagnosis(this)">🔍</button>
                     </div>
-                    <div id="diagnosis1Code_results" class="search-results"></div>
-                </div>
-                <div class="input-group">
-                    <label>Diagnosis 1 Name</label>
-                    <div class="code-search">
-                        <input type="text" id="diagnosis1Name" value="Down syndrome (disorder)">
-                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis1Name')">🔍</button>
-                    </div>
-                    <div id="diagnosis1Name_results" class="search-results"></div>
-                </div>
-                <div class="input-group">
-                    <label>Date of Diagnosis 1 (YYYYMMDD)</label>
-                    <input type="text" id="diagnosis1Date" value="20240601">
-                </div>
-                <div class="input-group">
-                    <label>Date of Onset 1 (YYYYMMDD)</label>
-                    <input type="text" id="diagnosis1OnsetDate" value="20240601">
+                    <div class="de-diagnosis-code-results search-results"></div>
                 </div>
                 
-                <!-- Diagnosis 2: Spina bifida (Neural Tube Defect) -->
                 <div class="input-group">
-                    <label>Diagnosis 2 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
+                    <label>Diagnosis Name</label>
                     <div class="code-search">
-                        <input type="text" id="diagnosis2Code" value="67531005" onblur="validateTriggerCode('diagnosis2Code')">
-                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis2Code')">🔍</button>
+                        <input type="text" class="de-diagnosis-name" placeholder="Down syndrome (disorder)">
+                        <button class="btn btn-secondary" type="button" onclick="searchRCTCForDiagnosisByName(this)">🔍</button>
                     </div>
-                    <div id="diagnosis2Code_results" class="search-results"></div>
-                </div>
-                <div class="input-group">
-                    <label>Diagnosis 2 Name</label>
-                    <div class="code-search">
-                        <input type="text" id="diagnosis2Name" value="Spina bifida (disorder)">
-                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis2Name')">🔍</button>
-                    </div>
-                    <div id="diagnosis2Name_results" class="search-results"></div>
-                </div>
-                <div class="input-group">
-                    <label>Date of Diagnosis 2 (YYYYMMDD)</label>
-                    <input type="text" id="diagnosis2Date" value="20240601">
-                </div>
-                <div class="input-group">
-                    <label>Date of Onset 2 (YYYYMMDD)</label>
-                    <input type="text" id="diagnosis2OnsetDate" value="20240601">
+                    <div class="de-diagnosis-name-results search-results"></div>
                 </div>
                 
-                <!-- Diagnosis 3: Neonatal abstinence syndrome (Treatment-related Condition) -->
                 <div class="input-group">
-                    <label>Diagnosis 3 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
-                    <div class="code-search">
-                        <input type="text" id="diagnosis3Code" value="414819007" onblur="validateTriggerCode('diagnosis3Code')">
-                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis3Code')">🔍</button>
-                    </div>
-                    <div id="diagnosis3Code_results" class="search-results"></div>
+                    <label>Date of Diagnosis (YYYYMMDD)</label>
+                    <input type="text" class="de-diagnosis-date" placeholder="20240601">
                 </div>
+                
                 <div class="input-group">
-                    <label>Diagnosis 3 Name</label>
-                    <div class="code-search">
-                        <input type="text" id="diagnosis3Name" value="Neonatal abstinence syndrome (disorder)">
-                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('diagnosis3Name')">🔍</button>
-                    </div>
-                    <div id="diagnosis3Name_results" class="search-results"></div>
+                    <label>Date of Onset (YYYYMMDD)</label>
+                    <input type="text" class="de-onset-date" placeholder="20240601">
                 </div>
+                
                 <div class="input-group">
-                    <label>Date of Diagnosis 3 (YYYYMMDD)</label>
-                    <input type="text" id="diagnosis3Date" value="20240610">
-                </div>
-                <div class="input-group">
-                    <label>Date of Onset 3 (YYYYMMDD)</label>
-                    <input type="text" id="diagnosis3OnsetDate" value="20240610">
-                </div>
-                <div class="input-group">
-                    <label>Problem Type</label>
-                    <select id="problemType">
-                        <option value="55607006">Problem</option>
-                        <option value="282291009">Diagnosis</option>
-                        <option value="404684003">Finding</option>
-                        <option value="418799008">Symptom</option>
+                    <label>Status</label>
+                    <select class="de-status">
+                        <option value="completed" selected>Completed</option>
+                        <option value="active">Active</option>
+                        <option value="resolved">Resolved</option>
                     </select>
                 </div>
-                <div class="input-group textarea-group">
-                    <label>Symptoms</label>
-                    <textarea id="symptoms">Fever, cough, fatigue, and respiratory symptoms consistent with viral infection</textarea>
+                
+                <div>
+                    <button class="btn btn-warning" type="button" onclick="removeDiagnosisEvidence(this)">🗑️ Remove</button>
                 </div>
             </div>
         </div>
+    </template>
+</div>
 
         <div class="section">
-            <h2 class="section-title">Laboratory Tests with RCTC Trigger Codes</h2>
+            <h2 class="section-title"><i class="fas fa-flask"></i> Laboratory Tests with RCTC Trigger Codes</h2>
             <div class="form-grid">
                 <div class="input-group">
                     <label>Lab Test 1 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
@@ -949,7 +930,7 @@
 
         <!-- Lab Orders and Results Section -->
         <div class="section">
-            <h2 class="section-title">Lab Orders and Results</h2>
+            <h2 class="section-title"><i class="fas fa-vial"></i> Lab Orders and Results</h2>
             
             <div class="lab-evidence-controls">
                 <button class="btn btn-primary" type="button" onclick="addLabEvidence()">➕ Add Lab Order and Result</button>
@@ -1101,7 +1082,7 @@
 
 <!-- ░░░  MEDICATIONS  ░░░================================================ -->
 <div class="section">
-  <h2 class="section-title">Medications</h2>
+  <h2 class="section-title"><i class="fas fa-pills"></i> Medications</h2>
 
   <div class="form-grid">
 
@@ -1323,7 +1304,7 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
 
 
         <div class="section">
-            <h2 class="section-title">Immunizations</h2>
+            <h2 class="section-title"><i class="fas fa-syringe"></i> Immunizations</h2>
             <div class="form-grid">
                 <div class="input-group">
                     <label>Immunization 1 Status</label>
@@ -1423,7 +1404,7 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
         </div>
 
         <div class="section">
-            <h2 class="section-title">Pregnancy Information</h2>
+            <h2 class="section-title"><i class="fas fa-baby"></i> Pregnancy Information</h2>
             <div class="form-grid">
                 <div class="input-group">
     <label>Pregnancy Status</label>
@@ -1481,7 +1462,7 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
         </div>
 
         <div class="section">
-            <h2 class="section-title">Travel History</h2>
+            <h2 class="section-title"><i class="fas fa-plane"></i> Travel History</h2>
             <div class="form-grid">
                 <div class="input-group">
                     <label>Travel Start Date (YYYYMMDD)</label>
@@ -1533,7 +1514,7 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
         </div>
 
         <div class="section">
-            <h2 class="section-title">Specimen Information</h2>
+            <h2 class="section-title"><i class="fas fa-microscope"></i> Specimen Information</h2>
             <div class="form-grid">
                 <div class="input-group">
                     <label>Specimen 1 Source</label>
@@ -1585,7 +1566,7 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
         </div>
 
         <div class="section">
-            <h2 class="section-title">Additional Clinical Data</h2>
+            <h2 class="section-title"><i class="fas fa-chart-line"></i> Additional Clinical Data</h2>
             <div class="form-grid">
                 <div class="input-group">
                     <label>Temperature (°F)</label>
@@ -1660,7 +1641,7 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
         </div>
 
         <div class="section">
-            <h2 class="section-title">Procedures</h2>
+            <h2 class="section-title"><i class="fas fa-procedures"></i> Procedures</h2>
             <div class="form-grid">
                 <div class="input-group">
                     <label>Current Procedure 1 Code</label>
@@ -1767,7 +1748,7 @@ Procedure: Use for therapeutic interventions that alter the patient's physical c
 
 
         <div class="section">
-            <h2 class="section-title">Emergency and Public Health</h2>
+            <h2 class="section-title"><i class="fas fa-exclamation-triangle"></i> Emergency and Public Health</h2>
             <div class="form-grid">
                 <div class="input-group">
                     <label>Emergency Outbreak Information</label>
@@ -1855,7 +1836,7 @@ Procedure: Use for therapeutic interventions that alter the patient's physical c
         </div>
 
         <div class="section">
-            <h2 class="section-title">Related Document Information</h2>
+            <h2 class="section-title"><i class="fas fa-file-alt"></i> Related Document Information</h2>
             <div class="form-grid">
                 <div class="input-group">
                     <label>Document ID</label>
@@ -2109,7 +2090,18 @@ function loadFormData(event) {
                     });
                 }
             }
-            
+
+            // Handle diagnosis evidence if present
+            if (data.diagnosisEvidence && Array.isArray(data.diagnosisEvidence)) {
+                const diagnosisList = document.getElementById('diagnosisEvidenceList');
+                if (diagnosisList) {
+                    diagnosisList.innerHTML = '';
+                    data.diagnosisEvidence.forEach(diagnosisEntry => {
+                        addDiagnosisEvidence(diagnosisEntry);
+                    });
+                }
+            }
+
             alert('Form data loaded successfully!');
         } catch (error) {
             alert('Error loading file: ' + error.message);
@@ -2882,7 +2874,10 @@ async function searchRCTCCodes(fieldId) {
             
             // ADD THIS: Collect lab evidence
             data.labEvidence = collectLabEvidence();
-            
+
+            // ADD THIS: Collect diagnosis evidence
+            data.diagnosisEvidence = collectDiagnosisEvidence();
+
             return data;
         }
 
@@ -3244,31 +3239,40 @@ async function searchRCTCCodes(fieldId) {
         function validateDQTriggerCodes() {
             const errors = [];
             const data = getFormData();
-            const triggerFields = [
-                'diagnosis1Code', 'diagnosis2Code', 'diagnosis3Code',
-                'labTest1Code', 'labTest2Code', 'labOrder1Code',
-                'adminMed1Code', 'adminMed2Code', 'vaccine1Code', 'vaccine2Code'
-            ];
-            
+
             let hasTriggerCode = false;
-            
-            // Check existing fields
-            triggerFields.forEach(fieldId => {
-                const element = document.getElementById(fieldId);
-                if (element?.value?.trim()) {
-                    hasTriggerCode = true;
-                }
-            });
-            
-            // NEW: Check lab evidence
+
+            // Check diagnosis evidence
+            if (Array.isArray(data.diagnosisEvidence)) {
+                hasTriggerCode = data.diagnosisEvidence.some(d =>
+                    isRCTCTriggerCode(d.diagnosisCode) || d.isRCTC
+                );
+            }
+
+            // Check lab evidence
             if (!hasTriggerCode && Array.isArray(data.labEvidence)) {
-                hasTriggerCode = data.labEvidence.some(ev => 
-                    ev.isRCTC || 
-                    isRCTCTriggerCode(ev.testCode) || 
+                hasTriggerCode = data.labEvidence.some(ev =>
+                    ev.isRCTC ||
+                    isRCTCTriggerCode(ev.testCode) ||
                     isRCTCTriggerCode(ev.valueCode)
                 );
             }
-            
+
+            // Check remaining legacy fields (remove these checks once you've fully migrated)
+            const legacyTriggerFields = [
+                'labTest1Code', 'labTest2Code', 'labOrder1Code',
+                'adminMed1Code', 'adminMed2Code', 'vaccine1Code', 'vaccine2Code'
+            ];
+
+            if (!hasTriggerCode) {
+                legacyTriggerFields.forEach(fieldId => {
+                    const element = document.getElementById(fieldId);
+                    if (element?.value?.trim()) {
+                        hasTriggerCode = true;
+                    }
+                });
+            }
+
             if (!hasTriggerCode) {
                 errors.push('FATAL: At least one trigger code template must be present (eICR requirement)');
             }
@@ -4004,15 +4008,26 @@ async function generateAndDownloadRR() {
             const data = getFormData();
             const conditions = [];
 
-            // Extract all diagnosis entries that have both code and name
-            if (data.diagnosis1Code && data.diagnosis1Name) {
-                conditions.push(data.diagnosis1Name);
+            // Extract from new dynamic diagnosis evidence array
+            if (data.diagnosisEvidence && Array.isArray(data.diagnosisEvidence)) {
+                data.diagnosisEvidence.forEach(diagnosis => {
+                    if (diagnosis.diagnosisCode && diagnosis.diagnosisName) {
+                        conditions.push(diagnosis.diagnosisName);
+                    }
+                });
             }
-            if (data.diagnosis2Code && data.diagnosis2Name) {
-                conditions.push(data.diagnosis2Name);
-            }
-            if (data.diagnosis3Code && data.diagnosis3Name) {
-                conditions.push(data.diagnosis3Name);
+
+            // Fallback: check legacy fields if they still exist
+            if (conditions.length === 0) {
+                if (data.diagnosis1Code && data.diagnosis1Name) {
+                    conditions.push(data.diagnosis1Name);
+                }
+                if (data.diagnosis2Code && data.diagnosis2Name) {
+                    conditions.push(data.diagnosis2Name);
+                }
+                if (data.diagnosis3Code && data.diagnosis3Name) {
+                    conditions.push(data.diagnosis3Name);
+                }
             }
 
             return conditions;
@@ -4872,6 +4887,174 @@ function generateImmunizationEntries(data) {
             return entries;
         }
 
+       // Add diagnosis evidence row
+function addDiagnosisEvidence(prefill = {}) {
+    const template = document.getElementById('diagnosisEvidenceTemplate');
+    const clone = template.content.cloneNode(true);
+    const row = clone.querySelector('.diagnosis-evidence-row');
+    
+    // Populate with prefill data if provided
+    if (prefill.diagnosisCode) row.querySelector('.de-diagnosis-code').value = prefill.diagnosisCode;
+    if (prefill.diagnosisName) row.querySelector('.de-diagnosis-name').value = prefill.diagnosisName;
+    if (prefill.diagnosisDate) row.querySelector('.de-diagnosis-date').value = prefill.diagnosisDate;
+    if (prefill.onsetDate) row.querySelector('.de-onset-date').value = prefill.onsetDate;
+    if (prefill.status) row.querySelector('.de-status').value = prefill.status;
+    
+    document.getElementById('diagnosisEvidenceList').appendChild(clone);
+}
+
+// Remove diagnosis evidence row
+function removeDiagnosisEvidence(btn) {
+    btn.closest('.diagnosis-evidence-row')?.remove();
+}
+
+// Search RCTC for diagnosis codes
+async function searchRCTCForDiagnosis(btn) {
+    const row = btn.closest('.diagnosis-evidence-row');
+    const codeInput = row.querySelector('.de-diagnosis-code');
+    const nameInput = row.querySelector('.de-diagnosis-name');
+    const resultsDiv = row.querySelector('.de-diagnosis-code-results');
+
+    btn.textContent = '⏳';
+    btn.disabled = true;
+    if (resultsDiv) { resultsDiv.innerHTML = ''; resultsDiv.style.display = 'none'; }
+
+    try {
+        if (!diagnosisLoaded) await loadDiagnosisFromRCTC();
+        if (!Array.isArray(diagnosisData) || diagnosisData.length === 0) {
+            alert('Diagnosis list is empty. The RCTC file may not have loaded.');
+            return;
+        }
+
+        const q = String(codeInput.value || '').trim().toLowerCase();
+        if (!q) { alert('Enter a diagnosis code to search'); return; }
+
+        const exact = diagnosisData.filter(d => String(d.code || '').toLowerCase() === q);
+        const starts = diagnosisData.filter(d => String(d.code || '').toLowerCase().startsWith(q) && !exact.some(e => e.code === d.code));
+        const contains = diagnosisData.filter(d => String(d.code || '').toLowerCase().includes(q)
+            && !exact.some(e => e.code === d.code)
+            && !starts.some(s => s.code === d.code));
+
+        const matches = [...exact, ...starts, ...contains];
+
+        if (!matches.length) {
+            if (resultsDiv) {
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = '<div class="no-results">No matching diagnosis codes found</div>';
+            }
+            return;
+        }
+
+        if (resultsDiv) {
+            const list = document.createElement('div');
+            list.className = 'search-results-list';
+
+            matches.slice(0, 10).forEach(d => {
+                const item = document.createElement('div');
+                item.className = 'search-result-item';
+                item.innerHTML = `<strong>${d.code}</strong> – ${d.name}${d.description ? `<br><small>${d.description}</small>` : ''}`;
+                item.onclick = () => {
+                    codeInput.value = d.code;
+                    nameInput.value = d.name;
+                    resultsDiv.style.display = 'none';
+                };
+                list.appendChild(item);
+            });
+
+            resultsDiv.appendChild(list);
+            resultsDiv.style.display = 'block';
+        }
+    } catch (err) {
+        console.error('Diagnosis code search error:', err);
+        alert('Error searching diagnosis codes. See console for details.');
+    } finally {
+        btn.textContent = '🔍';
+        btn.disabled = false;
+    }
+}
+
+// Search RCTC for diagnosis names
+async function searchRCTCForDiagnosisByName(btn) {
+    const row = btn.closest('.diagnosis-evidence-row');
+    const codeInput = row.querySelector('.de-diagnosis-code');
+    const nameInput = row.querySelector('.de-diagnosis-name');
+    const resultsDiv = row.querySelector('.de-diagnosis-name-results');
+
+    btn.textContent = '⏳';
+    btn.disabled = true;
+    if (resultsDiv) { resultsDiv.innerHTML = ''; resultsDiv.style.display = 'none'; }
+
+    try {
+        if (!diagnosisLoaded) await loadDiagnosisFromRCTC();
+        if (!Array.isArray(diagnosisData) || diagnosisData.length === 0) {
+            alert('Diagnosis list is empty. The RCTC file may not have loaded.');
+            return;
+        }
+
+        const q = String(nameInput.value || '').trim().toLowerCase();
+        if (!q) { alert('Enter a diagnosis name to search'); return; }
+
+        const exact = diagnosisData.filter(d => String(d.name || '').toLowerCase() === q);
+        const starts = diagnosisData.filter(d => String(d.name || '').toLowerCase().startsWith(q) && !exact.some(e => e.code === d.code));
+        const contains = diagnosisData.filter(d => String(d.name || '').toLowerCase().includes(q)
+            && !exact.some(e => e.code === d.code)
+            && !starts.some(s => s.code === d.code));
+
+        const matches = [...exact, ...starts, ...contains];
+
+        if (!matches.length) {
+            if (resultsDiv) {
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = '<div class="no-results">No matching diagnosis names found</div>';
+            }
+            return;
+        }
+
+        if (resultsDiv) {
+            const list = document.createElement('div');
+            list.className = 'search-results-list';
+
+            matches.slice(0, 10).forEach(d => {
+                const item = document.createElement('div');
+                item.className = 'search-result-item';
+                item.innerHTML = `<strong>${d.name}</strong> – ${d.code}${d.description ? `<br><small>${d.description}</small>` : ''}`;
+                item.onclick = () => {
+                    codeInput.value = d.code;
+                    nameInput.value = d.name;
+                    resultsDiv.style.display = 'none';
+                };
+                list.appendChild(item);
+            });
+
+            resultsDiv.appendChild(list);
+            resultsDiv.style.display = 'block';
+        }
+    } catch (err) {
+        console.error('Diagnosis name search error:', err);
+        alert('Error searching diagnosis names. See console for details.');
+    } finally {
+        btn.textContent = '🔍';
+        btn.disabled = false;
+    }
+}
+
+// Collect diagnosis evidence data
+function collectDiagnosisEvidence() {
+    return Array.from(document.querySelectorAll('.diagnosis-evidence-row')).map(r => {
+        return {
+            diagnosisCode: r.querySelector('.de-diagnosis-code').value.trim(),
+            diagnosisName: r.querySelector('.de-diagnosis-name').value.trim(),
+            diagnosisDate: r.querySelector('.de-diagnosis-date').value.trim(),
+            onsetDate: r.querySelector('.de-onset-date').value.trim(),
+            status: r.querySelector('.de-status').value,
+            isRCTC: isRCTCTriggerCode(r.querySelector('.de-diagnosis-code').value)
+        };
+    }).filter(x => x.diagnosisCode || x.diagnosisName);
+}
+       
+       
+       
+       
         // Lab Evidence Repeater Functions
         function addLabEvidence(prefill = {}) {
             const template = document.getElementById('labEvidenceTemplate');
@@ -5265,6 +5448,73 @@ function emitResultAuthorXML(ts) {
         </assignedPerson>
       </assignedAuthor>
     </author>`;
+}
+
+// Build diagnosis table rows for the narrative text
+function buildDiagnosisTableRows(data) {
+    const diagnoses = data.diagnosisEvidence || [];
+
+    if (diagnoses.length === 0) {
+        return '<tr><td colspan="4">No diagnoses recorded</td></tr>';
+    }
+
+    return diagnoses.map(diagnosis =>
+        `<tr><td>${xmlEscape(diagnosis.diagnosisName || '')}</td><td>${xmlEscape(diagnosis.diagnosisCode || '')}</td><td>${xmlEscape(diagnosis.diagnosisDate || data.encounterDate)}</td><td>${diagnosis.isRCTC ? 'Yes' : 'No'}</td></tr>`
+    ).join('');
+}
+
+function generateDiagnosisEntries(data) {
+    const diagnoses = data.diagnosisEvidence || [];
+
+    if (diagnoses.length === 0) return '<!-- No diagnoses to report -->';
+
+    return diagnoses.map(diagnosis => `
+              <entryRelationship typeCode="SUBJ">
+                <observation classCode="OBS" moodCode="EVN" negationInd="false">
+                  <templateId root="2.16.840.1.113883.10.20.22.4.4" />
+                  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.4" />
+                  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.3" />
+                  <id root="${generateGUID()}" />
+                  <code code="75323-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+                    displayName="Condition">
+                    <originalText>Condition</originalText>
+                    <translation code="282291009" codeSystem="2.16.840.1.113883.6.96"
+                      codeSystemName="SNOMED CT" displayName="Diagnosis" />
+                  </code>
+                  <statusCode code="${diagnosis.status || 'completed'}" />
+                  <effectiveTime><low value="${diagnosis.diagnosisDate || data.encounterDate}" /></effectiveTime>
+                  <author>
+                    <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+                    <time value="${diagnosis.diagnosisDate || data.encounterDate}"/>
+                    <assignedAuthor>
+                      <id extension="${data.providerId || '1234567890'}" root="2.16.840.1.113883.4.6"/>
+                      <code code="207Q00000X"
+                            codeSystem="2.16.840.1.113883.6.101"
+                            displayName="Family Medicine Physician"/>
+                      <assignedPerson>
+                        <name>
+                          <given>${xmlEscape((data.providerName || 'Royce').split(' ')[0])}</given>
+                          <family>${xmlEscape((data.providerName || 'Royce Hemlock').split(' ').slice(1).join(' ') || 'Hemlock')}</family>
+                        </name>
+                      </assignedPerson>
+                    </assignedAuthor>
+                  </author>
+                  ${diagnosis.diagnosisCode
+                    ? `<value xsi:type="CD"
+                            code="${xmlEscape(diagnosis.diagnosisCode)}"
+                            codeSystem="2.16.840.1.113883.6.96"
+                            codeSystemName="SNOMED CT"
+                            displayName="${xmlEscape(diagnosis.diagnosisName)}"
+                            sdtc:valueSet="${getConditionSpecificValueSet(diagnosis.diagnosisCode).oid}"
+                            sdtc:valueSetVersion="${getConditionSpecificValueSet(diagnosis.diagnosisCode).version}" />`
+                    : `<value xsi:type="CD"
+                            nullFlavor="UNK"
+                            displayName="${xmlEscape(diagnosis.diagnosisName)}"
+                            sdtc:valueSet="2.16.840.1.113762.1.4.1146.2260"
+                            sdtc:valueSetVersion="2.0.1" />`
+                  }
+                </observation>
+              </entryRelationship>`).join('');
 }
 
        function buildResultsSectionXML(labEvidence, rctcVersion = '2016-12-01', data = {}) {
@@ -5930,7 +6180,7 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
               <thead>
                 <tr><th>Problem</th><th>Code</th><th>Date</th><th>RCTC Trigger</th></tr>
               </thead>
-              <tbody><tr><td>${data.diagnosis1Name}</td><td>${data.diagnosis1Code}</td><td>${data.encounterDate}</td><td>Yes</td></tr><tr><td>${data.diagnosis2Name}</td><td>${data.diagnosis2Code}</td><td>${data.encounterDate}</td><td>Yes</td></tr><tr><td>${data.diagnosis3Name}</td><td>${data.diagnosis3Code}</td><td>${data.encounterDate}</td><td>Yes</td></tr></tbody>
+              <tbody>${buildDiagnosisTableRows(data)}</tbody>
             </table>
           </text>
           <entry typeCode="DRIV">
@@ -5958,142 +6208,7 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
             </assignedAuthor>
           </author>
 
-              <!-- Diagnosis with RCTC Trigger Code Template -->
-              <entryRelationship typeCode="SUBJ">
-                <observation classCode="OBS" moodCode="EVN" negationInd="false">
-                  <templateId root="2.16.840.1.113883.10.20.22.4.4" />
-                  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.4" />
-                  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.3" />
-                  <id root="5e3c9b57-fa2e-48a2-be29-47d9873e3c13" />
-                  <code code="75323-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
-                    displayName="Condition">
-                     <originalText>Condition</originalText>
-                    <translation code="282291009" codeSystem="2.16.840.1.113883.6.96"
-                      codeSystemName="SNOMED CT" displayName="Diagnosis" />
-                  </code>
-                  <statusCode code="completed" />
-                  <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
-                     <author>
-            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-            <time value="20240615"/>
-            <assignedAuthor>
-              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
-              <code code="207Q00000X" 
-      codeSystem="2.16.840.1.113883.6.101" 
-      displayName="Family Medicine Physician"/>
-              <assignedPerson>
-                <name>
-                  <given>Royce</given>
-                  <family>Hemlock</family>
-                </name>
-              </assignedPerson>
-            </assignedAuthor>
-          </author>
-                   ${data.diagnosis1Code
-  ? `<value xsi:type="CD"
-            code="${data.diagnosis1Code}"
-            codeSystem="2.16.840.1.113883.6.96"
-            codeSystemName="SNOMED CT"
-            displayName="${data.diagnosis1Name}"
-            sdtc:valueSet="${getConditionSpecificValueSet(data.diagnosis1Code).oid}"
-            sdtc:valueSetVersion="${getConditionSpecificValueSet(data.diagnosis1Code).version}" />`
-  : `<value xsi:type="CD"
-            nullFlavor="UNK"
-            displayName="${data.diagnosis1Name}" 
-             sdtc:valueSet="2.16.840.1.113762.1.4.1146.2260" 
-       sdtc:valueSetVersion="2.0.1" />`
-}
-                </observation>
-              </entryRelationship>
-
-              <!-- Diagnosis with RCTC Trigger Code Template -->
-              <entryRelationship typeCode="SUBJ">
-                <observation classCode="OBS" moodCode="EVN" negationInd="false">
-                  <templateId root="2.16.840.1.113883.10.20.22.4.4" />
-                  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.4" />
-                  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.3" />
-                  <id root="7f32bd91-c5f3-422b-8a9d-3bc24c1e8bc1" />
-                  <code code="75323-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
-                    displayName="Condition">
-                    <translation code="282291009" codeSystem="2.16.840.1.113883.6.96"
-                      codeSystemName="SNOMED CT" displayName="Diagnosis" />
-                  </code>
-                  <statusCode code="completed" />
-                  <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
-                     <author>
-            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-            <time value="20240615"/>
-            <assignedAuthor>
-              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
-              <code code="207Q00000X" 
-      codeSystem="2.16.840.1.113883.6.101" 
-      displayName="Family Medicine Physician"/>
-              <assignedPerson>
-                <name>
-                  <given>Royce</given>
-                  <family>Hemlock</family>
-                </name>
-              </assignedPerson>
-            </assignedAuthor>
-          </author>
-                 ${data.diagnosis2Code
-  ? `<value xsi:type="CD"
-            code="${data.diagnosis2Code}"
-            codeSystem="2.16.840.1.113883.6.96"
-            codeSystemName="SNOMED CT"
-            displayName="${data.diagnosis2Name}"
-            sdtc:valueSet="${getConditionSpecificValueSet(data.diagnosis2Code).oid}"
-            sdtc:valueSetVersion="${getConditionSpecificValueSet(data.diagnosis2Code).version}" />`
-  : `<value xsi:type="CD"
-            nullFlavor="UNK"
-            displayName="${data.diagnosis2Name}" 
-             sdtc:valueSet="2.16.840.1.113762.1.4.1146.2260" 
-       sdtc:valueSetVersion="2.0.1" />`
-}
-                </observation>
-              </entryRelationship>
-
-              <!-- Diagnosis with RCTC Trigger Code Template -->
-              <entryRelationship typeCode="SUBJ">
-                <observation classCode="OBS" moodCode="EVN" negationInd="false">
-                  <templateId root="2.16.840.1.113883.10.20.22.4.4" />
-                  <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.4" />
-                  <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.3" />
-                  <id root="b0ea9e52-4e54-4c22-8dc3-4bd390e10eef" />
-                  <code code="75323-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
-                    displayName="Condition">
-                    <translation code="282291009" codeSystem="2.16.840.1.113883.6.96"
-                      codeSystemName="SNOMED CT" displayName="Diagnosis" />
-                  </code>
-                  <statusCode code="completed" />
-                  <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
-                     <author>
-            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-            <time value="20240615"/>
-            <assignedAuthor>
-              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
-              <code code="207Q00000X" 
-      codeSystem="2.16.840.1.113883.6.101" 
-      displayName="Family Medicine Physician"/>
-              <assignedPerson>
-                <name>
-                  <given>Royce</given>
-                  <family>Hemlock</family>
-                </name>
-              </assignedPerson>
-            </assignedAuthor>
-          </author>
-                 ${data.diagnosis3Code 
-  ? `<value xsi:type="CD" code="${data.diagnosis3Code}" codeSystem="2.16.840.1.113883.6.96"
-       codeSystemName="SNOMED-CT" displayName="${data.diagnosis3Name}"
-       sdtc:valueSet="${getConditionSpecificValueSet(data.diagnosis3Code).oid}" 
-       sdtc:valueSetVersion="${getConditionSpecificValueSet(data.diagnosis3Code).version}" />`
-  : `<value xsi:type="CD" nullFlavor="UNK" displayName="${data.diagnosis3Name}"
-       sdtc:valueSet="2.16.840.1.113762.1.4.1146.2260" 
-       sdtc:valueSetVersion="2.0.1" />`
-}
-                </observation>
-              </entryRelationship>
+          ${generateDiagnosisEntries(data)}
             </act>
           </entry>
         </section>
@@ -7240,6 +7355,32 @@ const authorXml = (data.ordProvNPI || data.ordProvGiven || data.ordProvFamily ||
             // NEW: Initialize lab evidence
             if (!document.querySelector('.lab-evidence-row')) {
                 addLabEvidence();
+            }
+
+            // Initialize diagnosis evidence with default entries
+            if (!document.querySelector('.diagnosis-evidence-row')) {
+                // Add default diagnoses
+                addDiagnosisEvidence({
+                    diagnosisCode: '67531005',
+                    diagnosisName: 'Down syndrome (disorder)',
+                    diagnosisDate: '20240601',
+                    onsetDate: '20240601',
+                    status: 'completed'
+                });
+                addDiagnosisEvidence({
+                    diagnosisCode: '67531005',
+                    diagnosisName: 'Spina bifida (disorder)',
+                    diagnosisDate: '20240601',
+                    onsetDate: '20240601',
+                    status: 'completed'
+                });
+                addDiagnosisEvidence({
+                    diagnosisCode: '414819007',
+                    diagnosisName: 'Neonatal abstinence syndrome (disorder)',
+                    diagnosisDate: '20240610',
+                    onsetDate: '20240610',
+                    status: 'completed'
+                });
             }
 
             // Set default birth date to datetime-local format
