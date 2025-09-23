@@ -163,3 +163,43 @@ input:focus, select:focus, textarea:focus { outline:none; border-color:var(--acc
 .ui81-sidenav .nav-list li:nth-child(15) a i { color: #f59e0b; } /* amber - procedures */
 .ui81-sidenav .nav-list li:nth-child(16) a i { color: #dc2626; } /* red - warning */
 .ui81-sidenav .nav-list li:nth-child(17) a i { color: #4b5563; } /* gray - file */
+
+/* Template dropdown in floating dock */
+.ui81-template-select {
+  background: #fff !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  padding: 8px 12px !important;
+  margin-right: 8px !important;
+  font-size: 13px !important;
+  color: var(--text) !important;
+  cursor: pointer !important;
+  min-width: 160px !important;
+}
+
+.ui81-template-select:focus {
+  outline: none !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--focus) !important;
+}
+
+.ui81-template-select:hover {
+  background: var(--surface-2) !important;
+}
+
+/* Adjust dock layout for the new dropdown */
+.ui81-dock {
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+}
+
+/* Make dock responsive */
+@media (max-width: 1200px) {
+  .ui81-dock {
+    flex-wrap: wrap !important;
+  }
+  .ui81-template-select {
+    min-width: 140px !important;
+  }
+}

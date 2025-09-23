@@ -117,12 +117,35 @@ if (headings.length) {
   // Floating dock — always visible; wire to originals; don't hide our own buttons
 const dock = create('div', { class: 'ui81-dock' });
 const mk = (t, extra='') => create('button', { class: 'ui81-btn '+extra, innerHTML: t });
+
+// Create a dropdown for templates
+const templateSelect = create('select', {
+  class: 'ui81-template-select',
+  style: 'background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; margin-right: 8px;'
+});
+templateSelect.innerHTML = `
+  <option value="">📋 Load Template...</option>
+  <option value="Spina Bifida (Disorders) (ICD10CM).json">Spina Bifida Template</option>
+`;
+
 const bLoad = mk('Load Form', 'ghost');
 const bSave = mk('Save Form', 'secondary');
 const bCDA = mk('Generate CDA');
 const bRR  = mk('Generate RR','secondary');
 const bZIP = mk('Download ZIP (eICR + RR)','ghost');
-dock.append(bLoad, bSave, bCDA, bRR, bZIP);
+
+// Add template functionality
+templateSelect.addEventListener('change', async function() {
+  if (this.value) {
+    // Call the function you'll add to the main HTML
+    if (typeof window.loadFormDataFromAssets === 'function') {
+      await window.loadFormDataFromAssets(this.value);
+      this.value = ''; // Reset dropdown
+    }
+  }
+});
+
+dock.append(templateSelect, bLoad, bSave, bCDA, bRR, bZIP);
   document.body.appendChild(dock);
 
   const actionsQuery = () => $$('button, a, [role="button"], input[type="button"], input[type="submit"]');
@@ -161,9 +184,11 @@ wire(bZIP, targets.zip);
     /download\s*zip.*eicr.*rr/i,
     /\bload\s*form\s*data\b/i,
     /\bsave\s*form\s*data\b/i
+    // Don't hide template-related elements
   ];
   actionsQuery().forEach(el => {
     if (el.closest('.ui81-dock')) return; // don't hide our dock
+    if (el.classList.contains('ui81-template-select')) return; // don't hide template dropdown
     const txt = (el.textContent || el.value || '').trim();
     if (hideLabels.some(rx => rx.test(txt))) el.style.display = 'none';
   });

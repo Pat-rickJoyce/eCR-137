@@ -2808,6 +2808,99 @@ async function searchRCTCCodes(fieldId) {
             });
         }
 
+        // Make this function globally available for the Clean UI system
+        window.loadFormDataFromAssets = async function(filename) {
+            try {
+                console.log(`Attempting to load: ./assets/xslt/${filename}`);
+
+                const response = await fetch(`./assets/xslt/${filename}`);
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error(`Form template file not found: ${filename}`);
+                    }
+                    throw new Error(`Failed to load form data file: ${response.status} ${response.statusText}`);
+                }
+
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    console.warn('File may not be JSON format, attempting to parse anyway');
+                }
+
+                const data = await response.json();
+
+                // Validate that it's a form data object
+                if (!data || typeof data !== 'object') {
+                    throw new Error('Invalid form data format - expected JSON object');
+                }
+
+                setFormData(data);
+
+                // Handle lab evidence if present
+                if (data.labEvidence && Array.isArray(data.labEvidence)) {
+                    const labList = document.getElementById('labEvidenceList');
+                    if (labList) {
+                        labList.innerHTML = '';
+                        data.labEvidence.forEach(labEntry => {
+                            addLabEvidence(labEntry);
+                        });
+                    }
+                }
+
+                // Handle diagnosis evidence if present
+                if (data.diagnosisEvidence && Array.isArray(data.diagnosisEvidence)) {
+                    const diagnosisList = document.getElementById('diagnosisEvidenceList');
+                    if (diagnosisList) {
+                        diagnosisList.innerHTML = '';
+                        data.diagnosisEvidence.forEach(diagnosisEntry => {
+                            addDiagnosisEvidence(diagnosisEntry);
+                        });
+                    }
+                }
+
+                console.log(`Successfully loaded form template: ${filename}`);
+
+                // Show success message with Clean UI styling
+                showCleanUINotification(`✅ ${filename.replace('.json', '')} template loaded successfully!`, 'success');
+                return true;
+            } catch (error) {
+                console.error('Error loading form data from assets:', error);
+                showCleanUINotification(`❌ Error loading ${filename}: ${error.message}`, 'error');
+                return false;
+            }
+        };
+
+        // Optional: Add a notification system that matches your Clean UI
+        window.showCleanUINotification = function(message, type = 'info') {
+            // Remove any existing notifications
+            const existing = document.querySelector('.ui81-notification');
+            if (existing) existing.remove();
+
+            const notification = document.createElement('div');
+            notification.className = 'ui81-notification';
+            notification.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 10000;
+                background: ${type === 'error' ? '#fee2e2' : '#f0fdf4'};
+                border: 1px solid ${type === 'error' ? '#fecaca' : '#bbf7d0'};
+                color: ${type === 'error' ? '#dc2626' : '#16a34a'};
+                border-radius: 12px; padding: 16px 20px;
+                box-shadow: var(--shadow-2); max-width: 400px;
+                font-size: 14px; font-weight: 500;
+            `;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            // Auto-remove after 4 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateX(100%)';
+                    notification.style.transition = 'all 0.3s ease';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 4000);
+        };
+
         function loadRCTCFile() {
             const input = document.createElement('input');
             input.type = 'file';
