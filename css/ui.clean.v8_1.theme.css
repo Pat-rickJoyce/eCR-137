@@ -152,17 +152,18 @@ input:focus, select:focus, textarea:focus { outline:none; border-color:var(--acc
 .ui81-sidenav .nav-list li:nth-child(4) a i { color: #10b981; } /* emerald - user-md */
 .ui81-sidenav .nav-list li:nth-child(5) a i { color: #f59e0b; } /* amber - hospital */
 .ui81-sidenav .nav-list li:nth-child(6) a i { color: #ef4444; } /* red - stethoscope */
-.ui81-sidenav .nav-list li:nth-child(7) a i { color: #84cc16; } /* lime - flask */
-.ui81-sidenav .nav-list li:nth-child(8) a i { color: #6366f1; } /* indigo - vial */
-.ui81-sidenav .nav-list li:nth-child(9) a i { color: #f97316; } /* orange - pills */
-.ui81-sidenav .nav-list li:nth-child(10) a i { color: #14b8a6; } /* teal - syringe */
-.ui81-sidenav .nav-list li:nth-child(11) a i { color: #ec4899; } /* pink - baby */
-.ui81-sidenav .nav-list li:nth-child(12) a i { color: #0ea5e9; } /* sky - plane */
-.ui81-sidenav .nav-list li:nth-child(13) a i { color: #8b5cf6; } /* violet - microscope */
-.ui81-sidenav .nav-list li:nth-child(14) a i { color: #06b6d4; } /* cyan - chart */
-.ui81-sidenav .nav-list li:nth-child(15) a i { color: #f59e0b; } /* amber - procedures */
-.ui81-sidenav .nav-list li:nth-child(16) a i { color: #dc2626; } /* red - warning */
-.ui81-sidenav .nav-list li:nth-child(17) a i { color: #4b5563; } /* gray - file */
+.ui81-sidenav .nav-list li:nth-child(7) a i { color: #dc2626; } /* red - exclamation-circle for Problems */
+.ui81-sidenav .nav-list li:nth-child(8) a i { color: #84cc16; } /* lime - flask */
+.ui81-sidenav .nav-list li:nth-child(9) a i { color: #6366f1; } /* indigo - vial */
+.ui81-sidenav .nav-list li:nth-child(10) a i { color: #f97316; } /* orange - pills */
+.ui81-sidenav .nav-list li:nth-child(11) a i { color: #14b8a6; } /* teal - syringe */
+.ui81-sidenav .nav-list li:nth-child(12) a i { color: #ec4899; } /* pink - baby */
+.ui81-sidenav .nav-list li:nth-child(13) a i { color: #0ea5e9; } /* sky - plane */
+.ui81-sidenav .nav-list li:nth-child(14) a i { color: #8b5cf6; } /* violet - microscope */
+.ui81-sidenav .nav-list li:nth-child(15) a i { color: #06b6d4; } /* cyan - chart */
+.ui81-sidenav .nav-list li:nth-child(16) a i { color: #f59e0b; } /* amber - procedures */
+.ui81-sidenav .nav-list li:nth-child(17) a i { color: #dc2626; } /* red - warning */
+.ui81-sidenav .nav-list li:nth-child(18) a i { color: #4b5563; } /* gray - file */
 
 /* Template dropdown in floating dock */
 .ui81-template-select {

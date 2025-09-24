@@ -804,6 +804,66 @@
     </template>
 </div>
 
+<!-- Problems Section -->
+<div class="section">
+    <h2 class="section-title"><i class="fas fa-exclamation-circle"></i> Problems</h2>
+    <div class="problem-evidence-controls">
+        <button class="btn btn-primary" type="button" onclick="addProblemEvidence()">➕ Add Problem</button>
+    </div>
+
+    <div id="problemEvidenceList"></div>
+
+    <template id="problemEvidenceTemplate">
+        <div class="problem-evidence-row">
+            <h4>Problem Entry</h4>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Problem Code</label>
+                    <div class="code-search">
+                        <input type="text" class="pe-problem-code" placeholder="ex. 385093006">
+                        <button class="btn btn-secondary" type="button" onclick="searchSNOMEDForProblem(this)">🔍</button>
+                    </div>
+                    <div class="pe-problem-code-results search-results"></div>
+                </div>
+
+                <div class="input-group">
+                    <label>Problem Name</label>
+                    <div class="code-search">
+                        <input type="text" class="pe-problem-name" placeholder="Community acquired pneumonia">
+                        <button class="btn btn-secondary" type="button" onclick="searchSNOMEDForProblemByName(this)">🔍</button>
+                    </div>
+                    <div class="pe-problem-name-results search-results"></div>
+                </div>
+
+                <div class="input-group">
+                    <label>Problem Onset Date (YYYYMMDD)</label>
+                    <input type="text" class="pe-onset-date" placeholder="20240227">
+                </div>
+
+                <div class="input-group">
+                    <label>Problem Status</label>
+                    <select class="pe-status">
+                        <option value="active" selected>Active</option>
+                        <option value="completed">Resolved</option>
+                        <option value="suspended">Suspended</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Concern Status</label>
+                    <select class="pe-concern-status">
+                        <option value="active" selected>Active</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+
+                <div>
+                    <button class="btn btn-warning" type="button" onclick="removeProblemEvidence(this)">🗑️ Remove</button>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>
 
         <!-- Lab Orders and Results Section -->
         <div class="section">
@@ -2012,6 +2072,17 @@ function loadFormData(event) {
                 }
             }
 
+            // Handle problem evidence if present
+            if (data.problemEvidence && Array.isArray(data.problemEvidence)) {
+                const problemList = document.getElementById('problemEvidenceList');
+                if (problemList) {
+                    problemList.innerHTML = '';
+                    data.problemEvidence.forEach(problemEntry => {
+                        addProblemEvidence(problemEntry);
+                    });
+                }
+            }
+
             alert('Form data loaded successfully!');
         } catch (error) {
             alert('Error loading file: ' + error.message);
@@ -2790,6 +2861,11 @@ async function searchRCTCCodes(fieldId) {
 
             // ADD THIS: Collect diagnosis evidence
             data.diagnosisEvidence = collectDiagnosisEvidence();
+            console.log('getFormData diagnosis evidence:', data.diagnosisEvidence); // DEBUG
+
+            // ADD THIS: Collect problem evidence
+            data.problemEvidence = collectProblemEvidence();
+            console.log('Form data problem evidence:', data.problemEvidence); // DEBUG LINE
 
             return data;
         }
@@ -2853,6 +2929,17 @@ async function searchRCTCCodes(fieldId) {
                         diagnosisList.innerHTML = '';
                         data.diagnosisEvidence.forEach(diagnosisEntry => {
                             addDiagnosisEvidence(diagnosisEntry);
+                        });
+                    }
+                }
+
+                // Handle problem evidence if present
+                if (data.problemEvidence && Array.isArray(data.problemEvidence)) {
+                    const problemList = document.getElementById('problemEvidenceList');
+                    if (problemList) {
+                        problemList.innerHTML = '';
+                        data.problemEvidence.forEach(problemEntry => {
+                            addProblemEvidence(problemEntry);
                         });
                     }
                 }
@@ -5046,20 +5133,194 @@ async function searchRCTCForDiagnosisByName(btn) {
 
 // Collect diagnosis evidence data
 function collectDiagnosisEvidence() {
-    return Array.from(document.querySelectorAll('.diagnosis-evidence-row')).map(r => {
-        return {
-            diagnosisCode: r.querySelector('.de-diagnosis-code').value.trim(),
-            diagnosisName: r.querySelector('.de-diagnosis-name').value.trim(),
-            diagnosisDate: r.querySelector('.de-diagnosis-date').value.trim(),
-            onsetDate: r.querySelector('.de-onset-date').value.trim(),
-            status: r.querySelector('.de-status').value,
-            isRCTC: isRCTCTriggerCode(r.querySelector('.de-diagnosis-code').value)
+    const rows = Array.from(document.querySelectorAll('.diagnosis-evidence-row'));
+    console.log('Found diagnosis rows:', rows.length);
+
+    const result = rows.map(r => {
+        const data = {
+            diagnosisCode: r.querySelector('.de-diagnosis-code')?.value.trim() || '',
+            diagnosisName: r.querySelector('.de-diagnosis-name')?.value.trim() || '',
+            diagnosisDate: r.querySelector('.de-diagnosis-date')?.value.trim() || '',
+            onsetDate: r.querySelector('.de-onset-date')?.value.trim() || '',
+            status: r.querySelector('.de-status')?.value || 'completed',
+            isRCTC: isRCTCTriggerCode(r.querySelector('.de-diagnosis-code')?.value)
         };
+        console.log('Collected diagnosis:', data);
+        return data;
     }).filter(x => x.diagnosisCode || x.diagnosisName);
+
+    console.log('Final diagnosis evidence:', result);
+    return result;
 }
-       
-       
-       
+
+// Add problem evidence row
+function addProblemEvidence(prefill = {}) {
+    const template = document.getElementById('problemEvidenceTemplate');
+    const clone = template.content.cloneNode(true);
+    const row = clone.querySelector('.problem-evidence-row');
+
+    // Populate with prefill data if provided
+    if (prefill.problemCode) row.querySelector('.pe-problem-code').value = prefill.problemCode;
+    if (prefill.problemName) row.querySelector('.pe-problem-name').value = prefill.problemName;
+    if (prefill.onsetDate) row.querySelector('.pe-onset-date').value = prefill.onsetDate;
+    if (prefill.status) row.querySelector('.pe-status').value = prefill.status;
+    if (prefill.concernStatus) row.querySelector('.pe-concern-status').value = prefill.concernStatus;
+
+    document.getElementById('problemEvidenceList').appendChild(clone);
+}
+
+// Remove problem evidence row
+function removeProblemEvidence(btn) {
+    btn.closest('.problem-evidence-row')?.remove();
+}
+
+// Search SNOMED for problem codes
+async function searchSNOMEDForProblem(btn) {
+    const row = btn.closest('.problem-evidence-row');
+    const codeInput = row.querySelector('.pe-problem-code');
+    const nameInput = row.querySelector('.pe-problem-name');
+    const resultsDiv = row.querySelector('.pe-problem-code-results');
+
+    btn.textContent = '⏳';
+    btn.disabled = true;
+    if (resultsDiv) { resultsDiv.innerHTML = ''; resultsDiv.style.display = 'none'; }
+
+    try {
+        // Use existing diagnosis search as fallback for now
+        if (!diagnosisLoaded) await loadDiagnosisFromRCTC();
+        if (!Array.isArray(diagnosisData) || diagnosisData.length === 0) {
+            alert('Problem list is empty. Using diagnosis data as fallback.');
+            return;
+        }
+
+        const q = String(codeInput.value || '').trim().toLowerCase();
+        if (!q) { alert('Enter a problem code to search'); return; }
+
+        const exact = diagnosisData.filter(d => String(d.code || '').toLowerCase() === q);
+        const starts = diagnosisData.filter(d => String(d.code || '').toLowerCase().startsWith(q) && !exact.some(e => e.code === d.code));
+        const contains = diagnosisData.filter(d => String(d.code || '').toLowerCase().includes(q)
+            && !exact.some(e => e.code === d.code)
+            && !starts.some(s => s.code === d.code));
+
+        const matches = [...exact, ...starts, ...contains];
+
+        if (!matches.length) {
+            if (resultsDiv) {
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = '<div class="no-results">No matching problem codes found</div>';
+            }
+            return;
+        }
+
+        if (resultsDiv) {
+            const list = document.createElement('div');
+            list.className = 'search-results-list';
+
+            matches.slice(0, 10).forEach(d => {
+                const item = document.createElement('div');
+                item.className = 'search-result-item';
+                item.innerHTML = `<strong>${d.code}</strong> — ${d.name}${d.description ? `<br><small>${d.description}</small>` : ''}`;
+                item.onclick = () => {
+                    codeInput.value = d.code;
+                    nameInput.value = d.name;
+                    resultsDiv.style.display = 'none';
+                };
+                list.appendChild(item);
+            });
+
+            resultsDiv.appendChild(list);
+            resultsDiv.style.display = 'block';
+        }
+    } catch (err) {
+        console.error('Problem code search error:', err);
+        alert('Error searching problem codes. See console for details.');
+    } finally {
+        btn.textContent = '🔍';
+        btn.disabled = false;
+    }
+}
+
+// Search SNOMED for problem names
+async function searchSNOMEDForProblemByName(btn) {
+    const row = btn.closest('.problem-evidence-row');
+    const codeInput = row.querySelector('.pe-problem-code');
+    const nameInput = row.querySelector('.pe-problem-name');
+    const resultsDiv = row.querySelector('.pe-problem-name-results');
+
+    btn.textContent = '⏳';
+    btn.disabled = true;
+    if (resultsDiv) { resultsDiv.innerHTML = ''; resultsDiv.style.display = 'none'; }
+
+    try {
+        // Use existing diagnosis search as fallback for now
+        if (!diagnosisLoaded) await loadDiagnosisFromRCTC();
+        if (!Array.isArray(diagnosisData) || diagnosisData.length === 0) {
+            alert('Problem list is empty. Using diagnosis data as fallback.');
+            return;
+        }
+
+        const q = String(nameInput.value || '').trim().toLowerCase();
+        if (!q) { alert('Enter a problem name to search'); return; }
+
+        const exact = diagnosisData.filter(d => String(d.name || '').toLowerCase() === q);
+        const starts = diagnosisData.filter(d => String(d.name || '').toLowerCase().startsWith(q) && !exact.some(e => e.code === d.code));
+        const contains = diagnosisData.filter(d => String(d.name || '').toLowerCase().includes(q)
+            && !exact.some(e => e.code === d.code)
+            && !starts.some(s => s.code === d.code));
+
+        const matches = [...exact, ...starts, ...contains];
+
+        if (!matches.length) {
+            if (resultsDiv) {
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = '<div class="no-results">No matching problem names found</div>';
+            }
+            return;
+        }
+
+        if (resultsDiv) {
+            const list = document.createElement('div');
+            list.className = 'search-results-list';
+
+            matches.slice(0, 10).forEach(d => {
+                const item = document.createElement('div');
+                item.className = 'search-result-item';
+                item.innerHTML = `<strong>${d.name}</strong> — ${d.code}${d.description ? `<br><small>${d.description}</small>` : ''}`;
+                item.onclick = () => {
+                    codeInput.value = d.code;
+                    nameInput.value = d.name;
+                    resultsDiv.style.display = 'none';
+                };
+                list.appendChild(item);
+            });
+
+            resultsDiv.appendChild(list);
+            resultsDiv.style.display = 'block';
+        }
+    } catch (err) {
+        console.error('Problem name search error:', err);
+        alert('Error searching problem names. See console for details.');
+    } finally {
+        btn.textContent = '🔍';
+        btn.disabled = false;
+    }
+}
+
+// Collect problem evidence data
+function collectProblemEvidence() {
+    return Array.from(document.querySelectorAll('.problem-evidence-row')).map(r => {
+        return {
+            problemCode: r.querySelector('.pe-problem-code')?.value.trim() || '',
+            problemName: r.querySelector('.pe-problem-name')?.value.trim() || '',
+            onsetDate: r.querySelector('.pe-onset-date')?.value.trim() || '',
+            status: r.querySelector('.pe-status')?.value || 'active',
+            concernStatus: r.querySelector('.pe-concern-status')?.value || 'active'
+        };
+    }).filter(x => x.problemCode || x.problemName);
+}
+
+
+
        
         // Lab Evidence Repeater Functions
         function addLabEvidence(prefill = {}) {
@@ -5602,68 +5863,115 @@ function emitResultAuthorXML(ts) {
 // Build diagnosis table rows for the narrative text
 function buildDiagnosisTableRows(data) {
     const diagnoses = data.diagnosisEvidence || [];
+    console.log('buildDiagnosisTableRows called with:', diagnoses); // DEBUG LINE
 
     if (diagnoses.length === 0) {
-        return '<tr><td colspan="4">No diagnoses recorded</td></tr>';
+        console.log('No diagnoses found, returning empty'); // DEBUG LINE
+        return ''; // Return empty string, not a table row
     }
 
-    return diagnoses.map(diagnosis =>
-        `<tr><td>${xmlEscape(diagnosis.diagnosisName || '')}</td><td>${xmlEscape(diagnosis.diagnosisCode || '')}</td><td>${xmlEscape(diagnosis.diagnosisDate || data.encounterDate)}</td><td>${diagnosis.isRCTC ? 'Yes' : 'No'}</td></tr>`
+    const result = diagnoses.map(diagnosis =>
+        `<tr><td>Diagnosis</td><td>${xmlEscape(diagnosis.diagnosisName || '')}</td><td>${xmlEscape(diagnosis.diagnosisCode || '')}</td><td>${xmlEscape(diagnosis.diagnosisDate || data.encounterDate)}</td><td>${diagnosis.isRCTC ? 'RCTC Trigger' : 'Active'}</td></tr>`
     ).join('');
+
+    console.log('buildDiagnosisTableRows result:', result); // DEBUG LINE
+    return result;
 }
 
 function generateDiagnosisEntries(data) {
     const diagnoses = data.diagnosisEvidence || [];
+    console.log('generateDiagnosisEntries called with:', diagnoses);
 
-    if (diagnoses.length === 0) return '<!-- No diagnoses to report -->';
+    if (diagnoses.length === 0) {
+        console.log('No diagnoses, returning empty comment');
+        return '<!-- No diagnoses to report -->';
+    }
 
-    return diagnoses.map(diagnosis => `
+    const result = diagnoses.map(diagnosis => {
+        console.log('Processing diagnosis:', diagnosis);
+
+        // Determine if this is an RCTC trigger code
+        const isRCTCCode = isRCTCTriggerCode(diagnosis.diagnosisCode);
+
+        // Get appropriate valueSet info for RCTC codes
+        const valueSetInfo = isRCTCCode ? {
+            oid: '2.16.840.1.113762.1.4.1146.2260',
+            version: '2.0.1'
+        } : null;
+
+        return `
               <entryRelationship typeCode="SUBJ">
                 <observation classCode="OBS" moodCode="EVN" negationInd="false">
                   <templateId root="2.16.840.1.113883.10.20.22.4.4" />
                   <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.4" />
                   <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.3" />
                   <id root="${generateGUID()}" />
-                  <code code="75323-6" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
-                    displayName="Condition">
-                    <originalText>Condition</originalText>
-                    <translation code="282291009" codeSystem="2.16.840.1.113883.6.96"
-                      codeSystemName="SNOMED CT" displayName="Diagnosis" />
+                  <code code="282291009" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT"
+                    displayName="Diagnosis">
+                    <translation code="29308-4" codeSystem="2.16.840.1.113883.6.1"
+                      codeSystemName="LOINC" displayName="Diagnosis" />
                   </code>
                   <statusCode code="${diagnosis.status || 'completed'}" />
                   <effectiveTime><low value="${diagnosis.diagnosisDate || data.encounterDate}" /></effectiveTime>
-                  <author>
-                    <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-                    <time value="${diagnosis.diagnosisDate || data.encounterDate}"/>
-                    <assignedAuthor>
-                      <id extension="${data.providerId || '1234567890'}" root="2.16.840.1.113883.4.6"/>
-                      <code code="207Q00000X"
-                            codeSystem="2.16.840.1.113883.6.101"
-                            displayName="Family Medicine Physician"/>
-                      <assignedPerson>
-                        <name>
-                          <given>${xmlEscape((data.providerName || 'Royce').split(' ')[0])}</given>
-                          <family>${xmlEscape((data.providerName || 'Royce Hemlock').split(' ').slice(1).join(' ') || 'Hemlock')}</family>
-                        </name>
-                      </assignedPerson>
-                    </assignedAuthor>
-                  </author>
                   ${diagnosis.diagnosisCode
                     ? `<value xsi:type="CD"
                             code="${xmlEscape(diagnosis.diagnosisCode)}"
                             codeSystem="2.16.840.1.113883.6.96"
                             codeSystemName="SNOMED CT"
-                            displayName="${xmlEscape(diagnosis.diagnosisName)}"
-                            sdtc:valueSet="${getConditionSpecificValueSet(diagnosis.diagnosisCode).oid}"
-                            sdtc:valueSetVersion="${getConditionSpecificValueSet(diagnosis.diagnosisCode).version}" />`
+                            displayName="${xmlEscape(diagnosis.diagnosisName)}"${valueSetInfo ? ` sdtc:valueSet="${valueSetInfo.oid}" sdtc:valueSetVersion="${valueSetInfo.version}"` : ''} />`
                     : `<value xsi:type="CD"
                             nullFlavor="UNK"
-                            displayName="${xmlEscape(diagnosis.diagnosisName)}"
-                            sdtc:valueSet="2.16.840.1.113762.1.4.1146.2260"
-                            sdtc:valueSetVersion="2.0.1" />`
+                            displayName="${xmlEscape(diagnosis.diagnosisName)}" />`
                   }
                 </observation>
-              </entryRelationship>`).join('');
+              </entryRelationship>`;
+    }).join('');
+
+    console.log('generateDiagnosisEntries result length:', result.length);
+    return result;
+}
+
+// Build problems table rows for the narrative text
+function buildProblemsTableRows(data) {
+    const problems = data.problemEvidence || [];
+    return problems.map(problem =>
+        `<tr><td>Problem</td><td>${xmlEscape(problem.problemName || '')}</td><td>${xmlEscape(problem.problemCode || '')}</td><td>${xmlEscape(problem.onsetDate || '')}</td><td>${xmlEscape(problem.status || 'active')}</td></tr>`
+    ).join('');
+}
+
+function generateProblemEntries(data) {
+    const problems = data.problemEvidence || [];
+
+    if (problems.length === 0) return '';
+
+    return problems.map(problem => `
+        <entryRelationship typeCode="SUBJ">
+            <observation classCode="OBS" moodCode="EVN">
+                <templateId root="2.16.840.1.113883.10.20.22.4.4" />
+                <templateId root="2.16.840.1.113883.10.20.22.4.4" extension="2015-08-01"/>
+                <id root="${generateGUID()}"/>
+                <code code="55607006" displayName="Problem"
+                      codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT">
+                    <translation code="75326-9" codeSystem="2.16.840.1.113883.6.1"
+                               codeSystemName="LOINC" displayName="Problem"/>
+                </code>
+                <text>
+                    <reference value="#Problem${problem.problemCode}"/>
+                </text>
+                <statusCode code="completed"/>
+                <effectiveTime>
+                    <low value="${problem.onsetDate || data.encounterDate}"/>
+                </effectiveTime>
+                ${problem.problemCode
+                    ? `<value xsi:type="CD" code="${xmlEscape(problem.problemCode)}"
+                            codeSystem="2.16.840.1.113883.6.96"
+                            codeSystemName="SNOMED CT"
+                            displayName="${xmlEscape(problem.problemName)}"/>`
+                    : `<value xsi:type="CD" nullFlavor="UNK"
+                            displayName="${xmlEscape(problem.problemName)}"/>`
+                }
+            </observation>
+        </entryRelationship>`).join('');
 }
 
 function buildResultsSectionXML(labEvidence, rctcVersion = '2016-12-01') {
@@ -6380,7 +6688,7 @@ const refRange = le.referenceRange
         </section>
       </component>
 
-      <!-- Problems Section with RCTC Trigger Codes -->
+      <!-- Problem List Section (includes both Problems and Diagnoses) -->
       <component>
         <section>
           <templateId root="2.16.840.1.113883.10.20.22.2.5" />
@@ -6392,9 +6700,12 @@ const refRange = le.referenceRange
           <text>
             <table>
               <thead>
-                <tr><th>Problem</th><th>Code</th><th>Date</th><th>RCTC Trigger</th></tr>
+                <tr><th>Type</th><th>Name</th><th>Code</th><th>Date</th><th>Status</th></tr>
               </thead>
-              <tbody>${buildDiagnosisTableRows(data)}</tbody>
+              <tbody>
+                ${buildDiagnosisTableRows(data)}
+                ${buildProblemsTableRows(data)}
+              </tbody>
             </table>
           </text>
           <entry typeCode="DRIV">
@@ -6405,24 +6716,24 @@ const refRange = le.referenceRange
               <code code="CONC" codeSystem="2.16.840.1.113883.5.6" displayName="Concern" />
               <statusCode code="active" />
               <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
-                <author>
-            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-            <time value="20240615"/>
-            <assignedAuthor>
-              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
-              <code code="207Q00000X" 
-      codeSystem="2.16.840.1.113883.6.101" 
-      displayName="Family Medicine Physician"/>
-              <assignedPerson>
-                <name>
-                  <given>Royce</given>
-                  <family>Hemlock</family>
-                </name>
-              </assignedPerson>
-            </assignedAuthor>
-          </author>
-
-          ${generateDiagnosisEntries(data)}
+              <author>
+                <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+                <time value="20240615"/>
+                <assignedAuthor>
+                  <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+                  <code code="207Q00000X"
+                        codeSystem="2.16.840.1.113883.6.101"
+                        displayName="Family Medicine Physician"/>
+                  <assignedPerson>
+                    <name>
+                      <given>Royce</given>
+                      <family>Hemlock</family>
+                    </name>
+                  </assignedPerson>
+                </assignedAuthor>
+              </author>
+              ${generateDiagnosisEntries(data)}
+              ${generateProblemEntries(data)}
             </act>
           </entry>
         </section>
@@ -7329,6 +7640,17 @@ const refRange = le.referenceRange
                 }
             }
 
+            // Handle problem evidence if present
+            if (data.problemEvidence && Array.isArray(data.problemEvidence)) {
+                const problemList = document.getElementById('problemEvidenceList');
+                if (problemList) {
+                    problemList.innerHTML = ''; // Clear existing entries
+                    data.problemEvidence.forEach(problemEntry => {
+                        addProblemEvidence(problemEntry);
+                    });
+                }
+            }
+
             alert('Form data loaded successfully!');
         } catch (error) {
             alert('Error loading file: ' + error.message);
@@ -7622,6 +7944,17 @@ const refRange = le.referenceRange
                     diagnosisDate: '20240610',
                     onsetDate: '20240610',
                     status: 'completed'
+                });
+            }
+
+            // Initialize problems evidence with default entry
+            if (!document.querySelector('.problem-evidence-row')) {
+                addProblemEvidence({
+                    problemCode: '385093006',
+                    problemName: 'Community acquired pneumonia',
+                    onsetDate: '20240227',
+                    status: 'active',
+                    concernStatus: 'active'
                 });
             }
 
