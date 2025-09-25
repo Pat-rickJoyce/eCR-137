@@ -2539,6 +2539,9 @@ async function searchRCTCCodes(fieldId) {
             const xmlParseErrors = xml.getElementsByTagName('parsererror');
             if (xmlParseErrors.length > 0) {
               console.error('XML parsing error:', xmlParseErrors[0].textContent);
+              console.log('Full XML content length:', xmlString.length);
+              console.log('XML starts with:', xmlString.substring(0, 200));
+              console.log('XML around error area:', xmlString.substring(1680, 1700)); // Adjust numbers based on error line
               throw new Error('Invalid XML document');
             }
             
@@ -3633,7 +3636,32 @@ function xmlEscape(str = '') {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
+    .replace(/'/g, '&apos;')
+    .replace(/\(/g, '&#40;')   // Left parenthesis
+    .replace(/\)/g, '&#41;')   // Right parenthesis  
+    .replace(/\[/g, '&#91;')   // Left bracket
+    .replace(/\]/g, '&#93;')   // Right bracket
+    .replace(/\{/g, '&#123;')  // Left brace
+    .replace(/\}/g, '&#125;');  // Right brace;
+}
+
+
+// Build metadata XML from form data
+function buildMetadataXml(data, zipFilename) {
+    const esc = s => xmlEscape(s || '');
+
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <filename>${esc(zipFilename)}</filename>
+    <author>${esc(data.organizationName || data.facilityName || 'Unknown Organization')}</author>
+    <authorID>${esc(data.organizationId || data.facilityId || data.providerId || 'Unknown')}</authorID>
+    <serviceProviderOrg>${esc(data.facilityName || 'Unknown Facility')}</serviceProviderOrg>
+    <serviceProviderOrgID>${esc(data.facilityId || data.organizationId || '1.2.840.114350.1.13.248.3.7.2.696570.1020')}</serviceProviderOrgID>
+    <facility>${esc(data.facilityName || 'Unknown Facility')}</facility>
+    <facilityID>${esc(data.facilityId || '1.2.840.114350.1.13.248.3.7.2.686980.1020251')}</facilityID>
+    <sender>${esc(data.organizationEmail || data.providerEmail || 'unknown@facility.org')}</sender>
+    <senderID>${esc(data.organizationName || data.facilityName || 'Unknown Organization System')}</senderID>
+</metadata>`;
 }
 
 function buildRRXml () {
@@ -3975,17 +4003,9 @@ async function downloadZipOfEICRandRR() {
     zip.file(`eICR_${base}.html`, eicrHtml);
     zip.file(`RR_${base}.html`, rrHtml);
 
-    // Add metadata if function exists
-    if (typeof buildMetadataXml === 'function') {
-      const metadata = buildMetadataXml([
-        { fileName: `eICR_${base}.xml`, mimeType: 'application/xml' },
-        { fileName: `RR_${base}.xml`, mimeType: 'application/xml' },
-        { fileName: `eICR_${base}.html`, mimeType: 'text/html' },
-        { fileName: `RR_${base}.html`, mimeType: 'text/html' },
-      ]);
-      zip.file('metadata.xml', metadata);
-      console.log('Added metadata.xml to ZIP package');
-    }
+    // Add metadata file with form data
+    const metadata = buildMetadataXml(data, `${base}.zip`);
+    zip.file('metadata.xml', metadata);
 
     console.log('Generating ZIP file...');
     const blob = await zip.generateAsync({ type: 'blob' });
@@ -6255,10 +6275,10 @@ const refRange = le.referenceRange
       ${data.patientDeathDate ? `<sdtc:deceasedTime value="${data.patientDeathDate}" />` : ''}
 
       <raceCode code="${data.patientRace}" codeSystem="2.16.840.1.113883.6.238"
-        codeSystemName="Race &amp; Ethnicity - CDC" displayName="${getRaceDisplayName(data.patientRace)}" />
+        codeSystemName="Race and Ethnicity - CDC" displayName="${getRaceDisplayName(data.patientRace)}" />
       ${data.patientDetailedRace ? `<sdtc:raceCode code="${data.patientDetailedRace}" codeSystem="2.16.840.1.113883.6.238" />` : ''}
       <ethnicGroupCode code="${data.patientEthnicity}" codeSystem="2.16.840.1.113883.6.238"
-        codeSystemName="Race &amp; Ethnicity - CDC" displayName="${getEthnicityDisplayName(data.patientEthnicity)}" />
+        codeSystemName="Race and Ethnicity - CDC" displayName="${getEthnicityDisplayName(data.patientEthnicity)}" />
       ${data.patientDetailedEthnicity ? `<sdtc:ethnicGroupCode code="${data.patientDetailedEthnicity}" codeSystem="2.16.840.1.113883.6.238" />` : ''}
       <maritalStatusCode code="S" codeSystem="2.16.840.1.113883.5.2" 
                      codeSystemName="MaritalStatus" displayName="Never Married"/>
@@ -7289,8 +7309,20 @@ const refRange = le.referenceRange
               <thead>
                 <tr><th>Procedure</th><th>Date</th><th>Type</th></tr>
               </thead>
-              <tbody>${data.currentProc1Name ? `<tr><td>${data.currentProc1Name}</td><td>${data.currentProc1Date}</td><td>${data.currentProc1Type}</td></tr>` : ''}${data.currentProc2Name ? `<tr><td>${data.currentProc2Name}</td><td>${data.currentProc2Date}</td><td>${data.currentProc2Type}</td></tr>` : ''}${data.triggerProc1Name ? `<tr><td>${data.triggerProc1Name}</td><td>${data.triggerProc1Date}</td><td>${data.triggerProc1Type}</td></tr>` : ''}
-              </tbody>
+              <tbody>${
+  data.currentProc1Name
+    ? `<tr><td>${xmlEscape(data.currentProc1Name)}</td><td>${xmlEscape(data.currentProc1Date)}</td><td>${xmlEscape(data.currentProc1Type)}</td></tr>`
+    : ''
+}${
+  data.currentProc2Name
+    ? `<tr><td>${xmlEscape(data.currentProc2Name)}</td><td>${xmlEscape(data.currentProc2Date)}</td><td>${xmlEscape(data.currentProc2Type)}</td></tr>`
+    : ''
+}${
+  data.triggerProc1Name
+    ? `<tr><td>${xmlEscape(data.triggerProc1Name)}</td><td>${xmlEscape(data.triggerProc1Date)}</td><td>${xmlEscape(data.triggerProc1Type)}</td></tr>`
+    : ''
+}</tbody>
+
             </table>
           </text>
           ${generateProcedureEntries(data)}
