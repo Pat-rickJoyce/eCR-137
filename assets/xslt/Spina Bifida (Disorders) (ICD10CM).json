@@ -198,7 +198,7 @@
   "quarantineStatus": "405178008",
   "isolationStatus": "385432009",
   "documentId": "1886c8b5-e0fe-4ae2-8818-e2fdcc9b1a46",
-  "effectiveTime": "20240615150000-0500",
+  "effectiveTime": "20250615150000-0500",
   "documentRelationshipType": "NEW",
   "relatedDocumentId": "",
   "setId": "ba21ee0f-2375-4b1b-a800-4b9e845d0479",
@@ -208,7 +208,7 @@
       "orderCode": "33747-0",
       "orderName": "Alpha-fetoprotein [Mass/volume] in Serum or Plasma",
       "orderId": "ord-2345",
-      "orderTime": "20240615080000",
+      "orderTime": "20250615080000",
       "testCode": "33747-0",
       "testName": "Alpha-fetoprotein [Mass/volume] in Serum or Plasma",
       "valueKind": "quantity",
@@ -217,7 +217,7 @@
       "qtyValue": "125.3",
       "qtyUnit": "ng/mL",
       "textValue": "Elevated alpha-fetoprotein consistent with neural tube defect",
-      "time": "20240615080000",
+      "time": "20250615080000",
       "status": "completed",
       "interpretation": "H",
       "referenceRange": "0.5-2.5 ng/mL",
@@ -228,8 +228,8 @@
     {
       "diagnosisCode": "67531005",
       "diagnosisName": "Spina bifida (disorder)",
-      "diagnosisDate": "20240615",
-      "onsetDate": "20240615",
+      "diagnosisDate": "20250615",
+      "onsetDate": "20250615",
       "status": "completed",
       "isRCTC": true
     }

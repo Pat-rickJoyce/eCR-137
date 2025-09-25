@@ -126,6 +126,9 @@ const templateSelect = create('select', {
 templateSelect.innerHTML = `
   <option value="">📋 Load Template...</option>
   <option value="Spina Bifida (Disorders) (ICD10CM).json">Spina Bifida Template</option>
+  <option value="NAS.json">NAS</option>
+  <option value="SB.json">SB</option>
+  <option value="TF.json">TF</option>
 `;
 
 const bLoad = mk('Load Form', 'ghost');
