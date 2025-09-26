@@ -487,7 +487,7 @@
                 </div>
                 <div class="input-group">
                     <label>Date of Death (YYYYMMDD)</label>
-                    <input type="text" id="patientDeathDate" placeholder="Leave blank if alive">
+                    <input type="datetime-local" id="patientDeathDate" placeholder="Leave blank if alive">
                 </div>
                 <div class="input-group">
                     <label>Disability Status</label>
@@ -735,11 +735,11 @@
                 </div>
                 <div class="input-group">
                     <label>Encounter Date (YYYYMMDD)</label>
-                    <input type="text" id="encounterDate" value="20240615">
+                    <input type="datetime-local" id="encounterDate" value="2024-06-15T08:00">
                 </div>
                 <div class="input-group">
                     <label>Encounter End Date (YYYYMMDD)</label>
-                    <input type="text" id="encounterEndDate" value="20240615">
+                    <input type="datetime-local" id="encounterEndDate" value="2024-06-15T17:00">
                 </div>
                 <div class="input-group">
                     <label>Encounter Disposition</label>
@@ -792,7 +792,7 @@
                 <div class="input-group">
                     <label>Diagnosis Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
                     <div class="code-search">
-                        <input type="text" class="de-diagnosis-code" placeholder="ex. 67531005">
+                        <input type="text" class="de-diagnosis-code" value="67531005">
                         <button class="btn btn-secondary" type="button" onclick="searchRCTCForDiagnosis(this)">🔍</button>
                     </div>
                     <div class="de-diagnosis-code-results search-results"></div>
@@ -801,7 +801,7 @@
                 <div class="input-group">
                     <label>Diagnosis Name</label>
                     <div class="code-search">
-                        <input type="text" class="de-diagnosis-name" placeholder="Down syndrome (disorder)">
+                        <input type="text" class="de-diagnosis-name" value="Down syndrome (disorder)">
                         <button class="btn btn-secondary" type="button" onclick="searchRCTCForDiagnosisByName(this)">🔍</button>
                     </div>
                     <div class="de-diagnosis-name-results search-results"></div>
@@ -809,12 +809,12 @@
                 
                 <div class="input-group">
                     <label>Date of Diagnosis (YYYYMMDD)</label>
-                    <input type="text" class="de-diagnosis-date" placeholder="20240601">
+                    <input type="datetime-local" class="de-diagnosis-date" value="2024-06-15T12:00">
                 </div>
                 
                 <div class="input-group">
                     <label>Date of Onset (YYYYMMDD)</label>
-                    <input type="text" class="de-onset-date" placeholder="20240601">
+                    <input type="datetime-local" class="de-onset-date" value="2024-06-15T12:00">
                 </div>
                 
                 <div class="input-group">
@@ -850,7 +850,7 @@
                 <div class="input-group">
                     <label>Problem Code</label>
                     <div class="code-search">
-                        <input type="text" class="pe-problem-code" placeholder="ex. 385093006">
+                        <input type="text" class="pe-problem-code" value="385093006">
                         <button class="btn btn-secondary" type="button" onclick="searchSNOMEDForProblem(this)">🔍</button>
                     </div>
                     <div class="pe-problem-code-results search-results"></div>
@@ -859,15 +859,15 @@
                 <div class="input-group">
                     <label>Problem Name</label>
                     <div class="code-search">
-                        <input type="text" class="pe-problem-name" placeholder="Community acquired pneumonia">
+                        <input type="text" class="pe-problem-name" value="Community acquired pneumonia">
                         <button class="btn btn-secondary" type="button" onclick="searchSNOMEDForProblemByName(this)">🔍</button>
                     </div>
                     <div class="pe-problem-name-results search-results"></div>
                 </div>
 
                 <div class="input-group">
-                    <label>Problem Onset Date (YYYYMMDD)</label>
-                    <input type="text" class="pe-onset-date" placeholder="20240227">
+                    <label>Problem Onset Date</label>
+                    <input type="datetime-local" class="pe-onset-date" value="2024-06-15T12:00">
                 </div>
 
                 <div class="input-group">
@@ -957,7 +957,7 @@
                         <div class="input-group">
                             <label>Order Code (LOINC) <span class="trigger-indicator">RCTC TRIGGER</span></label>
                             <div class="code-search">
-                                <input type="text" class="le-order-code" placeholder="ex. 94310-0">
+                                <input type="text" class="le-order-code" value="94310-0">
                                 <button class="btn btn-secondary" type="button" onclick="searchRCTCForLabOrder(this)">🔍</button>
                             </div>
                             <div class="le-order-code-results search-results"></div>
@@ -965,25 +965,25 @@
                         <div class="input-group">
                             <label>Order Name</label>
                             <div class="code-search">
-                                <input type="text" class="le-order-name" placeholder="SARS-like Coronavirus N gene">
+                                <input type="text" class="le-order-name" value="SARS-like Coronavirus N gene">
                                 <button class="btn btn-secondary" type="button" onclick="searchRCTCForLabOrderByName(this)">🔍</button>
                             </div>
                             <div class="le-order-name-results search-results"></div>
                         </div>
                         <div class="input-group">
                             <label>Order ID</label>
-                            <input type="text" class="le-order-id" placeholder="ORD-2024-001">
+                            <input type="text" class="le-order-id" value="ORD-2024-001">
                         </div>
                         <div class="input-group">
-                            <label>Order Time (YYYYMMDDHHMMSS)</label>
-                            <input type="text" class="le-order-time" placeholder="20240615080000">
+                            <label>Order Time</label>
+                            <input type="datetime-local" class="le-order-time" value="2024-06-15T12:00">
                         </div>
 
                         <!-- Test/Result Information -->
                         <div class="input-group">
                             <label>Test Code (LOINC) <span class="trigger-indicator">RCTC TRIGGER</span></label>
                             <div class="code-search">
-                                <input type="text" class="le-test-code" placeholder="ex. 94310-0">
+                                <input type="text" class="le-test-code" value="94310-0">
                                 <button class="btn btn-secondary" type="button" onclick="searchRCTCForTest(this)">🔍</button>
                             </div>
                             <div class="le-test-code-results search-results"></div>
@@ -991,7 +991,7 @@
                         <div class="input-group">
                             <label>Test Name</label>
                             <div class="code-search">
-                                <input type="text" class="le-test-name" placeholder="SARS-like Coronavirus N gene">
+                                <input type="text" class="le-test-name" value="SARS-like Coronavirus N gene">
                                 <button class="btn btn-secondary" type="button" onclick="searchRCTCForTestByName(this)">🔍</button>
                             </div>
                             <div class="le-test-name-results search-results"></div>
@@ -1011,7 +1011,7 @@
                         <div class="input-group le-coded">
                             <label>Organism/Substance Code (SNOMED CT)</label>
                             <div class="code-search">
-                                <input type="text" class="le-value-code" placeholder="ex. 840539006">
+                                <input type="text" class="le-value-code" value="840539006">
                                 <button class="btn btn-secondary" type="button" onclick="searchRCTCForOrganism(this)">🔍</button>
                             </div>
                             <div class="le-value-code-results search-results"></div>
@@ -1019,7 +1019,7 @@
                         <div class="input-group le-coded">
                             <label>Organism/Substance Name</label>
                             <div class="code-search">
-                                <input type="text" class="le-value-name" placeholder="Disease caused by 2019-nCoV">
+                                <input type="text" class="le-value-name" value="Disease caused by 2019-nCoV">
                                 <button class="btn btn-secondary" type="button" onclick="searchRCTCForOrganismByName(this)">🔍</button>
                             </div>
                             <div class="le-value-name-results search-results"></div>
@@ -1028,23 +1028,23 @@
                         <!-- Quantity Value -->
                         <div class="input-group le-qty hidden">
                             <label>Value</label>
-                            <input type="number" step="0.01" class="le-qty-value" placeholder="ex. 100">
+                            <input type="number" step="0.01" class="le-qty-value" value="ex. 100">
                         </div>
                         <div class="input-group le-qty hidden">
                             <label>Unit</label>
-                            <input type="text" class="le-qty-unit" placeholder="[iU]/mL">
+                            <input type="text" class="le-qty-unit" value="[iU]/mL">
                         </div>
 
                         <!-- Text Value -->
                         <div class="input-group le-text hidden">
                             <label>Text Result</label>
-                            <input type="text" class="le-text-value" placeholder="Detected / Not detected">
+                            <input type="text" class="le-text-value" value="Detected">
                         </div>
 
                         <!-- Timing/Status/Interpretation -->
                         <div class="input-group">
-                            <label>Result Time (YYYYMMDDHHMMSS)</label>
-                            <input type="text" class="le-time" placeholder="20240615103000">
+                            <label>Result Time</label>
+                            <input type="datetime-local" class="le-time" value="2024-06-15T12:00">
                         </div>
                         <div class="input-group">
                             <label>Status</label>
@@ -1069,7 +1069,7 @@
                         <!-- Reference Range -->
                         <div class="input-group">
                             <label>Reference Range</label>
-                            <input type="text" class="le-reference-range" placeholder="2.5-15.0 ng/mL or Not Detected">
+                            <input type="text" class="le-reference-range" value="2.5-15.0 ng/mL">
                         </div>
 
                         <div>
@@ -1104,7 +1104,7 @@
 
 <div class="input-group">
   <label>Phone (opt)</label>
-  <input type="tel" id="administeringProviderPhone" placeholder="555-555-5555">
+  <input type="tel" id="administeringProviderPhone" value="555-555-5555">
 </div>
 
 <div class="input-group">
@@ -1114,7 +1114,7 @@
 
 <div class="input-group">
   <label>Org ID (extension) (opt)</label>
-  <input type="text" id="administeringProviderOrgId" placeholder="Facility ID/Code">
+  <input type="text" id="administeringProviderOrgId" value="123456789">
 </div>
 
 <div class="input-group">
@@ -1149,8 +1149,8 @@
     </div>
 
     <div class="input-group">
-      <label>Administration Time 1 (YYYYMMDDHHMMSS)</label>
-      <input type="text" id="adminMed1Time" value="20240615120000">
+      <label>Administration Time 1</label>
+      <input type="datetime-local" id="adminMed1Time" value="2024-06-15T12:00">
     </div>
 
     <div class="input-group">
@@ -1185,7 +1185,7 @@
 
     <div class="input-group">
       <label>Dose 1 • Volume (opt)</label>
-      <input type="number" step="0.01" id="adminMed1VolValue" placeholder="0.5">
+      <input type="number" step="0.01" id="adminMed1VolValue" value="0.5">
     </div>
 
     <div class="input-group">
@@ -1228,8 +1228,8 @@
     </div>
 
     <div class="input-group">
-      <label>Administration Time 2 (YYYYMMDDHHMMSS)</label>
-      <input type="text" id="adminMed2Time" value="20240615130000">
+      <label>Administration Time 2</label>
+      <input type="datetime-local" id="adminMed2Time" value="2024-06-15T13:00">
     </div>
 
     <div class="input-group">
@@ -1264,7 +1264,7 @@
 
     <div class="input-group">
       <label>Dose 2 • Volume (opt)</label>
-      <input type="number" step="0.01" id="adminMed2VolValue" placeholder="">
+      <input type="number" step="0.01" id="adminMed2VolValue" value="">
     </div>
 
     <div class="input-group">
@@ -1317,11 +1317,11 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                 </div>
                 <div class="input-group">
                     <label>Immunization 1 ID</label>
-                    <input type="text" id="immunization1Id" placeholder="e.g., IMM-001" value="HepB-NB-001">
+                    <input type="text" id="immunization1Id" placeholder="IMM-001" value="HepB-NB-001">
                 </div>
                 <div class="input-group">
-                    <label>Immunization 1 Date (YYYYMMDD)</label>
-                    <input type="text" id="immunization1Date" placeholder="e.g., 20250201" value="20240615">
+                    <label>Immunization 1 Date</label>
+                    <input type="datetime-local" id="immunization1Date" placeholder="e.g., 20250201" value="2024-06-15T09:30">
                 </div>
                 <div class="input-group">
                     <label>Vaccine 1 Code</label>
@@ -1367,8 +1367,8 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                     <input type="text" id="immunization2Id" placeholder="e.g., IMM-002" value="VitK-NB-001">
                 </div>
                 <div class="input-group">
-                    <label>Immunization 2 Date (YYYYMMDD)</label>
-                    <input type="text" id="immunization2Date" placeholder="e.g., 20250101" value="20240615">
+                    <label>Immunization 2 Date</label>
+                    <input type="datetime-local" id="immunization2Date" placeholder="e.g., 20250101" value="2024-06-15T09:45">
                 </div>
                 <div class="input-group">
                     <label>Vaccine 2 Code</label>
@@ -1416,12 +1416,12 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
     </select>
 </div>
                 <div class="input-group">
-                    <label>Pregnancy Effective Time (YYYYMMDD)</label>
-                    <input type="text" id="pregnancyEffectiveTime" placeholder="Date of assessment" value="20240615">
+                    <label>Pregnancy Effective Time</label>
+                    <input type="datetime-local" id="pregnancyEffectiveTime" placeholder="Date of assessment" value="2024-06-15T10:00">
                 </div>
                 <div class="input-group">
-                    <label>Estimated Delivery Date (YYYYMMDD)</label>
-                    <input type="text" id="estimatedDeliveryDate" placeholder="Expected delivery date" value="20240615">
+                    <label>Estimated Delivery Date</label>
+                    <input type="datetime-local" id="estimatedDeliveryDate" placeholder="Expected delivery date" value="2024-06-15T00:00">
                 </div>
                 <div class="input-group">
                     <label>Pregnancy Determination Method</label>
@@ -1437,8 +1437,8 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                     <input type="text" id="gestationalAge" placeholder="e.g., 12" value="39">
                 </div>
                 <div class="input-group">
-                    <label>Last Menstrual Period (YYYYMMDD)</label>
-                    <input type="text" id="lastMenstrualPeriod" placeholder="Date of LMP" value="20230906">
+                    <label>Last Menstrual Period</label>
+                    <input type="datetime-local" id="lastMenstrualPeriod" placeholder="Date of LMP" value="2023-09-06T00:00">
                 </div>
                 <div class="input-group">
                     <label>Pregnancy Outcome</label>
@@ -1465,12 +1465,12 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
             <h2 class="section-title"><i class="fas fa-plane"></i> Travel History</h2>
             <div class="form-grid">
                 <div class="input-group">
-                    <label>Travel Start Date (YYYYMMDD)</label>
-                    <input type="text" id="travelStartDate" value="20240515">
+                    <label>Travel Start Date</label>
+                    <input type="datetime-local" id="travelStartDate" value="2024-05-15T00:00">
                 </div>
                 <div class="input-group">
-                    <label>Travel End Date (YYYYMMDD)</label>
-                    <input type="text" id="travelEndDate" value="20240520">
+                    <label>Travel End Date</label>
+                    <input type="datetime-local" id="travelEndDate" value="2024-05-20T00:00">
                 </div>
                 <div class="input-group">
                     <label>Travel Location</label>
@@ -1536,8 +1536,8 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                     <input type="text" id="specimen1Id" placeholder="e.g., SPEC-001" value="NB-BLOOD-20240615-001">
                 </div>
                 <div class="input-group">
-                    <label>Collection Date 1 (YYYYMMDDHHMMSS)</label>
-                    <input type="text" id="collection1Date" placeholder="e.g., 20250216110000" value="20240615083000">
+                    <label>Collection Date 1</label>
+                    <input type="datetime-local" id="collection1Date" placeholder="e.g., 20250216110000" value="2024-06-15T08:30">
                 </div>
                 <div class="input-group">
                     <label>Specimen 2 Source</label>
@@ -1559,8 +1559,8 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                     <input type="text" id="specimen2Id" placeholder="e.g., SPEC-002" value="NB-CSF-20240615-001">
                 </div>
                 <div class="input-group">
-                    <label>Collection Date 2 (YYYYMMDDHHMMSS)</label>
-                    <input type="text" id="collection2Date" placeholder="e.g., 20250216120000" value="20240615093000">
+                    <label>Collection Date 2</label>
+                    <input type="datetime-local" id="collection2Date" placeholder="e.g., 20250216120000" value="2024-06-15T09:30">
                 </div>
             </div>
         </div>
@@ -1652,8 +1652,8 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
                     <input type="text" id="currentProc1Name" placeholder="e.g., Bronchoscopy" value="Excision of spinal lesion">
                 </div>
                 <div class="input-group">
-                    <label>Current Procedure 1 Date (YYYYMMDD)</label>
-                    <input type="text" id="currentProc1Date" placeholder="e.g., 20250216" value="20240615">
+                    <label>Current Procedure 1 Date</label>
+                    <input type="datetime-local" id="currentProc1Date" placeholder="e.g., 20250216" value="2024-06-15T09:00">
                 </div>
                 <div class="input-group">
                     <label>Current Procedure 1 Type <span class="help-tooltip" title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
@@ -1676,8 +1676,8 @@ Procedure: Use for therapeutic interventions that alter the patient's physical c
                     <input type="text" id="currentProc2Name" placeholder="e.g., Chest X-ray" value="Magnetic resonance imaging of spine">
                 </div>
                 <div class="input-group">
-                    <label>Current Procedure 2 Date (YYYYMMDD)</label>
-                    <input type="text" id="currentProc2Date" placeholder="e.g., 20250216" value="20240615">
+                    <label>Current Procedure 2 Date</label>
+                    <input type="datetime-local" id="currentProc2Date" placeholder="e.g., 20250216" value="2024-06-15T10:00">
                 </div>
                 <div class="input-group">
                     <label>Current Procedure 2 Type <span class="help-tooltip" title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
@@ -1704,8 +1704,8 @@ Procedure: Use for therapeutic interventions that alter the patient's physical c
                     <input type="text" id="triggerProc1Name" placeholder="e.g., Intubation" value="Stroke">
                 </div>
                 <div class="input-group">
-                    <label>Trigger Procedure 1 Date (YYYYMMDD)</label>
-                    <input type="text" id="triggerProc1Date" placeholder="e.g., 20250216" value="20240615">
+                    <label>Trigger Procedure 1 Date</label>
+                    <input type="datetime-local" id="triggerProc1Date" placeholder="e.g., 20250216" value="2024-06-15T11:00">
                 </div>
                 <div class="input-group">
                     <label>Trigger Procedure 1 Type <span class="help-tooltip" title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
@@ -1728,8 +1728,8 @@ Procedure: Use for therapeutic interventions that alter the patient's physical c
                     <input type="text" id="plannedProc1Name" placeholder="e.g., Follow-up CT scan" value="Neurosurgical follow-up">
                 </div>
                 <div class="input-group">
-                    <label>Planned Procedure 1 Date (YYYYMMDD)</label>
-                    <input type="text" id="plannedProc1Date" placeholder="e.g., 20250220" value="20240715">
+                    <label>Planned Procedure 1 Date</label>
+                    <input type="datetime-local" id="plannedProc1Date" placeholder="e.g., 20250220" value="2024-07-15T14:00">
                 </div>
                 <div class="input-group">
                     <label>Planned Procedure 1 Type <span class="help-tooltip" title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
@@ -1844,7 +1844,7 @@ Procedure: Use for therapeutic interventions that alter the patient's physical c
                 </div>
                 <div class="input-group">
                     <label>Effective Time</label>
-                    <input type="text" id="effectiveTime" value="20240615150000-0500">
+                    <input type="datetime-local" id="effectiveTime" value="2025-09-26T18:05">
                 </div>
                 <div class="input-group">
                     <label>Document Relationship Type <span class="help-tooltip" title="Defines how this document relates to other documents. Use 'New Document' for standalone documents, or 'Replace/Update Document' to supersede or modify an existing document.">ℹ️</span></label>
@@ -2724,18 +2724,106 @@ async function searchRCTCCodes(fieldId) {
             return valueSetMap[code] || valueSetMap['default'];
         }
 
-        // Convert from CDA format (YYYYMMDDHHMMSS) to datetime-local format (YYYY-MM-DDTHH:MM)
-        function cdaToDatetimeLocal(cdaDateTime) {
-            if (!cdaDateTime || cdaDateTime.length < 8) return '';
+        // Strict cdaToDatetimeLocal function - only accepts 8 or 14 digit formats
+// Simple test function to debug what's happening
+function debugDateConversion() {
+    console.log('=== DEBUGGING DATE CONVERSION ===');
+    
+    // Test cases from your actual data
+    const testDates = [
+        "202507100",    // 9 digits - malformed
+        "20250710",     // 8 digits - valid date only
+        "20250922",     // 8 digits - valid date only
+        "20250822093000+000", // 14 digits + timezone - valid datetime
+        ""              // empty string
+    ];
+    
+    testDates.forEach(date => {
+        console.log(`Input: "${date}"`);
+        console.log(`Output: "${cdaToDatetimeLocal(date)}"`);
+        console.log('---');
+    });
+}
 
-            const year = cdaDateTime.substring(0, 4);
-            const month = cdaDateTime.substring(4, 6);
-            const day = cdaDateTime.substring(6, 8);
-            const hour = cdaDateTime.substring(8, 10) || '00';
-            const minute = cdaDateTime.substring(10, 12) || '00';
+// Very simple, clean version of the conversion function
+function cdaToDatetimeLocal(cdaDateTime) {
+    if (!cdaDateTime || typeof cdaDateTime !== 'string' || cdaDateTime.trim() === '') {
+        return '';
+    }
+    
+    // Remove timezone and non-digits, but be more flexible
+    let cleaned = cdaDateTime.replace(/[+-]\d{3,4}$/, '').replace(/\D/g, '');
+    
+    // Handle various lengths more flexibly
+    if (cleaned.length < 8) {
+        console.warn(`Date too short: "${cdaDateTime}" (${cleaned.length} digits)`);
+        return '';
+    }
+    
+    // Truncate if too long, pad if exactly right
+    if (cleaned.length >= 14) {
+        cleaned = cleaned.substring(0, 14);
+    } else if (cleaned.length >= 8) {
+        // Pad with default time if we only have date
+        const datePart = cleaned.substring(0, 8);
+        cleaned = datePart + '000000'.substring(0, 14 - cleaned.length);
+    }
+    
+    const year = cleaned.substring(0, 4);
+    const month = cleaned.substring(4, 6);
+    const day = cleaned.substring(6, 8);
+    const hour = cleaned.length >= 10 ? cleaned.substring(8, 10) : '00';
+    const minute = cleaned.length >= 12 ? cleaned.substring(10, 12) : '00';
+    
+    // Validate the components
+    if (parseInt(month) > 12 || parseInt(month) < 1) {
+        console.warn(`Invalid month in date: "${cdaDateTime}"`);
+        return '';
+    }
+    if (parseInt(day) > 31 || parseInt(day) < 1) {
+        console.warn(`Invalid day in date: "${cdaDateTime}"`);
+        return '';
+    }
+    if (parseInt(hour) > 23) {
+        console.warn(`Invalid hour in date: "${cdaDateTime}"`);
+        return '';
+    }
+    if (parseInt(minute) > 59) {
+        console.warn(`Invalid minute in date: "${cdaDateTime}"`);
+        return '';
+    }
+    
+    return `${year}-${month}-${day}T${hour}:${minute}`;
+}
 
-            return `${year}-${month}-${day}T${hour}:${minute}`;
-        }
+// Test it
+debugDateConversion();
+
+// Also test what happens when you try to set invalid values
+function testDateTimeInputs() {
+    console.log('\n=== TESTING DATETIME INPUT BEHAVIOR ===');
+    
+    // Create a test input
+    const testInput = document.createElement('input');
+    testInput.type = 'datetime-local';
+    document.body.appendChild(testInput);
+    
+    const testValues = [
+        '2025-07-10T00:00',  // Valid
+        '2025-09-22T00:00',  // Valid
+        '2025-13-01T00:00',  // Invalid month
+        '2025-07-32T00:00',  // Invalid day
+        '2025-07-10T25:00',  // Invalid hour
+        '2025-07-10T23:70'   // Invalid minute
+    ];
+    
+    testValues.forEach(value => {
+        testInput.value = value;
+        console.log(`Set: "${value}" -> Got: "${testInput.value}"`);
+    });
+    
+    document.body.removeChild(testInput);
+}
 
         // Convert from datetime-local format to CDA format
         function datetimeLocalToCda(datetimeLocal) {
@@ -2878,16 +2966,36 @@ async function searchRCTCCodes(fieldId) {
             
             const data = {};
             fields.forEach(field => {
-                const element = document.getElementById(field);
-                if (element) {
-                    // Special handling for datetime fields
-                    if (field === 'patientBirthDate' && element.type === 'datetime-local') {
-                        data[field] = datetimeLocalToCda(element.value);
-                    } else {
-                        data[field] = element.value;
-                    }
-                }
-            });
+    const element = document.getElementById(field);
+    if (element) {
+        // Special handling for datetime fields
+        if ((field === 'patientBirthDate' || 
+             field === 'encounterDate' || 
+             field === 'encounterEndDate' || 
+             field === 'patientDeathDate' || 
+             field === 'pregnancyEffectiveTime' || 
+             field === 'estimatedDeliveryDate' || 
+             field === 'lastMenstrualPeriod' || 
+             field === 'travelStartDate' || 
+             field === 'travelEndDate' || 
+             field === 'currentProc1Date' || 
+             field === 'currentProc2Date' || 
+             field === 'triggerProc1Date' || 
+             field === 'plannedProc1Date' || 
+             field === 'immunization1Date' || 
+             field === 'immunization2Date' || 
+             field === 'collection1Date' || 
+             field === 'collection2Date' || 
+             field === 'adminMed1Time' || 
+             field === 'adminMed2Time' || 
+             field === 'effectiveTime') && 
+            element.type === 'datetime-local') {
+            data[field] = datetimeLocalToCda(element.value);
+        } else {
+            data[field] = element.value;
+        }
+    }
+});
             
             // ADD THIS: Collect lab evidence
             data.labEvidence = collectLabEvidence();
@@ -2904,19 +3012,30 @@ async function searchRCTCCodes(fieldId) {
         }
 
         function setFormData(data) {
-            Object.keys(data).forEach(field => {
-                const element = document.getElementById(field);
-                if (element) {
-                    // Special handling for datetime fields
-                    if (field === 'patientBirthDate' && element.type === 'datetime-local') {
-                        element.value = cdaToDatetimeLocal(data[field]);
-                    } else {
-                        element.value = data[field];
-                    }
-                }
-            });
+    Object.keys(data).forEach(field => {
+        const element = document.getElementById(field);
+        if (element) {
+            // Comprehensive list of datetime fields
+            const datetimeFields = [
+                'patientBirthDate', 'encounterDate', 'encounterEndDate', 'patientDeathDate',
+                'pregnancyEffectiveTime', 'estimatedDeliveryDate', 'lastMenstrualPeriod',
+                'travelStartDate', 'travelEndDate', 'currentProc1Date', 'currentProc2Date',
+                'triggerProc1Date', 'plannedProc1Date', 'immunization1Date', 'immunization2Date',
+                'collection1Date', 'collection2Date', 'adminMed1Time', 'adminMed2Time',
+                'effectiveTime', 'diagnosis1Date', 'diagnosis2Date', 'diagnosis3Date',
+                'diagnosis1OnsetDate', 'diagnosis2OnsetDate', 'diagnosis3OnsetDate'
+            ];
+            
+            if (datetimeFields.includes(field) && element.type === 'datetime-local') {
+                const convertedValue = cdaToDatetimeLocal(data[field]);
+                element.value = convertedValue;
+                console.log(`Setting ${field}: "${data[field]}" -> "${convertedValue}"`);
+            } else {
+                element.value = data[field];
+            }
         }
-
+    });
+}
         // Make this function globally available for the Clean UI system
         window.loadFormDataFromAssets = async function(filename) {
             try {
@@ -5039,13 +5158,21 @@ function addDiagnosisEvidence(prefill = {}) {
     // Populate with prefill data if provided
     if (prefill.diagnosisCode) row.querySelector('.de-diagnosis-code').value = prefill.diagnosisCode;
     if (prefill.diagnosisName) row.querySelector('.de-diagnosis-name').value = prefill.diagnosisName;
-    if (prefill.diagnosisDate) row.querySelector('.de-diagnosis-date').value = prefill.diagnosisDate;
-    if (prefill.onsetDate) row.querySelector('.de-onset-date').value = prefill.onsetDate;
+    
+    // Handle datetime fields with conversion
+    if (prefill.diagnosisDate) {
+        const dateField = row.querySelector('.de-diagnosis-date');
+        dateField.value = prefill.diagnosisDate.includes('T') ? prefill.diagnosisDate : cdaToDatetimeLocal(prefill.diagnosisDate);
+    }
+    if (prefill.onsetDate) {
+        const onsetField = row.querySelector('.de-onset-date');
+        onsetField.value = prefill.onsetDate.includes('T') ? prefill.onsetDate : cdaToDatetimeLocal(prefill.onsetDate);
+    }
+    
     if (prefill.status) row.querySelector('.de-status').value = prefill.status;
     
     document.getElementById('diagnosisEvidenceList').appendChild(clone);
 }
-
 // Remove diagnosis evidence row
 function removeDiagnosisEvidence(btn) {
     btn.closest('.diagnosis-evidence-row')?.remove();
@@ -5359,10 +5486,14 @@ async function searchSNOMEDForProblemByName(btn) {
 // Collect problem evidence data
 function collectProblemEvidence() {
     return Array.from(document.querySelectorAll('.problem-evidence-row')).map(r => {
+        const onsetDateElement = r.querySelector('.pe-onset-date');
+        
         return {
             problemCode: r.querySelector('.pe-problem-code')?.value.trim() || '',
             problemName: r.querySelector('.pe-problem-name')?.value.trim() || '',
-            onsetDate: r.querySelector('.pe-onset-date')?.value.trim() || '',
+            onsetDate: onsetDateElement?.type === 'datetime-local' ? 
+                      datetimeLocalToCda(onsetDateElement.value) : 
+                      onsetDateElement?.value.trim() || '',
             status: r.querySelector('.pe-status')?.value || 'active',
             concernStatus: r.querySelector('.pe-concern-status')?.value || 'active'
         };
@@ -5374,33 +5505,69 @@ function collectProblemEvidence() {
        
         // Lab Evidence Repeater Functions
         function addLabEvidence(prefill = {}) {
-            const template = document.getElementById('labEvidenceTemplate');
-            const clone = template.content.cloneNode(true);
-            const row = clone.querySelector('.lab-evidence-row');
+    const template = document.getElementById('labEvidenceTemplate');
+    const clone = template.content.cloneNode(true);
+    const row = clone.querySelector('.lab-evidence-row');
 
-            // Populate with prefill data if provided
-            if (prefill.orderCode) row.querySelector('.le-order-code').value = prefill.orderCode;
-            if (prefill.orderName) row.querySelector('.le-order-name').value = prefill.orderName;
-            if (prefill.orderId) row.querySelector('.le-order-id').value = prefill.orderId;
-            if (prefill.orderTime) row.querySelector('.le-order-time').value = prefill.orderTime;
-            if (prefill.testCode) row.querySelector('.le-test-code').value = prefill.testCode;
-            if (prefill.testName) row.querySelector('.le-test-name').value = prefill.testName;
-            if (prefill.valueKind) {
-                row.querySelector('.le-value-kind').value = prefill.valueKind;
-                toggleValueEditors(row.querySelector('.le-value-kind'));
-            }
-            if (prefill.valueCode) row.querySelector('.le-value-code').value = prefill.valueCode;
-            if (prefill.valueName) row.querySelector('.le-value-name').value = prefill.valueName;
-            if (prefill.qtyValue) row.querySelector('.le-qty-value').value = prefill.qtyValue;
-            if (prefill.qtyUnit) row.querySelector('.le-qty-unit').value = prefill.qtyUnit;
-            if (prefill.textValue) row.querySelector('.le-text-value').value = prefill.textValue;
-            if (prefill.time) row.querySelector('.le-time').value = prefill.time;
-            if (prefill.status) row.querySelector('.le-status').value = prefill.status;
-            if (prefill.interpretation) row.querySelector('.le-interpretation').value = prefill.interpretation;
-            if (prefill.referenceRange) row.querySelector('.le-reference-range').value = prefill.referenceRange;
+    // Populate with prefill data if provided - handle datetime fields specially
+    if (prefill.orderCode) row.querySelector('.le-order-code').value = prefill.orderCode;
+    if (prefill.orderName) row.querySelector('.le-order-name').value = prefill.orderName;
+    if (prefill.orderId) row.querySelector('.le-order-id').value = prefill.orderId;
+    
+    // Handle datetime fields with conversion
+    if (prefill.orderTime) {
+        const orderTimeField = row.querySelector('.le-order-time');
+        orderTimeField.value = prefill.orderTime.includes('T') ? prefill.orderTime : cdaToDatetimeLocal(prefill.orderTime);
+    }
+    
+    if (prefill.testCode) row.querySelector('.le-test-code').value = prefill.testCode;
+    if (prefill.testName) row.querySelector('.le-test-name').value = prefill.testName;
+    if (prefill.valueKind) {
+        row.querySelector('.le-value-kind').value = prefill.valueKind;
+        toggleValueEditors(row.querySelector('.le-value-kind'));
+    }
+    if (prefill.valueCode) row.querySelector('.le-value-code').value = prefill.valueCode;
+    if (prefill.valueName) row.querySelector('.le-value-name').value = prefill.valueName;
+    if (prefill.qtyValue) row.querySelector('.le-qty-value').value = prefill.qtyValue;
+    if (prefill.qtyUnit) row.querySelector('.le-qty-unit').value = prefill.qtyUnit;
+    if (prefill.textValue) row.querySelector('.le-text-value').value = prefill.textValue;
+    
+    // Handle result time datetime field
+    if (prefill.time) {
+        const timeField = row.querySelector('.le-time');
+        timeField.value = prefill.time.includes('T') ? prefill.time : cdaToDatetimeLocal(prefill.time);
+    }
+    
+    if (prefill.status) row.querySelector('.le-status').value = prefill.status;
+    if (prefill.interpretation) row.querySelector('.le-interpretation').value = prefill.interpretation;
+    if (prefill.referenceRange) row.querySelector('.le-reference-range').value = prefill.referenceRange;
 
-            document.getElementById('labEvidenceList').appendChild(clone);
-        }
+    document.getElementById('labEvidenceList').appendChild(clone);
+}
+
+function addDiagnosisEvidence(prefill = {}) {
+    const template = document.getElementById('diagnosisEvidenceTemplate');
+    const clone = template.content.cloneNode(true);
+    const row = clone.querySelector('.diagnosis-evidence-row');
+    
+    // Populate with prefill data if provided
+    if (prefill.diagnosisCode) row.querySelector('.de-diagnosis-code').value = prefill.diagnosisCode;
+    if (prefill.diagnosisName) row.querySelector('.de-diagnosis-name').value = prefill.diagnosisName;
+    
+    // Handle datetime fields with conversion
+    if (prefill.diagnosisDate) {
+        const dateField = row.querySelector('.de-diagnosis-date');
+        dateField.value = prefill.diagnosisDate.includes('T') ? prefill.diagnosisDate : cdaToDatetimeLocal(prefill.diagnosisDate);
+    }
+    if (prefill.onsetDate) {
+        const onsetField = row.querySelector('.de-onset-date');
+        onsetField.value = prefill.onsetDate.includes('T') ? prefill.onsetDate : cdaToDatetimeLocal(prefill.onsetDate);
+    }
+    
+    if (prefill.status) row.querySelector('.de-status').value = prefill.status;
+    
+    document.getElementById('diagnosisEvidenceList').appendChild(clone);
+}
 
         function removeLabEvidence(btn) {
             btn.closest('.lab-evidence-row')?.remove();
@@ -7670,7 +7837,7 @@ const refRange = le.referenceRange
             URL.revokeObjectURL(url);
         }
 
-        function loadFormData(event) {
+       function loadFormData(event) {
     const file = event.target.files[0];
     if (!file) return;
     
@@ -7684,31 +7851,52 @@ const refRange = le.referenceRange
             if (data.labEvidence && Array.isArray(data.labEvidence)) {
                 const labList = document.getElementById('labEvidenceList');
                 if (labList) {
-                    labList.innerHTML = ''; // Clear existing entries
+                    labList.innerHTML = '';
                     data.labEvidence.forEach(labEntry => {
-                        addLabEvidence(labEntry);
+                        // Convert dates back to datetime-local format before adding
+                        const convertedLabEntry = { ...labEntry };
+                        if (convertedLabEntry.orderTime) {
+                            convertedLabEntry.orderTime = cdaToDatetimeLocal(convertedLabEntry.orderTime);
+                        }
+                        if (convertedLabEntry.time) {
+                            convertedLabEntry.time = cdaToDatetimeLocal(convertedLabEntry.time);
+                        }
+                        addLabEvidence(convertedLabEntry);
                     });
                 }
             }
 
-            // Handle diagnosis evidence if present
+            // Handle diagnosis evidence if present - FIX THE DATE CONVERSION HERE
             if (data.diagnosisEvidence && Array.isArray(data.diagnosisEvidence)) {
                 const diagnosisList = document.getElementById('diagnosisEvidenceList');
                 if (diagnosisList) {
-                    diagnosisList.innerHTML = ''; // Clear existing entries
+                    diagnosisList.innerHTML = '';
                     data.diagnosisEvidence.forEach(diagnosisEntry => {
-                        addDiagnosisEvidence(diagnosisEntry);
+                        // Convert dates back to datetime-local format before adding
+                        const convertedDiagnosisEntry = { ...diagnosisEntry };
+                        if (convertedDiagnosisEntry.diagnosisDate) {
+                            convertedDiagnosisEntry.diagnosisDate = cdaToDatetimeLocal(convertedDiagnosisEntry.diagnosisDate);
+                        }
+                        if (convertedDiagnosisEntry.onsetDate) {
+                            convertedDiagnosisEntry.onsetDate = cdaToDatetimeLocal(convertedDiagnosisEntry.onsetDate);
+                        }
+                        addDiagnosisEvidence(convertedDiagnosisEntry);
                     });
                 }
             }
 
-            // Handle problem evidence if present
+            // Handle problem evidence if present - FIX THE DATE CONVERSION HERE
             if (data.problemEvidence && Array.isArray(data.problemEvidence)) {
                 const problemList = document.getElementById('problemEvidenceList');
                 if (problemList) {
-                    problemList.innerHTML = ''; // Clear existing entries
+                    problemList.innerHTML = '';
                     data.problemEvidence.forEach(problemEntry => {
-                        addProblemEvidence(problemEntry);
+                        // Convert dates back to datetime-local format before adding
+                        const convertedProblemEntry = { ...problemEntry };
+                        if (convertedProblemEntry.onsetDate) {
+                            convertedProblemEntry.onsetDate = cdaToDatetimeLocal(convertedProblemEntry.onsetDate);
+                        }
+                        addProblemEvidence(convertedProblemEntry);
                     });
                 }
             }
@@ -7989,22 +8177,22 @@ const refRange = le.referenceRange
                 addDiagnosisEvidence({
                     diagnosisCode: '67531005',
                     diagnosisName: 'Down syndrome (disorder)',
-                    diagnosisDate: '20240601',
-                    onsetDate: '20240601',
+                    diagnosisDate: '2024-06-01T00:00',
+                    onsetDate: '2024-06-01T00:00',
                     status: 'completed'
                 });
                 addDiagnosisEvidence({
                     diagnosisCode: '67531005',
                     diagnosisName: 'Spina bifida (disorder)',
-                    diagnosisDate: '20240601',
-                    onsetDate: '20240601',
+                    diagnosisDate: '2024-06-01T00:00',
+                    onsetDate: '2024-06-01T00:00',
                     status: 'completed'
                 });
                 addDiagnosisEvidence({
                     diagnosisCode: '414819007',
                     diagnosisName: 'Neonatal abstinence syndrome (disorder)',
-                    diagnosisDate: '20240610',
-                    onsetDate: '20240610',
+                    diagnosisDate: '2024-06-01T00:00',
+                    onsetDate: '2024-06-01T00:00',
                     status: 'completed'
                 });
             }
@@ -8014,7 +8202,7 @@ const refRange = le.referenceRange
                 addProblemEvidence({
                     problemCode: '385093006',
                     problemName: 'Community acquired pneumonia',
-                    onsetDate: '20240227',
+                    onsetDate: '2024-06-01T00:00',
                     status: 'active',
                     concernStatus: 'active'
                 });
