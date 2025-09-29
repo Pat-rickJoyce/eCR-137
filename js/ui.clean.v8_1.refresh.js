@@ -134,7 +134,7 @@ templateSelect.innerHTML = `
 
 const bLoad = mk('Load Form', 'ghost');
 const bSave = mk('Save Form', 'secondary');
-const bCDA = mk('Generate CDA');
+const bCDA = mk('Generate eICR');
 const bRR  = mk('Generate RR','secondary');
 const bZIP = mk('Download ZIP (eICR + RR)','ghost');
 
