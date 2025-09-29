@@ -552,35 +552,35 @@
             <div class="form-grid">
                 <div class="input-group">
                     <label>Current Occupation</label>
-                    <input type="text" id="currentOccupation" value="Marketing Manager">
+                    <input type="text" id="currentOccupation" placeholder="Marketing Manager">
                 </div>
                 <div class="input-group">
                     <label>Usual Occupation</label>
-                    <input type="text" id="usualOccupation" value="Marketing Manager">
+                    <input type="text" id="usualOccupation" placeholder="Marketing Manager">
                 </div>
                 <div class="input-group">
                     <label>Current Industry</label>
-                    <input type="text" id="currentIndustry" value="Healthcare Services">
+                    <input type="text" id="currentIndustry" placeholder="Healthcare Services">
                 </div>
                 <div class="input-group">
                     <label>Usual Industry</label>
-                    <input type="text" id="usualIndustry" value="Healthcare Services">
+                    <input type="text" id="usualIndustry" placeholder="Healthcare Services">
                 </div>
                 <div class="input-group">
                     <label>Current Job Title</label>
-                    <input type="text" id="currentJobTitle" value="Senior Marketing Manager">
+                    <input type="text" id="currentJobTitle" placeholder="Senior Marketing Manager">
                 </div>
                 <div class="input-group">
                     <label>Current Employer Name</label>
-                    <input type="text" id="currentEmployerName" value="Springfield Medical Center">
+                    <input type="text" id="currentEmployerName" placeholder="Springfield Medical Center">
                 </div>
                 <div class="input-group">
                     <label>Current Employer Phone</label>
-                    <input type="text" id="currentEmployerPhone" value="+1-217-555-0155">
+                    <input type="text" id="currentEmployerPhone" placeholder="+1-217-555-0155">
                 </div>
                 <div class="input-group">
                     <label>Current Employer Address</label>
-                    <input type="text" id="currentEmployerAddress" value="800 E Capitol Ave, Springfield, IL 62701">
+                    <input type="text" id="currentEmployerAddress" placeholder="800 E Capitol Ave, Springfield, IL 62701">
                 </div>
                 <div class="input-group">
                     <label>Occupational Exposure</label>
@@ -734,11 +734,11 @@
                     <input type="text" id="encounterType" value="AMB">
                 </div>
                 <div class="input-group">
-                    <label>Encounter Date (YYYYMMDD)</label>
+                    <label>Encounter Date</label>
                     <input type="datetime-local" id="encounterDate" value="2024-06-15T08:00">
                 </div>
                 <div class="input-group">
-                    <label>Encounter End Date (YYYYMMDD)</label>
+                    <label>Encounter End Date</label>
                     <input type="datetime-local" id="encounterEndDate" value="2024-06-15T17:00">
                 </div>
                 <div class="input-group">
@@ -801,19 +801,19 @@
                 <div class="input-group">
                     <label>Diagnosis Name</label>
                     <div class="code-search">
-                        <input type="text" class="de-diagnosis-name" value="Down syndrome (disorder)">
+                        <input type="text" class="de-diagnosis-name" placeholder="Down syndrome (disorder)">
                         <button class="btn btn-secondary" type="button" onclick="searchRCTCForDiagnosisByName(this)">🔍</button>
                     </div>
                     <div class="de-diagnosis-name-results search-results"></div>
                 </div>
                 
                 <div class="input-group">
-                    <label>Date of Diagnosis (YYYYMMDD)</label>
+                    <label>Date of Diagnosis</label>
                     <input type="datetime-local" class="de-diagnosis-date" value="2024-06-15T12:00">
                 </div>
                 
                 <div class="input-group">
-                    <label>Date of Onset (YYYYMMDD)</label>
+                    <label>Date of Onset</label>
                     <input type="datetime-local" class="de-onset-date" value="2024-06-15T12:00">
                 </div>
                 
@@ -850,7 +850,7 @@
                 <div class="input-group">
                     <label>Problem Code</label>
                     <div class="code-search">
-                        <input type="text" class="pe-problem-code" value="385093006">
+                        <input type="text" class="pe-problem-code" placeholder="805002">
                         <button class="btn btn-secondary" type="button" onclick="searchSNOMEDForProblem(this)">🔍</button>
                     </div>
                     <div class="pe-problem-code-results search-results"></div>
@@ -859,7 +859,7 @@
                 <div class="input-group">
                     <label>Problem Name</label>
                     <div class="code-search">
-                        <input type="text" class="pe-problem-name" value="Community acquired pneumonia">
+                        <input type="text" class="pe-problem-name" placeholder="Pneumoconiosis">
                         <button class="btn btn-secondary" type="button" onclick="searchSNOMEDForProblemByName(this)">🔍</button>
                     </div>
                     <div class="pe-problem-name-results search-results"></div>
@@ -909,39 +909,39 @@
                 <div class="form-grid">
                     <!-- Performing lab (organization) -->
                     <div class="input-group">
-                        <label>Performing Lab • CLIA (opt)</label>
+                        <label>Performing Lab • CLIA </label>
                         <input type="text" id="resultLabCLIA" value="12D3456789">
                     </div>
                     <div class="input-group">
-                        <label>Performing Lab • Name (opt)</label>
+                        <label>Performing Lab • Name </label>
                         <input type="text" id="resultLabName" value="Good Health Lab">
                     </div>
 
                     <!-- Resulting performer (person) -->
                     <div class="input-group">
-                        <label>Resulting Performer • NPI (opt)</label>
+                        <label>Resulting Performer • NPI </label>
                         <input type="text" id="resultPerformerNPI" inputmode="numeric" pattern="\d{10}">
                     </div>
                     <div class="input-group">
-                        <label>Resulting Performer • First (opt)</label>
+                        <label>Resulting Performer • First </label>
                         <input type="text" id="resultPerformerGiven">
                     </div>
                     <div class="input-group">
-                        <label>Resulting Performer • Last (opt)</label>
+                        <label>Resulting Performer • Last </label>
                         <input type="text" id="resultPerformerFamily">
                     </div>
 
                     <!-- Ordering provider (author) -->
                     <div class="input-group">
-                        <label>Ordering Provider • NPI (opt)</label>
+                        <label>Ordering Provider • NPI </label>
                         <input type="text" id="resultOrderingNPI" inputmode="numeric" pattern="\d{10}">
                     </div>
                     <div class="input-group">
-                        <label>Ordering Provider • First (opt)</label>
+                        <label>Ordering Provider • First </label>
                         <input type="text" id="resultOrderingGiven">
                     </div>
                     <div class="input-group">
-                        <label>Ordering Provider • Last (opt)</label>
+                        <label>Ordering Provider • Last</label>
                         <input type="text" id="resultOrderingFamily">
                     </div>
                 </div>
@@ -1692,7 +1692,7 @@ Procedure: Use for therapeutic interventions that alter the patient's physical c
                     </select>
                 </div>
                 <div class="input-group">
-                    <label>Trigger Procedure 1 Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
+                    <label>Procedure 1 Code </label>
                     <div class="code-search">
                         <input type="text" id="triggerProc1Code" placeholder="e.g., 168731009" onblur="validateTriggerCode('triggerProc1Code')" value="230690007">
                         <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('triggerProc1Code')">🔍</button>
@@ -1700,15 +1700,15 @@ Procedure: Use for therapeutic interventions that alter the patient's physical c
                     <div id="triggerProc1Code_results" class="search-results"></div>
                 </div>
                 <div class="input-group">
-                    <label>Trigger Procedure 1 Name</label>
+                    <label>Procedure 1 Name</label>
                     <input type="text" id="triggerProc1Name" placeholder="e.g., Intubation" value="Stroke">
                 </div>
                 <div class="input-group">
-                    <label>Trigger Procedure 1 Date</label>
+                    <label>Procedure 1 Date</label>
                     <input type="datetime-local" id="triggerProc1Date" placeholder="e.g., 20250216" value="2024-06-15T11:00">
                 </div>
                 <div class="input-group">
-                    <label>Trigger Procedure 1 Type <span class="help-tooltip" title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
+                    <label>Procedure 1 Type <span class="help-tooltip" title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
 
 Observation: Use for diagnostic activities that gather information about the patient (lab tests, imaging, assessments) without altering their physical condition.
 
@@ -8173,35 +8173,21 @@ const refRange = le.referenceRange
 
             // Initialize diagnosis evidence with default entries
             if (!document.querySelector('.diagnosis-evidence-row')) {
-                // Add default diagnoses
-                addDiagnosisEvidence({
-                    diagnosisCode: '67531005',
-                    diagnosisName: 'Down syndrome (disorder)',
-                    diagnosisDate: '2024-06-01T00:00',
-                    onsetDate: '2024-06-01T00:00',
-                    status: 'completed'
-                });
+                
                 addDiagnosisEvidence({
                     diagnosisCode: '67531005',
                     diagnosisName: 'Spina bifida (disorder)',
                     diagnosisDate: '2024-06-01T00:00',
                     onsetDate: '2024-06-01T00:00',
                     status: 'completed'
-                });
-                addDiagnosisEvidence({
-                    diagnosisCode: '414819007',
-                    diagnosisName: 'Neonatal abstinence syndrome (disorder)',
-                    diagnosisDate: '2024-06-01T00:00',
-                    onsetDate: '2024-06-01T00:00',
-                    status: 'completed'
-                });
+                })
             }
 
             // Initialize problems evidence with default entry
             if (!document.querySelector('.problem-evidence-row')) {
                 addProblemEvidence({
-                    problemCode: '385093006',
-                    problemName: 'Community acquired pneumonia',
+                    problemCode: '204008003',
+                    problemName: 'Spina bifida without hydrocephalus - closed (disorder)',
                     onsetDate: '2024-06-01T00:00',
                     status: 'active',
                     concernStatus: 'active'

@@ -125,6 +125,7 @@ const templateSelect = create('select', {
 });
 templateSelect.innerHTML = `
   <option value="">📋 Load Template...</option>
+  <option value="AnimalBites.json">Animal Bites</option>
   <option value="Spina Bifida (Disorders) (ICD10CM).json">Spina Bifida</option>
   <option value="NAS.json">Neonatal Abstinence Syndrome</option>
   <option value="SB.json">Cervical Spina Bifida</option>
@@ -133,7 +134,7 @@ templateSelect.innerHTML = `
 
 const bLoad = mk('Load Form', 'ghost');
 const bSave = mk('Save Form', 'secondary');
-const bCDA = mk('Generate CDA');
+const bCDA = mk('Generate eICR');
 const bRR  = mk('Generate RR','secondary');
 const bZIP = mk('Download ZIP (eICR + RR)','ghost');
 
