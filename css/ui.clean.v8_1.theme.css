@@ -204,3 +204,7 @@ input:focus, select:focus, textarea:focus { outline:none; border-color:var(--acc
     min-width: 140px !important;
   }
 }
+
+.underlined {
+  text-decoration: underline;
+}
