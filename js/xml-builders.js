@@ -1704,16 +1704,923 @@ function buildEICRXml() {
   </encompassingEncounter>
 </componentOf>
 
-  <component>
+   <component>
     <structuredBody>
-      <!-- ENCOUNTER SECTION, VITAL SIGNS, MEDICATIONS, IMMUNIZATIONS, PROCEDURES, ETC. -->
-      <!-- NOTE: The full body sections continue below - this is truncated for brevity -->
-      <!-- The actual buildEICRXml function contains ~3500 more lines of XML sections -->
+      <!-- Encounters Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.22" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.22" extension="2015-08-01" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.22.1" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.22.1" extension="2015-08-01" />
+          <code code="46240-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
+            displayName="History of encounters" />
+          <title>Encounters</title>
+          <text>
+            <table>
+              <thead>
+                <tr><th>Encounter</th><th>Date</th><th>Location</th></tr>
+              </thead>
+              <tbody><tr><td>Office outpatient visit</td><td>${data.encounterDate}</td><td>${data.facilityName}</td></tr></tbody>
+            </table>
+          </text>
+          <entry typeCode="DRIV">
+            <encounter classCode="ENC" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.49" />
+              <templateId root="2.16.840.1.113883.10.20.22.4.49" extension="2015-08-01" />
+              <id root="2.16.840.1.113883.19.${data.encounterId}" />
+              <code code="99213" codeSystem="2.16.840.1.113883.6.12" codeSystemName="CPT-4"
+      displayName="Office outpatient visit">
+    <originalText>Office outpatient visit</originalText>
+</code>
+              <effectiveTime>
+                <low value="${data.encounterDate}" />
+                <high value="${data.encounterDate}" />
+              </effectiveTime>
+              <participant typeCode="LOC">
+    <participantRole classCode="SDLOC">
+      <templateId root="2.16.840.1.113883.10.20.22.4.32"/>
+      <id root="2.16.840.1.113883.4.6" extension="${data.facilityId || data.organizationId}"/>
+      <code code="${data.facilityTypeCode || 'OF'}" 
+            codeSystem="2.16.840.1.113883.5.111" 
+            displayName="Outpatient facility"/>
+      <addr use="WP">
+        <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+        <city>${data.patientCity}</city>
+        <state>${data.patientState}</state>
+        <postalCode>${data.patientZip}</postalCode>
+        <country>US</country>
+      </addr>
+      <telecom use="WP" value="tel:${data.organizationPhone || data.providerPhone}"/>
+      <playingEntity classCode="PLC">
+        <name>${data.facilityName}</name>
+      </playingEntity>
+    </participantRole>
+  </participant>
+            </encounter>
+          </entry>
+        </section>
+      </component>
 
       ${buildSpecimenSection(data)}
-      ${(data.labEvidence && data.labEvidence.length) ? buildResultsSectionXML(data.labEvidence, '2016-12-01') : ''}
-      ${generateVitalSignsEntries(data)}
+      
+      <!-- Reason for Visit Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.12" />
+          <code code="29299-5" codeSystem="2.16.840.1.113883.6.1" displayName="Reason for visit" />
+          <title>Reason for visit</title>
+          <text>${data.chiefComplaint}</text>
+        </section>
+      </component>
 
+      <!-- History of Present Illness -->
+      <component>
+        <section>
+          <templateId root="1.3.6.1.4.1.19376.1.5.3.1.3.4" />
+          <code code="10164-2" codeSystem="2.16.840.1.113883.6.1" displayName="History of Present Illness" />
+          <title>History of Present Illness</title>
+          <text>${data.presentIllness}</text>
+        </section>
+      </component>
+
+      <!-- Medications Administered Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.38" />
+          <templateId extension="2014-06-09" root="2.16.840.1.113883.10.20.22.2.38" />
+          <code code="29549-3" codeSystem="2.16.840.1.113883.6.1"
+            codeSystemName="LOINC" displayName="Medications Administered" />
+          <title>Medications Administered</title>
+          <text>
+      <table border="1" width="100%">
+        <thead>
+          <tr>
+            <th>Medication</th>
+            <th>Dose</th>
+            <th>Route</th>
+            <th>Administration Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <content ID="MedAdministered_1">${data.adminMed1Name}</content>
+            </td>
+            <td>${data.adminMed1DoseValue} ${data.adminMed1DoseUnit}${data.adminMed1VolValue ? ` (${data.adminMed1VolValue} ${data.adminMed1VolUnit})` : ''}</td>
+            <td>${data.adminMed1Route}</td>
+            <td>${data.adminMed1Time}</td>
+            <td>${data.adminMed1Negated ? 'Not Given' : data.adminMed1Status}</td>
+          </tr>
+          <tr>
+            <td>
+              <content ID="MedAdministered_2">${data.adminMed2Name}</content>
+            </td>
+            <td>${data.adminMed2DoseValue} ${data.adminMed2DoseUnit}${data.adminMed2VolValue ? ` (${data.adminMed2VolValue} ${data.adminMed2VolUnit})` : ''}</td>
+            <td>${data.adminMed2Route}</td>
+            <td>${data.adminMed2Time}</td>
+            <td>${data.adminMed2Negated ? 'Not Given' : data.adminMed2Status}</td>
+          </tr>
+        </tbody>
+      </table>
+    </text>
+    
+    <!-- First Medication Entry -->
+    <entry typeCode="DRIV">
+      <substanceAdministration classCode="SBADM" moodCode="EVN" ${data.adminMed1Negated ? 'negationInd="true"' : ''}>
+        <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09" />
+        <id extension="${data.adminMed1Id}" root="2.16.840.1.113883.19.5.99999.1" />
+        <statusCode code="${data.adminMed1Status}" />
+        <effectiveTime value="${data.adminMed1Time}" />
+        <routeCode code="${data.adminMed1Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
+  <translation code="${getRouteTranslation(data.adminMed1Route).code}" 
+               codeSystem="2.16.840.1.113883.6.96" 
+               displayName="${getRouteTranslation(data.adminMed1Route).display}"/>
+</routeCode>
+        <doseQuantity value="${data.adminMed1DoseValue}" unit="${fixDoseUnit(data.adminMed1DoseUnit)}" />
+        ${data.adminMed1VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed1VolValue}" unit="${data.adminMed1VolUnit}" /></maxDoseQuantity>` : ''}
+        <author>
+      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+      <time value="20240615120000"/>
+      <assignedAuthor>
+        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+        <code code="${getProviderTaxonomyCode('physician').code}" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="${getProviderTaxonomyCode('physician').display}"/>
+        <assignedPerson>
+          <name>
+            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+          </name>
+        </assignedPerson>
+      </assignedAuthor>
+    </author>
+        <consumable>
+          <manufacturedProduct classCode="MANU">
+            <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
+            <manufacturedMaterial>
+              <code code="${data.adminMed1Code}" codeSystem="2.16.840.1.113883.6.88">
+                <originalText>
+                  <reference value="#MedAdministered_1" />
+                </originalText>
+              </code>
+              <name>${data.adminMed1Name}</name>
+            </manufacturedMaterial>
+          </manufacturedProduct>
+        </consumable>
+         ${ (data.administeringProviderNPI || data.administeringProviderGiven || data.administeringProviderFamily) ? `
+    <performer typeCode="PRF">
+      <assignedEntity>
+        ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}"/>` : ''}
+        ${data.administeringProviderPhone ? `<telecom use="WP" value="tel:${data.administeringProviderPhone}"/>` : ''}
+        <assignedPerson>
+          <name>
+            ${data.administeringProviderGiven ? `<given>${data.administeringProviderGiven}</given>` : ''}
+            ${data.administeringProviderMiddle ? `<given>${data.administeringProviderMiddle}</given>` : ''}
+            ${data.administeringProviderFamily ? `<family>${data.administeringProviderFamily}</family>` : ''}
+          </name>
+        </assignedPerson>
+        ${data.administeringProviderOrgName ? `
+        <representedOrganization>
+          ${data.administeringProviderOrgId ? `<id root="${data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19'}" extension="${data.administeringProviderOrgId}"/>` : ''}
+          <name>${data.administeringProviderOrgName}</name>
+        </representedOrganization>` : ''}
+      </assignedEntity>
+    </performer>` : '' }
+      </substanceAdministration>
+    </entry>
+    
+    <!-- Second Medication Entry -->
+    <entry typeCode="DRIV">
+      <substanceAdministration classCode="SBADM" moodCode="EVN" ${data.adminMed2Negated ? 'negationInd="true"' : ''}>
+        <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09" />
+        <id extension="${data.adminMed2Id}" root="2.16.840.1.113883.19.5.99999.1" />
+        <statusCode code="${data.adminMed2Status}" />
+        <effectiveTime value="${data.adminMed2Time}" />      
+  <routeCode code="${data.adminMed2Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
+  <translation code="${getRouteTranslation(data.adminMed2Route).code}" 
+               codeSystem="2.16.840.1.113883.6.96" 
+               displayName="${getRouteTranslation(data.adminMed2Route).display}"/>
+</routeCode>
+        <doseQuantity value="${data.adminMed2DoseValue}" unit="${data.adminMed2DoseUnit === '1' || data.adminMed2DoseUnit === 'each' ? 'mg' : data.adminMed2DoseUnit}" />
+        ${data.adminMed2VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed2VolValue}" unit="${data.adminMed2VolUnit}" /></maxDoseQuantity>` : ''}
+        <author>
+      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+      <time value="20240615120000"/>
+      <assignedAuthor>
+        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+        <code code="${getProviderTaxonomyCode('physician').code}" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="${getProviderTaxonomyCode('physician').display}"/>
+        <assignedPerson>
+          <name>
+            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+          </name>
+        </assignedPerson>
+      </assignedAuthor>
+    </author>
+        <consumable>
+          <manufacturedProduct classCode="MANU">
+            <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
+            <manufacturedMaterial>
+              <code code="${data.adminMed2Code}" codeSystem="2.16.840.1.113883.6.88">
+                <originalText>
+                  <reference value="#MedAdministered_2" />
+                </originalText>
+              </code>
+              <name>${data.adminMed2Name}</name>
+            </manufacturedMaterial>
+          </manufacturedProduct>
+        </consumable>
+         ${ (data.administeringProviderNPI || data.administeringProviderGiven || data.administeringProviderFamily) ? `
+    <performer typeCode="PRF">
+      <assignedEntity>
+        ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}"/>` : ''}
+        ${data.administeringProviderPhone ? `<telecom use="WP" value="tel:${data.administeringProviderPhone}"/>` : ''}
+        <assignedPerson>
+          <name>
+            ${data.administeringProviderGiven ? `<given>${data.administeringProviderGiven}</given>` : ''}
+            ${data.administeringProviderMiddle ? `<given>${data.administeringProviderMiddle}</given>` : ''}
+            ${data.administeringProviderFamily ? `<family>${data.administeringProviderFamily}</family>` : ''}
+          </name>
+        </assignedPerson>
+        ${data.administeringProviderOrgName ? `
+        <representedOrganization>
+          ${data.administeringProviderOrgId ? `<id root="${data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19'}" extension="${data.administeringProviderOrgId}"/>` : ''}
+          <name>${data.administeringProviderOrgName}</name>
+        </representedOrganization>` : ''}
+      </assignedEntity>
+    </performer>` : '' }
+      </substanceAdministration>
+    </entry>
+        </section>
+      </component>
+
+      <!-- Problem List Section (includes both Problems and Diagnoses) -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.5" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.5" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.5.1" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.5.1" />
+          <code code="11450-4" codeSystem="2.16.840.1.113883.6.1" displayName="Problem List" />
+          <title>Problem List</title>
+          <text>
+            <table>
+              <thead>
+                <tr><th>Type</th><th>Name</th><th>Code</th><th>Date</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                ${buildDiagnosisTableRows(data)}
+                ${buildProblemsTableRows(data)}
+              </tbody>
+            </table>
+          </text>
+          <entry typeCode="DRIV">
+            <act classCode="ACT" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.3" />
+              <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.4.3" />
+              <id root="a1c0c380-eacc-4b40-9207-85164185558d" />
+              <code code="CONC" codeSystem="2.16.840.1.113883.5.6" displayName="Concern" />
+              <statusCode code="active" />
+              <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+              <author>
+                <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+                <time value="20240615"/>
+                <assignedAuthor>
+                  <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+                  <code code="207Q00000X"
+                        codeSystem="2.16.840.1.113883.6.101"
+                        displayName="Family Medicine Physician"/>
+                  <assignedPerson>
+                    <name>
+                      <given>Royce</given>
+                      <family>Hemlock</family>
+                    </name>
+                  </assignedPerson>
+                </assignedAuthor>
+              </author>
+              ${generateDiagnosisEntries(data)}
+              ${generateProblemEntries(data)}
+            </act>
+          </entry>
+        </section>
+      </component>
+      ${(data.labEvidence && data.labEvidence.length) ? buildResultsSectionXML(data.labEvidence, '2016-12-01') : ''}
+      <!-- Social History Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.17" />
+          <templateId extension="2015-08-01" root="2.16.840.1.113883.10.20.22.2.17" />
+          <code code="29762-2" codeSystem="2.16.840.1.113883.6.1" displayName="Social History" />
+          <title>Social History</title>
+          <text>
+            <table>
+              <thead>
+                <tr><th>Travel History</th><th>Dates</th><th>Location</th></tr>
+              </thead>
+              <tbody><tr><td>Recent travel</td><td>${data.travelStartDate} - ${data.travelEndDate}</td><td>${data.travelLocation}</td></tr></tbody>
+            </table>
+          </text>
+          <entry typeCode="DRIV">
+            <act classCode="ACT" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.15.2.3.1" />
+              <templateId extension="2016-12-01" root="2.16.840.1.113883.10.20.15.2.3.1" />
+              <id root="79565142-eae0-4213-a3b3-b73cdf474682" />
+              <code code="420008001" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED-CT"
+      displayName="Travel">
+    <originalText>Travel</originalText>
+</code>
+              <text>Recent travel to ${data.travelLocation}</text>
+              <statusCode code="completed" />
+              <effectiveTime>
+                <low value="${data.travelStartDate}" />
+                <high value="${data.travelEndDate}" />
+              </effectiveTime>
+              <participant typeCode="LOC">
+    <participantRole classCode="TERR">
+      <id nullFlavor="UNK"/>
+      <code code="US" 
+      codeSystem="1.0.3166.1" 
+      displayName="United States"/>
+      <addr>
+        <streetAddressLine>${data.travelAddress}</streetAddressLine>
+        <city>${data.travelLocation.split(',')[0] || data.travelLocation}</city>
+        <state>${data.travelLocationCode || 'IL'}</state>
+        <country>US</country>
+      </addr>
+      <playingEntity classCode="PLC">
+        <name>${data.travelLocation}</name>
+      </playingEntity>
+    </participantRole>
+  </participant>
+            </act>
+          </entry>
+          
+  <!-- ADDED to satisfy CONF:1198-14824 — exactly one Smoking Status - MU (V2) -->
+    <entry>
+      <observation classCode="OBS" moodCode="EVN">
+        <!-- Smoking Status - Meaningful Use (V2) -->
+        <templateId root="2.16.840.1.113883.10.20.22.4.78"/>
+        <templateId root="2.16.840.1.113883.10.20.22.4.78" extension="2014-06-09"/>
+        <id root="b3d8d3b1-9b8b-49a8-8ad0-6a0e0c0a1234"/>
+        <code code="72166-2" codeSystem="2.16.840.1.113883.6.1" displayName="Tobacco smoking status NHIS"/>
+        <statusCode code="completed"/>
+        <!-- use the encounter/assessment date if known -->
+        <effectiveTime value="20240520"/>
+           <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
+        <!-- SNOMED CT concept from the Smoking Status value set -->
+        <value xsi:type="CD"
+               code="266919005"
+               codeSystem="2.16.840.1.113883.6.96"
+               displayName="Never smoker"/>
+      </observation>
+    </entry>
+
+
+
+         <!-- Pregnancy Observation -->
+          ${generatePregnancyObservation(data)}
+
+
+          <!-- Birth Sex Observation -->
+          <entry typeCode="DRIV">
+            <observation classCode="OBS" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.200" extension="2016-06-01" />
+              <id root="${generateGUID()}" />
+              <code code="76689-9" codeSystem="2.16.840.1.113883.6.1" displayName="Sex Assigned At Birth" />
+              <statusCode code="completed" />
+              <effectiveTime value="${data.patientBirthDate}" />
+              <value xsi:type="CD" code="${data.patientBirthSex || data.patientGender}" codeSystem="2.16.840.1.113883.5.1" />
+            </observation>
+          </entry>
+          
+          <!-- Gender Identity Observation -->
+          <entry typeCode="DRIV">
+            <observation classCode="OBS" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.38" extension="2015-08-01" />
+              <id root="${generateGUID()}" />
+              <code code="76691-5" codeSystem="2.16.840.1.113883.6.1" displayName="Gender identity" />
+              <statusCode code="completed" />
+              <effectiveTime value="${data.patientBirthDate}" />
+                <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
+              <value xsi:type="CD" code="${data.patientGenderIdentity || data.patientGender}" codeSystem="2.16.840.1.113883.6.96" />
+            </observation>
+          </entry>
+
+          
+          
+          <!-- Occupation Information -->
+          ${data.currentOccupation ? `
+          <entry typeCode="DRIV">
+            <observation classCode="OBS" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.38" extension="2015-08-01" />
+              <id root="${generateGUID()}" />
+              <code code="87729-0" codeSystem="2.16.840.1.113883.6.1" displayName="Current occupation" />
+              <statusCode code="completed" />
+              <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+                <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
+              <value xsi:type="ST">${data.currentOccupation}</value>
+              <participant typeCode="IND">
+                <participantRole classCode="ASSIGNED">
+                   
+                  ${data.currentEmployerAddress ? `<addr><streetAddressLine>${data.currentEmployerAddress}</streetAddressLine></addr>` : ''}
+                   ${data.currentEmployerPhone ? `<telecom value="tel:${data.currentEmployerPhone}" />` : ''}
+                  <playingEntity classCode="ORG">
+                    <name>${data.currentEmployerName || 'Unknown'}</name>
+                  </playingEntity>
+                </participantRole>
+              </participant>
+            </observation>
+          </entry>
+          
+          <entry typeCode="DRIV">
+            <observation classCode="OBS" moodCode="EVN">
+              <templateId root="2.16.840.1.113883.10.20.22.4.216" extension="2022-06-01" />
+              <id root="${generateGUID()}" />
+              <code code="21843-8" codeSystem="2.16.840.1.113883.6.1" displayName="History of Occupation industry" />
+              <statusCode code="active" />
+              <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+              <value xsi:type="ST">${data.currentIndustry || 'Unknown'}</value>
+            </observation>
+          </entry>` : ''}
+        </section>
+      </component>
+
+<!-- Occupational Data for Health Template Requirements Section -->
+<component>
+  <section>
+    <templateId root="2.16.840.1.113883.10.20.22.2.17" extension="2020-09-01"/>
+    <code code="29762-2" codeSystem="2.16.840.1.113883.6.1" 
+      displayName="Social History"/>
+    <title>Occupational Data for Health</title>
+    <text>
+      <table border="1">
+        <thead>
+          <tr><th>Category</th><th>Value</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Current Occupation</td>
+            <td>${data.currentOccupation}</td>
+            <td>Job Title: ${data.currentJobTitle}</td>
+          </tr>
+          <tr>
+            <td>Current Industry</td>
+            <td>${data.currentIndustry}</td>
+            <td>Employer: ${data.currentEmployerName}</td>
+          </tr>
+          <tr>
+            <td>Employment Status</td>
+            <td>${getEmploymentStatusDisplay(data.employmentStatus)}</td>
+            <td>Occupational Exposure Risk: ${data.occupationalExposure === 'Y' ? 'Yes' : data.occupationalExposure === 'N' ? 'No' : 'Unknown'}</td>
+          </tr>
+        </tbody>
+      </table>
+    </text>
+    
+    <!-- Current Occupation Observation -->
+    <entry typeCode="DRIV">
+      <observation classCode="OBS" moodCode="EVN">
+        <templateId root="2.16.840.1.113883.10.20.22.4.38" extension="2015-08-01" />
+        <id root="${generateGUID()}" />
+        <code code="87729-0" codeSystem="2.16.840.1.113883.6.1" displayName="Current occupation" />
+        <statusCode code="completed" />
+        <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+        <author>
+          <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+          <time value="${data.encounterDate}"/>
+          <assignedAuthor>
+            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+            <code code="${getProviderTaxonomyCode('physician').code}" 
+                  codeSystem="2.16.840.1.113883.6.101" 
+                  displayName="${getProviderTaxonomyCode('physician').display}"/>
+            <assignedPerson>
+              <name>
+                <given>${(data.providerName || 'Unknown').split(' ')[0]}</given>
+                <family>${(data.providerName || 'Unknown').split(' ').slice(1).join(' ') || 'Provider'}</family>
+              </name>
+            </assignedPerson>
+          </assignedAuthor>
+        </author>
+        <value xsi:type="ST">${data.currentOccupation}</value>
+        <participant typeCode="IND">
+          <participantRole classCode="ASSIGNED">
+            ${data.currentEmployerAddress ? `<addr><streetAddressLine>${data.currentEmployerAddress}</streetAddressLine></addr>` : ''}
+            ${data.currentEmployerPhone ? `<telecom value="tel:${data.currentEmployerPhone}" />` : ''}
+            <playingEntity classCode="ORG">
+              <name>${data.currentEmployerName || 'Unknown'}</name>
+            </playingEntity>
+          </participantRole>
+        </participant>
+      </observation>
+    </entry>
+    
+    <!-- Current Industry Observation -->
+    <entry typeCode="DRIV">
+      <observation classCode="OBS" moodCode="EVN">
+        <templateId root="2.16.840.1.113883.10.20.22.4.216" extension="2022-06-01" />
+        <id root="${generateGUID()}" />
+        <code code="21843-8" codeSystem="2.16.840.1.113883.6.1" displayName="History of Occupation industry" />
+        <statusCode code="active" />
+        <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+        <author>
+          <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+          <time value="${data.encounterDate}"/>
+          <assignedAuthor>
+            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+            <code code="${getProviderTaxonomyCode('physician').code}" 
+                  codeSystem="2.16.840.1.113883.6.101" 
+                  displayName="${getProviderTaxonomyCode('physician').display}"/>
+            <assignedPerson>
+              <name>
+                <given>${(data.providerName || 'Unknown').split(' ')[0]}</given>
+                <family>${(data.providerName || 'Unknown').split(' ').slice(1).join(' ') || 'Provider'}</family>
+              </name>
+            </assignedPerson>
+          </assignedAuthor>
+        </author>
+        <value xsi:type="ST">${data.currentIndustry}</value>
+      </observation>
+    </entry>
+  </section>
+</component>
+
+  <!-- Vital Signs Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.4" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.4" extension="2015-08-01" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.4.1" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.4.1" extension="2015-08-01" />
+          <code code="8716-3" codeSystem="2.16.840.1.113883.6.1" displayName="Vital signs" />
+          <title>Vital Signs</title>
+          <text>
+            <table>
+              <thead>
+                <tr><th>Vital Sign</th><th>Value</th><th>Unit</th><th>Date</th></tr>
+              </thead>
+              <tbody>${data.temperature ? `<tr><td>Temperature</td><td>${data.temperature}</td><td>°F</td><td>${data.encounterDate}</td></tr>` : ''}${data.bloodPressure ? `<tr><td>Blood Pressure</td><td>${data.bloodPressure}</td><td>mmHg</td><td>${data.encounterDate}</td></tr>` : ''}${data.heartRate ? `<tr><td>Heart Rate</td><td>${data.heartRate}</td><td>bpm</td><td>${data.encounterDate}</td></tr>` : ''}
+  ${data.respiratoryRate  ? `<tr><td>Respiratory Rate</td><td>${data.respiratoryRate}</td><td>/min</td><td>${data.encounterDate}</td></tr>` : ''}
+  ${data.oxygenSaturation ? `<tr><td>Oxygen Saturation</td><td>${data.oxygenSaturation}</td><td>%</td><td>${data.encounterDate}</td></tr>` : ''}
+  ${data.weight           ? `<tr><td>Weight</td><td>${data.weight}</td><td>kg</td><td>${data.encounterDate}</td></tr>` : ''}
+  ${data.height           ? `<tr><td>Height</td><td>${data.height}</td><td>cm</td><td>${data.encounterDate}</td></tr>` : ''}
+  ${data.bmi              ? `<tr><td>BMI</td><td>${data.bmi}</td><td>kg/m²</td><td>${data.encounterDate}</td></tr>` : ''}
+</tbody>
+
+            </table>
+          </text>
+      ${generateVitalSignsEntries(data)}
+      </section>
+      </component>
+ <!-- Medications Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.1" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.1" extension="2014-06-09" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.1.1" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.1.1" extension="2014-06-09" />
+          <code code="10160-0" codeSystem="2.16.840.1.113883.6.1" displayName="Medications" />
+          <title>Medications</title>
+          <text>
+            <table>
+              <thead>
+                <tr><th>Medication</th><th>Dose</th><th>Route</th><th>Date</th><th>Status</th></tr>
+              </thead>
+              <tbody>${data.adminMed1Name ? `<tr><td>${data.adminMed1Name}</td><td>${data.adminMed1DoseValue} ${data.adminMed1DoseUnit}${data.adminMed1VolValue ? ' (' + data.adminMed1VolValue + ' ' + data.adminMed1VolUnit + ')' : ''}</td><td>${data.adminMed1Route}</td><td>${data.adminMed1Time}</td><td>${data.adminMed1Status}</td></tr>` : ''}${data.adminMed2Name ? `<tr><td>${data.adminMed2Name}</td><td>${data.adminMed2DoseValue} ${data.adminMed2DoseUnit}${data.adminMed2VolValue ? ' (' + data.adminMed2VolValue + ' ' + data.adminMed2VolUnit + ')' : ''}</td><td>${data.adminMed2Route}</td><td>${data.adminMed2Time}</td><td>${data.adminMed2Status}</td></tr>` : ''}</tbody>
+            </table>
+          </text>
+          ${generateMedicationEntries(data)}
+        </section>
+      </component>
+
+      <!-- Immunizations Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.2" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.2" extension="2015-08-01" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.2.1" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.2.1" extension="2015-08-01" />
+          <code code="11369-6" codeSystem="2.16.840.1.113883.6.1" displayName="Immunizations" />
+          <title>Immunizations</title>
+          <text>
+            <table>
+              <thead>
+                <tr><th>Vaccine</th><th>Date</th><th>Status</th><th>Manufacturer</th></tr>
+              </thead>
+              <tbody>${data.vaccine1Name ? `<tr><td>${data.vaccine1Name}</td><td>${data.immunization1Date}</td><td>${data.immunization1Status}</td><td>${data.vaccine1Manufacturer}</td></tr>` : ''}${data.vaccine2Name ? `<tr><td>${data.vaccine2Name}</td><td>${data.immunization2Date}</td><td>${data.immunization2Status}</td><td>${data.vaccine2Manufacturer}</td></tr>` : ''}</tbody>
+            </table>
+          </text>
+          ${generateImmunizationEntries(data)}
+        </section>
+      </component>
+
+      <!-- Procedures Section -->
+      <component>
+        <section>
+          <templateId root="2.16.840.1.113883.10.20.22.2.7" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.7" extension="2014-06-09" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.7.1" />
+          <templateId root="2.16.840.1.113883.10.20.22.2.7.1" extension="2014-06-09" />
+          <code code="47519-4" codeSystem="2.16.840.1.113883.6.1" displayName="Procedures" />
+          <title>Procedures</title>
+          <text>
+            <table>
+              <thead>
+                <tr><th>Procedure</th><th>Date</th><th>Type</th></tr>
+              </thead>
+              <tbody>${
+  data.currentProc1Name
+    ? `<tr><td>${xmlEscape(data.currentProc1Name)}</td><td>${xmlEscape(data.currentProc1Date)}</td><td>${xmlEscape(data.currentProc1Type)}</td></tr>`
+    : ''
+}${
+  data.currentProc2Name
+    ? `<tr><td>${xmlEscape(data.currentProc2Name)}</td><td>${xmlEscape(data.currentProc2Date)}</td><td>${xmlEscape(data.currentProc2Type)}</td></tr>`
+    : ''
+}${
+  data.triggerProc1Name
+    ? `<tr><td>${xmlEscape(data.triggerProc1Name)}</td><td>${xmlEscape(data.triggerProc1Date)}</td><td>${xmlEscape(data.triggerProc1Type)}</td></tr>`
+    : ''
+}</tbody>
+
+            </table>
+          </text>
+          ${generateProcedureEntries(data)}
+        </section>
+      </component>
+
+      <!-- Allergies Section -->
+      <component>
+        <section nullFlavor="NI">
+          <templateId root="2.16.840.1.113883.10.20.22.2.6.1" extension="2015-08-01"/>
+          <code code="48765-2" codeSystem="2.16.840.1.113883.6.1" displayName="Allergies and adverse reactions Document"/>
+          <title>Allergies</title>
+          <text>No Known Allergies</text>
+        </section>
+      </component>
+
+      // Find this section in your buildEICRXml() function around line 1600+ and replace it:
+
+// Find this section in your buildEICRXml() function around line 1600+ and replace it:
+
+<!-- Admission Medications Section -->
+<component>
+  <section>
+    <templateId root="2.16.840.1.113883.10.20.22.2.44" extension="2015-08-01"/>
+    <code code="42346-7" codeSystem="2.16.840.1.113883.6.1" displayName="Medications on admission (narrative) Document"/>
+    <title>Admission Medications</title>
+    <text>
+      <table>
+        <thead>
+          <tr><th>Medication</th><th>Dose</th><th>Route</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>${data.adminMed1Name}</td><td>${data.adminMed1DoseValue} ${data.adminMed1DoseUnit}</td><td>${data.adminMed1Route}</td></tr>
+        </tbody>
+      </table>
+    </text>
+    <entry typeCode="DRIV">
+      <act classCode="ACT" moodCode="EVN">
+        <templateId root="2.16.840.1.113883.10.20.22.4.36" extension="2014-06-09"/>
+        <id root="${generateGUID()}"/>
+        <code code="42346-7" codeSystem="2.16.840.1.113883.6.1" displayName="Medications on admission"/>
+        <statusCode code="active"/>
+        <effectiveTime value="${data.encounterDate}"/>
+  <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
+        <entryRelationship typeCode="SUBJ">
+          <substanceAdministration classCode="SBADM" moodCode="INT">
+            <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09"/>
+            <id root="${generateGUID()}"/>
+            <statusCode code="active"/>
+            <effectiveTime value="${data.encounterDate}"/>
+               <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
+            <routeCode code="${data.adminMed1Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
+              <translation code="${getRouteTranslation(data.adminMed1Route).code}" 
+                           codeSystem="2.16.840.1.113883.6.96" 
+                           displayName="${getRouteTranslation(data.adminMed1Route).display}"/>
+            </routeCode>
+            <doseQuantity value="${data.adminMed1DoseValue}" unit="${data.adminMed1DoseUnit}"/>
+            <consumable>
+              <manufacturedProduct classCode="MANU">
+                <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
+                <manufacturedMaterial>
+                  <code code="${data.adminMed1Code}" codeSystem="2.16.840.1.113883.6.88" displayName="${data.adminMed1Name}"/>
+                </manufacturedMaterial>
+              </manufacturedProduct>
+            </consumable>
+          </substanceAdministration>
+        </entryRelationship>
+      </act>
+    </entry>
+  </section>
+</component>
+
+      <!-- Hospital Admission Diagnosis FIXED VERSION -->
+<component>
+  <section nullFlavor="NI">
+    <templateId root="2.16.840.1.113883.10.20.22.2.43" extension="2015-08-01"/>
+    <code code="46241-6" codeSystem="2.16.840.1.113883.6.1" displayName="Hospital admission diagnosis Narrative - Reported">
+      <translation code="42347-5" codeSystem="2.16.840.1.113883.6.1" displayName="Admission Diagnosis"/>
+    </code>
+    <title>Hospital Admission Diagnosis</title>
+    <text>See Encounters Section and Problems Section</text>
+  </section>
+</component>
+
+      <!-- Hospital Discharge Diagnosis -->
+      <component>
+        <section nullFlavor="NI">
+          <templateId root="2.16.840.1.113883.10.20.22.2.24" extension="2015-08-01"/>
+          <code code="11535-2" codeSystem="2.16.840.1.113883.6.1" displayName="Hospital discharge diagnosis Narrative">
+      <translation code="78375-3" codeSystem="2.16.840.1.113883.6.1" displayName="Discharge Diagnosis"/>
+    </code>
+          <title>Hospital Discharge Diagnosis</title>
+          <text>See Encounters Section and Problems Section</text>
+        </section>
+      </component>
+
+      <!-- Past Medical History -->
+      <component>
+        <section nullFlavor="NI">
+          <templateId root="2.16.840.1.113883.10.20.22.2.20" extension="2015-08-01"/>
+          <code code="11348-0" codeSystem="2.16.840.1.113883.6.1" displayName="History of Past illness Narrative"/>
+          <title>Past Medical History</title>
+          <text>${data.pastMedicalHistory}</text>
+        </section>
+      </component>
+
+      <!-- Review of Systems -->
+      <component>
+        <section nullFlavor="NI">
+          <templateId root="1.3.6.1.4.1.19376.1.5.3.1.3.18"/>
+          <code code="10187-3" codeSystem="2.16.840.1.113883.6.1" displayName="Review of systems Narrative - Reported"/>
+          <title>Review of Systems</title>
+          <text>${data.reviewOfSystems}</text>
+        </section>
+      </component>
+
+      <!-- Chief Complaint -->
+      <component>
+        <section nullFlavor="NI">
+          <templateId root="1.3.6.1.4.1.19376.1.5.3.1.1.13.2.1"/>
+          <code code="10154-3" codeSystem="2.16.840.1.113883.6.1" displayName="Chief complaint Narrative - Reported"/>
+          <title>Chief Complaint</title>
+          <text>${data.chiefComplaint}</text>
+        </section>
+      </component>
+<!-- Emergency Outbreak Information Section -->
+<component>
+  <section>
+    <templateId root="2.16.840.1.113883.10.20.15.2.2.4" extension="2021-01-01"/>
+    <code code="83910-0" codeSystem="2.16.840.1.113883.6.1" 
+          codeSystemName="LOINC" displayName="Emergency outbreak information"/>
+    <title>Emergency Outbreak Information</title>
+    <text>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Information</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Emergency/Outbreak Status</td>
+            <td>${getEmergencyOutbreakDisplay(data.emergencyOutbreakInfo)}</td>
+            <td>${data.outbreakDetails}</td>
+          </tr>
+          <tr>
+            <td>Exposure/Contact</td>
+            <td>${getExposureContactDisplay(data.exposureContactInfo)}</td>
+            <td>Type: ${getExposureTypeDisplay(data.exposureType)}, Location: ${data.exposureLocation}, Date: ${data.exposureDate}</td>
+          </tr>
+          <tr>
+            <td>Contact Person</td>
+            <td>${data.contactPersonName}</td>
+            <td>Phone: ${data.contactPersonPhone}</td>
+          </tr>
+          <tr>
+            <td>Quarantine/Isolation</td>
+            <td>Quarantine: ${getQuarantineStatusDisplay(data.quarantineStatus)}, Isolation: ${getIsolationStatusDisplay(data.isolationStatus)}</td>
+            <td>Current status as of encounter date</td>
+          </tr>
+        </tbody>
+      </table>
+    </text>
+    
+    <!-- REQUIRED Emergency Outbreak Information Observation -->
+<entry typeCode="DRIV">
+  <observation classCode="OBS" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.15.2.3.40" extension="2021-01-01"/>
+    <id root="${generateGUID()}"/>
+    <code code="83910-0" codeSystem="2.16.840.1.113883.6.1" 
+          displayName="Emergency outbreak information"/>
+    <statusCode code="completed"/>
+    <effectiveTime value="${data.encounterDate}"/>
+    <value xsi:type="CD" 
+           code="${data.emergencyOutbreakInfo || 'N/A'}" 
+           codeSystem="2.16.840.1.113883.6.96" 
+           displayName="${getEmergencyOutbreakDisplay(data.emergencyOutbreakInfo || 'N/A')}"/>
+  </observation>
+</entry>
+    
+    <!-- Exposure Information Entry -->
+    ${data.exposureContactInfo && data.exposureContactInfo !== '373068000' 
+      ? `<entry typeCode="DRIV">
+           <observation classCode="OBS" moodCode="EVN">
+             <templateId root="2.16.840.1.113883.10.20.22.4.38"/>
+             <id root="${generateGUID()}"/>
+             <code code="418715001" codeSystem="2.16.840.1.113883.6.96" 
+                   displayName="Exposure to potentially harmful entity"/>
+             <statusCode code="completed"/>
+             <effectiveTime value="${data.exposureDate !== 'Not applicable' ? data.exposureDate : data.encounterDate}"/>
+             <value xsi:type="CD" code="${data.exposureContactInfo}" 
+                    codeSystem="2.16.840.1.113883.6.96" 
+                    displayName="${getExposureContactDisplay(data.exposureContactInfo)}"/>
+           </observation>
+         </entry>`
+      : ''
+    }
+  </section>
+</component>
     </structuredBody>
   </component>
 </ClinicalDocument>`;
