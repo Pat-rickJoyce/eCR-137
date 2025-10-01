@@ -6959,6 +6959,7 @@ const refRange = le.referenceRange
       <!-- Replace existing Results Section with Lab Evidence -->
      ${(data.labEvidence && data.labEvidence.length)
   ? buildResultsSectionXML(data.labEvidence, '2016-12-01')
+  
   : `<!-- Fallback Results Section for Legacy Support -->
      <component>
        <section>
