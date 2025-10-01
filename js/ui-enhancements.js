@@ -41,7 +41,7 @@ window.addEventListener('load', () => {
     if (chosen) chosen.classList.add('ui81-force-wide');
   }
 
-  // Sidenav
+  
   // Sidenav
 const headings = $$('h2');
 if (headings.length) {
@@ -66,7 +66,6 @@ if (headings.length) {
   document.body.appendChild(nav);
   document.body.classList.add('has-sidenav');
   
-  // ... rest of the scrollspy code remains the same
 
     // Scrollspy + fit nav
     const links = $$('a', nav);
@@ -113,7 +112,6 @@ if (headings.length) {
     }
   });
 
-  // Floating dock — always visible; wire to originals; don't hide our own buttons
   // Floating dock — always visible; wire to originals; don't hide our own buttons
 const dock = create('div', { class: 'ui81-dock' });
 const mk = (t, extra='') => create('button', { class: 'ui81-btn '+extra, innerHTML: t });
