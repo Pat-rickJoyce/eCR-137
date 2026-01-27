@@ -1525,6 +1525,8 @@ function buildEICRXml() {
       <birthTime value="${data.patientBirthDate}" />
 <sdtc:deceasedInd value="${data.patientDeathIndicator || 'false'}" />
       ${data.patientDeathDate ? `<sdtc:deceasedTime value="${data.patientDeathDate}" />` : ''}
+      <maritalStatusCode code="S" codeSystem="2.16.840.1.113883.5.2"
+                     codeSystemName="MaritalStatus" displayName="Never Married"/>
 
       <raceCode code="${data.patientRace}" codeSystem="2.16.840.1.113883.6.238"
         codeSystemName="Race and Ethnicity - CDC" displayName="${getRaceDisplayName(data.patientRace)}" />
@@ -1532,8 +1534,6 @@ function buildEICRXml() {
       <ethnicGroupCode code="${data.patientEthnicity}" codeSystem="2.16.840.1.113883.6.238"
         codeSystemName="Race and Ethnicity - CDC" displayName="${getEthnicityDisplayName(data.patientEthnicity)}" />
       ${data.patientDetailedEthnicity ? `<sdtc:ethnicGroupCode code="${data.patientDetailedEthnicity}" codeSystem="2.16.840.1.113883.6.238" />` : ''}
-      <maritalStatusCode code="S" codeSystem="2.16.840.1.113883.5.2"
-                     codeSystemName="MaritalStatus" displayName="Never Married"/>
       ${data.guardianName ? `
       <guardian>
         <code code="${data.guardianCode || 'GUARD'}" codeSystem="2.16.840.1.113883.11.20.12.1" />
