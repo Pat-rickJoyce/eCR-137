@@ -47,10 +47,10 @@ function xmlEscape(str = '') {
  * @returns {string} GUID in format xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
  */
 function generateGUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
 }
 
 /**
@@ -68,12 +68,12 @@ function generateGUID() {
  * @returns {string} Effective setId
  */
 function getEffectiveSetId(data) {
-    // For Replace/Update documents, use the relatedDocumentId as the setId
-    // For New documents, use the setId field
-    if (data.documentRelationshipType === 'RPLC') {
-        return data.relatedDocumentId || data.setId;
-    }
-    return data.setId;
+  // For Replace/Update documents, use the relatedDocumentId as the setId
+  // For New documents, use the setId field
+  if (data.documentRelationshipType === 'RPLC') {
+    return data.relatedDocumentId || data.setId;
+  }
+  return data.setId;
 }
 
 /**
@@ -82,15 +82,15 @@ function getEffectiveSetId(data) {
  * @returns {string} RelatedDocument XML or empty string
  */
 function generateRelatedDocumentXml(data) {
-    // Only generate relatedDocument element if not a new document
-    if (!data.documentRelationshipType || data.documentRelationshipType === 'NEW') {
-        return '';
-    }
+  // Only generate relatedDocument element if not a new document
+  if (!data.documentRelationshipType || data.documentRelationshipType === 'NEW') {
+    return '';
+  }
 
-    const relatedSetId = data.relatedDocumentId || '';
-    const typeCode = data.documentRelationshipType || 'RPLC';
+  const relatedSetId = data.relatedDocumentId || '';
+  const typeCode = data.documentRelationshipType || 'RPLC';
 
-    return `
+  return `
   <!-- Related Document Information -->
   <relatedDocument typeCode="${typeCode}">
     <parentDocument>
@@ -108,67 +108,67 @@ function generateRelatedDocumentXml(data) {
  * @returns {Object} Value set OID and version
  */
 function getConditionSpecificValueSet(code, codeSystem = '2.16.840.1.113883.6.96') {
-    const valueSetMap = {
-        // COVID-19 Trigger Codes
-        '840539006': { // Disease caused by 2019-nCoV
-            oid: '2.16.840.1.114222.4.11.7508',
-            version: '1.2.0.0',
-            name: 'COVID-19 (Diagnosis, Symptom, Condition, or Healthcare Encounter)'
-        },
-        '840544004': { // Suspected disease caused by 2019-nCoV
-            oid: '2.16.840.1.114222.4.11.7508',
-            version: '1.2.0.0',
-            name: 'COVID-19 (Diagnosis, Symptom, Condition, or Healthcare Encounter)'
-        },
-        '94500-6': { // SARS-CoV-2 RNA [Presence] in Respiratory specimen by NAA with probe detection
-            oid: '2.16.840.1.114222.4.11.7508',
-            version: '1.2.0.0',
-            name: 'COVID-19 (Laboratory Test)'
-        },
-        '94310-0': { // SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection
-            oid: '2.16.840.1.114222.4.11.7508',
-            version: '1.2.0.0',
-            name: 'COVID-19 (Laboratory Test)'
-        },
+  const valueSetMap = {
+    // COVID-19 Trigger Codes
+    '840539006': { // Disease caused by 2019-nCoV
+      oid: '2.16.840.1.114222.4.11.7508',
+      version: '1.2.0.0',
+      name: 'COVID-19 (Diagnosis, Symptom, Condition, or Healthcare Encounter)'
+    },
+    '840544004': { // Suspected disease caused by 2019-nCoV
+      oid: '2.16.840.1.114222.4.11.7508',
+      version: '1.2.0.0',
+      name: 'COVID-19 (Diagnosis, Symptom, Condition, or Healthcare Encounter)'
+    },
+    '94500-6': { // SARS-CoV-2 RNA [Presence] in Respiratory specimen by NAA with probe detection
+      oid: '2.16.840.1.114222.4.11.7508',
+      version: '1.2.0.0',
+      name: 'COVID-19 (Laboratory Test)'
+    },
+    '94310-0': { // SARS-like Coronavirus N gene [Presence] in Unspecified specimen by NAA with probe detection
+      oid: '2.16.840.1.114222.4.11.7508',
+      version: '1.2.0.0',
+      name: 'COVID-19 (Laboratory Test)'
+    },
 
-        // Influenza Trigger Codes
-        '719865001': { // Influenza A virus infection
-            oid: '2.16.840.1.114222.4.11.1009',
-            version: '2.0.0',
-            name: 'Influenza (Diagnosis, Symptom, Condition, or Healthcare Encounter)'
-        },
-        '34487-9': { // Influenza virus A RNA [Presence] in Respiratory specimen by NAA with probe detection
-            oid: '2.16.840.1.114222.4.11.1009',
-            version: '2.0.0',
-            name: 'Influenza (Laboratory Test)'
-        },
+    // Influenza Trigger Codes
+    '719865001': { // Influenza A virus infection
+      oid: '2.16.840.1.114222.4.11.1009',
+      version: '2.0.0',
+      name: 'Influenza (Diagnosis, Symptom, Condition, or Healthcare Encounter)'
+    },
+    '34487-9': { // Influenza virus A RNA [Presence] in Respiratory specimen by NAA with probe detection
+      oid: '2.16.840.1.114222.4.11.1009',
+      version: '2.0.0',
+      name: 'Influenza (Laboratory Test)'
+    },
 
-        // Birth Defects (current focus)
-        '67531005': { // Spina bifida
-            oid: '2.16.840.1.113762.1.4.1146.2260',
-            version: '2.0.1',
-            name: 'Birth Defects Trigger Codes'
-        },
-        '86299006': { // Tetralogy of Fallot
-            oid: '2.16.840.1.113762.1.4.1146.2260',
-            version: '2.0.1',
-            name: 'Birth Defects Trigger Codes'
-        },
-        '414819007': { // Neonatal abstinence syndrome
-            oid: '2.16.840.1.113762.1.4.1146.2260',
-            version: '2.0.1',
-            name: 'Birth Defects Trigger Codes'
-        },
+    // Birth Defects (current focus)
+    '67531005': { // Spina bifida
+      oid: '2.16.840.1.113762.1.4.1146.2260',
+      version: '2.0.1',
+      name: 'Birth Defects Trigger Codes'
+    },
+    '86299006': { // Tetralogy of Fallot
+      oid: '2.16.840.1.113762.1.4.1146.2260',
+      version: '2.0.1',
+      name: 'Birth Defects Trigger Codes'
+    },
+    '414819007': { // Neonatal abstinence syndrome
+      oid: '2.16.840.1.113762.1.4.1146.2260',
+      version: '2.0.1',
+      name: 'Birth Defects Trigger Codes'
+    },
 
-        // Default fallback
-        'default': {
-            oid: '2.16.840.1.113762.1.4.1146.2260',
-            version: '2.0.1',
-            name: 'RCTC Master List'
-        }
-    };
+    // Default fallback
+    'default': {
+      oid: '2.16.840.1.113762.1.4.1146.2260',
+      version: '2.0.1',
+      name: 'RCTC Master List'
+    }
+  };
 
-    return valueSetMap[code] || valueSetMap['default'];
+  return valueSetMap[code] || valueSetMap['default'];
 }
 
 /**
@@ -177,17 +177,17 @@ function getConditionSpecificValueSet(code, codeSystem = '2.16.840.1.113883.6.96
  * @returns {string} HL7 interpretation code
  */
 function mapInterp(v) {
-    switch ((v||'').toLowerCase()) {
-        case 'positive': return 'POS';
-        case 'negative': return 'NEG';
-        case 'detected': return 'DET';
-        case 'not detected': return 'NDET';
-        case 'a': return 'A';
-        case 'n': return 'N';
-        case 'h': return 'H';
-        case 'l': return 'L';
-        default: return '';
-    }
+  switch ((v || '').toLowerCase()) {
+    case 'positive': return 'POS';
+    case 'negative': return 'NEG';
+    case 'detected': return 'DET';
+    case 'not detected': return 'NDET';
+    case 'a': return 'A';
+    case 'n': return 'N';
+    case 'h': return 'H';
+    case 'l': return 'L';
+    default: return '';
+  }
 }
 
 /**
@@ -198,7 +198,7 @@ function mapInterp(v) {
 function normalizeTS(raw) {
   const digits = String(raw || '').replace(/\D/g, '');
   if (digits.length >= 14) return digits.slice(0, 14); // YYYYMMDDHHMMSS
-  if (digits.length >= 8)  return digits.slice(0, 8);  // YYYYMMDD
+  if (digits.length >= 8) return digits.slice(0, 8);  // YYYYMMDD
   // fall back to a safe date if empty/invalid; adjust if you prefer another default
   return '20240615';
 }
@@ -208,23 +208,23 @@ function normalizeTS(raw) {
  * @returns {Object} Provider information for results
  */
 function getGlobalResultsProviders() {
-    const v = id => (document.getElementById(id)?.value || '').trim();
-    return {
-        // Performing lab (organization)
-        labCLIA:  v('resultLabCLIA'),
-        labName:  v('resultLabName'),
+  const v = id => (document.getElementById(id)?.value || '').trim();
+  return {
+    // Performing lab (organization)
+    labCLIA: v('resultLabCLIA'),
+    labName: v('resultLabName'),
 
-        // Resulting performer (person)
-        perfNPI:   v('resultPerformerNPI'),
-        perfGiven: v('resultPerformerGiven'),
-        perfFamily:v('resultPerformerFamily'),
+    // Resulting performer (person)
+    perfNPI: v('resultPerformerNPI'),
+    perfGiven: v('resultPerformerGiven'),
+    perfFamily: v('resultPerformerFamily'),
 
-        // Ordering provider (author)
-        ordNPI:    v('resultOrderingNPI'),
-        ordGiven:  v('resultOrderingGiven'),
-        ordFamily: v('resultOrderingFamily'),
-        ordTime:   v('resultAuthorTime')
-    };
+    // Ordering provider (author)
+    ordNPI: v('resultOrderingNPI'),
+    ordGiven: v('resultOrderingGiven'),
+    ordFamily: v('resultOrderingFamily'),
+    ordTime: v('resultAuthorTime')
+  };
 }
 
 /**
@@ -254,23 +254,23 @@ function emitResultAuthorXML(ts) {
  * @returns {string} Reference range XML
  */
 function getReferenceRange(testCode, referenceRangeText) {
-    if (referenceRangeText) {
-        return `
+  if (referenceRangeText) {
+    return `
         <referenceRange>
           <observationRange>
             <text>${referenceRangeText}</text>
           </observationRange>
         </referenceRange>`;
-    }
+  }
 
-    // Default reference ranges for common tests
-    const defaultRanges = {
-        '94310-0': 'Not Detected', // COVID-19
-        '34487-9': 'Not Detected'  // Influenza
-    };
+  // Default reference ranges for common tests
+  const defaultRanges = {
+    '94310-0': 'Not Detected', // COVID-19
+    '34487-9': 'Not Detected'  // Influenza
+  };
 
-    if (defaultRanges[testCode]) {
-        return `
+  if (defaultRanges[testCode]) {
+    return `
         <referenceRange>
           <observationRange>
             <text>${defaultRanges[testCode]}</text>
@@ -279,9 +279,9 @@ function getReferenceRange(testCode, referenceRangeText) {
                    displayName="Not detected"/>
           </observationRange>
         </referenceRange>`;
-    }
+  }
 
-    return '';
+  return '';
 }
 
 // ============================================================================
@@ -292,111 +292,111 @@ function getReferenceRange(testCode, referenceRangeText) {
  * Gets display name for employment status code
  */
 function getEmploymentStatusDisplay(status) {
-    const displays = {
-        '1': 'Employed',
-        '2': 'Unemployed',
-        '3': 'Not in labor force',
-        '4': 'Retired',
-        '5': 'Student',
-        'UNK': 'Unknown'
-    };
-    return displays[status] || 'Unknown';
+  const displays = {
+    '1': 'Employed',
+    '2': 'Unemployed',
+    '3': 'Not in labor force',
+    '4': 'Retired',
+    '5': 'Student',
+    'UNK': 'Unknown'
+  };
+  return displays[status] || 'Unknown';
 }
 
 /**
  * Gets display name for exposure/contact code
  */
 function getExposureContactDisplay(code) {
-    const displays = {
-        '24932003': 'Exposed',
-        '84100007': 'Contact',
-        '373068000': 'No exposure',
-        '261665006': 'Unknown'
-    };
-    return displays[code] || 'Unknown';
+  const displays = {
+    '24932003': 'Exposed',
+    '84100007': 'Contact',
+    '373068000': 'No exposure',
+    '261665006': 'Unknown'
+  };
+  return displays[code] || 'Unknown';
 }
 
 /**
  * Gets display name for exposure type code
  */
 function getExposureTypeDisplay(code) {
-    const displays = {
-        '409822003': 'Direct contact',
-        '417746004': 'Airborne',
-        '418038007': 'Droplet',
-        '447964005': 'Contact precaution',
-        'OTH': 'Other'
-    };
-    return displays[code] || 'Other';
+  const displays = {
+    '409822003': 'Direct contact',
+    '417746004': 'Airborne',
+    '418038007': 'Droplet',
+    '447964005': 'Contact precaution',
+    'OTH': 'Other'
+  };
+  return displays[code] || 'Other';
 }
 
 /**
  * Gets display name for quarantine status code
  */
 function getQuarantineStatusDisplay(code) {
-    const displays = {
-        '182856006': 'In quarantine',
-        '182857002': 'Released from quarantine',
-        '405178008': 'Not in quarantine',
-        '261665006': 'Unknown'
-    };
-    return displays[code] || 'Unknown';
+  const displays = {
+    '182856006': 'In quarantine',
+    '182857002': 'Released from quarantine',
+    '405178008': 'Not in quarantine',
+    '261665006': 'Unknown'
+  };
+  return displays[code] || 'Unknown';
 }
 
 /**
  * Gets display name for isolation status code
  */
 function getIsolationStatusDisplay(code) {
-    const displays = {
-        '40174006': 'In isolation',
-        '182840001': 'Released from isolation',
-        '385432009': 'Not in isolation',
-        '261665006': 'Unknown'
-    };
-    return displays[code] || 'Unknown';
+  const displays = {
+    '40174006': 'In isolation',
+    '182840001': 'Released from isolation',
+    '385432009': 'Not in isolation',
+    '261665006': 'Unknown'
+  };
+  return displays[code] || 'Unknown';
 }
 
 /**
  * Gets display name for emergency outbreak code
  */
 function getEmergencyOutbreakDisplay(code) {
-    const displays = {
-        '443684005': 'Disease outbreak',
-        '410546004': 'Public health emergency',
-        '261665006': 'Unknown',
-        'N/A': 'Not applicable'
-    };
-    return displays[code] || 'Not specified';
+  const displays = {
+    '443684005': 'Disease outbreak',
+    '410546004': 'Public health emergency',
+    '261665006': 'Unknown',
+    'N/A': 'Not applicable'
+  };
+  return displays[code] || 'Not specified';
 }
 
 /**
  * Gets interpretation code for lab results
  */
 function getInterpretationCode(result, interpretation) {
-    // Use the interpretation field if available
-    if (interpretation) {
-        const interpMap = {
-            'A': 'A',     // Abnormal
-            'N': 'N',     // Normal
-            'H': 'H',     // High
-            'L': 'L',     // Low
-            'HH': 'HH',   // Critical high
-            'LL': 'LL'    // Critical low
-        };
-        if (interpMap[interpretation]) return interpMap[interpretation];
-    }
+  // Use the interpretation field if available
+  if (interpretation) {
+    const interpMap = {
+      'A': 'A',     // Abnormal
+      'N': 'N',     // Normal
+      'H': 'H',     // High
+      'L': 'L',     // Low
+      'HH': 'HH',   // Critical high
+      'LL': 'LL'    // Critical low
+    };
+    if (interpMap[interpretation]) return interpMap[interpretation];
+  }
 
-    // Fallback based on result text
-    if (result) {
-        const resultLower = result.toLowerCase();
-        if (resultLower.includes('detected') || resultLower.includes('positive')) return 'A';
-        if (resultLower.includes('not detected') || resultLower.includes('negative')) return 'N';
-        if (resultLower.includes('high')) return 'H';
-        if (resultLower.includes('low')) return 'L';
-    }
+  // Fallback based on result text
+  if (result) {
+    const resultLower = result.toLowerCase();
+    if (resultLower.includes('detected') || resultLower.includes('positive')) return 'A';
+    if (resultLower.includes('not detected') || resultLower.includes('negative')) return 'N';
+    if (resultLower.includes('high')) return 'H';
+    if (resultLower.includes('low')) return 'L';
+  }
 
-    // Default fallback
-    return 'A'; // Abnormal as default for lab results
+  // Default fallback
+  return 'A'; // Abnormal as default for lab results
 }
 
 // ============================================================================
@@ -473,14 +473,14 @@ function generateVitalSignsEntries(data) {
       </assignedAuthor>
     </author>
 
-        ${data.temperature         ? vital('8310-5', 'Body temperature',          data.temperature,      '[degF]')     : ''}
-        ${data.bloodPressure       ? vital('8480-6', 'Systolic blood pressure',   data.bloodPressure.split('/')[0], 'mm[Hg]') : ''}
-        ${data.heartRate           ? vital('8867-4', 'Heart rate',                data.heartRate,        '/min')       : ''}
-        ${data.respiratoryRate     ? vital('9279-1', 'Respiratory rate',          data.respiratoryRate,  '/min')       : ''}
-        ${data.oxygenSaturation    ? vital('59408-5','Oxygen saturation (SpO₂)',  data.oxygenSaturation, '%')          : ''}
-        ${data.weight              ? vital('3141-9', 'Body weight',               data.weight,           'kg')         : ''}
-        ${data.height              ? vital('8302-2', 'Body height',               data.height,           'cm')         : ''}
-        ${data.bmi                 ? vital('39156-5','Body Mass Index',           data.bmi,              'kg/m2')      : ''}
+        ${data.temperature ? vital('8310-5', 'Body temperature', data.temperature, '[degF]') : ''}
+        ${data.bloodPressure ? vital('8480-6', 'Systolic blood pressure', data.bloodPressure.split('/')[0], 'mm[Hg]') : ''}
+        ${data.heartRate ? vital('8867-4', 'Heart rate', data.heartRate, '/min') : ''}
+        ${data.respiratoryRate ? vital('9279-1', 'Respiratory rate', data.respiratoryRate, '/min') : ''}
+        ${data.oxygenSaturation ? vital('59408-5', 'Oxygen saturation (SpO₂)', data.oxygenSaturation, '%') : ''}
+        ${data.weight ? vital('3141-9', 'Body weight', data.weight, 'kg') : ''}
+        ${data.height ? vital('8302-2', 'Body height', data.height, 'cm') : ''}
+        ${data.bmi ? vital('39156-5', 'Body Mass Index', data.bmi, 'kg/m2') : ''}
 
       </organizer>
     </entry>`;
@@ -612,7 +612,7 @@ function buildSpecimenSection(d) {
  * @param {string} vUnit - Volume unit (optional)
  * @returns {string} Dose XML
  */
-function buildDoseXML (dVal, dUnit, vVal, vUnit) {
+function buildDoseXML(dVal, dUnit, vVal, vUnit) {
   let xml = `          <doseQuantity value="${dVal}" unit="${dUnit === '1' || dUnit === 'each' ? '{tbl}' : dUnit}"/>\n`;
   if (vVal && vUnit) {
     xml += `          <rateQuantity value="${vVal}" unit="${vUnit}"/>\n`;
@@ -625,21 +625,21 @@ function buildDoseXML (dVal, dUnit, vVal, vUnit) {
  * @param {Object} d - Form data
  * @returns {string} Medication entries XML
  */
-function generateMedicationEntries (d) {
+function generateMedicationEntries(d) {
   const meds = [
     {
-      code:d.adminMed1Code, name:d.adminMed1Name, id:d.adminMed1Id,
-      status:d.adminMed1Status, time:d.adminMed1Time, route:d.adminMed1Route,
-      dVal:d.adminMed1DoseValue, dUnit:d.adminMed1DoseUnit,
-      vVal:d.adminMed1VolValue, vUnit:d.adminMed1VolUnit,
-      neg:d.adminMed1Negated ? 'true' : 'false'
+      code: d.adminMed1Code, name: d.adminMed1Name, id: d.adminMed1Id,
+      status: d.adminMed1Status, time: d.adminMed1Time, route: d.adminMed1Route,
+      dVal: d.adminMed1DoseValue, dUnit: d.adminMed1DoseUnit,
+      vVal: d.adminMed1VolValue, vUnit: d.adminMed1VolUnit,
+      neg: d.adminMed1Negated ? 'true' : 'false'
     },
     {
-      code:d.adminMed2Code, name:d.adminMed2Name, id:d.adminMed2Id,
-      status:d.adminMed2Status, time:d.adminMed2Time, route:d.adminMed2Route,
-      dVal:d.adminMed2DoseValue, dUnit:d.adminMed2DoseUnit,
-      vVal:d.adminMed2VolValue, vUnit:d.adminMed2VolUnit,
-      neg:d.adminMed2Negated ? 'true' : 'false'
+      code: d.adminMed2Code, name: d.adminMed2Name, id: d.adminMed2Id,
+      status: d.adminMed2Status, time: d.adminMed2Time, route: d.adminMed2Route,
+      dVal: d.adminMed2DoseValue, dUnit: d.adminMed2DoseUnit,
+      vVal: d.adminMed2VolValue, vUnit: d.adminMed2VolUnit,
+      neg: d.adminMed2Negated ? 'true' : 'false'
     }
   ];
 
@@ -699,19 +699,19 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <!-- ADD THIS AUTHO
  */
 function generateImmunizationEntries(data) {
   const mkEntry = (i) => {
-    const code  = data[`vaccine${i}Code`];
-    const name  = data[`vaccine${i}Name`];
+    const code = data[`vaccine${i}Code`];
+    const name = data[`vaccine${i}Name`];
     if (!code || !name) return '';
 
-    const status   = data[`immunization${i}Status`] || 'completed';
+    const status = data[`immunization${i}Status`] || 'completed';
     const negation = (status === 'not-done' || status === 'refused') ? 'true' : 'false';
-    const date     = data[`immunization${i}Date`] || '';
-    const route    = data[`vaccine${i}Route`] || 'IM';
-    const doseStr  = (data[`vaccine${i}Dose`] || '').trim();
+    const date = data[`immunization${i}Date`] || '';
+    const route = data[`vaccine${i}Route`] || 'IM';
+    const doseStr = (data[`vaccine${i}Dose`] || '').trim();
     const [doseValue, doseUnitRaw] = doseStr.split(/\s+/, 2);
     const doseUnit = (doseUnitRaw === '1' || doseUnitRaw === 'each') ? '{tbl}' : (doseUnitRaw || 'mL');
-    const mfr      = data[`vaccine${i}Manufacturer`] || '';
-    const lot      = data[`vaccine${i}Lot`] || '';
+    const mfr = data[`vaccine${i}Manufacturer`] || '';
+    const lot = data[`vaccine${i}Lot`] || '';
 
     // Get the correct route translation
     const routeTranslation = getImmunizationRouteTranslation(route);
@@ -768,11 +768,11 @@ function generateImmunizationEntries(data) {
         </consumable>
 
         ${(data.administeringProviderNPI
-           || data.administeringProviderGiven
-           || data.administeringProviderMiddle
-           || data.administeringProviderFamily
-           || data.administeringProviderPhone
-           || data.administeringProviderOrgName) ? `
+        || data.administeringProviderGiven
+        || data.administeringProviderMiddle
+        || data.administeringProviderFamily
+        || data.administeringProviderPhone
+        || data.administeringProviderOrgName) ? `
         <performer typeCode="PRF">
           <assignedEntity>
             ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}" />` : ''}
@@ -805,14 +805,14 @@ function generateImmunizationEntries(data) {
  * @returns {Object} Route translation with code, display, and snomed
  */
 function getImmunizationRouteTranslation(routeCode) {
-    const routeMap = {
-        'IM': { code: 'C28161', display: 'Intramuscular route', snomed: '78421000' },
-        'SC': { code: 'C38299', display: 'Subcutaneous route', snomed: '34206005' },
-        'ID': { code: 'C38238', display: 'Intradermal route', snomed: '72607000' },
-        'PO': { code: 'C38288', display: 'Oral route', snomed: '26643006' },
-        'IN': { code: 'C38284', display: 'Intranasal route', snomed: '46713006' }
-    };
-    return routeMap[routeCode] || routeMap['IM'];
+  const routeMap = {
+    'IM': { code: 'C28161', display: 'Intramuscular route', snomed: '78421000' },
+    'SC': { code: 'C38299', display: 'Subcutaneous route', snomed: '34206005' },
+    'ID': { code: 'C38238', display: 'Intradermal route', snomed: '72607000' },
+    'PO': { code: 'C38288', display: 'Oral route', snomed: '26643006' },
+    'IN': { code: 'C38284', display: 'Intranasal route', snomed: '46713006' }
+  };
+  return routeMap[routeCode] || routeMap['IM'];
 }
 
 /**
@@ -821,10 +821,10 @@ function getImmunizationRouteTranslation(routeCode) {
  * @returns {string} Procedure entries XML
  */
 function generateProcedureEntries(data) {
-    let entries = '';
+  let entries = '';
 
-    if (data.currentProc1Code && data.currentProc1Name) {
-        entries += `
+  if (data.currentProc1Code && data.currentProc1Name) {
+    entries += `
                 <entry typeCode="DRIV">
                     <procedure classCode="PROC" moodCode="EVN">
                         <templateId root="2.16.840.1.113883.10.20.22.4.14" extension="2014-06-09" />
@@ -885,10 +885,10 @@ function generateProcedureEntries(data) {
                     displayName="Structure of vertebral column"/>
                     </procedure>
                 </entry>`;
-    }
+  }
 
-    if (data.currentProc2Code && data.currentProc2Name) {
-        entries += `
+  if (data.currentProc2Code && data.currentProc2Name) {
+    entries += `
                 <entry typeCode="DRIV">
                     <procedure classCode="PROC" moodCode="EVN">
                         <templateId root="2.16.840.1.113883.10.20.22.4.14" extension="2014-06-09" />
@@ -950,11 +950,11 @@ function generateProcedureEntries(data) {
                        displayName="Structure of vertebral column"/>
                     </procedure>
                 </entry>`;
-    }
+  }
 
-    // Add specimen collection procedures
-    if (data.specimen1Id && data.collection1Date) {
-        entries += `
+  // Add specimen collection procedures
+  if (data.specimen1Id && data.collection1Date) {
+    entries += `
                 <entry typeCode="DRIV">
                     <procedure classCode="PROC" moodCode="EVN">
                         <templateId root="2.16.840.1.113883.10.20.22.4.415" extension="2019-06-21" />
@@ -974,10 +974,10 @@ function generateProcedureEntries(data) {
                         </participant>
                     </procedure>
                 </entry>`;
-    }
+  }
 
-    if (data.specimen2Id && data.collection2Date) {
-        entries += `
+  if (data.specimen2Id && data.collection2Date) {
+    entries += `
                 <entry typeCode="DRIV">
                     <procedure classCode="PROC" moodCode="EVN">
                         <templateId root="2.16.840.1.113883.10.20.22.4.415" extension="2019-06-21" />
@@ -997,9 +997,9 @@ function generateProcedureEntries(data) {
                         </participant>
                     </procedure>
                 </entry>`;
-    }
+  }
 
-    return entries;
+  return entries;
 }
 
 /**
@@ -1008,18 +1008,18 @@ function generateProcedureEntries(data) {
  * @returns {string} Pregnancy observation XML or empty string
  */
 function generatePregnancyObservation(data) {
-    // Only generate if patient is female and has pregnancy status
-    if (data.patientGender !== 'F' || !data.pregnancyStatus) {
-        return '';
-    }
+  // Only generate if patient is female and has pregnancy status
+  if (data.patientGender !== 'F' || !data.pregnancyStatus) {
+    return '';
+  }
 
-    // Only include delivery date and gestational age if actually pregnant
-    const isPregnant = data.pregnancyStatus === '77386006';
+  // Only include delivery date and gestational age if actually pregnant
+  const isPregnant = data.pregnancyStatus === '77386006';
 
-    // Ensure we have a properly formatted date (at least 8 characters YYYYMMDD)
-    const effectiveDate = data.pregnancyEffectiveTime || data.encounterDate || '20240615';
+  // Ensure we have a properly formatted date (at least 8 characters YYYYMMDD)
+  const effectiveDate = data.pregnancyEffectiveTime || data.encounterDate || '20240615';
 
-    return `
+  return `
         <entry typeCode="DRIV">
             <observation classCode="OBS" moodCode="EVN">
                 <!-- Pregnancy Observation -->
@@ -1048,13 +1048,13 @@ function generatePregnancyObservation(data) {
  * Gets pregnancy status display name
  */
 function getPregnancyStatusDisplay(code) {
-    const displays = {
-        '77386006': 'Pregnant',
-        '60001007': 'Not pregnant',
-        '102874004': 'Possible pregnancy',
-        '261665006': 'Unknown'
-    };
-    return displays[code] || 'Unknown';
+  const displays = {
+    '77386006': 'Pregnant',
+    '60001007': 'Not pregnant',
+    '102874004': 'Possible pregnancy',
+    '261665006': 'Unknown'
+  };
+  return displays[code] || 'Unknown';
 }
 
 /**
@@ -1063,7 +1063,7 @@ function getPregnancyStatusDisplay(code) {
  * @returns {string} Estimated delivery date XML
  */
 function generateEstimatedDeliveryDate(deliveryDate) {
-    return `
+  return `
         <entryRelationship typeCode="REFR">
             <observation classCode="OBS" moodCode="EVN">
                 <!-- Estimated Date of Delivery -->
@@ -1083,7 +1083,7 @@ function generateEstimatedDeliveryDate(deliveryDate) {
  * @returns {string} Gestational age XML
  */
 function generateGestationalAgeObservation(gestationalAge) {
-    return `
+  return `
                         <entryRelationship typeCode="COMP">
                             <observation classCode="OBS" moodCode="EVN">
                                 <templateId root="2.16.840.1.113883.10.20.22.4.38"/>
@@ -1102,20 +1102,20 @@ function generateGestationalAgeObservation(gestationalAge) {
  * @returns {string} Diagnosis table rows HTML
  */
 function buildDiagnosisTableRows(data) {
-    const diagnoses = data.diagnosisEvidence || [];
-    console.log('buildDiagnosisTableRows called with:', diagnoses);
+  const diagnoses = data.diagnosisEvidence || [];
+  console.log('buildDiagnosisTableRows called with:', diagnoses);
 
-    if (diagnoses.length === 0) {
-        console.log('No diagnoses found, returning empty');
-        return ''; // Return empty string, not a table row
-    }
+  if (diagnoses.length === 0) {
+    console.log('No diagnoses found, returning empty');
+    return ''; // Return empty string, not a table row
+  }
 
-    const result = diagnoses.map(diagnosis =>
-        `<tr><td>Diagnosis</td><td>${xmlEscape(diagnosis.diagnosisName || '')}</td><td>${xmlEscape(diagnosis.diagnosisCode || '')}</td><td>${xmlEscape(diagnosis.diagnosisDate || data.encounterDate)}</td><td>${diagnosis.isRCTC ? 'RCTC Trigger' : 'Active'}</td></tr>`
-    ).join('');
+  const result = diagnoses.map(diagnosis =>
+    `<tr><td>Diagnosis</td><td>${xmlEscape(diagnosis.diagnosisName || '')}</td><td>${xmlEscape(diagnosis.diagnosisCode || '')}</td><td>${xmlEscape(diagnosis.diagnosisDate || data.encounterDate)}</td><td>${diagnosis.isRCTC ? 'RCTC Trigger' : 'Active'}</td></tr>`
+  ).join('');
 
-    console.log('buildDiagnosisTableRows result:', result);
-    return result;
+  console.log('buildDiagnosisTableRows result:', result);
+  return result;
 }
 
 /**
@@ -1124,27 +1124,27 @@ function buildDiagnosisTableRows(data) {
  * @returns {string} Diagnosis entries XML
  */
 function generateDiagnosisEntries(data) {
-    const diagnoses = data.diagnosisEvidence || [];
-    console.log('generateDiagnosisEntries called with:', diagnoses);
+  const diagnoses = data.diagnosisEvidence || [];
+  console.log('generateDiagnosisEntries called with:', diagnoses);
 
-    if (diagnoses.length === 0) {
-        console.log('No diagnoses, returning empty comment');
-        return '<!-- No diagnoses to report -->';
-    }
+  if (diagnoses.length === 0) {
+    console.log('No diagnoses, returning empty comment');
+    return '<!-- No diagnoses to report -->';
+  }
 
-    const result = diagnoses.map(diagnosis => {
-        console.log('Processing diagnosis:', diagnosis);
+  const result = diagnoses.map(diagnosis => {
+    console.log('Processing diagnosis:', diagnosis);
 
-        // Determine if this is an RCTC trigger code
-        const isRCTCCode = isRCTCTriggerCode(diagnosis.diagnosisCode);
+    // Determine if this is an RCTC trigger code
+    const isRCTCCode = isRCTCTriggerCode(diagnosis.diagnosisCode);
 
-        // Get appropriate valueSet info for RCTC codes
-        const valueSetInfo = isRCTCCode ? {
-            oid: '2.16.840.1.113762.1.4.1146.2260',
-            version: '2.0.1'
-        } : null;
+    // Get appropriate valueSet info for RCTC codes
+    const valueSetInfo = isRCTCCode ? {
+      oid: '2.16.840.1.113762.1.4.1146.2260',
+      version: '2.0.1'
+    } : null;
 
-        return `
+    return `
               <entryRelationship typeCode="SUBJ">
                 <observation classCode="OBS" moodCode="EVN" negationInd="false">
                   <templateId root="2.16.840.1.113883.10.20.22.4.4" />
@@ -1159,21 +1159,21 @@ function generateDiagnosisEntries(data) {
                   <statusCode code="${diagnosis.status || 'completed'}" />
                   <effectiveTime><low value="${diagnosis.diagnosisDate || data.encounterDate}" /></effectiveTime>
                   ${diagnosis.diagnosisCode
-                    ? `<value xsi:type="CD"
+        ? `<value xsi:type="CD"
                             code="${xmlEscape(diagnosis.diagnosisCode)}"
                             codeSystem="2.16.840.1.113883.6.96"
                             codeSystemName="SNOMED CT"
                             displayName="${xmlEscape(diagnosis.diagnosisName)}"${valueSetInfo ? ` sdtc:valueSet="${valueSetInfo.oid}" sdtc:valueSetVersion="${valueSetInfo.version}"` : ''} />`
-                    : `<value xsi:type="CD"
+        : `<value xsi:type="CD"
                             nullFlavor="UNK"
                             displayName="${xmlEscape(diagnosis.diagnosisName)}" />`
-                  }
+      }
                 </observation>
               </entryRelationship>`;
-    }).join('');
+  }).join('');
 
-    console.log('generateDiagnosisEntries result length:', result.length);
-    return result;
+  console.log('generateDiagnosisEntries result length:', result.length);
+  return result;
 }
 
 /**
@@ -1182,10 +1182,10 @@ function generateDiagnosisEntries(data) {
  * @returns {string} Problems table rows HTML
  */
 function buildProblemsTableRows(data) {
-    const problems = data.problemEvidence || [];
-    return problems.map(problem =>
-        `<tr><td>Problem</td><td>${xmlEscape(problem.problemName || '')}</td><td>${xmlEscape(problem.problemCode || '')}</td><td>${xmlEscape(problem.onsetDate || '')}</td><td>${xmlEscape(problem.status || 'active')}</td></tr>`
-    ).join('');
+  const problems = data.problemEvidence || [];
+  return problems.map(problem =>
+    `<tr><td>Problem</td><td>${xmlEscape(problem.problemName || '')}</td><td>${xmlEscape(problem.problemCode || '')}</td><td>${xmlEscape(problem.onsetDate || '')}</td><td>${xmlEscape(problem.status || 'active')}</td></tr>`
+  ).join('');
 }
 
 /**
@@ -1194,11 +1194,11 @@ function buildProblemsTableRows(data) {
  * @returns {string} Problem entries XML
  */
 function generateProblemEntries(data) {
-    const problems = data.problemEvidence || [];
+  const problems = data.problemEvidence || [];
 
-    if (problems.length === 0) return '';
+  if (problems.length === 0) return '';
 
-    return problems.map(problem => `
+  return problems.map(problem => `
         <entryRelationship typeCode="SUBJ">
             <observation classCode="OBS" moodCode="EVN">
                 <templateId root="2.16.840.1.113883.10.20.22.4.4" />
@@ -1217,13 +1217,13 @@ function generateProblemEntries(data) {
                     <low value="${problem.onsetDate || data.encounterDate}"/>
                 </effectiveTime>
                 ${problem.problemCode
-                    ? `<value xsi:type="CD" code="${xmlEscape(problem.problemCode)}"
+      ? `<value xsi:type="CD" code="${xmlEscape(problem.problemCode)}"
                             codeSystem="2.16.840.1.113883.6.96"
                             codeSystemName="SNOMED CT"
                             displayName="${xmlEscape(problem.problemName)}"/>`
-                    : `<value xsi:type="CD" nullFlavor="UNK"
+      : `<value xsi:type="CD" nullFlavor="UNK"
                             displayName="${xmlEscape(problem.problemName)}"/>`
-                }
+    }
             </observation>
         </entryRelationship>`).join('');
 }
@@ -1249,12 +1249,12 @@ function buildResultsSectionXML(labEvidence, rctcVersion = '2016-12-01') {
     const primaryName = le.testName || le.orderName || '';
 
     const codeAttrs = [
-  primaryCode ? `code="${esc(primaryCode)}"` : 'nullFlavor="UNK"',
-  `codeSystem="2.16.840.1.113883.6.1"`,
-  `codeSystemName="LOINC"`,
-  primaryName ? `displayName="${esc(primaryName)}"` : null,
-  `sdtc:valueSet="${vsOID}" sdtc:valueSetVersion="${esc(rctcVersion)}"`
-].filter(Boolean).join(' ');
+      primaryCode ? `code="${esc(primaryCode)}"` : 'nullFlavor="UNK"',
+      `codeSystem="2.16.840.1.113883.6.1"`,
+      `codeSystemName="LOINC"`,
+      primaryName ? `displayName="${esc(primaryName)}"` : null,
+      `sdtc:valueSet="${vsOID}" sdtc:valueSetVersion="${esc(rctcVersion)}"`
+    ].filter(Boolean).join(' ');
 
     // Build <value> based on valueKind
     let valueXml = `<value xsi:type="CD" nullFlavor="UNK"/>`;
@@ -1278,14 +1278,14 @@ function buildResultsSectionXML(labEvidence, rctcVersion = '2016-12-01') {
       : '';
 
     // Reference Range
-const refRange = le.referenceRange
-  ? `<referenceRange>
+    const refRange = le.referenceRange
+      ? `<referenceRange>
       <observationRange>
         <text>${esc(le.referenceRange)}</text>
         <value xsi:type="ST">${esc(le.referenceRange)}</value>
       </observationRange>
     </referenceRange>`
-  : '';
+      : '';
 
     // Build Author (Ordering Provider)
     const orderingAuthor = (data.resultOrderingNPI || data.resultOrderingGiven || data.resultOrderingFamily) ? `
@@ -1453,27 +1453,27 @@ const refRange = le.referenceRange
  * @throws {Error} If validation fails or required data is missing
  */
 function buildEICRXml() {
-    // Run comprehensive DQ Schematron validation first
-    if (!validateFormData()) {
-        throw new Error('Form data does not pass DQ Schematron validation. Please correct the errors and try again.');
-    }
+  // Run comprehensive DQ Schematron validation first
+  if (!validateFormData()) {
+    throw new Error('Form data does not pass DQ Schematron validation. Please correct the errors and try again.');
+  }
 
-    const data = getFormData();
+  const data = getFormData();
 
-    // Additional CDA-specific validation
-    if (!data.patientId || !data.patientName || !data.providerId) {
-        throw new Error('Missing required patient or provider information for CDA generation');
-    }
+  // Additional CDA-specific validation
+  if (!data.patientId || !data.patientName || !data.providerId) {
+    throw new Error('Missing required patient or provider information for CDA generation');
+  }
 
-    if (!data.providerPhone) {
-        throw new Error('Provider phone is required for author telecom compliance (CONF:1198-5428)');
-    }
+  if (!data.providerPhone) {
+    throw new Error('Provider phone is required for author telecom compliance (CONF:1198-5428)');
+  }
 
-    if (!data.facilityAddress || !data.patientCity || !data.patientState || !data.patientZip) {
-        throw new Error('Complete facility address is required for US Realm compliance (CONF:1198-5452)');
-    }
+  if (!data.facilityAddress || !data.patientCity || !data.patientState || !data.patientZip) {
+    throw new Error('Complete facility address is required for US Realm compliance (CONF:1198-5452)');
+  }
 
-    const cdaTemplate = `<?xml version="1.0" encoding="UTF-8"?>
+  const cdaTemplate = `<?xml version="1.0" encoding="UTF-8"?>
 <!--
   HL7 CDA-compliant eICR Document
   Generated by eICR Form Generator v1.0
@@ -1483,6 +1483,12 @@ function buildEICRXml() {
   xmlns:voc="http://www.lantanagroup.com/voc"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="urn:hl7-org:v3 ../../schema/infrastructure/cda/CDA_SDTC.xsd">
+<!--
+        ********************************************************
+        CDA Header
+        ********************************************************
+-->
+  <!-- US Realm Header template -->
   <realmCode code="US" />
   <typeId extension="POCD_HD000040" root="2.16.840.1.113883.1.3" />
   <templateId root="2.16.840.1.113883.10.20.22.1.1" />
@@ -1869,7 +1875,7 @@ function buildEICRXml() {
             </manufacturedMaterial>
           </manufacturedProduct>
         </consumable>
-         ${ (data.administeringProviderNPI || data.administeringProviderGiven || data.administeringProviderFamily) ? `
+         ${(data.administeringProviderNPI || data.administeringProviderGiven || data.administeringProviderFamily) ? `
     <performer typeCode="PRF">
       <assignedEntity>
         ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}"/>` : ''}
@@ -1887,7 +1893,7 @@ function buildEICRXml() {
           <name>${data.administeringProviderOrgName}</name>
         </representedOrganization>` : ''}
       </assignedEntity>
-    </performer>` : '' }
+    </performer>` : ''}
       </substanceAdministration>
     </entry>
     
@@ -1934,7 +1940,7 @@ function buildEICRXml() {
             </manufacturedMaterial>
           </manufacturedProduct>
         </consumable>
-         ${ (data.administeringProviderNPI || data.administeringProviderGiven || data.administeringProviderFamily) ? `
+         ${(data.administeringProviderNPI || data.administeringProviderGiven || data.administeringProviderFamily) ? `
     <performer typeCode="PRF">
       <assignedEntity>
         ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}"/>` : ''}
@@ -1952,7 +1958,7 @@ function buildEICRXml() {
           <name>${data.administeringProviderOrgName}</name>
         </representedOrganization>` : ''}
       </assignedEntity>
-    </performer>` : '' }
+    </performer>` : ''}
       </substanceAdministration>
     </entry>
         </section>
@@ -2308,11 +2314,11 @@ function buildEICRXml() {
                 <tr><th>Vital Sign</th><th>Value</th><th>Unit</th><th>Date</th></tr>
               </thead>
               <tbody>${data.temperature ? `<tr><td>Temperature</td><td>${data.temperature}</td><td>°F</td><td>${data.encounterDate}</td></tr>` : ''}${data.bloodPressure ? `<tr><td>Blood Pressure</td><td>${data.bloodPressure}</td><td>mmHg</td><td>${data.encounterDate}</td></tr>` : ''}${data.heartRate ? `<tr><td>Heart Rate</td><td>${data.heartRate}</td><td>bpm</td><td>${data.encounterDate}</td></tr>` : ''}
-  ${data.respiratoryRate  ? `<tr><td>Respiratory Rate</td><td>${data.respiratoryRate}</td><td>/min</td><td>${data.encounterDate}</td></tr>` : ''}
+  ${data.respiratoryRate ? `<tr><td>Respiratory Rate</td><td>${data.respiratoryRate}</td><td>/min</td><td>${data.encounterDate}</td></tr>` : ''}
   ${data.oxygenSaturation ? `<tr><td>Oxygen Saturation</td><td>${data.oxygenSaturation}</td><td>%</td><td>${data.encounterDate}</td></tr>` : ''}
-  ${data.weight           ? `<tr><td>Weight</td><td>${data.weight}</td><td>kg</td><td>${data.encounterDate}</td></tr>` : ''}
-  ${data.height           ? `<tr><td>Height</td><td>${data.height}</td><td>cm</td><td>${data.encounterDate}</td></tr>` : ''}
-  ${data.bmi              ? `<tr><td>BMI</td><td>${data.bmi}</td><td>kg/m²</td><td>${data.encounterDate}</td></tr>` : ''}
+  ${data.weight ? `<tr><td>Weight</td><td>${data.weight}</td><td>kg</td><td>${data.encounterDate}</td></tr>` : ''}
+  ${data.height ? `<tr><td>Height</td><td>${data.height}</td><td>cm</td><td>${data.encounterDate}</td></tr>` : ''}
+  ${data.bmi ? `<tr><td>BMI</td><td>${data.bmi}</td><td>kg/m²</td><td>${data.encounterDate}</td></tr>` : ''}
 </tbody>
 
             </table>
@@ -2376,19 +2382,16 @@ function buildEICRXml() {
               <thead>
                 <tr><th>Procedure</th><th>Date</th><th>Type</th></tr>
               </thead>
-              <tbody>${
-  data.currentProc1Name
-    ? `<tr><td>${xmlEscape(data.currentProc1Name)}</td><td>${xmlEscape(data.currentProc1Date)}</td><td>${xmlEscape(data.currentProc1Type)}</td></tr>`
-    : ''
-}${
-  data.currentProc2Name
-    ? `<tr><td>${xmlEscape(data.currentProc2Name)}</td><td>${xmlEscape(data.currentProc2Date)}</td><td>${xmlEscape(data.currentProc2Type)}</td></tr>`
-    : ''
-}${
-  data.triggerProc1Name
-    ? `<tr><td>${xmlEscape(data.triggerProc1Name)}</td><td>${xmlEscape(data.triggerProc1Date)}</td><td>${xmlEscape(data.triggerProc1Type)}</td></tr>`
-    : ''
-}</tbody>
+              <tbody>${data.currentProc1Name
+      ? `<tr><td>${xmlEscape(data.currentProc1Name)}</td><td>${xmlEscape(data.currentProc1Date)}</td><td>${xmlEscape(data.currentProc1Type)}</td></tr>`
+      : ''
+    }${data.currentProc2Name
+      ? `<tr><td>${xmlEscape(data.currentProc2Name)}</td><td>${xmlEscape(data.currentProc2Date)}</td><td>${xmlEscape(data.currentProc2Type)}</td></tr>`
+      : ''
+    }${data.triggerProc1Name
+      ? `<tr><td>${xmlEscape(data.triggerProc1Name)}</td><td>${xmlEscape(data.triggerProc1Date)}</td><td>${xmlEscape(data.triggerProc1Type)}</td></tr>`
+      : ''
+    }</tbody>
 
             </table>
           </text>
@@ -2603,7 +2606,7 @@ function buildEICRXml() {
 </entry>
     
     <!-- Exposure Information Entry -->
-    ${data.exposureContactInfo && data.exposureContactInfo !== '373068000' 
+    ${data.exposureContactInfo && data.exposureContactInfo !== '373068000'
       ? `<entry typeCode="DRIV">
            <observation classCode="OBS" moodCode="EVN">
              <templateId root="2.16.840.1.113883.10.20.22.4.38"/>
@@ -2624,7 +2627,7 @@ function buildEICRXml() {
     </structuredBody>
   </component>
 </ClinicalDocument>`;
-    return cdaTemplate;
+  return cdaTemplate;
 }
 
 /**
@@ -2632,7 +2635,7 @@ function buildEICRXml() {
  * @returns {string} Complete eICR XML
  */
 function generateEICRXml() {
-    return buildEICRXml();
+  return buildEICRXml();
 }
 
 /**
@@ -2640,7 +2643,7 @@ function generateEICRXml() {
  * @returns {string} Complete CDA XML
  */
 function generateCDA() {
-    return buildEICRXml();
+  return buildEICRXml();
 }
 
 // ============================================================================
@@ -2654,9 +2657,9 @@ function generateCDA() {
  * @returns {string} Metadata XML
  */
 function buildMetadataXml(data, zipFilename) {
-    const esc = s => xmlEscape(s || '');
+  const esc = s => xmlEscape(s || '');
 
-    return `<?xml version="1.0" encoding="UTF-8"?>
+  return `<?xml version="1.0" encoding="UTF-8"?>
 <metadata>
     <filename>${esc(zipFilename)}</filename>
     <author>${esc(data.organizationName || data.facilityName || 'Unknown Organization')}</author>
@@ -2681,7 +2684,7 @@ function buildMetadataXml(data, zipFilename) {
  * @returns {string} Complete RR XML
  */
 function generateRR() {
-    return buildRRXml();
+  return buildRRXml();
 }
 
 /**
@@ -2689,7 +2692,7 @@ function generateRR() {
  * @returns {string} Complete RR XML
  */
 function generateRRXml() {
-    return buildRRXml();
+  return buildRRXml();
 }
 
 // Expose functions globally for cross-module access
