@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
             diagnosisCode: '67531005',
             diagnosisName: 'Spina bifida (disorder)',
             diagnosisDate: '2024-06-01T00:00',
-            onsetDate: '2024-06-01T00:00',
+            onsetDate: '20240602',
             status: 'completed'
         })
     }

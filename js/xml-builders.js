@@ -198,6 +198,7 @@ function mapInterp(v) {
 function normalizeTS(raw) {
   const digits = String(raw || '').replace(/\D/g, '');
   if (digits.length >= 14) return digits.slice(0, 14); // YYYYMMDDHHMMSS
+  if (digits.length >= 12) return digits.slice(0, 12); // YYYYMMDDHHMM
   if (digits.length >= 8) return digits.slice(0, 8);  // YYYYMMDD
   // fall back to a safe date if empty/invalid; adjust if you prefer another default
   return '20240615';
@@ -660,7 +661,18 @@ function generateMedicationEntries(d) {
                displayName="${getRouteTranslation(m.route).display}"/>
 </routeCode>
 ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <!-- ADD THIS AUTHOR PARTICIPATION -->
-            <author>
+             <consumable>
+              <manufacturedProduct classCode="MANU">
+                <templateId root="2.16.840.1.113883.10.20.22.4.23"
+                            extension="2014-06-09"/>
+                <manufacturedMaterial>
+                  <code code="${m.code}"
+                        codeSystem="2.16.840.1.113883.6.88"
+                        displayName="${xmlEscape(m.name)}"/>
+                </manufacturedMaterial>
+              </manufacturedProduct>
+             </consumable> 
+             <author>
               <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
               <time value="${m.time}"/>
               <assignedAuthor>
@@ -677,17 +689,7 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <!-- ADD THIS AUTHO
               </assignedAuthor>
             </author>
 
-            <consumable>
-              <manufacturedProduct classCode="MANU">
-                <templateId root="2.16.840.1.113883.10.20.22.4.23"
-                            extension="2014-06-09"/>
-                <manufacturedMaterial>
-                  <code code="${m.code}"
-                        codeSystem="2.16.840.1.113883.6.88"
-                        displayName="${xmlEscape(m.name)}"/>
-                </manufacturedMaterial>
-              </manufacturedProduct>
-            </consumable>
+            
           </substanceAdministration>
         </entry>`).join('');
 }
@@ -740,22 +742,6 @@ function generateImmunizationEntries(data) {
                        displayName="${routeTranslation.display}"/>
         </routeCode>` : ''}
         ${doseValue ? `<doseQuantity value="${doseValue}" unit="${doseUnit}" />` : ''}
-        <author>
-          <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-          <time value="20240615120000"/>
-          <assignedAuthor>
-            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-            <code code="${getProviderTaxonomyCode('physician').code}"
-                  codeSystem="2.16.840.1.113883.6.101"
-                  displayName="${getProviderTaxonomyCode('physician').display}"/>
-            <assignedPerson>
-              <name>
-                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-              </name>
-            </assignedPerson>
-          </assignedAuthor>
-        </author>
         <consumable>
           <manufacturedProduct classCode="MANU">
             <templateId root="2.16.840.1.113883.10.20.22.4.54" extension="2014-06-09" />
@@ -766,7 +752,6 @@ function generateImmunizationEntries(data) {
             ${mfr ? `<manufacturerOrganization><name>${mfr}</name></manufacturerOrganization>` : ''}
           </manufacturedProduct>
         </consumable>
-
         ${(data.administeringProviderNPI
         || data.administeringProviderGiven
         || data.administeringProviderMiddle
@@ -791,7 +776,22 @@ function generateImmunizationEntries(data) {
             </representedOrganization>` : ''}
           </assignedEntity>
         </performer>` : ''}
-
+        <author>
+          <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+          <time value="20240615120000"/>
+          <assignedAuthor>
+            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+            <code code="${getProviderTaxonomyCode('physician').code}"
+                  codeSystem="2.16.840.1.113883.6.101"
+                  displayName="${getProviderTaxonomyCode('physician').display}"/>
+            <assignedPerson>
+              <name>
+                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+              </name>
+            </assignedPerson>
+          </assignedAuthor>
+        </author>
       </substanceAdministration>
     </entry>`;
   };
@@ -1862,23 +1862,8 @@ function buildEICRXml() {
                displayName="${getRouteTranslation(data.adminMed1Route).display}"/>
 </routeCode>
         <doseQuantity value="${data.adminMed1DoseValue}" unit="${fixDoseUnit(data.adminMed1DoseUnit)}" />
-        ${data.adminMed1VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed1VolValue}" unit="${data.adminMed1VolUnit}" /></maxDoseQuantity>` : ''}
-        <author>
-      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-      <time value="20240615120000"/>
-      <assignedAuthor>
-        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-        <code code="${getProviderTaxonomyCode('physician').code}" 
-      codeSystem="2.16.840.1.113883.6.101" 
-      displayName="${getProviderTaxonomyCode('physician').display}"/>
-        <assignedPerson>
-          <name>
-            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-          </name>
-        </assignedPerson>
-      </assignedAuthor>
-    </author>
+        ${data.adminMed1VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed1VolValue}" unit="${data.adminMed1VolUnit || '1'}" /><denominator value="1" unit="1"/></maxDoseQuantity>` : ''}
+        
         <consumable>
           <manufacturedProduct classCode="MANU">
             <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
@@ -1911,6 +1896,22 @@ function buildEICRXml() {
         </representedOrganization>` : ''}
       </assignedEntity>
     </performer>` : ''}
+    <author>
+      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+      <time value="20240615120000"/>
+      <assignedAuthor>
+        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+        <code code="${getProviderTaxonomyCode('physician').code}" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="${getProviderTaxonomyCode('physician').display}"/>
+        <assignedPerson>
+          <name>
+            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+          </name>
+        </assignedPerson>
+      </assignedAuthor>
+    </author>
       </substanceAdministration>
     </entry>
     
@@ -1928,22 +1929,7 @@ function buildEICRXml() {
 </routeCode>
         <doseQuantity value="${data.adminMed2DoseValue}" unit="${data.adminMed2DoseUnit === '1' || data.adminMed2DoseUnit === 'each' ? 'mg' : data.adminMed2DoseUnit}" />
         ${data.adminMed2VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed2VolValue}" unit="${data.adminMed2VolUnit}" /></maxDoseQuantity>` : ''}
-        <author>
-      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-      <time value="20240615120000"/>
-      <assignedAuthor>
-        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-        <code code="${getProviderTaxonomyCode('physician').code}" 
-      codeSystem="2.16.840.1.113883.6.101" 
-      displayName="${getProviderTaxonomyCode('physician').display}"/>
-        <assignedPerson>
-          <name>
-            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-          </name>
-        </assignedPerson>
-      </assignedAuthor>
-    </author>
+        
         <consumable>
           <manufacturedProduct classCode="MANU">
             <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
@@ -1976,6 +1962,22 @@ function buildEICRXml() {
         </representedOrganization>` : ''}
       </assignedEntity>
     </performer>` : ''}
+    <author>
+      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+      <time value="20240615120000"/>
+      <assignedAuthor>
+        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+        <code code="${getProviderTaxonomyCode('physician').code}" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="${getProviderTaxonomyCode('physician').display}"/>
+        <assignedPerson>
+          <name>
+            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+          </name>
+        </assignedPerson>
+      </assignedAuthor>
+    </author>
       </substanceAdministration>
     </entry>
         </section>
@@ -2008,7 +2010,7 @@ function buildEICRXml() {
               <id root="a1c0c380-eacc-4b40-9207-85164185558d" />
               <code code="CONC" codeSystem="2.16.840.1.113883.5.6" displayName="Concern" />
               <statusCode code="active" />
-              <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+              <effectiveTime><low value="${normalizeTS(data.encounterDate)}" /></effectiveTime>
               <author>
                 <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
                 <time value="20240615"/>
