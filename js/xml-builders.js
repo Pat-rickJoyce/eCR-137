@@ -198,6 +198,7 @@ function mapInterp(v) {
 function normalizeTS(raw) {
   const digits = String(raw || '').replace(/\D/g, '');
   if (digits.length >= 14) return digits.slice(0, 14); // YYYYMMDDHHMMSS
+  if (digits.length >= 12) return digits.slice(0, 12); // YYYYMMDDHHMM
   if (digits.length >= 8) return digits.slice(0, 8);  // YYYYMMDD
   // fall back to a safe date if empty/invalid; adjust if you prefer another default
   return '20240615';
@@ -514,22 +515,7 @@ function buildSpecimenSection(d) {
     </code>
         <statusCode code="completed" />
         <effectiveTime value="${xmlEscape(dt)}"/>
-        <author>
-            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-            <time value="20240615"/>
-            <assignedAuthor>
-                <id extension="${d.providerId}" root="2.16.840.1.113883.4.6"/>
-                <code code="${getProviderTaxonomyCode('physician').code}"
-      codeSystem="2.16.840.1.113883.6.101"
-      displayName="${getProviderTaxonomyCode('physician').display}"/>
-                <assignedPerson>
-                    <name>
-                        <given>${d.providerName.split(' ')[1] || 'Unknown'}</given>
-                        <family>${d.providerName.split(' ')[2] || 'Provider'}</family>
-                    </name>
-                </assignedPerson>
-            </assignedAuthor>
-        </author>
+        <targetSiteCode displayName="${xmlEscape(src)}" codeSystem="2.16.840.1.113883.6.96" />
         <performer>
   <assignedEntity>
     <id extension="${d.providerId}" root="2.16.840.1.113883.4.6"/>
@@ -560,8 +546,23 @@ function buildSpecimenSection(d) {
       </addr>
     </representedOrganization>
   </assignedEntity>
-</performer>
-        <targetSiteCode displayName="${xmlEscape(src)}" codeSystem="2.16.840.1.113883.6.96" />
+ </performer>
+ <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+                <id extension="${d.providerId}" root="2.16.840.1.113883.4.6"/>
+                <code code="${getProviderTaxonomyCode('physician').code}" codeSystem="2.16.840.1.113883.6.101"
+                  displayName="${getProviderTaxonomyCode('physician').display}"/>
+                <assignedPerson>
+                    <name>
+                        <given>${d.providerName.split(' ')[1] || 'Unknown'}</given>
+                        <family>${d.providerName.split(' ')[2] || 'Provider'}</family>
+                    </name>
+                </assignedPerson>
+            </assignedAuthor>
+  </author>
+        
         <participant typeCode="PRD">
           <participantRole classCode="SPEC">
             <templateId root="2.16.840.1.113883.10.20.22.4.410" extension="2019-06-21" />
@@ -660,7 +661,18 @@ function generateMedicationEntries(d) {
                displayName="${getRouteTranslation(m.route).display}"/>
 </routeCode>
 ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <!-- ADD THIS AUTHOR PARTICIPATION -->
-            <author>
+             <consumable>
+              <manufacturedProduct classCode="MANU">
+                <templateId root="2.16.840.1.113883.10.20.22.4.23"
+                            extension="2014-06-09"/>
+                <manufacturedMaterial>
+                  <code code="${m.code}"
+                        codeSystem="2.16.840.1.113883.6.88"
+                        displayName="${xmlEscape(m.name)}"/>
+                </manufacturedMaterial>
+              </manufacturedProduct>
+             </consumable> 
+             <author>
               <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
               <time value="${m.time}"/>
               <assignedAuthor>
@@ -677,17 +689,7 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <!-- ADD THIS AUTHO
               </assignedAuthor>
             </author>
 
-            <consumable>
-              <manufacturedProduct classCode="MANU">
-                <templateId root="2.16.840.1.113883.10.20.22.4.23"
-                            extension="2014-06-09"/>
-                <manufacturedMaterial>
-                  <code code="${m.code}"
-                        codeSystem="2.16.840.1.113883.6.88"
-                        displayName="${xmlEscape(m.name)}"/>
-                </manufacturedMaterial>
-              </manufacturedProduct>
-            </consumable>
+            
           </substanceAdministration>
         </entry>`).join('');
 }
@@ -740,22 +742,6 @@ function generateImmunizationEntries(data) {
                        displayName="${routeTranslation.display}"/>
         </routeCode>` : ''}
         ${doseValue ? `<doseQuantity value="${doseValue}" unit="${doseUnit}" />` : ''}
-        <author>
-          <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-          <time value="20240615120000"/>
-          <assignedAuthor>
-            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-            <code code="${getProviderTaxonomyCode('physician').code}"
-                  codeSystem="2.16.840.1.113883.6.101"
-                  displayName="${getProviderTaxonomyCode('physician').display}"/>
-            <assignedPerson>
-              <name>
-                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-              </name>
-            </assignedPerson>
-          </assignedAuthor>
-        </author>
         <consumable>
           <manufacturedProduct classCode="MANU">
             <templateId root="2.16.840.1.113883.10.20.22.4.54" extension="2014-06-09" />
@@ -766,7 +752,6 @@ function generateImmunizationEntries(data) {
             ${mfr ? `<manufacturerOrganization><name>${mfr}</name></manufacturerOrganization>` : ''}
           </manufacturedProduct>
         </consumable>
-
         ${(data.administeringProviderNPI
         || data.administeringProviderGiven
         || data.administeringProviderMiddle
@@ -791,7 +776,22 @@ function generateImmunizationEntries(data) {
             </representedOrganization>` : ''}
           </assignedEntity>
         </performer>` : ''}
-
+        <author>
+          <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+          <time value="20240615120000"/>
+          <assignedAuthor>
+            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+            <code code="${getProviderTaxonomyCode('physician').code}"
+                  codeSystem="2.16.840.1.113883.6.101"
+                  displayName="${getProviderTaxonomyCode('physician').display}"/>
+            <assignedPerson>
+              <name>
+                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+              </name>
+            </assignedPerson>
+          </assignedAuthor>
+        </author>
       </substanceAdministration>
     </entry>`;
   };
@@ -834,6 +834,7 @@ function generateProcedureEntries(data) {
         </code>
                         <statusCode code="completed" />
                         <effectiveTime value="${data.currentProc1Date}" />
+                        <targetSiteCode code="421060004" codeSystem="2.16.840.1.113883.6.96" displayName="Structure of vertebral column"/>
                         <author>
                     <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
                     <time value="${data.currentProc1Date}"/>
@@ -881,8 +882,7 @@ function generateProcedureEntries(data) {
             </representedOrganization>
         </assignedEntity>
     </performer>
-                <targetSiteCode code="421060004" codeSystem="2.16.840.1.113883.6.96"
-                    displayName="Structure of vertebral column"/>
+                
                     </procedure>
                 </entry>`;
   }
@@ -1505,10 +1505,13 @@ function buildEICRXml() {
   <setId extension="${getEffectiveSetId(data)}" root="1.2.840.114350.1.13.380.3.7.1.1" />
   <versionNumber value="${data.versionNumber}" />
   ${generateRelatedDocumentXml(data)}
-
-  <!-- Patient Information -->
- <recordTarget>
-    <patientRole>
+<!--
+        ********************************************************
+        recordTarget: The patient
+        ********************************************************
+-->
+<recordTarget>
+  <patientRole>
       <id extension="${data.patientId}" root="2.16.840.1.113883.19.5" />
       <addr use="H">
         <streetAddressLine>${data.patientAddress}</streetAddressLine>
@@ -1521,7 +1524,6 @@ function buildEICRXml() {
       <telecom use="MC" value="tel:${data.patientPhone}" />
       <telecom use="WP" value="mailto:${data.patientEmail}" />
     <patient>
-      <!-- CDA Schema Compliant Patient Element Order -->
       <name use="L">
         <given>${data.patientName.split(' ')[0]}</given>
         <family>${data.patientName.split(' ').slice(1).join(' ')}</family>
@@ -1529,11 +1531,10 @@ function buildEICRXml() {
       <administrativeGenderCode code="${data.patientGender}" codeSystem="2.16.840.1.113883.5.1"
         displayName="${data.patientGender === 'F' ? 'Female' : 'Male'}" />
       <birthTime value="${data.patientBirthDate}" />
-<sdtc:deceasedInd value="${data.patientDeathIndicator || 'false'}" />
+      <sdtc:deceasedInd value="${data.patientDeathIndicator || 'false'}" />
       ${data.patientDeathDate ? `<sdtc:deceasedTime value="${data.patientDeathDate}" />` : ''}
       <maritalStatusCode code="S" codeSystem="2.16.840.1.113883.5.2"
                      codeSystemName="MaritalStatus" displayName="Never Married"/>
-
       <raceCode code="${data.patientRace}" codeSystem="2.16.840.1.113883.6.238"
         codeSystemName="Race and Ethnicity - CDC" displayName="${getRaceDisplayName(data.patientRace)}" />
       ${data.patientDetailedRace ? `<sdtc:raceCode code="${data.patientDetailedRace}" codeSystem="2.16.840.1.113883.6.238" />` : ''}
@@ -1560,30 +1561,30 @@ function buildEICRXml() {
         </guardianPerson>
       </guardian>` : ''}
       <birthplace>
-  <place>
-    <addr>
-      <streetAddressLine>${data.patientBirthPlaceFacility || ''}</streetAddressLine>
-      <city>${data.patientBirthPlaceCity || data.patientCity}</city>
-      <state>${data.patientBirthPlaceState || data.patientState}</state>
-      <country>${data.patientBirthPlaceCountry || data.patientCountry || 'US'}</country>
-    </addr>
-    ${data.patientBirthPlaceFacility ? `<name>${data.patientBirthPlaceFacility}</name>` : ''}
-  </place>
-</birthplace>
+        <place>
+          <addr>
+            <streetAddressLine>4444 Home Street</streetAddressLine>
+            <city>${data.patientBirthPlaceCity || data.patientCity}</city>
+            <state>${data.patientBirthPlaceState || data.patientState}</state>
+            <postalCode>97867</postalCode>
+            <country>${data.patientBirthPlaceCountry || data.patientCountry || 'US'}</country>
+          </addr>
+        </place>
+      </birthplace>
       <languageCommunication>
-  <languageCode code="${data.patientLanguage || 'en'}" />
-  <preferenceInd value="true" />
-  <proficiencyLevelCode code="G"
-                       codeSystem="2.16.840.1.113883.5.61"
-                       displayName="Good"/>
-</languageCommunication>
-
+        <languageCode code="${data.patientLanguage || 'en'}" />
+        <proficiencyLevelCode code="G" codeSystem="2.16.840.1.113883.5.61" displayName="Good"/>
+        <preferenceInd value="true" />
+      </languageCommunication>
     </patient>
-    </patientRole>
-  </recordTarget>
-
-  <!-- Provider Information -->
-  <author>
+ </patientRole>
+</recordTarget>
+<!--
+        ********************************************************
+        author
+        ********************************************************
+-->
+<author>
     <time value="${data.effectiveTime}" />
     <assignedAuthor>
       <id extension="${data.providerId}" root="2.16.840.1.113883.4.6" />
@@ -1613,9 +1614,13 @@ function buildEICRXml() {
         </addr>
       </representedOrganization>
     </assignedAuthor>
-  </author>
-
-  <custodian>
+</author>
+<!--
+        ********************************************************
+        custodian: The custodian of the CDA document is the generator of the document
+        ********************************************************
+-->
+<custodian>
     <assignedCustodian>
       <representedCustodianOrganization>
         <id extension="${data.organizationId || data.facilityId}" root="2.16.840.1.113883.4.6" />
@@ -1630,9 +1635,13 @@ function buildEICRXml() {
         </addr>
       </representedCustodianOrganization>
     </assignedCustodian>
-  </custodian>
-
-  <!-- Encounter Information -->
+</custodian>
+<!--
+        ********************************************************
+        componentOf: contains the encompassingEncouter and the
+        provider and facility infomation for the case
+        ********************************************************
+-->
 <componentOf>
   <encompassingEncounter>
     <id extension="${data.encounterId}" root="2.16.840.1.113883.19" />
@@ -1664,6 +1673,13 @@ function buildEICRXml() {
         </assignedPerson>
         <representedOrganization>
           <name>${data.facilityName}</name>
+<!--
+        ********************************************************
+        3.1.1 May include telecom
+        <telecom use="WP" value="tel:${data.organizationPhone || data.providerPhone}" />
+          ${data.organizationEmail ? `<telecom use="WP" value="mailto:${data.organizationEmail}" />` : ''}
+        ********************************************************
+-->
           <addr use="WP">
             <streetAddressLine>${data.facilityAddress}</streetAddressLine>
             <city>${data.patientCity}</city>
@@ -1671,8 +1687,7 @@ function buildEICRXml() {
             <postalCode>${data.patientZip}</postalCode>
             <country>US</country>
           </addr>
-          <telecom use="WP" value="tel:${data.organizationPhone || data.providerPhone}" />
-          ${data.organizationEmail ? `<telecom use="WP" value="mailto:${data.organizationEmail}" />` : ''}
+          
         </representedOrganization>
       </assignedEntity>
     </responsibleParty>
@@ -1710,17 +1725,20 @@ function buildEICRXml() {
   </encompassingEncounter>
 </componentOf>
 
-   <component>
+<component>
     <structuredBody>
       <!-- Encounters Section -->
       <component>
         <section>
+          <!-- [C-CDA R1.1] Encounters Section (entries optional) -->
           <templateId root="2.16.840.1.113883.10.20.22.2.22" />
+          <!-- [C-CDA R2.1] Encounters Section (entries optional) (V3) -->
           <templateId root="2.16.840.1.113883.10.20.22.2.22" extension="2015-08-01" />
+          <!-- [C-CDA R1.1] Encounters Section (entries required) -->
           <templateId root="2.16.840.1.113883.10.20.22.2.22.1" />
+          <!-- [C-CDA R2.1] Encounters Section (entries required) (V3) -->
           <templateId root="2.16.840.1.113883.10.20.22.2.22.1" extension="2015-08-01" />
-          <code code="46240-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"
-            displayName="History of encounters" />
+          <code code="46240-8" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" displayName="History of encounters" />
           <title>Encounters</title>
           <text>
             <table>
@@ -1735,10 +1753,9 @@ function buildEICRXml() {
               <templateId root="2.16.840.1.113883.10.20.22.4.49" />
               <templateId root="2.16.840.1.113883.10.20.22.4.49" extension="2015-08-01" />
               <id root="2.16.840.1.113883.19.${data.encounterId}" />
-              <code code="99213" codeSystem="2.16.840.1.113883.6.12" codeSystemName="CPT-4"
-      displayName="Office outpatient visit">
+              <code code="99213" codeSystem="2.16.840.1.113883.6.12" codeSystemName="CPT-4" displayName="Office outpatient visit">
     <originalText>Office outpatient visit</originalText>
-</code>
+              </code>   
               <effectiveTime>
                 <low value="${data.encounterDate}" />
                 <high value="${data.encounterDate}" />
@@ -1845,23 +1862,8 @@ function buildEICRXml() {
                displayName="${getRouteTranslation(data.adminMed1Route).display}"/>
 </routeCode>
         <doseQuantity value="${data.adminMed1DoseValue}" unit="${fixDoseUnit(data.adminMed1DoseUnit)}" />
-        ${data.adminMed1VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed1VolValue}" unit="${data.adminMed1VolUnit}" /></maxDoseQuantity>` : ''}
-        <author>
-      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-      <time value="20240615120000"/>
-      <assignedAuthor>
-        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-        <code code="${getProviderTaxonomyCode('physician').code}" 
-      codeSystem="2.16.840.1.113883.6.101" 
-      displayName="${getProviderTaxonomyCode('physician').display}"/>
-        <assignedPerson>
-          <name>
-            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-          </name>
-        </assignedPerson>
-      </assignedAuthor>
-    </author>
+        ${data.adminMed1VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed1VolValue}" unit="${data.adminMed1VolUnit || '1'}" /><denominator value="1" unit="1"/></maxDoseQuantity>` : ''}
+        
         <consumable>
           <manufacturedProduct classCode="MANU">
             <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
@@ -1894,6 +1896,22 @@ function buildEICRXml() {
         </representedOrganization>` : ''}
       </assignedEntity>
     </performer>` : ''}
+    <author>
+      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+      <time value="20240615120000"/>
+      <assignedAuthor>
+        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+        <code code="${getProviderTaxonomyCode('physician').code}" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="${getProviderTaxonomyCode('physician').display}"/>
+        <assignedPerson>
+          <name>
+            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+          </name>
+        </assignedPerson>
+      </assignedAuthor>
+    </author>
       </substanceAdministration>
     </entry>
     
@@ -1911,22 +1929,7 @@ function buildEICRXml() {
 </routeCode>
         <doseQuantity value="${data.adminMed2DoseValue}" unit="${data.adminMed2DoseUnit === '1' || data.adminMed2DoseUnit === 'each' ? 'mg' : data.adminMed2DoseUnit}" />
         ${data.adminMed2VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed2VolValue}" unit="${data.adminMed2VolUnit}" /></maxDoseQuantity>` : ''}
-        <author>
-      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-      <time value="20240615120000"/>
-      <assignedAuthor>
-        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-        <code code="${getProviderTaxonomyCode('physician').code}" 
-      codeSystem="2.16.840.1.113883.6.101" 
-      displayName="${getProviderTaxonomyCode('physician').display}"/>
-        <assignedPerson>
-          <name>
-            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-          </name>
-        </assignedPerson>
-      </assignedAuthor>
-    </author>
+        
         <consumable>
           <manufacturedProduct classCode="MANU">
             <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
@@ -1959,6 +1962,22 @@ function buildEICRXml() {
         </representedOrganization>` : ''}
       </assignedEntity>
     </performer>` : ''}
+    <author>
+      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+      <time value="20240615120000"/>
+      <assignedAuthor>
+        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+        <code code="${getProviderTaxonomyCode('physician').code}" 
+      codeSystem="2.16.840.1.113883.6.101" 
+      displayName="${getProviderTaxonomyCode('physician').display}"/>
+        <assignedPerson>
+          <name>
+            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+          </name>
+        </assignedPerson>
+      </assignedAuthor>
+    </author>
       </substanceAdministration>
     </entry>
         </section>
@@ -1991,7 +2010,7 @@ function buildEICRXml() {
               <id root="a1c0c380-eacc-4b40-9207-85164185558d" />
               <code code="CONC" codeSystem="2.16.840.1.113883.5.6" displayName="Concern" />
               <statusCode code="active" />
-              <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+              <effectiveTime><low value="${normalizeTS(data.encounterDate)}" /></effectiveTime>
               <author>
                 <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
                 <time value="20240615"/>
