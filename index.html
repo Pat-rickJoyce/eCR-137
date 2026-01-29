@@ -1,301 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>eICR Form Generator - DQ Schematron Compliant</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f9fafb;
-            line-height: 1.6;
-        }
+        /* Base overrides to bridge standard CDA structure with Clean UI v8.1 */
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 30px;
+            padding: 40px 20px;
         }
-        .header {
+
+        .patient-overview-card {
+            background:
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+                #ffffff;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 32px;
+            box-shadow:
+                0 4px 6px -1px rgba(0, 0, 0, 0.05),
+                0 20px 40px -4px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            padding: 28px 40px;
+            margin: 0 32px 32px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 20px;
+            gap: 32px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        h1 {
-            color: #1f2937;
-            margin: 0;
-            font-size: 2rem;
+
+        .snapshot-label {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--muted);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            display: block;
+            opacity: 0.8;
         }
-        .subtitle {
-            color: #6b7280;
-            margin: 5px 0 0 0;
+
+        .patient-overview-card:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 4px 6px -1px rgba(0, 0, 0, 0.05),
+                0 25px 50px -12px rgba(0, 0, 0, 0.15);
         }
-        .rctc-info {
-            background: #e0f2fe;
-            border: 1px solid #81d4fa;
-            border-radius: 6px;
-            padding: 15px;
-            margin: 20px 0;
+
+        /* Ambient glow in the corner */
+        .patient-overview-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
         }
-        .rctc-info h3 {
-            margin: 0 0 10px 0;
-            color: #0277bd;
-        }
-        .buttons {
+
+        .patient-overview-card .patient-avatar {
+            width: 76px;
+            height: 76px;
+            border-radius: 24px;
+            background: var(--accent-gradient);
             display: flex;
-            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: 800;
+            flex-shrink: 0;
+            box-shadow:
+                0 0 0 4px rgba(99, 102, 241, 0.1),
+                0 10px 25px rgba(99, 102, 241, 0.35),
+                inset 0 1px 1px rgba(255, 255, 255, 0.5);
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .patient-overview-card .patient-avatar i {
+            display: none;
+            /* Initially hide icon if using initials */
+        }
+
+        .patient-overview-card .patient-info {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .patient-overview-card .patient-name {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: var(--text);
+            margin: 0;
+            letter-spacing: -0.03em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .patient-overview-card .patient-name .verified-badge {
+            font-size: 10px;
+            background: #f0fdf4;
+            color: #16a34a;
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid #dcfce7;
+            letter-spacing: 0.08em;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .patient-overview-card .patient-meta {
+            display: flex;
+            gap: 12px;
             flex-wrap: wrap;
         }
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
+
+        .patient-overview-card .meta-chip {
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: background-color 0.2s;
-        }
-        .btn-primary { background: #3b82f6; color: white; }
-        .btn-success { background: #10b981; color: white; }
-        .btn-secondary { background: #6b7280; color: white; }
-        .btn-warning { background: #f59e0b; color: white; }
-        .btn:hover { opacity: 0.9; }
-        .section {
-            margin-bottom: 30px;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            padding: 20px;
-        }
-        .section-title {
-            font-size: 1.25rem;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 0.85rem;
             font-weight: 600;
-            color: #1f2937;
-            margin: 0 0 20px 0;
-            border-bottom: 1px solid #e5e7eb;
-            padding-bottom: 10px;
+            color: #475569;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
         }
+
+        .patient-overview-card .meta-chip:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .patient-overview-card .meta-chip i {
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+
+        .patient-overview-card .record-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .patient-overview-card .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .patient-overview-card .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 10px #10b981;
+            animation: pulse-green 2s infinite;
+        }
+
+        @keyframes pulse-green {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        .trigger-indicator {
+            background: var(--accent-weak);
+            color: var(--accent);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-left: 8px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
         }
+
         .input-group {
             display: flex;
             flex-direction: column;
-        }
-        .textarea-group {
-            grid-column: 1 / -1;
-        }
-        label {
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 5px;
-        }
-        input, textarea, select {
-            padding: 8px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            font-size: 14px;
-            transition: border-color 0.2s;
-        }
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        select[id*="diagnosis"] {
-            min-width: 300px;
-            max-width: 100%;
-        }
-        select[id*="diagnosis"] option[style*="font-weight: bold"] {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-        .footer-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
-            flex-wrap: wrap;
-        }
-        .code-search {
-            display: flex;
-            gap: 10px;
-            align-items: end;
-        }
-        .search-results {
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            background: #f9fafb;
-            margin-top: 10px;
-            display: none;
-        }
-        .result-item {
-            padding: 10px;
-            border-bottom: 1px solid #e5e7eb;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .result-item:hover {
-            background-color: #e5e7eb;
-        }
-        .search-results-list {
-            /* Container for search results */
-        }
-        .search-result-item {
-            padding: 10px;
-            border-bottom: 1px solid #e5e7eb;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .search-result-item:hover {
-            background-color: #e5e7eb;
-        }
-        .search-result-item:last-child {
-            border-bottom: none;
-        }
-        .no-results {
-            padding: 10px;
-            text-align: center;
-            color: #6b7280;
-            font-style: italic;
-        }
-        
-        /* Lab Evidence Repeatable UI */
-        .lab-evidence-controls {
-            margin-bottom: 20px;
-        }
-        .lab-evidence-row {
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            background: #f9fafb;
-        }
-        .lab-evidence-row h4 {
-            margin: 0 0 15px 0;
-            color: #374151;
-            border-bottom: 1px solid #d1d5db;
-            padding-bottom: 8px;
-        }
-
-        /* Diagnosis Evidence Repeatable UI */
-        .diagnosis-evidence-controls {
-            margin-bottom: 20px;
-        }
-        .diagnosis-evidence-row {
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            background: #f9fafb;
-        }
-        .diagnosis-evidence-row h4 {
-            margin: 0 0 15px 0;
-            color: #374151;
-            border-bottom: 1px solid #d1d5db;
-            padding-bottom: 8px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-        .result-item:last-child {
-            border-bottom: none;
-        }
-        .code-display {
-            font-family: monospace;
-            background: #f3f4f6;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-weight: bold;
-        }
-        .hidden { display: none; }
-        .trigger-indicator {
-            background: #fef3c7;
-            border: 1px solid #f59e0b;
-            color: #92400e;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
-            margin-left: 10px;
-        }
-        .help-tooltip {
-            cursor: help;
-            margin-left: 5px;
-            color: #6b7280;
-        }
-        .help-text {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            padding: 15px;
-            margin-top: 20px;
-            font-size: 14px;
-        }
-        .help-text h4 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            color: #374151;
-        }
-        .help-text ul {
-            margin-bottom: 0;
-            padding-left: 20px;
-        }
-        .help-text li {
-            margin-bottom: 5px;
-        }
-        @media (max-width: 768px) {
-            .header { flex-direction: column; }
-            .form-grid { grid-template-columns: 1fr; }
-            .container { padding: 15px; }
-        }
-        .ui81-brand {
-            position: fixed;
-            left: var(--sidenav-gap);
-            top: 10px;
-            width: var(--sidenav-w);
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 6px 12px;
-            box-shadow: var(--shadow-1);
-            z-index: 1001;
-            display: flex;
-            align-items: center;
             gap: 8px;
         }
 
-        .ui81-brand .penguin-logo {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            flex-shrink: 0;
+        .input-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--muted);
+            padding-left: 4px;
         }
 
-        .ui81-brand .name {
-            font-weight: 800;
-            letter-spacing: .2px;
-            font-size: 18px;
-            line-height: 1.2;
+        .input-group span.required {
+            color: var(--warning);
+            margin-left: 2px;
+        }
+
+        .textarea-group {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .header-premium {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 24px;
+            }
+        }
+
+        .patient-overview-card .meta-chip.clinical-count {
+            border-style: dashed;
+            font-weight: 700;
+        }
+
+        .patient-overview-card .meta-chip.clinical-count:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -303,603 +260,665 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 
-  <!-- Clean UI v8.1 styles -->
-  <link rel="stylesheet" href="css/styles.css">
+    <!-- Clean UI v8.1 styles -->
+    <link rel="stylesheet" href="css/styles.css">
 
 </head>
+
 <body>
-<div class="ui81-brand">
-  <img src="./assets/images/penguin-logo.png" alt="eCeleRate" class="penguin-logo">
-  <div class="name"><span class="underlined">eC</span>ele<span class="underlined">R</span>ate</div>
-</div>
+    <div class="ui81-watermark"></div>
+    <div class="ui81-brand">
+        <img src="./assets/images/penguin-logo.png" alt="eCeleRate" class="penguin-logo">
+        <div class="name">eCeleRate</div>
+    </div>
 
     <div class="container">
-        <div class="header">
-            <div>
-                <h1>eICR Generator</h1>
-                <p class="subtitle">Electronic Initial Case Report with Reportable Condition Trigger Codes</p>
-            </div>
-            <div class="buttons">
-    <button class="btn btn-success" onclick="saveFormData()">💾 Save Form Data</button>
-    <button class="btn btn-primary" onclick="generateAndDownloadCDA()">📄 Generate CDA</button>
-    <button class="btn btn-primary" onclick="generateAndDownloadRR()">📨 Generate RR</button>
-    <button class="btn btn-info" onclick="downloadZipOfEICRandRR()">📦 Download ZIP (eICR + RR)</button>
-    
-    <!-- Hidden buttons for Clean UI system -->
-    <button onclick="loadFormDataDialog()" style="display:none">Load Form Data</button>
-    <button onclick="saveFormData()" style="display:none">Save Form Data</button>
-</div>
+        <!-- Patient Demographics Overview -->
+        <div class="patient-overview-card">
+            <div class="patient-avatar" id="patientAvatarInitials">P</div>
+            <div class="patient-info">
+                <span class="snapshot-label">Patient Snapshot</span>
+                <h1 class="patient-name" id="patientOverviewName" style="margin-bottom: 12px;">
+                    Patient Name
+                    <span class="verified-badge"><i class="fas fa-check-circle"></i> Verified</span>
+                </h1>
 
-<!-- File input goes outside the buttons div -->
-<input type="file" id="loadFormDataInput" accept=".json" style="display:none" onchange="loadFormData(event)">
-        </div>
+                <!-- Main Demographics Row -->
+                <div class="patient-meta" style="margin-bottom: 16px;">
+                    <div class="meta-chip">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span id="patientOverviewDOB">DOB: 06/15/2024</span>
+                    </div>
+                    <div class="meta-chip">
+                        <i class="fas fa-venus-mars"></i>
+                        <span id="patientOverviewGender">Female</span>
+                    </div>
+                    <div class="meta-chip">
+                        <i class="fas fa-users"></i>
+                        <span id="patientOverviewRace">White</span>
+                    </div>
+                    <div class="meta-chip">
+                        <i class="fas fa-globe"></i>
+                        <span id="patientOverviewEthnicity">Non-Hispanic</span>
+                    </div>
+                </div>
 
-
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-user"></i> Patient Demographics</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Patient ID <span class="help-tooltip" title="Unique identifier that stays the same across all versions of the same logical document. Documents with the same Set ID represent different versions of the same document.">ℹ️</span></label>
-                    <input type="text" id="patientId" value="MRN-00234567">
-                </div>
-                <div class="input-group">
-                    <label>Patient Name <span style="color: red;">*</span></label>
-                    <input type="text" id="patientName" value="Emma Rose Johnson" required>
-                </div>
-                <div class="input-group">
-                    <label>Phone</label>
-                    <input type="text" id="patientPhone" value="+1-555-234-5678">
-                </div>
-                <div class="input-group">
-                    <label>Email</label>
-                    <input type="email" id="patientEmail" value="johnson.family@email.com">
-                </div>
-                <div class="input-group">
-                    <label>Address <span style="color: red;">*</span></label>
-                    <input type="text" id="patientAddress" value="1247 Maple Street" required>
-                </div>
-                <div class="input-group">
-                    <label>City <span style="color: red;">*</span></label>
-                    <input type="text" id="patientCity" value="Springfield" required>
-                </div>
-                <div class="input-group">
-                    <label>State <span style="color: red;">*</span></label>
-                    <input type="text" id="patientState" value="IL" required>
-                </div>
-                <div class="input-group">
-                    <label>ZIP Code <span style="color: red;">*</span></label>
-                    <input type="text" id="patientZip" value="62701" required>
-                </div>
-                <div class="input-group">
-                    <label>County</label>
-                    <input type="text" id="patientCounty" value="Sangamon County">
-                </div>
-                <div class="input-group">
-                    <label>Country</label>
-                    <input type="text" id="patientCountry" value="US">
-                </div>
-                <div class="input-group">
-                    <label>Administrative Gender Code <span style="color: red;">*</span></label>
-                    <select id="patientGender" required>
-                        <option value="">Select Gender</option>
-                        <option value="F" selected>Female</option>
-                        <option value="M">Male</option>
-                        <option value="UN">Undifferentiated</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Birth Date</label>
-                    <input type="datetime-local" id="patientBirthDate" value="2024-06-15T00:00">
-                </div>
-                <div class="input-group">
-                    <label>Race Code <span style="color: red;">*</span></label>
-                    <select id="patientRace" required>
-                        <option value="">Select Race</option>
-                        <option value="1002-5">American Indian or Alaska Native</option>
-                        <option value="2028-9">Asian</option>
-                        <option value="2054-5">Black or African American</option>
-                        <option value="2076-8">Native Hawaiian or Other Pacific Islander</option>
-                        <option value="2106-3" selected>White</option>
-                        <option value="2131-1">Other Race</option>
-                        <option value="UNK">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Ethnicity Code <span style="color: red;">*</span></label>
-                    <select id="patientEthnicity" required>
-                        <option value="">Select Ethnicity</option>
-                        <option value="2135-2">Hispanic or Latino</option>
-                        <option value="2186-5" selected>Not Hispanic or Latino</option>
-                        <option value="UNK">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-    <label>Birth Place City</label>
-    <input type="text" id="patientBirthPlaceCity" value="Springfield">
-</div>
-<div class="input-group">
-    <label>Birth Place State</label>
-    <input type="text" id="patientBirthPlaceState" value="IL">
-</div>
-<div class="input-group">
-    <label>Birth Place Country</label>
-    <input type="text" id="patientBirthPlaceCountry" value="US">
-</div>
-<div class="input-group">
-    <label>Birth Place Facility</label>
-    <input type="text" id="patientBirthPlaceFacility" value="Memorial Hospital">
-</div>
-                <div class="input-group">
-                    <label>Birth Sex</label>
-                    <select id="patientBirthSex">
-                        <option value="F">Female</option>
-                        <option value="M">Male</option>
-                        <option value="UNK">Unknown</option>
-                    </select>
-                </div>
-                 <div class="input-group" style="display:none">
-                   <label>Gender Identity</label>
-                   <select id="patientGenderIdentity">
-                     <option value="446151000124109">Identifies as female gender (finding)</option>
-                       <option value="446141000124107">Identifies as male gender (finding)</option>
-                      <option value="33791000087105">Identifies as nonbinary gender (finding)</option>
-                        <option value="UNK">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Detailed Race Code</label>
-                    <select id="patientDetailedRace">
-                        <option value="1004-1">American Indian</option>
-                        <option value="1010-8">Alaska Native</option>
-                        <option value="2029-7">Asian Indian</option>
-                        <option value="2040-4">Chinese</option>
-                        <option value="2047-9">Filipino</option>
-                        <option value="2051-1">Japanese</option>
-                        <option value="2054-5">Korean</option>
-                        <option value="2058-6">Vietnamese</option>
-                        <option value="2060-2">Other Asian</option>
-                        <option value="2076-8">Black</option>
-                        <option value="2108-9" selected>White</option>
-                        <option value="2131-1">Other</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Detailed Ethnicity Code</label>
-                    <select id="patientDetailedEthnicity">
-                        <option value="2137-8">Mexican</option>
-                        <option value="2141-0">Puerto Rican</option>
-                        <option value="2142-8">Cuban</option>
-                        <option value="2148-5" selected>Not Hispanic or Latino</option>
-                        <option value="2180-8">Other Hispanic or Latino</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Primary Language</label>
-                    <input type="text" id="patientLanguage" value="en">
-                </div>
-                <div class="input-group">
-                    <label>Death Indicator</label>
-                    <select id="patientDeathIndicator">
-                        <option value="false">No</option>
-                        <option value="true">Yes</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Date of Death (YYYYMMDD)</label>
-                    <input type="datetime-local" id="patientDeathDate" placeholder="Leave blank if alive">
-                </div>
-                <div class="input-group">
-                    <label>Disability Status</label>
-                    <select id="disabilityStatus">
-                        <option value="21134002" selected>Disabled</option>
-                        <option value="405159006">Not disabled</option>
-                        <option value="261665006">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Disability Type</label>
-                    <input type="text" id="disabilityType" value="Spina bifida - congenital neural tube defect">
-                </div>
-                <div class="input-group">
-                    <label>Tribal Affiliation</label>
-                    <input type="text" id="tribalAffiliation" value="Not applicable">
-                </div>
-                <div class="input-group">
-                    <label>Tribal Enrollment</label>
-                    <select id="tribalEnrollment">
-                        <option value="true">Yes</option>
-                        <option value="false" selected>No</option>
-                        <option value="UNK">Unknown</option>
-                    </select>
-                </div>               
-                <div class="input-group">
-                    <label>Immigration Status</label>
-                    <select id="immigrationStatus">
-                        <option value="160542002" selected>US Citizen</option>
-                        <option value="160540005">Permanent Resident</option>
-                        <option value="160541006">Temporary Resident</option>
-                        <option value="160543007">Undocumented</option>
-                        <option value="261665006">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Preferred Language</label>
-                    <input type="text" id="preferredLanguage" value="English">
-                </div>
-                <div class="input-group">
-                    <label>Interpreter Needed</label>
-                    <select id="interpreterNeeded">
-                        <option value="Y">Yes</option>
-                        <option value="N" selected>No</option>
-                        <option value="UNK">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Insurance Status</label>
-                    <select id="insuranceStatus">
-                        <option value="48758009" selected>Insured</option>
-                        <option value="182890002">Uninsured</option>
-                        <option value="182891003">Self-pay</option>
-                        <option value="261665006">Unknown</option>
-                    </select>
+                <!-- Clinical Counts Row -->
+                <div class="patient-meta">
+                    <div class="meta-chip clinical-count"
+                        style="border-color: #fecaca; background: #fef2f2; color: #991b1b;">
+                        <i class="fas fa-file-medical-alt" style="color: #ef4444;"></i>
+                        <span id="patientOverviewDiagCount">0 Diagnoses</span>
+                    </div>
+                    <div class="meta-chip clinical-count"
+                        style="border-color: #fde68a; background: #fffbeb; color: #92400e;">
+                        <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
+                        <span id="patientOverviewProbCount">0 Problems</span>
+                    </div>
+                    <div class="meta-chip clinical-count"
+                        style="border-color: #bfdbfe; background: #eff6ff; color: #1e40af;">
+                        <i class="fas fa-vials" style="color: #3b82f6;"></i>
+                        <span id="patientOverviewLabCount">0 Labs</span>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-briefcase"></i> Occupation Information</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Current Occupation</label>
-                    <input type="text" id="currentOccupation" placeholder="Marketing Manager">
-                </div>
-                <div class="input-group">
-                    <label>Usual Occupation</label>
-                    <input type="text" id="usualOccupation" placeholder="Marketing Manager">
-                </div>
-                <div class="input-group">
-                    <label>Current Industry</label>
-                    <input type="text" id="currentIndustry" placeholder="Healthcare Services">
-                </div>
-                <div class="input-group">
-                    <label>Usual Industry</label>
-                    <input type="text" id="usualIndustry" placeholder="Healthcare Services">
-                </div>
-                <div class="input-group">
-                    <label>Current Job Title</label>
-                    <input type="text" id="currentJobTitle" placeholder="Senior Marketing Manager">
-                </div>
-                <div class="input-group">
-                    <label>Current Employer Name</label>
-                    <input type="text" id="currentEmployerName" placeholder="Springfield Medical Center">
-                </div>
-                <div class="input-group">
-                    <label>Current Employer Phone</label>
-                    <input type="text" id="currentEmployerPhone" placeholder="+1-217-555-0155">
-                </div>
-                <div class="input-group">
-                    <label>Current Employer Address</label>
-                    <input type="text" id="currentEmployerAddress" placeholder="800 E Capitol Ave, Springfield, IL 62701">
-                </div>
-                <div class="input-group">
-                    <label>Occupational Exposure</label>
-                    <select id="occupationalExposure">
-                        <option value="">-- Select Occupational Exposure --</option>
-                        <option value="Y">Yes</option>
-                        <option value="N" selected>No</option>
-                        <option value="UNK">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Employment Status</label>
-                    <select id="employmentStatus">
-                       <option value="">-- Select Employment Status --</option>
-                        <option value="1" selected>Employed</option>
-                        <option value="2">Unemployed</option>
-                        <option value="3">Not in labor force</option>
-                        <option value="4">Retired</option>
-                        <option value="5">Student</option>
-                        <option value="UNK">Unknown</option>
-                    </select>
-                </div>
+        <div class="buttons">
+            <!-- Hidden functional gateway buttons - User now uses the floating dock as requested -->
+            <div style="display:none !important;">
+                <button class="ui81-btn" onclick="saveFormData()"><i class="fas fa-save"></i> Save Data</button>
+                <button class="ui81-btn secondary" onclick="downloadZipOfEICRandRR()"><i
+                        class="fas fa-file-archive"></i> Package ZIP</button>
+                <button id="generate-cda-btn" onclick="generateAndDownloadCDA()">Generate CDA</button>
+                <button id="generate-rr-btn" onclick="generateAndDownloadRR()">Generate RR</button>
+                <button id="zip-btn" onclick="downloadZipOfEICRandRR()">Download ZIP (eICR + RR)</button>
+                <button onclick="loadFormDataDialog()">Load Form Data</button>
+                <button onclick="saveFormData()">Save Form Data</button>
+                <input type="file" id="loadFormDataInput" accept=".json" onchange="loadFormData(event)">
             </div>
         </div>
+    </div>
 
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-users"></i> Guardian/Parent Information</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Guardian Name</label>
-                    <input type="text" id="guardianName" value="Sarah Michelle Johnson">
-                </div>
-                <div class="input-group">
-                    <label>Guardian Phone</label>
-                    <input type="text" id="guardianPhone" value="+1-555-234-5678">
-                </div>
-                <div class="input-group">
-                    <label>Guardian Email</label>
-                    <input type="email" id="guardianEmail" value="sarah.johnson@email.com">
-                </div>
-                <div class="input-group">
-                    <label>Guardian Address</label>
-                    <input type="text" id="guardianAddress" value="1247 Maple Street">
-                </div>
-                <div class="input-group">
-                    <label>Guardian City</label>
-                    <input type="text" id="guardianCity" value="Springfield">
-                </div>
-                <div class="input-group">
-                    <label>Guardian State</label>
-                    <input type="text" id="guardianState" value="IL">
-                </div>
-                <div class="input-group">
-                    <label>Guardian ZIP Code</label>
-                    <input type="text" id="guardianZip" value="62701">
-                </div>
-                <div class="input-group">
-                    <label>Guardian Relationship Code</label>
-                    <select id="guardianCode">
-                        <option value="MTH">Mother</option>
-                        <option value="FTH">Father</option>
-                        <option value="GRMTH">Grandmother</option>
-                        <option value="GRFTH">Grandfather</option>
-                        <option value="GUARD">Guardian</option>
-                        <option value="O">Other</option>
-                    </select>
-                </div>
+    <!-- Safety container for validation errors (JS looks for .footer-buttons or #validation-errors) -->
+    <div id="validation-errors" style="display:none;"></div>
+    <div class="footer-buttons" style="display:none !important;"></div>
+
+
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-user"></i> Patient Demographics</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Patient ID <span class="help-tooltip"
+                        title="Unique identifier that stays the same across all versions of the same logical document. Documents with the same Set ID represent different versions of the same document.">ℹ️</span></label>
+                <input type="text" id="patientId" value="MRN-00234567">
+            </div>
+            <div class="input-group">
+                <label>Patient Name <span style="color: red;">*</span></label>
+                <input type="text" id="patientName" value="Emma Rose Johnson" required>
+            </div>
+            <div class="input-group">
+                <label>Phone</label>
+                <input type="text" id="patientPhone" value="+1-555-234-5678">
+            </div>
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="patientEmail" value="johnson.family@email.com">
+            </div>
+            <div class="input-group">
+                <label>Address <span style="color: red;">*</span></label>
+                <input type="text" id="patientAddress" value="1247 Maple Street" required>
+            </div>
+            <div class="input-group">
+                <label>City <span style="color: red;">*</span></label>
+                <input type="text" id="patientCity" value="Springfield" required>
+            </div>
+            <div class="input-group">
+                <label>State <span style="color: red;">*</span></label>
+                <input type="text" id="patientState" value="IL" required>
+            </div>
+            <div class="input-group">
+                <label>ZIP Code <span style="color: red;">*</span></label>
+                <input type="text" id="patientZip" value="62701" required>
+            </div>
+            <div class="input-group">
+                <label>County</label>
+                <input type="text" id="patientCounty" value="Sangamon County">
+            </div>
+            <div class="input-group">
+                <label>Country</label>
+                <input type="text" id="patientCountry" value="US">
+            </div>
+            <div class="input-group">
+                <label>Administrative Gender Code <span style="color: red;">*</span></label>
+                <select id="patientGender" required>
+                    <option value="">Select Gender</option>
+                    <option value="F" selected>Female</option>
+                    <option value="M">Male</option>
+                    <option value="UN">Undifferentiated</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Birth Date</label>
+                <input type="datetime-local" id="patientBirthDate" value="2024-06-15T00:00">
+            </div>
+            <div class="input-group">
+                <label>Race Code <span style="color: red;">*</span></label>
+                <select id="patientRace" required>
+                    <option value="">Select Race</option>
+                    <option value="1002-5">American Indian or Alaska Native</option>
+                    <option value="2028-9">Asian</option>
+                    <option value="2054-5">Black or African American</option>
+                    <option value="2076-8">Native Hawaiian or Other Pacific Islander</option>
+                    <option value="2106-3" selected>White</option>
+                    <option value="2131-1">Other Race</option>
+                    <option value="UNK">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Ethnicity Code <span style="color: red;">*</span></label>
+                <select id="patientEthnicity" required>
+                    <option value="">Select Ethnicity</option>
+                    <option value="2135-2">Hispanic or Latino</option>
+                    <option value="2186-5" selected>Not Hispanic or Latino</option>
+                    <option value="UNK">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Birth Place City</label>
+                <input type="text" id="patientBirthPlaceCity" value="Springfield">
+            </div>
+            <div class="input-group">
+                <label>Birth Place State</label>
+                <input type="text" id="patientBirthPlaceState" value="IL">
+            </div>
+            <div class="input-group">
+                <label>Birth Place Country</label>
+                <input type="text" id="patientBirthPlaceCountry" value="US">
+            </div>
+            <div class="input-group">
+                <label>Birth Place Facility</label>
+                <input type="text" id="patientBirthPlaceFacility" value="Memorial Hospital">
+            </div>
+            <div class="input-group">
+                <label>Birth Sex</label>
+                <select id="patientBirthSex">
+                    <option value="F">Female</option>
+                    <option value="M">Male</option>
+                    <option value="UNK">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group" style="display:none">
+                <label>Gender Identity</label>
+                <select id="patientGenderIdentity">
+                    <option value="446151000124109">Identifies as female gender (finding)</option>
+                    <option value="446141000124107">Identifies as male gender (finding)</option>
+                    <option value="33791000087105">Identifies as nonbinary gender (finding)</option>
+                    <option value="UNK">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Detailed Race Code</label>
+                <select id="patientDetailedRace">
+                    <option value="1004-1">American Indian</option>
+                    <option value="1010-8">Alaska Native</option>
+                    <option value="2029-7">Asian Indian</option>
+                    <option value="2040-4">Chinese</option>
+                    <option value="2047-9">Filipino</option>
+                    <option value="2051-1">Japanese</option>
+                    <option value="2054-5">Korean</option>
+                    <option value="2058-6">Vietnamese</option>
+                    <option value="2060-2">Other Asian</option>
+                    <option value="2076-8">Black</option>
+                    <option value="2108-9" selected>White</option>
+                    <option value="2131-1">Other</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Detailed Ethnicity Code</label>
+                <select id="patientDetailedEthnicity">
+                    <option value="2137-8">Mexican</option>
+                    <option value="2141-0">Puerto Rican</option>
+                    <option value="2142-8">Cuban</option>
+                    <option value="2148-5" selected>Not Hispanic or Latino</option>
+                    <option value="2180-8">Other Hispanic or Latino</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Primary Language</label>
+                <input type="text" id="patientLanguage" value="en">
+            </div>
+            <div class="input-group">
+                <label>Death Indicator</label>
+                <select id="patientDeathIndicator">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Date of Death (YYYYMMDD)</label>
+                <input type="datetime-local" id="patientDeathDate" placeholder="Leave blank if alive">
+            </div>
+            <div class="input-group">
+                <label>Disability Status</label>
+                <select id="disabilityStatus">
+                    <option value="21134002" selected>Disabled</option>
+                    <option value="405159006">Not disabled</option>
+                    <option value="261665006">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Disability Type</label>
+                <input type="text" id="disabilityType" value="Spina bifida - congenital neural tube defect">
+            </div>
+            <div class="input-group">
+                <label>Tribal Affiliation</label>
+                <input type="text" id="tribalAffiliation" value="Not applicable">
+            </div>
+            <div class="input-group">
+                <label>Tribal Enrollment</label>
+                <select id="tribalEnrollment">
+                    <option value="true">Yes</option>
+                    <option value="false" selected>No</option>
+                    <option value="UNK">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Immigration Status</label>
+                <select id="immigrationStatus">
+                    <option value="160542002" selected>US Citizen</option>
+                    <option value="160540005">Permanent Resident</option>
+                    <option value="160541006">Temporary Resident</option>
+                    <option value="160543007">Undocumented</option>
+                    <option value="261665006">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Preferred Language</label>
+                <input type="text" id="preferredLanguage" value="English">
+            </div>
+            <div class="input-group">
+                <label>Interpreter Needed</label>
+                <select id="interpreterNeeded">
+                    <option value="Y">Yes</option>
+                    <option value="N" selected>No</option>
+                    <option value="UNK">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Insurance Status</label>
+                <select id="insuranceStatus">
+                    <option value="48758009" selected>Insured</option>
+                    <option value="182890002">Uninsured</option>
+                    <option value="182891003">Self-pay</option>
+                    <option value="261665006">Unknown</option>
+                </select>
             </div>
         </div>
+    </div>
 
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-user-md"></i> Provider Information</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Provider ID</label>
-                    <input type="text" id="providerId" value="1234567890">
-                </div>
-                <div class="input-group">
-                    <label>Provider Name</label>
-                    <input type="text" id="providerName" value="Dr Royce Hemlock">
-                </div>
-                <div class="input-group">
-                    <label>Provider Phone</label>
-                    <input type="text" id="providerPhone" value="+1-555-777-0123">
-                </div>
-                <div class="input-group">
-                    <label>Provider Email</label>
-                    <input type="email" id="providerEmail" value="dr.hemlock@grmfc.gc.example.com">
-                </div>
-                <div class="input-group">
-                    <label>Provider Fax</label>
-                    <input type="text" id="providerFax" value="+1-555-777-0124">
-                </div>
-                <div class="input-group">
-                    <label>Facility ID</label>
-                    <input type="text" id="facilityId" value="FAC-987654321">
-                </div>
-                <div class="input-group">
-                    <label>Facility Name</label>
-                    <input type="text" id="facilityName" value="Grand Republic Medical Facility Clinic">
-                </div>
-                <div class="input-group">
-                    <label>Facility Address</label>
-                    <input type="text" id="facilityAddress" value="500 Republica Medical Plaza, Suite 1000">
-                </div>
-                <div class="input-group">
-                    <label>Facility Type Code</label>
-                    <select id="facilityTypeCode">
-                        <option value="OF">Outpatient Facility</option>
-                        <option value="HOSP">Hospital</option>
-                        <option value="COMM">Community Hospital</option>
-                        <option value="PROFF">Provider's Office</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Organization Name</label>
-                    <input type="text" id="organizationName" value="Grand Republic Medical Corporation">
-                </div>
-                <div class="input-group">
-                    <label>Organization ID</label>
-                    <input type="text" id="organizationId" value="ORG-123456789">
-                </div>
-                <div class="input-group">
-                    <label>Organization Phone</label>
-                    <input type="text" id="organizationPhone" value="+1-555-777-1000">
-                </div>
-                <div class="input-group">
-                    <label>Organization Email</label>
-                    <input type="email" id="organizationEmail" value="info@grmfc.gc.example.com">
-                </div>
-                <div class="input-group">
-                    <label>Organization Fax</label>
-                    <input type="text" id="organizationFax" value="+1-555-777-1001">
-                </div>
-                <div class="input-group">
-                    <label>Organization Address</label>
-                    <input type="text" id="organizationAddress" value="500 Republica Medical Plaza">
-                </div>
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-briefcase"></i> Occupation Information</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Current Occupation</label>
+                <input type="text" id="currentOccupation" placeholder="Marketing Manager">
+            </div>
+            <div class="input-group">
+                <label>Usual Occupation</label>
+                <input type="text" id="usualOccupation" placeholder="Marketing Manager">
+            </div>
+            <div class="input-group">
+                <label>Current Industry</label>
+                <input type="text" id="currentIndustry" placeholder="Healthcare Services">
+            </div>
+            <div class="input-group">
+                <label>Usual Industry</label>
+                <input type="text" id="usualIndustry" placeholder="Healthcare Services">
+            </div>
+            <div class="input-group">
+                <label>Current Job Title</label>
+                <input type="text" id="currentJobTitle" placeholder="Senior Marketing Manager">
+            </div>
+            <div class="input-group">
+                <label>Current Employer Name</label>
+                <input type="text" id="currentEmployerName" placeholder="Springfield Medical Center">
+            </div>
+            <div class="input-group">
+                <label>Current Employer Phone</label>
+                <input type="text" id="currentEmployerPhone" placeholder="+1-217-555-0155">
+            </div>
+            <div class="input-group">
+                <label>Current Employer Address</label>
+                <input type="text" id="currentEmployerAddress" placeholder="800 E Capitol Ave, Springfield, IL 62701">
+            </div>
+            <div class="input-group">
+                <label>Occupational Exposure</label>
+                <select id="occupationalExposure">
+                    <option value="">-- Select Occupational Exposure --</option>
+                    <option value="Y">Yes</option>
+                    <option value="N" selected>No</option>
+                    <option value="UNK">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Employment Status</label>
+                <select id="employmentStatus">
+                    <option value="">-- Select Employment Status --</option>
+                    <option value="1" selected>Employed</option>
+                    <option value="2">Unemployed</option>
+                    <option value="3">Not in labor force</option>
+                    <option value="4">Retired</option>
+                    <option value="5">Student</option>
+                    <option value="UNK">Unknown</option>
+                </select>
             </div>
         </div>
+    </div>
 
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-hospital"></i> Encounter Information</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Encounter ID</label>
-                    <input type="text" id="encounterId" value="9937015">
-                </div>
-                <div class="input-group">
-                    <label>Encounter Type</label>
-                    <input type="text" id="encounterType" value="AMB">
-                </div>
-                <div class="input-group">
-                    <label>Encounter Date</label>
-                    <input type="datetime-local" id="encounterDate" value="2024-06-15T08:00">
-                </div>
-                <div class="input-group">
-                    <label>Encounter End Date</label>
-                    <input type="datetime-local" id="encounterEndDate" value="2024-06-15T17:00">
-                </div>
-                <div class="input-group">
-                    <label>Encounter Disposition</label>
-                    <select id="encounterDisposition">
-                        <option value="01">Routine discharge/release to home or self care</option>
-                        <option value="02">Discharge/transfer to another short term hospital</option>
-                        <option value="03">Discharge/transfer to skilled nursing facility</option>
-                        <option value="04">Discharge/transfer to an intermediate care facility</option>
-                        <option value="05">Discharge/transfer to another type of institution</option>
-                        <option value="06">Discharge/transfer to home under care of organized home health service</option>
-                        <option value="07">Left against medical advice or discontinued care</option>
-                        <option value="20">Expired</option>
-                    </select>
-                </div>
-                <div class="input-group textarea-group">
-                    <label>Chief Complaint</label>
-                    <textarea id="chiefComplaint">fever, cough, exposure to COVID-19 hot zone</textarea>
-                </div>
-                <div class="input-group textarea-group">
-                    <label>History of Present Illness</label>
-                    <textarea id="presentIllness">The patient initially presented with difficulty breathing and fever. Patient disclosed recent travel to a known COVID-19 hot zone.</textarea>
-                </div>
-                <div class="input-group textarea-group">
-                    <label>Reason for Visit</label>
-                    <textarea id="reasonForVisit">Routine follow-up visit and COVID-19 screening due to exposure</textarea>
-                </div>
-                <div class="input-group textarea-group">
-                    <label>Past Medical History</label>
-                    <textarea id="pastMedicalHistory">No significant past medical history. No known allergies.</textarea>
-                </div>
-                <div class="input-group textarea-group">
-                    <label>Review of Systems</label>
-                    <textarea id="reviewOfSystems">Patient reports fever, fatigue, and mild cough. Denies chest pain, shortness of breath at rest.</textarea>
-                </div>
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-users"></i> Guardian/Parent Information</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Guardian Name</label>
+                <input type="text" id="guardianName" value="Sarah Michelle Johnson">
+            </div>
+            <div class="input-group">
+                <label>Guardian Phone</label>
+                <input type="text" id="guardianPhone" value="+1-555-234-5678">
+            </div>
+            <div class="input-group">
+                <label>Guardian Email</label>
+                <input type="email" id="guardianEmail" value="sarah.johnson@email.com">
+            </div>
+            <div class="input-group">
+                <label>Guardian Address</label>
+                <input type="text" id="guardianAddress" value="1247 Maple Street">
+            </div>
+            <div class="input-group">
+                <label>Guardian City</label>
+                <input type="text" id="guardianCity" value="Springfield">
+            </div>
+            <div class="input-group">
+                <label>Guardian State</label>
+                <input type="text" id="guardianState" value="IL">
+            </div>
+            <div class="input-group">
+                <label>Guardian ZIP Code</label>
+                <input type="text" id="guardianZip" value="62701">
+            </div>
+            <div class="input-group">
+                <label>Guardian Relationship Code</label>
+                <select id="guardianCode">
+                    <option value="MTH">Mother</option>
+                    <option value="FTH">Father</option>
+                    <option value="GRMTH">Grandmother</option>
+                    <option value="GRFTH">Grandfather</option>
+                    <option value="GUARD">Guardian</option>
+                    <option value="O">Other</option>
+                </select>
             </div>
         </div>
+    </div>
 
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-stethoscope"></i> Diagnoses with RCTC Trigger Codes</h2>
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-user-md"></i> Provider Information</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Provider ID</label>
+                <input type="text" id="providerId" value="1234567890">
+            </div>
+            <div class="input-group">
+                <label>Provider Name</label>
+                <input type="text" id="providerName" value="Dr Royce Hemlock">
+            </div>
+            <div class="input-group">
+                <label>Provider Phone</label>
+                <input type="text" id="providerPhone" value="+1-555-777-0123">
+            </div>
+            <div class="input-group">
+                <label>Provider Email</label>
+                <input type="email" id="providerEmail" value="dr.hemlock@grmfc.gc.example.com">
+            </div>
+            <div class="input-group">
+                <label>Provider Fax</label>
+                <input type="text" id="providerFax" value="+1-555-777-0124">
+            </div>
+            <div class="input-group">
+                <label>Facility ID</label>
+                <input type="text" id="facilityId" value="FAC-987654321">
+            </div>
+            <div class="input-group">
+                <label>Facility Name</label>
+                <input type="text" id="facilityName" value="Grand Republic Medical Facility Clinic">
+            </div>
+            <div class="input-group">
+                <label>Facility Address</label>
+                <input type="text" id="facilityAddress" value="500 Republica Medical Plaza, Suite 1000">
+            </div>
+            <div class="input-group">
+                <label>Facility Type Code</label>
+                <select id="facilityTypeCode">
+                    <option value="OF">Outpatient Facility</option>
+                    <option value="HOSP">Hospital</option>
+                    <option value="COMM">Community Hospital</option>
+                    <option value="PROFF">Provider's Office</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Organization Name</label>
+                <input type="text" id="organizationName" value="Grand Republic Medical Corporation">
+            </div>
+            <div class="input-group">
+                <label>Organization ID</label>
+                <input type="text" id="organizationId" value="ORG-123456789">
+            </div>
+            <div class="input-group">
+                <label>Organization Phone</label>
+                <input type="text" id="organizationPhone" value="+1-555-777-1000">
+            </div>
+            <div class="input-group">
+                <label>Organization Email</label>
+                <input type="email" id="organizationEmail" value="info@grmfc.gc.example.com">
+            </div>
+            <div class="input-group">
+                <label>Organization Fax</label>
+                <input type="text" id="organizationFax" value="+1-555-777-1001">
+            </div>
+            <div class="input-group">
+                <label>Organization Address</label>
+                <input type="text" id="organizationAddress" value="500 Republica Medical Plaza">
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-hospital"></i> Encounter Information</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Encounter ID</label>
+                <input type="text" id="encounterId" value="9937015">
+            </div>
+            <div class="input-group">
+                <label>Encounter Type</label>
+                <input type="text" id="encounterType" value="AMB">
+            </div>
+            <div class="input-group">
+                <label>Encounter Date</label>
+                <input type="datetime-local" id="encounterDate" value="2024-06-15T08:00">
+            </div>
+            <div class="input-group">
+                <label>Encounter End Date</label>
+                <input type="datetime-local" id="encounterEndDate" value="2024-06-15T17:00">
+            </div>
+            <div class="input-group">
+                <label>Encounter Disposition</label>
+                <select id="encounterDisposition">
+                    <option value="01">Routine discharge/release to home or self care</option>
+                    <option value="02">Discharge/transfer to another short term hospital</option>
+                    <option value="03">Discharge/transfer to skilled nursing facility</option>
+                    <option value="04">Discharge/transfer to an intermediate care facility</option>
+                    <option value="05">Discharge/transfer to another type of institution</option>
+                    <option value="06">Discharge/transfer to home under care of organized home health service
+                    </option>
+                    <option value="07">Left against medical advice or discontinued care</option>
+                    <option value="20">Expired</option>
+                </select>
+            </div>
+            <div class="input-group textarea-group">
+                <label>Chief Complaint</label>
+                <textarea id="chiefComplaint">fever, cough, exposure to COVID-19 hot zone</textarea>
+            </div>
+            <div class="input-group textarea-group">
+                <label>History of Present Illness</label>
+                <textarea
+                    id="presentIllness">The patient initially presented with difficulty breathing and fever. Patient disclosed recent travel to a known COVID-19 hot zone.</textarea>
+            </div>
+            <div class="input-group textarea-group">
+                <label>Reason for Visit</label>
+                <textarea id="reasonForVisit">Routine follow-up visit and COVID-19 screening due to exposure</textarea>
+            </div>
+            <div class="input-group textarea-group">
+                <label>Past Medical History</label>
+                <textarea id="pastMedicalHistory">No significant past medical history. No known allergies.</textarea>
+            </div>
+            <div class="input-group textarea-group">
+                <label>Review of Systems</label>
+                <textarea
+                    id="reviewOfSystems">Patient reports fever, fatigue, and mild cough. Denies chest pain, shortness of breath at rest.</textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-stethoscope"></i> Diagnoses with RCTC Trigger Codes</h2>
+
+        <div>
             <div class="diagnosis-evidence-controls">
-        <button class="btn btn-primary" type="button" onclick="addDiagnosisEvidence()">➕ Add Diagnosis</button>
+                <button class="btn btn-primary" type="button" onclick="addDiagnosisEvidence()">➕ Add
+                    Diagnosis</button>
+            </div>
+
+            <div id="diagnosisEvidenceList"></div>
+
+            <template id="diagnosisEvidenceTemplate">
+                <div class="diagnosis-evidence-row">
+                    <h4>Diagnosis Entry</h4>
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>Diagnosis Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
+                            <div class="code-search">
+                                <input type="text" class="de-diagnosis-code" value="67531005">
+                                <button class="btn btn-secondary" type="button"
+                                    onclick="searchRCTCForDiagnosis(this)">🔍</button>
+                            </div>
+                            <div class="de-diagnosis-code-results search-results"></div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Diagnosis Name</label>
+                            <div class="code-search">
+                                <input type="text" class="de-diagnosis-name" placeholder="Down syndrome (disorder)">
+                                <button class="btn btn-secondary" type="button"
+                                    onclick="searchRCTCForDiagnosisByName(this)">🔍</button>
+                            </div>
+                            <div class="de-diagnosis-name-results search-results"></div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Date of Diagnosis</label>
+                            <input type="datetime-local" class="de-diagnosis-date" value="2024-06-15T12:00">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Date of Onset</label>
+                            <input type="datetime-local" class="de-onset-date" value="2024-06-15T12:00">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Status</label>
+                            <select class="de-status">
+                                <option value="completed" selected>Completed</option>
+                                <option value="active">Active</option>
+                                <option value="resolved">Resolved</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <button class="btn btn-warning" type="button" onclick="removeDiagnosisEvidence(this)">🗑️
+                                Remove</button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
     </div>
 
-    <div id="diagnosisEvidenceList"></div>
-    
-    <template id="diagnosisEvidenceTemplate">
-        <div class="diagnosis-evidence-row">
-            <h4>Diagnosis Entry</h4>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Diagnosis Code <span class="trigger-indicator">RCTC TRIGGER</span></label>
-                    <div class="code-search">
-                        <input type="text" class="de-diagnosis-code" value="67531005">
-                        <button class="btn btn-secondary" type="button" onclick="searchRCTCForDiagnosis(this)">🔍</button>
-                    </div>
-                    <div class="de-diagnosis-code-results search-results"></div>
-                </div>
-                
-                <div class="input-group">
-                    <label>Diagnosis Name</label>
-                    <div class="code-search">
-                        <input type="text" class="de-diagnosis-name" placeholder="Down syndrome (disorder)">
-                        <button class="btn btn-secondary" type="button" onclick="searchRCTCForDiagnosisByName(this)">🔍</button>
-                    </div>
-                    <div class="de-diagnosis-name-results search-results"></div>
-                </div>
-                
-                <div class="input-group">
-                    <label>Date of Diagnosis</label>
-                    <input type="datetime-local" class="de-diagnosis-date" value="2024-06-15T12:00">
-                </div>
-                
-                <div class="input-group">
-                    <label>Date of Onset</label>
-                    <input type="datetime-local" class="de-onset-date" value="2024-06-15T12:00">
-                </div>
-                
-                <div class="input-group">
-                    <label>Status</label>
-                    <select class="de-status">
-                        <option value="completed" selected>Completed</option>
-                        <option value="active">Active</option>
-                        <option value="resolved">Resolved</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <button class="btn btn-warning" type="button" onclick="removeDiagnosisEvidence(this)">🗑️ Remove</button>
-                </div>
-            </div>
-        </div>
-    </template>
-</div>
+    <!-- Problems Section -->
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-exclamation-circle"></i> Problems</h2>
 
-<!-- Problems Section -->
-<div class="section">
-    <h2 class="section-title"><i class="fas fa-exclamation-circle"></i> Problems</h2>
-    <div class="problem-evidence-controls">
-        <button class="btn btn-primary" type="button" onclick="addProblemEvidence()">➕ Add Problem</button>
+        <div>
+            <div class="problem-evidence-controls">
+                <button class="btn btn-primary" type="button" onclick="addProblemEvidence()">➕ Add Problem</button>
+            </div>
+
+            <div id="problemEvidenceList"></div>
+
+            <template id="problemEvidenceTemplate">
+                <div class="problem-evidence-row">
+                    <h4>Problem Entry</h4>
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>Problem Code</label>
+                            <div class="code-search">
+                                <input type="text" class="pe-problem-code" placeholder="805002">
+                                <button class="btn btn-secondary" type="button"
+                                    onclick="searchSNOMEDForProblem(this)">🔍</button>
+                            </div>
+                            <div class="pe-problem-code-results search-results"></div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Problem Name</label>
+                            <div class="code-search">
+                                <input type="text" class="pe-problem-name" placeholder="Pneumoconiosis">
+                                <button class="btn btn-secondary" type="button"
+                                    onclick="searchSNOMEDForProblemByName(this)">🔍</button>
+                            </div>
+                            <div class="pe-problem-name-results search-results"></div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Problem Onset Date</label>
+                            <input type="datetime-local" class="pe-onset-date" value="2024-06-15T12:00">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Concern Status</label>
+                            <select class="pe-concern-status">
+                                <option value="active" selected>Active</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <button class="btn btn-warning" type="button" onclick="removeProblemEvidence(this)">🗑️
+                                Remove</button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
     </div>
 
-    <div id="problemEvidenceList"></div>
+    <!-- Lab Orders and Results Section -->
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-vial"></i> Lab Orders and Results</h2>
 
-    <template id="problemEvidenceTemplate">
-        <div class="problem-evidence-row">
-            <h4>Problem Entry</h4>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Problem Code</label>
-                    <div class="code-search">
-                        <input type="text" class="pe-problem-code" placeholder="805002">
-                        <button class="btn btn-secondary" type="button" onclick="searchSNOMEDForProblem(this)">🔍</button>
-                    </div>
-                    <div class="pe-problem-code-results search-results"></div>
-                </div>
-
-                <div class="input-group">
-                    <label>Problem Name</label>
-                    <div class="code-search">
-                        <input type="text" class="pe-problem-name" placeholder="Pneumoconiosis">
-                        <button class="btn btn-secondary" type="button" onclick="searchSNOMEDForProblemByName(this)">🔍</button>
-                    </div>
-                    <div class="pe-problem-name-results search-results"></div>
-                </div>
-
-                <div class="input-group">
-                    <label>Problem Onset Date</label>
-                    <input type="datetime-local" class="pe-onset-date" value="2024-06-15T12:00">
-                </div>
-
-                <div class="input-group">
-                    <label>Problem Status</label>
-                    <select class="pe-status">
-                        <option value="active" selected>Active</option>
-                        <option value="completed">Resolved</option>
-                        <option value="suspended">Suspended</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label>Concern Status</label>
-                    <select class="pe-concern-status">
-                        <option value="active" selected>Active</option>
-                        <option value="completed">Completed</option>
-                    </select>
-                </div>
-
-                <div>
-                    <button class="btn btn-warning" type="button" onclick="removeProblemEvidence(this)">🗑️ Remove</button>
-                </div>
-            </div>
-        </div>
-    </template>
-</div>
-
-        <!-- Lab Orders and Results Section -->
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-vial"></i> Lab Orders and Results</h2>
-            
+        <div>
             <div class="lab-evidence-controls">
-                <button class="btn btn-primary" type="button" onclick="addLabEvidence()">➕ Add Lab Order and Result</button>
+                <button class="btn btn-primary" type="button" onclick="addLabEvidence()">➕ Add Lab Order and
+                    Result</button>
             </div>
 
             <!-- ── Results Providers (applies to *all* result observations) ── -->
@@ -947,7 +966,7 @@
             </div>
 
             <div id="labEvidenceList"></div>
-            
+
             <template id="labEvidenceTemplate">
                 <div class="lab-evidence-row">
                     <h4>Lab Order and Result Entry</h4>
@@ -957,7 +976,8 @@
                             <label>Order Code (LOINC) <span class="trigger-indicator">RCTC TRIGGER</span></label>
                             <div class="code-search">
                                 <input type="text" class="le-order-code" value="94310-0">
-                                <button class="btn btn-secondary" type="button" onclick="searchRCTCForLabOrder(this)">🔍</button>
+                                <button class="btn btn-secondary" type="button"
+                                    onclick="searchRCTCForLabOrder(this)">🔍</button>
                             </div>
                             <div class="le-order-code-results search-results"></div>
                         </div>
@@ -965,7 +985,8 @@
                             <label>Order Name</label>
                             <div class="code-search">
                                 <input type="text" class="le-order-name" value="SARS-like Coronavirus N gene">
-                                <button class="btn btn-secondary" type="button" onclick="searchRCTCForLabOrderByName(this)">🔍</button>
+                                <button class="btn btn-secondary" type="button"
+                                    onclick="searchRCTCForLabOrderByName(this)">🔍</button>
                             </div>
                             <div class="le-order-name-results search-results"></div>
                         </div>
@@ -983,7 +1004,8 @@
                             <label>Test Code (LOINC) <span class="trigger-indicator">RCTC TRIGGER</span></label>
                             <div class="code-search">
                                 <input type="text" class="le-test-code" value="94310-0">
-                                <button class="btn btn-secondary" type="button" onclick="searchRCTCForTest(this)">🔍</button>
+                                <button class="btn btn-secondary" type="button"
+                                    onclick="searchRCTCForTest(this)">🔍</button>
                             </div>
                             <div class="le-test-code-results search-results"></div>
                         </div>
@@ -991,7 +1013,8 @@
                             <label>Test Name</label>
                             <div class="code-search">
                                 <input type="text" class="le-test-name" value="SARS-like Coronavirus N gene">
-                                <button class="btn btn-secondary" type="button" onclick="searchRCTCForTestByName(this)">🔍</button>
+                                <button class="btn btn-secondary" type="button"
+                                    onclick="searchRCTCForTestByName(this)">🔍</button>
                             </div>
                             <div class="le-test-name-results search-results"></div>
                         </div>
@@ -1011,7 +1034,8 @@
                             <label>Organism/Substance Code (SNOMED CT)</label>
                             <div class="code-search">
                                 <input type="text" class="le-value-code" value="840539006">
-                                <button class="btn btn-secondary" type="button" onclick="searchRCTCForOrganism(this)">🔍</button>
+                                <button class="btn btn-secondary" type="button"
+                                    onclick="searchRCTCForOrganism(this)">🔍</button>
                             </div>
                             <div class="le-value-code-results search-results"></div>
                         </div>
@@ -1019,7 +1043,8 @@
                             <label>Organism/Substance Name</label>
                             <div class="code-search">
                                 <input type="text" class="le-value-name" value="Disease caused by 2019-nCoV">
-                                <button class="btn btn-secondary" type="button" onclick="searchRCTCForOrganismByName(this)">🔍</button>
+                                <button class="btn btn-secondary" type="button"
+                                    onclick="searchRCTCForOrganismByName(this)">🔍</button>
                             </div>
                             <div class="le-value-name-results search-results"></div>
                         </div>
@@ -1072,807 +1097,841 @@
                         </div>
 
                         <div>
-                            <button class="btn btn-warning" type="button" onclick="removeLabEvidence(this)">🗑️ Remove</button>
+                            <button class="btn btn-warning" type="button" onclick="removeLabEvidence(this)">🗑️
+                                Remove</button>
                         </div>
                     </div>
                 </div>
             </template>
         </div>
-
-<!-- ░░░  MEDICATIONS  ░░░================================================ -->
-<div class="section">
-  <h2 class="section-title"><i class="fas fa-pills"></i> Medications</h2>
-
-  <div class="form-grid">
-
-   <!-- Administering Provider (single provider for ALL administered meds) -->
-<div class="input-group">
-  <label>Administering Provider NPI</label>
-  <input type="text" id="administeringProviderNPI" inputmode="numeric" pattern="\d{10}" value="1234567890">
-</div>
-
-<div class="input-group">
-  <label>First</label>
-  <input type="text" id="administeringProviderGiven" value="Je Suis">
-</div>
-
-<div class="input-group">
-  <label>Last</label>
-  <input type="text" id="administeringProviderFamily" value="Médecin">
-</div>
-
-<div class="input-group">
-  <label>Phone (opt)</label>
-  <input type="tel" id="administeringProviderPhone" value="555-555-5555">
-</div>
-
-<div class="input-group">
-  <label>Organization (opt)</label>
-  <input type="text" id="administeringProviderOrgName">
-</div>
-
-<div class="input-group">
-  <label>Org ID (extension) (opt)</label>
-  <input type="text" id="administeringProviderOrgId" value="123456789">
-</div>
-
-<div class="input-group">
-  <label>Org ID Root (OID) (opt)</label>
-  <input type="text" id="administeringProviderOrgIdRoot" value="2.16.840.1.113883.19">
-</div>
-
-    <!-- ───────────── Administered Medication 1 ───────────── -->
-    <div class="input-group">
-      <label>Administered Medication 1 Code</label>
-      <input type="text" id="adminMed1Code" value="42946">
     </div>
 
-    <div class="input-group">
-      <label>Administered Medication 1 Name</label>
-      <input type="text" id="adminMed1Name" value="Folic acid">
-    </div>
+    <!-- ░░░  MEDICATIONS  ░░░================================================ -->
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-pills"></i> Medications</h2>
 
-    <div class="input-group">
-      <label>Administration ID 1</label>
-      <input type="text" id="adminMed1Id" value="MED-2024-001">
-    </div>
+        <div class="form-grid">
 
-    <div class="input-group">
-      <label>Administration Status 1</label>
-      <select id="adminMed1Status">
-        <option value="completed">Completed</option>
-        <option value="active">Active</option>
-        <option value="suspended">Suspended</option>
-        <option value="aborted">Aborted</option>
-      </select>
-    </div>
+            <!-- Administering Provider (single provider for ALL administered meds) -->
+            <div class="input-group">
+                <label>Administering Provider NPI</label>
+                <input type="text" id="administeringProviderNPI" inputmode="numeric" pattern="\d{10}"
+                    value="1234567890">
+            </div>
 
-    <div class="input-group">
-      <label>Administration Time 1</label>
-      <input type="datetime-local" id="adminMed1Time" value="2024-06-15T12:00">
-    </div>
+            <div class="input-group">
+                <label>First</label>
+                <input type="text" id="administeringProviderGiven" value="Je Suis">
+            </div>
 
-    <div class="input-group">
-      <label>Route 1</label>
-      <select id="adminMed1Route">
-        <option value="PO">Oral</option>
-        <option value="IV">Intravenous</option>
-        <option value="IM">Intramuscular</option>
-        <option value="SC">Subcutaneous</option>
-        <option value="SL">Sublingual</option>
-        <option value="TOP">Topical</option>
-        <option value="INH">Inhalation</option>
-      </select>
-    </div>
+            <div class="input-group">
+                <label>Last</label>
+                <input type="text" id="administeringProviderFamily" value="Médecin">
+            </div>
 
-    <!-- — NEW dose widgets — -->
-    <div class="input-group">
-      <label>Dose 1 • Amount</label>
-      <input type="number" step="0.01" id="adminMed1DoseValue" value="0.4">
-    </div>
+            <div class="input-group">
+                <label>Phone (opt)</label>
+                <input type="tel" id="administeringProviderPhone" value="555-555-5555">
+            </div>
 
-    <div class="input-group">
-      <label>Dose 1 • Unit</label>
-      <select id="adminMed1DoseUnit">
-        <option value="mg">mg</option>
-        <option value="mcg">mcg</option>
-        <option value="g">g</option>
-        <option value="mL">mL</option>
-        <option value="1">each / tablet</option>
-      </select>
-    </div>
+            <div class="input-group">
+                <label>Organization (opt)</label>
+                <input type="text" id="administeringProviderOrgName">
+            </div>
 
-    <div class="input-group">
-      <label>Dose 1 • Volume (opt)</label>
-      <input type="number" step="0.01" id="adminMed1VolValue" value="0.5">
-    </div>
+            <div class="input-group">
+                <label>Org ID (extension) (opt)</label>
+                <input type="text" id="administeringProviderOrgId" value="123456789">
+            </div>
 
-    <div class="input-group">
-      <label>Vol • Unit</label>
-      <select id="adminMed1VolUnit">
-        <option value=""></option>
-        <option value="mL">mL</option>
-        <option value="L">L</option>
-      </select>
-    </div>
+            <div class="input-group">
+                <label>Org ID Root (OID) (opt)</label>
+                <input type="text" id="administeringProviderOrgIdRoot" value="2.16.840.1.113883.19">
+            </div>
 
-    <div class="input-group">
-      <label><input type="checkbox" id="adminMed1Negated"> NOT given</label>
-    </div>
+            <!-- ───────────── Administered Medication 1 ───────────── -->
+            <div class="input-group">
+                <label>Administered Medication 1 Code</label>
+                <input type="text" id="adminMed1Code" value="42946">
+            </div>
 
-    <!-- ───────────── Administered Medication 2 ───────────── -->
-    <div class="input-group">
-      <label>Administered Medication 2 Code</label>
-      <input type="text" id="adminMed2Code" value="161">
-    </div>
+            <div class="input-group">
+                <label>Administered Medication 1 Name</label>
+                <input type="text" id="adminMed1Name" value="Folic acid">
+            </div>
 
-    <div class="input-group">
-      <label>Administered Medication 2 Name</label>
-      <input type="text" id="adminMed2Name" value="Multivitamin preparation">
-    </div>
+            <div class="input-group">
+                <label>Administration ID 1</label>
+                <input type="text" id="adminMed1Id" value="MED-2024-001">
+            </div>
 
-    <div class="input-group">
-      <label>Administration ID 2</label>
-      <input type="text" id="adminMed2Id" value="MED-2024-002">
-    </div>
+            <div class="input-group">
+                <label>Administration Status 1</label>
+                <select id="adminMed1Status">
+                    <option value="completed">Completed</option>
+                    <option value="active">Active</option>
+                    <option value="suspended">Suspended</option>
+                    <option value="aborted">Aborted</option>
+                </select>
+            </div>
 
-    <div class="input-group">
-      <label>Administration Status 2</label>
-      <select id="adminMed2Status">
-        <option value="completed">Completed</option>
-        <option value="active">Active</option>
-        <option value="suspended">Suspended</option>
-        <option value="aborted">Aborted</option>
-      </select>
-    </div>
+            <div class="input-group">
+                <label>Administration Time 1</label>
+                <input type="datetime-local" id="adminMed1Time" value="2024-06-15T12:00">
+            </div>
 
-    <div class="input-group">
-      <label>Administration Time 2</label>
-      <input type="datetime-local" id="adminMed2Time" value="2024-06-15T13:00">
-    </div>
+            <div class="input-group">
+                <label>Route 1</label>
+                <select id="adminMed1Route">
+                    <option value="PO">Oral</option>
+                    <option value="IV">Intravenous</option>
+                    <option value="IM">Intramuscular</option>
+                    <option value="SC">Subcutaneous</option>
+                    <option value="SL">Sublingual</option>
+                    <option value="TOP">Topical</option>
+                    <option value="INH">Inhalation</option>
+                </select>
+            </div>
 
-    <div class="input-group">
-      <label>Route 2</label>
-      <select id="adminMed2Route">
-        <option value="PO">Oral</option>
-        <option value="IV">Intravenous</option>
-        <option value="IM">Intramuscular</option>
-        <option value="SC">Subcutaneous</option>
-        <option value="SL">Sublingual</option>
-        <option value="TOP">Topical</option>
-        <option value="INH">Inhalation</option>
-      </select>
-    </div>
+            <!-- — NEW dose widgets — -->
+            <div class="input-group">
+                <label>Dose 1 • Amount</label>
+                <input type="number" step="0.01" id="adminMed1DoseValue" value="0.4">
+            </div>
 
-    <!-- — NEW dose widgets — -->
-    <div class="input-group">
-      <label>Dose 2 • Amount</label>
-      <input type="number" step="0.01" id="adminMed2DoseValue" value="1">
-    </div>
+            <div class="input-group">
+                <label>Dose 1 • Unit</label>
+                <select id="adminMed1DoseUnit">
+                    <option value="mg">mg</option>
+                    <option value="mcg">mcg</option>
+                    <option value="g">g</option>
+                    <option value="mL">mL</option>
+                    <option value="1">each / tablet</option>
+                </select>
+            </div>
 
-    <div class="input-group">
-      <label>Dose 2 • Unit</label>
-      <select id="adminMed2DoseUnit">
-        <option value="mg">mg</option>
-        <option value="mcg">mcg</option>
-        <option value="g">g</option>
-        <option value="mL">mL</option>
-        <option value="1" selected>each / tablet</option>
-      </select>
-    </div>
+            <div class="input-group">
+                <label>Dose 1 • Volume (opt)</label>
+                <input type="number" step="0.01" id="adminMed1VolValue" value="0.5">
+            </div>
 
-    <div class="input-group">
-      <label>Dose 2 • Volume (opt)</label>
-      <input type="number" step="0.01" id="adminMed2VolValue" value="">
-    </div>
+            <div class="input-group">
+                <label>Vol • Unit</label>
+                <select id="adminMed1VolUnit">
+                    <option value=""></option>
+                    <option value="mL">mL</option>
+                    <option value="L">L</option>
+                </select>
+            </div>
 
-    <div class="input-group">
-      <label>Vol • Unit</label>
-      <select id="adminMed2VolUnit">
-        <option value=""></option>
-        <option value="mL">mL</option>
-        <option value="L">L</option>
-      </select>
-    </div>
+            <div class="input-group">
+                <label><input type="checkbox" id="adminMed1Negated"> NOT given</label>
+            </div>
 
-    <div class="input-group">
-      <label><input type="checkbox" id="adminMed2Negated"> NOT given</label>
-    </div>
+            <!-- ───────────── Administered Medication 2 ───────────── -->
+            <div class="input-group">
+                <label>Administered Medication 2 Code</label>
+                <input type="text" id="adminMed2Code" value="161">
+            </div>
 
-    <!-- ───────────── Planned Medication (unchanged) ───────────── -->
-    <div class="input-group">
-      <label>Planned Medication 1 Code</label>
-      <input type="text" id="plannedMed1Code" value="161">
-    </div>
+            <div class="input-group">
+                <label>Administered Medication 2 Name</label>
+                <input type="text" id="adminMed2Name" value="Multivitamin preparation">
+            </div>
 
-    <div class="input-group">
-      <label>Planned Medication 1 Name</label>
-      <input type="text" id="plannedMed1Name" value="Multivitamin with iron">
-    </div>
+            <div class="input-group">
+                <label>Administration ID 2</label>
+                <input type="text" id="adminMed2Id" value="MED-2024-002">
+            </div>
 
-    <div class="input-group">
-      <label>Planned Medication 1 Instructions</label>
-      <textarea id="plannedMed1Instructions">
+            <div class="input-group">
+                <label>Administration Status 2</label>
+                <select id="adminMed2Status">
+                    <option value="completed">Completed</option>
+                    <option value="active">Active</option>
+                    <option value="suspended">Suspended</option>
+                    <option value="aborted">Aborted</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Administration Time 2</label>
+                <input type="datetime-local" id="adminMed2Time" value="2024-06-15T13:00">
+            </div>
+
+            <div class="input-group">
+                <label>Route 2</label>
+                <select id="adminMed2Route">
+                    <option value="PO">Oral</option>
+                    <option value="IV">Intravenous</option>
+                    <option value="IM">Intramuscular</option>
+                    <option value="SC">Subcutaneous</option>
+                    <option value="SL">Sublingual</option>
+                    <option value="TOP">Topical</option>
+                    <option value="INH">Inhalation</option>
+                </select>
+            </div>
+
+            <!-- — NEW dose widgets — -->
+            <div class="input-group">
+                <label>Dose 2 • Amount</label>
+                <input type="number" step="0.01" id="adminMed2DoseValue" value="1">
+            </div>
+
+            <div class="input-group">
+                <label>Dose 2 • Unit</label>
+                <select id="adminMed2DoseUnit">
+                    <option value="mg">mg</option>
+                    <option value="mcg">mcg</option>
+                    <option value="g">g</option>
+                    <option value="mL">mL</option>
+                    <option value="1" selected>each / tablet</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Dose 2 • Volume (opt)</label>
+                <input type="number" step="0.01" id="adminMed2VolValue" value="">
+            </div>
+
+            <div class="input-group">
+                <label>Vol • Unit</label>
+                <select id="adminMed2VolUnit">
+                    <option value=""></option>
+                    <option value="mL">mL</option>
+                    <option value="L">L</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label><input type="checkbox" id="adminMed2Negated"> NOT given</label>
+            </div>
+
+            <!-- ───────────── Planned Medication (unchanged) ───────────── -->
+            <div class="input-group">
+                <label>Planned Medication 1 Code</label>
+                <input type="text" id="plannedMed1Code" value="161">
+            </div>
+
+            <div class="input-group">
+                <label>Planned Medication 1 Name</label>
+                <input type="text" id="plannedMed1Name" value="Multivitamin with iron">
+            </div>
+
+            <div class="input-group">
+                <label>Planned Medication 1 Instructions</label>
+                <textarea id="plannedMed1Instructions">
 Take 1 tablet daily with food for nutritional support during neural tube defect management
       </textarea>
+            </div>
+
+        </div>
     </div>
-
-  </div>
-</div>
-<!-- ░░░=============================================================== -->
+    <!-- ░░░=============================================================== -->
 
 
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-syringe"></i> Immunizations</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Immunization 1 Status</label>
-                    <select id="immunization1Status">
-                        <option value="completed" selected>Completed</option>
-                        <option value="not-done">Not Done</option>
-                        <option value="refused">Refused</option>
-                        <option value="unknown">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Immunization 1 ID</label>
-                    <input type="text" id="immunization1Id" placeholder="IMM-001" value="HepB-NB-001">
-                </div>
-                <div class="input-group">
-                    <label>Immunization 1 Date</label>
-                    <input type="datetime-local" id="immunization1Date" placeholder="e.g., 20250201" value="2024-06-15T09:30">
-                </div>
-                <div class="input-group">
-                    <label>Vaccine 1 Code</label>
-                    <input type="text" id="vaccine1Code" placeholder="e.g., 207" value="08">
-                </div>
-                <div class="input-group">
-                    <label>Vaccine 1 Name</label>
-                    <input type="text" id="vaccine1Name" placeholder="e.g., COVID-19 mRNA vaccine" value="Hepatitis B vaccine, pediatric or pediatric/adolescent dosage">
-                </div>
-                <div class="input-group">
-               <label>Vaccine 1 Lot</label>
-               <input type="text" id="vaccine1Lot" value="ABC12345">
-               </div>
-                <div class="input-group">
-                    <label>Dose Quantity 1</label>
-                    <input type="text" id="vaccine1Dose" placeholder="e.g., 0.3 mL" value="0.5 mL">
-                </div>
-                <div class="input-group">
-                    <label>Route 1</label>
-                    <select id="vaccine1Route">
-                        <option value="IM" selected>Intramuscular</option>
-                        <option value="SC">Subcutaneous</option>
-                        <option value="ID">Intradermal</option>
-                        <option value="PO">Oral</option>
-                        <option value="IN">Intranasal</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Manufacturer 1</label>
-                    <input type="text" id="vaccine1Manufacturer" placeholder="e.g., Pfizer-BioNTech" value="Merck Co, Inc.">
-                </div>
-                <div class="input-group">
-                    <label>Immunization 2 Status</label>
-                    <select id="immunization2Status">
-                        <option value="completed" selected>Completed</option>
-                        <option value="not-done">Not Done</option>
-                        <option value="refused">Refused</option>
-                        <option value="unknown">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Immunization 2 ID</label>
-                    <input type="text" id="immunization2Id" placeholder="e.g., IMM-002" value="VitK-NB-001">
-                </div>
-                <div class="input-group">
-                    <label>Immunization 2 Date</label>
-                    <input type="datetime-local" id="immunization2Date" placeholder="e.g., 20250101" value="2024-06-15T09:45">
-                </div>
-                <div class="input-group">
-                    <label>Vaccine 2 Code</label>
-                    <input type="text" id="vaccine2Code" placeholder="e.g., 141" value="87567">
-                </div>
-                <div class="input-group">
-                    <label>Vaccine 2 Name</label>
-                    <input type="text" id="vaccine2Name" placeholder="e.g., Influenza vaccine" value="Vitamin K1 injection (phytonadione)">
-                </div>
-                <div class="input-group">
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-syringe"></i> Immunizations</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Immunization 1 Status</label>
+                <select id="immunization1Status">
+                    <option value="completed" selected>Completed</option>
+                    <option value="not-done">Not Done</option>
+                    <option value="refused">Refused</option>
+                    <option value="unknown">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Immunization 1 ID</label>
+                <input type="text" id="immunization1Id" placeholder="IMM-001" value="HepB-NB-001">
+            </div>
+            <div class="input-group">
+                <label>Immunization 1 Date</label>
+                <input type="datetime-local" id="immunization1Date" placeholder="e.g., 20250201"
+                    value="2024-06-15T09:30">
+            </div>
+            <div class="input-group">
+                <label>Vaccine 1 Code</label>
+                <input type="text" id="vaccine1Code" placeholder="e.g., 207" value="08">
+            </div>
+            <div class="input-group">
+                <label>Vaccine 1 Name</label>
+                <input type="text" id="vaccine1Name" placeholder="e.g., COVID-19 mRNA vaccine"
+                    value="Hepatitis B vaccine, pediatric or pediatric/adolescent dosage">
+            </div>
+            <div class="input-group">
+                <label>Vaccine 1 Lot</label>
+                <input type="text" id="vaccine1Lot" value="ABC12345">
+            </div>
+            <div class="input-group">
+                <label>Dose Quantity 1</label>
+                <input type="text" id="vaccine1Dose" placeholder="e.g., 0.3 mL" value="0.5 mL">
+            </div>
+            <div class="input-group">
+                <label>Route 1</label>
+                <select id="vaccine1Route">
+                    <option value="IM" selected>Intramuscular</option>
+                    <option value="SC">Subcutaneous</option>
+                    <option value="ID">Intradermal</option>
+                    <option value="PO">Oral</option>
+                    <option value="IN">Intranasal</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Manufacturer 1</label>
+                <input type="text" id="vaccine1Manufacturer" placeholder="e.g., Pfizer-BioNTech" value="Merck Co, Inc.">
+            </div>
+            <div class="input-group">
+                <label>Immunization 2 Status</label>
+                <select id="immunization2Status">
+                    <option value="completed" selected>Completed</option>
+                    <option value="not-done">Not Done</option>
+                    <option value="refused">Refused</option>
+                    <option value="unknown">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Immunization 2 ID</label>
+                <input type="text" id="immunization2Id" placeholder="e.g., IMM-002" value="VitK-NB-001">
+            </div>
+            <div class="input-group">
+                <label>Immunization 2 Date</label>
+                <input type="datetime-local" id="immunization2Date" placeholder="e.g., 20250101"
+                    value="2024-06-15T09:45">
+            </div>
+            <div class="input-group">
+                <label>Vaccine 2 Code</label>
+                <input type="text" id="vaccine2Code" placeholder="e.g., 141" value="87567">
+            </div>
+            <div class="input-group">
+                <label>Vaccine 2 Name</label>
+                <input type="text" id="vaccine2Name" placeholder="e.g., Influenza vaccine"
+                    value="Vitamin K1 injection (phytonadione)">
+            </div>
+            <div class="input-group">
                 <label>Vaccine 2 Lot</label>
                 <input type="text" id="vaccine2Lot" value="XYZ98765">
-                </div>
-                <div class="input-group">
-                    <label>Dose Quantity 2</label>
-                    <input type="text" id="vaccine2Dose" placeholder="e.g., 0.5 mL" value="1 mg (0.5 mL)">
-                </div>
-                <div class="input-group">
-                    <label>Route 2</label>
-                    <select id="vaccine2Route">
-                        <option value="IM" selected>Intramuscular</option>
-                        <option value="SC">Subcutaneous</option>
-                        <option value="ID">Intradermal</option>
-                        <option value="PO">Oral</option>
-                        <option value="IN">Intranasal</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Manufacturer 2</label>
-                    <input type="text" id="vaccine2Manufacturer" placeholder="e.g., Sanofi Pasteur" value="Hospira Inc.">
-                </div>
+            </div>
+            <div class="input-group">
+                <label>Dose Quantity 2</label>
+                <input type="text" id="vaccine2Dose" placeholder="e.g., 0.5 mL" value="1 mg (0.5 mL)">
+            </div>
+            <div class="input-group">
+                <label>Route 2</label>
+                <select id="vaccine2Route">
+                    <option value="IM" selected>Intramuscular</option>
+                    <option value="SC">Subcutaneous</option>
+                    <option value="ID">Intradermal</option>
+                    <option value="PO">Oral</option>
+                    <option value="IN">Intranasal</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Manufacturer 2</label>
+                <input type="text" id="vaccine2Manufacturer" placeholder="e.g., Sanofi Pasteur" value="Hospira Inc.">
             </div>
         </div>
+    </div>
 
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-baby"></i> Pregnancy Information</h2>
-            <div class="form-grid">
-                <div class="input-group">
-    <label>Pregnancy Status</label>
-    <select id="pregnancyStatus">
-        <option value="77386006" selected>Pregnant</option>  
-        <option value="60001007">Not pregnant</option>
-        <option value="102874004">Possible pregnancy</option>
-        <option value="261665006">Unknown</option>
-    </select>
-</div>
-                <div class="input-group">
-                    <label>Pregnancy Effective Time</label>
-                    <input type="datetime-local" id="pregnancyEffectiveTime" placeholder="Date of assessment" value="2024-06-15T10:00">
-                </div>
-                <div class="input-group">
-                    <label>Estimated Delivery Date</label>
-                    <input type="datetime-local" id="estimatedDeliveryDate" placeholder="Expected delivery date" value="2024-06-15T00:00">
-                </div>
-                <div class="input-group">
-                    <label>Pregnancy Determination Method</label>
-                    <select id="pregnancyDeterminationMethod">
-                        <option value="169560004">Urine pregnancy test</option>
-                        <option value="167252002">Serum pregnancy test</option>
-                        <option value="12611008" selected>Ultrasound examination</option>
-                        <option value="271900007">Patient reported</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Gestational Age (weeks)</label>
-                    <input type="text" id="gestationalAge" placeholder="e.g., 12" value="39">
-                </div>
-                <div class="input-group">
-                    <label>Last Menstrual Period</label>
-                    <input type="datetime-local" id="lastMenstrualPeriod" placeholder="Date of LMP" value="2023-09-06T00:00">
-                </div>
-                <div class="input-group">
-                    <label>Pregnancy Outcome</label>
-                    <select id="pregnancyOutcome">
-                        <option value="281050002" selected>Live birth</option>
-                        <option value="237364002">Stillbirth</option>
-                        <option value="17369002">Miscarriage</option>
-                        <option value="69422002">Elective termination</option>
-                        <option value="N/A">Not applicable</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Postpartum Status</label>
-                    <select id="postpartumStatus">
-                        <option value="255410009" selected>Postpartum</option>
-                        <option value="255409004">Not postpartum</option>
-                        <option value="261665006">Unknown</option>
-                    </select>
-                </div>
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-baby"></i> Pregnancy Information</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Pregnancy Status</label>
+                <select id="pregnancyStatus">
+                    <option value="77386006" selected>Pregnant</option>
+                    <option value="60001007">Not pregnant</option>
+                    <option value="102874004">Possible pregnancy</option>
+                    <option value="261665006">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Pregnancy Effective Time</label>
+                <input type="datetime-local" id="pregnancyEffectiveTime" placeholder="Date of assessment"
+                    value="2024-06-15T10:00">
+            </div>
+            <div class="input-group">
+                <label>Estimated Delivery Date</label>
+                <input type="datetime-local" id="estimatedDeliveryDate" placeholder="Expected delivery date"
+                    value="2024-06-15T00:00">
+            </div>
+            <div class="input-group">
+                <label>Pregnancy Determination Method</label>
+                <select id="pregnancyDeterminationMethod">
+                    <option value="169560004">Urine pregnancy test</option>
+                    <option value="167252002">Serum pregnancy test</option>
+                    <option value="12611008" selected>Ultrasound examination</option>
+                    <option value="271900007">Patient reported</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Gestational Age (weeks)</label>
+                <input type="text" id="gestationalAge" placeholder="e.g., 12" value="39">
+            </div>
+            <div class="input-group">
+                <label>Last Menstrual Period</label>
+                <input type="datetime-local" id="lastMenstrualPeriod" placeholder="Date of LMP"
+                    value="2023-09-06T00:00">
+            </div>
+            <div class="input-group">
+                <label>Pregnancy Outcome</label>
+                <select id="pregnancyOutcome">
+                    <option value="281050002" selected>Live birth</option>
+                    <option value="237364002">Stillbirth</option>
+                    <option value="17369002">Miscarriage</option>
+                    <option value="69422002">Elective termination</option>
+                    <option value="N/A">Not applicable</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Postpartum Status</label>
+                <select id="postpartumStatus">
+                    <option value="255410009" selected>Postpartum</option>
+                    <option value="255409004">Not postpartum</option>
+                    <option value="261665006">Unknown</option>
+                </select>
             </div>
         </div>
+    </div>
 
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-plane"></i> Travel History</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Travel Start Date</label>
-                    <input type="datetime-local" id="travelStartDate" value="2024-05-15T00:00">
-                </div>
-                <div class="input-group">
-                    <label>Travel End Date</label>
-                    <input type="datetime-local" id="travelEndDate" value="2024-05-20T00:00">
-                </div>
-                <div class="input-group">
-                    <label>Travel Location</label>
-                    <input type="text" id="travelLocation" value="Chicago, Illinois">
-                </div>
-                <div class="input-group">
-                    <label>Travel Location Code</label>
-                    <input type="text" id="travelLocationCode" value="IL">
-                </div>
-                <div class="input-group">
-                    <label>Travel Address</label>
-                    <input type="text" id="travelAddress" value="123 Oak Street, Springfield, IL 62701">
-                </div>
-                <div class="input-group">
-                    <label>Purpose of Travel</label>
-                    <select id="purposeOfTravel">
-                        <option value="">-- Select Purpose of Travel --</option>
-                        <option value="224930009">Business</option>
-                        <option value="289049007" selected>Leisure</option>
-                        <option value="385731004">Medical</option>
-                        <option value="224930009">Educational</option>
-                        <option value="O">Other</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Transportation Type</label>
-                    <select id="transportationType">
-                        <option value="">-- Select Transportation Type --</option>
-                        <option value="73957001">Air transport</option>
-                        <option value="49122002" selected>Ground transport</option>
-                        <option value="272125009">Water transport</option>
-                        <option value="34965002">Public transport</option>
-                        <option value="71783008">Private transport</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Transportation Details</label>
-                    <textarea id="transportationDetails">Personal vehicle - 2022 Honda Pilot, License plate: ABC-1234</textarea>
-                </div>
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-plane"></i> Travel History</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Travel Start Date</label>
+                <input type="datetime-local" id="travelStartDate" value="2024-05-15T00:00">
+            </div>
+            <div class="input-group">
+                <label>Travel End Date</label>
+                <input type="datetime-local" id="travelEndDate" value="2024-05-20T00:00">
+            </div>
+            <div class="input-group">
+                <label>Travel Location</label>
+                <input type="text" id="travelLocation" value="Chicago, Illinois">
+            </div>
+            <div class="input-group">
+                <label>Travel Location Code</label>
+                <input type="text" id="travelLocationCode" value="IL">
+            </div>
+            <div class="input-group">
+                <label>Travel Address</label>
+                <input type="text" id="travelAddress" value="123 Oak Street, Springfield, IL 62701">
+            </div>
+            <div class="input-group">
+                <label>Purpose of Travel</label>
+                <select id="purposeOfTravel">
+                    <option value="">-- Select Purpose of Travel --</option>
+                    <option value="224930009">Business</option>
+                    <option value="289049007" selected>Leisure</option>
+                    <option value="385731004">Medical</option>
+                    <option value="224930009">Educational</option>
+                    <option value="O">Other</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Transportation Type</label>
+                <select id="transportationType">
+                    <option value="">-- Select Transportation Type --</option>
+                    <option value="73957001">Air transport</option>
+                    <option value="49122002" selected>Ground transport</option>
+                    <option value="272125009">Water transport</option>
+                    <option value="34965002">Public transport</option>
+                    <option value="71783008">Private transport</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Transportation Details</label>
+                <textarea
+                    id="transportationDetails">Personal vehicle - 2022 Honda Pilot, License plate: ABC-1234</textarea>
             </div>
         </div>
+    </div>
 
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-microscope"></i> Specimen Information</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Specimen 1 Source</label>
-                    <select id="specimen1Source">
-                        <option value="258500001">Nasopharyngeal swab</option>
-                        <option value="461911000124106">Oropharyngeal swab</option>
-                        <option value="258580003" selected>Whole blood sample</option>
-                        <option value="122555007">Venous blood sample</option>
-                        <option value="309051001">Body fluid sample</option>
-                        <option value="119295008">Specimen obtained by aspiration</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Specimen 1 Type</label>
-                    <input type="text" id="specimen1Type" placeholder="e.g., Swab" value="Whole blood">
-                </div>
-                <div class="input-group">
-                    <label>Specimen 1 ID</label>
-                    <input type="text" id="specimen1Id" placeholder="e.g., SPEC-001" value="NB-BLOOD-20240615-001">
-                </div>
-                <div class="input-group">
-                    <label>Collection Date 1</label>
-                    <input type="datetime-local" id="collection1Date" placeholder="e.g., 20250216110000" value="2024-06-15T08:30">
-                </div>
-                <div class="input-group">
-                    <label>Specimen 2 Source</label>
-                    <select id="specimen2Source">
-                        <option value="258500001">Nasopharyngeal swab</option>
-                        <option value="461911000124106">Oropharyngeal swab</option>
-                        <option value="258580003">Whole blood sample</option>
-                        <option value="122555007">Venous blood sample</option>
-                        <option value="309051001" selected>Body fluid sample</option>
-                        <option value="119295008">Specimen obtained by aspiration</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Specimen 2 Type</label>
-                    <input type="text" id="specimen2Type" placeholder="e.g., Blood" value="Cerebrospinal fluid">
-                </div>
-                <div class="input-group">
-                    <label>Specimen 2 ID</label>
-                    <input type="text" id="specimen2Id" placeholder="e.g., SPEC-002" value="NB-CSF-20240615-001">
-                </div>
-                <div class="input-group">
-                    <label>Collection Date 2</label>
-                    <input type="datetime-local" id="collection2Date" placeholder="e.g., 20250216120000" value="2024-06-15T09:30">
-                </div>
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-microscope"></i> Specimen Information</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Specimen 1 Source</label>
+                <select id="specimen1Source">
+                    <option value="258500001">Nasopharyngeal swab</option>
+                    <option value="461911000124106">Oropharyngeal swab</option>
+                    <option value="258580003" selected>Whole blood sample</option>
+                    <option value="122555007">Venous blood sample</option>
+                    <option value="309051001">Body fluid sample</option>
+                    <option value="119295008">Specimen obtained by aspiration</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Specimen 1 Type</label>
+                <input type="text" id="specimen1Type" placeholder="e.g., Swab" value="Whole blood">
+            </div>
+            <div class="input-group">
+                <label>Specimen 1 ID</label>
+                <input type="text" id="specimen1Id" placeholder="e.g., SPEC-001" value="NB-BLOOD-20240615-001">
+            </div>
+            <div class="input-group">
+                <label>Collection Date 1</label>
+                <input type="datetime-local" id="collection1Date" placeholder="e.g., 20250216110000"
+                    value="2024-06-15T08:30">
+            </div>
+            <div class="input-group">
+                <label>Specimen 2 Source</label>
+                <select id="specimen2Source">
+                    <option value="258500001">Nasopharyngeal swab</option>
+                    <option value="461911000124106">Oropharyngeal swab</option>
+                    <option value="258580003">Whole blood sample</option>
+                    <option value="122555007">Venous blood sample</option>
+                    <option value="309051001" selected>Body fluid sample</option>
+                    <option value="119295008">Specimen obtained by aspiration</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Specimen 2 Type</label>
+                <input type="text" id="specimen2Type" placeholder="e.g., Blood" value="Cerebrospinal fluid">
+            </div>
+            <div class="input-group">
+                <label>Specimen 2 ID</label>
+                <input type="text" id="specimen2Id" placeholder="e.g., SPEC-002" value="NB-CSF-20240615-001">
+            </div>
+            <div class="input-group">
+                <label>Collection Date 2</label>
+                <input type="datetime-local" id="collection2Date" placeholder="e.g., 20250216120000"
+                    value="2024-06-15T09:30">
             </div>
         </div>
+    </div>
 
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-chart-line"></i> Additional Clinical Data</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Temperature (°F)</label>
-                    <input type="text" id="temperature" placeholder="e.g., 98.6" value="97.8">
-                </div>
-                <div class="input-group">
-                    <label>Blood Pressure (mmHg)</label>
-                    <input type="text" id="bloodPressure" placeholder="e.g., 120/80" value="65/42">
-                </div>
-                <div class="input-group">
-                    <label>Heart Rate (bpm)</label>
-                    <input type="text" id="heartRate" placeholder="e.g., 72" value="145">
-                </div>
-                <div class="input-group">
-                    <label>Respiratory Rate (breaths/min)</label>
-                    <input type="text" id="respiratoryRate" placeholder="e.g., 16" value="38">
-                </div>
-                <div class="input-group">
-                    <label>Oxygen Saturation (%)</label>
-                    <input type="text" id="oxygenSaturation" placeholder="e.g., 98" value="97">
-                </div>
-                <div class="input-group">
-                    <label>Weight (lbs)</label>
-                    <input type="text" id="weight" placeholder="e.g., 150" value="6.2">
-                </div>
-                <div class="input-group">
-                    <label>Height (inches)</label>
-                    <input type="text" id="height" placeholder="e.g., 68" value="19.5">
-                </div>
-                <div class="input-group">
-                    <label>BMI</label>
-                    <input type="text" id="bmi" placeholder="e.g., 22.8" value="13.2">
-                </div>
-                <div class="input-group">
-                    <label>Therapeutic Response</label>
-                    <select id="therapeuticResponse">
-                        <option value="182840001" selected>Good response</option>
-                        <option value="182841002">Poor response</option>
-                        <option value="182842009">No response</option>
-                        <option value="182843004">Partial response</option>
-                        <option value="385655000">Not applicable</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Homeless Status</label>
-                    <select id="homelessStatus">
-                        <option value="105526001">Homeless</option>
-                        <option value="105529008" selected>Not homeless</option>
-                        <option value="261665006">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Congregate Living</label>
-                    <select id="congregateLiving">
-                        <option value="Y">Yes</option>
-                        <option value="N" selected>No</option>
-                        <option value="UNK">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Congregate Living Type</label>
-                    <select id="congregateLivingType">
-                        <option value="224683003">Nursing home</option>
-                        <option value="42665001">School</option>
-                        <option value="264362003">Prison</option>
-                        <option value="257656006">Dormitory</option>
-                        <option value="224891009">Shelter</option>
-                        <option value="O" selected>Other</option>
-                    </select>
-                </div>
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-chart-line"></i> Additional Clinical Data</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Temperature (°F)</label>
+                <input type="text" id="temperature" placeholder="e.g., 98.6" value="97.8">
+            </div>
+            <div class="input-group">
+                <label>Blood Pressure (mmHg)</label>
+                <input type="text" id="bloodPressure" placeholder="e.g., 120/80" value="65/42">
+            </div>
+            <div class="input-group">
+                <label>Heart Rate (bpm)</label>
+                <input type="text" id="heartRate" placeholder="e.g., 72" value="145">
+            </div>
+            <div class="input-group">
+                <label>Respiratory Rate (breaths/min)</label>
+                <input type="text" id="respiratoryRate" placeholder="e.g., 16" value="38">
+            </div>
+            <div class="input-group">
+                <label>Oxygen Saturation (%)</label>
+                <input type="text" id="oxygenSaturation" placeholder="e.g., 98" value="97">
+            </div>
+            <div class="input-group">
+                <label>Weight (lbs)</label>
+                <input type="text" id="weight" placeholder="e.g., 150" value="6.2">
+            </div>
+            <div class="input-group">
+                <label>Height (inches)</label>
+                <input type="text" id="height" placeholder="e.g., 68" value="19.5">
+            </div>
+            <div class="input-group">
+                <label>BMI</label>
+                <input type="text" id="bmi" placeholder="e.g., 22.8" value="13.2">
+            </div>
+            <div class="input-group">
+                <label>Therapeutic Response</label>
+                <select id="therapeuticResponse">
+                    <option value="182840001" selected>Good response</option>
+                    <option value="182841002">Poor response</option>
+                    <option value="182842009">No response</option>
+                    <option value="182843004">Partial response</option>
+                    <option value="385655000">Not applicable</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Homeless Status</label>
+                <select id="homelessStatus">
+                    <option value="105526001">Homeless</option>
+                    <option value="105529008" selected>Not homeless</option>
+                    <option value="261665006">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Congregate Living</label>
+                <select id="congregateLiving">
+                    <option value="Y">Yes</option>
+                    <option value="N" selected>No</option>
+                    <option value="UNK">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Congregate Living Type</label>
+                <select id="congregateLivingType">
+                    <option value="224683003">Nursing home</option>
+                    <option value="42665001">School</option>
+                    <option value="264362003">Prison</option>
+                    <option value="257656006">Dormitory</option>
+                    <option value="224891009">Shelter</option>
+                    <option value="O" selected>Other</option>
+                </select>
             </div>
         </div>
+    </div>
 
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-procedures"></i> Procedures</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Current Procedure 1 Code</label>
-                    <input type="text" id="currentProc1Code" placeholder="e.g., 33747-0" value="80146002">
-                </div>
-                <div class="input-group">
-                    <label>Current Procedure 1 Name</label>
-                    <input type="text" id="currentProc1Name" placeholder="e.g., Bronchoscopy" value="Excision of spinal lesion">
-                </div>
-                <div class="input-group">
-                    <label>Current Procedure 1 Date</label>
-                    <input type="datetime-local" id="currentProc1Date" placeholder="e.g., 20250216" value="2024-06-15T09:00">
-                </div>
-                <div class="input-group">
-                    <label>Current Procedure 1 Type <span class="help-tooltip" title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-procedures"></i> Procedures</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Current Procedure 1 Code</label>
+                <input type="text" id="currentProc1Code" placeholder="e.g., 33747-0" value="80146002">
+            </div>
+            <div class="input-group">
+                <label>Current Procedure 1 Name</label>
+                <input type="text" id="currentProc1Name" placeholder="e.g., Bronchoscopy"
+                    value="Excision of spinal lesion">
+            </div>
+            <div class="input-group">
+                <label>Current Procedure 1 Date</label>
+                <input type="datetime-local" id="currentProc1Date" placeholder="e.g., 20250216"
+                    value="2024-06-15T09:00">
+            </div>
+            <div class="input-group">
+                <label>Current Procedure 1 Type <span class="help-tooltip"
+                        title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
 
 Observation: Use for diagnostic activities that gather information about the patient (lab tests, imaging, assessments) without altering their physical condition.
 
 Procedure: Use for therapeutic interventions that alter the patient's physical condition (surgeries, treatments, manipulations).">ℹ️</span></label>
-                    <select id="currentProc1Type">
-                        <option value="act">Act</option>
-                        <option value="observation">Observation</option>
-                        <option value="procedure" selected>Procedure</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Current Procedure 2 Code</label>
-                    <input type="text" id="currentProc2Code" placeholder="e.g., 71388002" value="241615005">
-                </div>
-                <div class="input-group">
-                    <label>Current Procedure 2 Name</label>
-                    <input type="text" id="currentProc2Name" placeholder="e.g., Chest X-ray" value="Magnetic resonance imaging of spine">
-                </div>
-                <div class="input-group">
-                    <label>Current Procedure 2 Date</label>
-                    <input type="datetime-local" id="currentProc2Date" placeholder="e.g., 20250216" value="2024-06-15T10:00">
-                </div>
-                <div class="input-group">
-                    <label>Current Procedure 2 Type <span class="help-tooltip" title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
+                <select id="currentProc1Type">
+                    <option value="act">Act</option>
+                    <option value="observation">Observation</option>
+                    <option value="procedure" selected>Procedure</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Current Procedure 2 Code</label>
+                <input type="text" id="currentProc2Code" placeholder="e.g., 71388002" value="241615005">
+            </div>
+            <div class="input-group">
+                <label>Current Procedure 2 Name</label>
+                <input type="text" id="currentProc2Name" placeholder="e.g., Chest X-ray"
+                    value="Magnetic resonance imaging of spine">
+            </div>
+            <div class="input-group">
+                <label>Current Procedure 2 Date</label>
+                <input type="datetime-local" id="currentProc2Date" placeholder="e.g., 20250216"
+                    value="2024-06-15T10:00">
+            </div>
+            <div class="input-group">
+                <label>Current Procedure 2 Type <span class="help-tooltip"
+                        title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
 
 Observation: Use for diagnostic activities that gather information about the patient (lab tests, imaging, assessments) without altering their physical condition.
 
 Procedure: Use for therapeutic interventions that alter the patient's physical condition (surgeries, treatments, manipulations).">ℹ️</span></label>
-                    <select id="currentProc2Type">
-                        <option value="act">Act</option>
-                        <option value="observation" selected>Observation</option>
-                        <option value="procedure">Procedure</option>
-                    </select>
+                <select id="currentProc2Type">
+                    <option value="act">Act</option>
+                    <option value="observation" selected>Observation</option>
+                    <option value="procedure">Procedure</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Procedure 1 Code </label>
+                <div class="code-search">
+                    <input type="text" id="triggerProc1Code" placeholder="e.g., 168731009"
+                        onblur="validateTriggerCode('triggerProc1Code')" value="230690007">
+                    <button type="button" class="btn btn-secondary"
+                        onclick="searchRCTCCodes('triggerProc1Code')">🔍</button>
                 </div>
-                <div class="input-group">
-                    <label>Procedure 1 Code </label>
-                    <div class="code-search">
-                        <input type="text" id="triggerProc1Code" placeholder="e.g., 168731009" onblur="validateTriggerCode('triggerProc1Code')" value="230690007">
-                        <button type="button" class="btn btn-secondary" onclick="searchRCTCCodes('triggerProc1Code')">🔍</button>
-                    </div>
-                    <div id="triggerProc1Code_results" class="search-results"></div>
-                </div>
-                <div class="input-group">
-                    <label>Procedure 1 Name</label>
-                    <input type="text" id="triggerProc1Name" placeholder="e.g., Intubation" value="Stroke">
-                </div>
-                <div class="input-group">
-                    <label>Procedure 1 Date</label>
-                    <input type="datetime-local" id="triggerProc1Date" placeholder="e.g., 20250216" value="2024-06-15T11:00">
-                </div>
-                <div class="input-group">
-                    <label>Procedure 1 Type <span class="help-tooltip" title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
+                <div id="triggerProc1Code_results" class="search-results"></div>
+            </div>
+            <div class="input-group">
+                <label>Procedure 1 Name</label>
+                <input type="text" id="triggerProc1Name" placeholder="e.g., Intubation" value="Stroke">
+            </div>
+            <div class="input-group">
+                <label>Procedure 1 Date</label>
+                <input type="datetime-local" id="triggerProc1Date" placeholder="e.g., 20250216"
+                    value="2024-06-15T11:00">
+            </div>
+            <div class="input-group">
+                <label>Procedure 1 Type <span class="help-tooltip"
+                        title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
 
 Observation: Use for diagnostic activities that gather information about the patient (lab tests, imaging, assessments) without altering their physical condition.
 
 Procedure: Use for therapeutic interventions that alter the patient's physical condition (surgeries, treatments, manipulations).">ℹ️</span></label>
-                    <select id="triggerProc1Type">
-                        <option value="act">Act</option>
-                        <option value="observation" selected>Observation</option>
-                        <option value="procedure">Procedure</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Planned Procedure 1 Code</label>
-                    <input type="text" id="plannedProc1Code" placeholder="e.g., 182836005" value="182836005">
-                </div>
-                <div class="input-group">
-                    <label>Planned Procedure 1 Name</label>
-                    <input type="text" id="plannedProc1Name" placeholder="e.g., Follow-up CT scan" value="Neurosurgical follow-up">
-                </div>
-                <div class="input-group">
-                    <label>Planned Procedure 1 Date</label>
-                    <input type="datetime-local" id="plannedProc1Date" placeholder="e.g., 20250220" value="2024-07-15T14:00">
-                </div>
-                <div class="input-group">
-                    <label>Planned Procedure 1 Type <span class="help-tooltip" title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
+                <select id="triggerProc1Type">
+                    <option value="act">Act</option>
+                    <option value="observation" selected>Observation</option>
+                    <option value="procedure">Procedure</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Planned Procedure 1 Code</label>
+                <input type="text" id="plannedProc1Code" placeholder="e.g., 182836005" value="182836005">
+            </div>
+            <div class="input-group">
+                <label>Planned Procedure 1 Name</label>
+                <input type="text" id="plannedProc1Name" placeholder="e.g., Follow-up CT scan"
+                    value="Neurosurgical follow-up">
+            </div>
+            <div class="input-group">
+                <label>Planned Procedure 1 Date</label>
+                <input type="datetime-local" id="plannedProc1Date" placeholder="e.g., 20250220"
+                    value="2024-07-15T14:00">
+            </div>
+            <div class="input-group">
+                <label>Planned Procedure 1 Type <span class="help-tooltip"
+                        title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
 
 Observation: Use for diagnostic activities that gather information about the patient (lab tests, imaging, assessments) without altering their physical condition.
 
 Procedure: Use for therapeutic interventions that alter the patient's physical condition (surgeries, treatments, manipulations).">ℹ️</span></label>
-                    <select id="plannedProc1Type">
-                        <option value="act" selected>Act</option>
-                        <option value="observation">Observation</option>
-                        <option value="procedure">Procedure</option>
-                    </select>
-                </div>
+                <select id="plannedProc1Type">
+                    <option value="act" selected>Act</option>
+                    <option value="observation">Observation</option>
+                    <option value="procedure">Procedure</option>
+                </select>
             </div>
         </div>
+    </div>
 
 
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-exclamation-triangle"></i> Emergency and Public Health</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Emergency Outbreak Information</label>
-                    <select id="emergencyOutbreakInfo">
-                        <option value="443684005">Disease outbreak</option>
-                        <option value="410546004">Public health emergency</option>
-                        <option value="N/A" selected>Not applicable</option>
-                        <option value="261665006">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Outbreak Details</label>
-                    <textarea id="outbreakDetails">No current outbreak or emergency situation related to this case</textarea>
-                </div>
-                <div class="input-group">
-                    <label>Exposure/Contact Information</label>
-                    <select id="exposureContactInfo">
-                        <option value="24932003">Exposed</option>
-                        <option value="84100007">Contact</option>
-                        <option value="373068000" selected>No exposure</option>
-                        <option value="261665006">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Exposure Type</label>
-                    <select id="exposureType">
-                        <option value="409822003">Direct contact</option>
-                        <option value="417746004">Airborne</option>
-                        <option value="418038007">Droplet</option>
-                        <option value="447964005">Contact precaution</option>
-                        <option value="OTH" selected>Other</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Exposure Location</label>
-                    <input type="text" id="exposureLocation" value="Not applicable - congenital condition">
-                </div>
-                <div class="input-group">
-                    <label>Exposure Date (YYYYMMDD)</label>
-                    <input type="text" id="exposureDate" value="Not applicable">
-                </div>
-                <div class="input-group">
-                    <label>Contact Person Name</label>
-                    <input type="text" id="contactPersonName" value="Dr. Patricia Williams, MD">
-                </div>
-                <div class="input-group">
-                    <label>Contact Person Phone</label>
-                    <input type="text" id="contactPersonPhone" value="+1-217-555-0199">
-                </div>
-                <div class="input-group">
-                    <label>Vaccine Credential Patient Assertion</label>
-                    <select id="vaccineCredentialAssertion">
-                        <option value="Y">Yes</option>
-                        <option value="N" selected>No</option>
-                        <option value="UNK">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Vaccine Card Available</label>
-                    <select id="vaccineCardAvailable">
-                        <option value="Y">Yes</option>
-                        <option value="N" selected>No</option>
-                        <option value="UNK">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Quarantine Status</label>
-                    <select id="quarantineStatus">
-                        <option value="182856006">In quarantine</option>
-                        <option value="182857002">Released from quarantine</option>
-                        <option value="405178008" selected>Not in quarantine</option>
-                        <option value="261665006">Unknown</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>Isolation Status</label>
-                    <select id="isolationStatus">
-                        <option value="40174006">In isolation</option>
-                        <option value="182840001">Released from isolation</option>
-                        <option value="385432009" selected>Not in isolation</option>
-                        <option value="261665006">Unknown</option>
-                    </select>
-                </div>
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-exclamation-triangle"></i> Emergency and Public Health</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Emergency Outbreak Information</label>
+                <select id="emergencyOutbreakInfo">
+                    <option value="443684005">Disease outbreak</option>
+                    <option value="410546004">Public health emergency</option>
+                    <option value="N/A" selected>Not applicable</option>
+                    <option value="261665006">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Outbreak Details</label>
+                <textarea
+                    id="outbreakDetails">No current outbreak or emergency situation related to this case</textarea>
+            </div>
+            <div class="input-group">
+                <label>Exposure/Contact Information</label>
+                <select id="exposureContactInfo">
+                    <option value="24932003">Exposed</option>
+                    <option value="84100007">Contact</option>
+                    <option value="373068000" selected>No exposure</option>
+                    <option value="261665006">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Exposure Type</label>
+                <select id="exposureType">
+                    <option value="409822003">Direct contact</option>
+                    <option value="417746004">Airborne</option>
+                    <option value="418038007">Droplet</option>
+                    <option value="447964005">Contact precaution</option>
+                    <option value="OTH" selected>Other</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Exposure Location</label>
+                <input type="text" id="exposureLocation" value="Not applicable - congenital condition">
+            </div>
+            <div class="input-group">
+                <label>Exposure Date (YYYYMMDD)</label>
+                <input type="text" id="exposureDate" value="Not applicable">
+            </div>
+            <div class="input-group">
+                <label>Contact Person Name</label>
+                <input type="text" id="contactPersonName" value="Dr. Patricia Williams, MD">
+            </div>
+            <div class="input-group">
+                <label>Contact Person Phone</label>
+                <input type="text" id="contactPersonPhone" value="+1-217-555-0199">
+            </div>
+            <div class="input-group">
+                <label>Vaccine Credential Patient Assertion</label>
+                <select id="vaccineCredentialAssertion">
+                    <option value="Y">Yes</option>
+                    <option value="N" selected>No</option>
+                    <option value="UNK">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Vaccine Card Available</label>
+                <select id="vaccineCardAvailable">
+                    <option value="Y">Yes</option>
+                    <option value="N" selected>No</option>
+                    <option value="UNK">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Quarantine Status</label>
+                <select id="quarantineStatus">
+                    <option value="182856006">In quarantine</option>
+                    <option value="182857002">Released from quarantine</option>
+                    <option value="405178008" selected>Not in quarantine</option>
+                    <option value="261665006">Unknown</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Isolation Status</label>
+                <select id="isolationStatus">
+                    <option value="40174006">In isolation</option>
+                    <option value="182840001">Released from isolation</option>
+                    <option value="385432009" selected>Not in isolation</option>
+                    <option value="261665006">Unknown</option>
+                </select>
             </div>
         </div>
+    </div>
 
-        <div class="section">
-            <h2 class="section-title"><i class="fas fa-file-alt"></i> Related Document Information</h2>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Document ID</label>
-                    <input type="text" id="documentId" value="10c13861-86a8-4a9a-aec6-b615921178df">
-                </div>
-                <div class="input-group">
-                    <label>Effective Time</label>
-                    <input type="datetime-local" id="effectiveTime" value="2025-09-26T18:05">
-                </div>
-                <div class="input-group">
-                    <label>Document Relationship Type <span class="help-tooltip" title="Defines how this document relates to other documents. Use 'New Document' for standalone documents, or 'Replace/Update Document' to supersede or modify an existing document.">ℹ️</span></label>
-                    <select id="documentRelationshipType" onchange="handleRelationshipTypeChange()">
-                        <option value="NEW" selected>New Document</option>
-                        <option value="RPLC">Replace/Update Document</option>
-                    </select>
-                </div>
-                <div class="input-group" id="relatedDocIdGroup" style="display: none;">
-                    <label>Related Document Set ID <span style="color: red;">*</span> <span class="help-tooltip" title="The Set ID of the original document you are replacing/updating. This will become the Set ID for this new version. Required when relationship type is not 'New Document'.">ℹ️</span></label>
-                    <input type="text" id="relatedDocumentId" placeholder="Enter the Set ID of the original document" onchange="handleRelatedDocumentIdChange()">
-                </div>
-                <div class="input-group" id="setIdGroup">
-                    <label>Set ID <span class="help-tooltip" title="Unique identifier that stays the same across all versions of the same logical document. Documents with the same Set ID represent different versions of the same document.">ℹ️</span></label>
-                    <input type="text" id="setId" value="8d86218e-0fea-11eb-8216-a80388425cfb">
-                </div>
-                <div class="input-group">
-                    <label>Version Number <span class="help-tooltip" title="Sequential number that increments with each new version of the document. Same Set ID + higher version number = newer version.">ℹ️</span></label>
-                    <input type="text" id="versionNumber" value="3">
-                </div>
-                <div class="help-text">
-                    <h4>Document Relationship Guide:</h4>
-                    <ul>
-                        <li><strong>New Document:</strong> Creates a standalone document with a unique Set ID and version 1</li>
-                        <li><strong>Replace/Update Document:</strong> Creates a new version of an existing document by entering the original document's Set ID and incrementing the version number</li>
-                    </ul>
-                </div>
+    <div class="section">
+        <h2 class="section-title"><i class="fas fa-file-alt"></i> Related Document Information</h2>
+        <div class="form-grid">
+            <div class="input-group">
+                <label>Document ID</label>
+                <input type="text" id="documentId" value="10c13861-86a8-4a9a-aec6-b615921178df">
+            </div>
+            <div class="input-group">
+                <label>Effective Time</label>
+                <input type="datetime-local" id="effectiveTime" value="2025-09-26T18:05">
+            </div>
+            <div class="input-group">
+                <label>Document Relationship Type <span class="help-tooltip"
+                        title="Defines how this document relates to other documents. Use 'New Document' for standalone documents, or 'Replace/Update Document' to supersede or modify an existing document.">ℹ️</span></label>
+                <select id="documentRelationshipType" onchange="handleRelationshipTypeChange()">
+                    <option value="NEW" selected>New Document</option>
+                    <option value="RPLC">Replace/Update Document</option>
+                </select>
+            </div>
+            <div class="input-group" id="relatedDocIdGroup" style="display: none;">
+                <label>Related Document Set ID <span style="color: red;">*</span> <span class="help-tooltip"
+                        title="The Set ID of the original document you are replacing/updating. This will become the Set ID for this new version. Required when relationship type is not 'New Document'.">ℹ️</span></label>
+                <input type="text" id="relatedDocumentId" placeholder="Enter the Set ID of the original document"
+                    onchange="handleRelatedDocumentIdChange()">
+            </div>
+            <div class="input-group" id="setIdGroup">
+                <label>Set ID <span class="help-tooltip"
+                        title="Unique identifier that stays the same across all versions of the same logical document. Documents with the same Set ID represent different versions of the same document.">ℹ️</span></label>
+                <input type="text" id="setId" value="8d86218e-0fea-11eb-8216-a80388425cfb">
+            </div>
+            <div class="input-group">
+                <label>Version Number <span class="help-tooltip"
+                        title="Sequential number that increments with each new version of the document. Same Set ID + higher version number = newer version.">ℹ️</span></label>
+                <input type="text" id="versionNumber" value="3">
+            </div>
+            <div class="help-text">
+                <h4>Document Relationship Guide:</h4>
+                <ul>
+                    <li><strong>New Document:</strong> Creates a standalone document with a unique Set ID and
+                        version 1</li>
+                    <li><strong>Replace/Update Document:</strong> Creates a new version of an existing document by
+                        entering the original document's Set ID and incrementing the version number</li>
+                </ul>
             </div>
         </div>
+    </div>
 
     </div>
 
@@ -1893,11 +1952,13 @@ Procedure: Use for therapeutic interventions that alter the patient's physical c
     <script src="js/xslt-processor.js"></script>
     <script src="js/file-downloaders.js"></script>
     <script src="js/ui-interactions.js"></script>
+    <script src="js/patient-overview.js"></script>
     <script src="js/initialization.js"></script>
 
 
-  <!-- UI Enhancements - Visual overlay module -->
-  <script type="module" src="js/ui-enhancements.js" defer></script>
+    <!-- UI Enhancements - Visual overlay module -->
+    <script type="module" src="js/ui-enhancements.js" defer></script>
 
 </body>
+
 </html>
