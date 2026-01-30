@@ -646,33 +646,30 @@ function generateMedicationEntries(d) {
 
   return meds.filter(m => m.code && m.name).map(m => `
         <entry typeCode="DRIV">
-          <substanceAdministration classCode="SBADM" moodCode="EVN"
-                                   negationInd="${m.neg}">
-            <templateId root="2.16.840.1.113883.10.20.22.4.16"
-                        extension="2014-06-09"/>
+          <substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="${m.neg}">
+            <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09"/>
             <id root="${generateGUID()}"/>
             <statusCode code="${m.status}"/>
             <effectiveTime xsi:type="IVL_TS">
               <low value="${m.time}"/>
             </effectiveTime>
-           <routeCode code="${getRouteTranslation(m.route).fdaCode}" codeSystem="2.16.840.1.113883.3.26.1.1">
-  <translation code="${getRouteTranslation(m.route).snomedCode}"
-               codeSystem="2.16.840.1.113883.6.96"
-               displayName="${getRouteTranslation(m.route).display}"/>
-</routeCode>
-${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <!-- ADD THIS AUTHOR PARTICIPATION -->
-             <consumable>
+            <routeCode code="${getRouteTranslation(m.route).fdaCode}" codeSystem="2.16.840.1.113883.3.26.1.1">
+              <translation code="${getRouteTranslation(m.route).snomedCode}"
+                           codeSystem="2.16.840.1.113883.6.96"
+                           displayName="${getRouteTranslation(m.route).display}"/>
+            </routeCode>
+            ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}
+            <consumable>
               <manufacturedProduct classCode="MANU">
-                <templateId root="2.16.840.1.113883.10.20.22.4.23"
-                            extension="2014-06-09"/>
+                <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
                 <manufacturedMaterial>
                   <code code="${m.code}"
                         codeSystem="2.16.840.1.113883.6.88"
                         displayName="${xmlEscape(m.name)}"/>
                 </manufacturedMaterial>
               </manufacturedProduct>
-             </consumable> 
-             <author>
+            </consumable>
+            <author>
               <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
               <time value="${m.time}"/>
               <assignedAuthor>
@@ -688,8 +685,6 @@ ${buildDoseXML(m.dVal, m.dUnit, m.vVal, m.vUnit)}            <!-- ADD THIS AUTHO
                 </assignedPerson>
               </assignedAuthor>
             </author>
-
-            
           </substanceAdministration>
         </entry>`).join('');
 }
@@ -719,81 +714,72 @@ function generateImmunizationEntries(data) {
     const routeTranslation = getImmunizationRouteTranslation(route);
 
     return `
-    <entry typeCode="DRIV">
-      <substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="${negation}">
-        <templateId root="2.16.840.1.113883.10.20.22.4.52" extension="2015-08-01" />
-        <id root="${generateGUID()}" />
-        <statusCode code="${status}" />
-        <effectiveTime value="${date}" />
-        <entryRelationship typeCode="COMP" inversionInd="true">
-  <act classCode="ACT" moodCode="EVN">
-    <templateId root="2.16.840.1.113883.10.20.22.4.118"/>
-    <id root="${generateGUID()}"/>
-    <code code="416118004"
-          codeSystem="2.16.840.1.113883.6.96"
-          displayName="Administration of substance (procedure)"/>
-    <statusCode code="completed"/>
-    ${date ? `<effectiveTime value="${date}"/>` : ''}
-  </act>
-</entryRelationship>
-        ${route ? `<routeCode code="${routeTranslation.code}" codeSystem="2.16.840.1.113883.3.26.1.1" displayName="${routeTranslation.display}">
-          <translation code="${routeTranslation.snomed}"
-                       codeSystem="2.16.840.1.113883.6.96"
-                       displayName="${routeTranslation.display}"/>
-        </routeCode>` : ''}
-        ${doseValue ? `<doseQuantity value="${doseValue}" unit="${doseUnit}" />` : ''}
-        <consumable>
-          <manufacturedProduct classCode="MANU">
-            <templateId root="2.16.840.1.113883.10.20.22.4.54" extension="2014-06-09" />
-            <manufacturedMaterial>
-              <code code="${code}" codeSystem="2.16.840.1.113883.12.292" displayName="${name}" />
-              ${lot ? `<lotNumberText>${lot}</lotNumberText>` : ''}
-            </manufacturedMaterial>
-            ${mfr ? `<manufacturerOrganization><name>${mfr}</name></manufacturerOrganization>` : ''}
-          </manufacturedProduct>
-        </consumable>
-        ${(data.administeringProviderNPI
-        || data.administeringProviderGiven
-        || data.administeringProviderMiddle
-        || data.administeringProviderFamily
-        || data.administeringProviderPhone
-        || data.administeringProviderOrgName) ? `
-        <performer typeCode="PRF">
-          <assignedEntity>
-            ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}" />` : ''}
-            ${data.administeringProviderPhone ? `<telecom use="WP" value="tel:${data.administeringProviderPhone}" />` : ''}
-            <assignedPerson>
-              <name>
-                ${data.administeringProviderGiven ? `<given>${data.administeringProviderGiven}</given>` : ''}
-                ${data.administeringProviderMiddle ? `<given>${data.administeringProviderMiddle}</given>` : ''}
-                ${data.administeringProviderFamily ? `<family>${data.administeringProviderFamily}</family>` : ''}
-              </name>
-            </assignedPerson>
-            ${data.administeringProviderOrgName ? `
-            <representedOrganization>
-              ${data.administeringProviderOrgId ? `<id root="${data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19'}" extension="${data.administeringProviderOrgId}" />` : ''}
-              <name>${data.administeringProviderOrgName}</name>
-            </representedOrganization>` : ''}
-          </assignedEntity>
-        </performer>` : ''}
-        <author>
-          <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-          <time value="20240615120000"/>
-          <assignedAuthor>
-            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-            <code code="${getProviderTaxonomyCode('physician').code}"
-                  codeSystem="2.16.840.1.113883.6.101"
-                  displayName="${getProviderTaxonomyCode('physician').display}"/>
-            <assignedPerson>
-              <name>
-                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-              </name>
-            </assignedPerson>
-          </assignedAuthor>
-        </author>
-      </substanceAdministration>
-    </entry>`;
+      <entry typeCode="DRIV">
+        <substanceAdministration classCode="SBADM" moodCode="EVN" negationInd="${negation}">
+          <templateId root="2.16.840.1.113883.10.20.22.4.52" />
+          <templateId root="2.16.840.1.113883.10.20.22.4.52" extension="2015-08-01" />
+          <id root="${generateGUID()}" />
+          <statusCode code="${status}" />
+          <effectiveTime value="${date}" />
+          ${route ? `<routeCode code="${routeTranslation.code}" codeSystem="2.16.840.1.113883.3.26.1.1" displayName="${routeTranslation.display}">
+            <translation code="${routeTranslation.snomed}"
+                         codeSystem="2.16.840.1.113883.6.96"
+                         displayName="${routeTranslation.display}"/>
+          </routeCode>` : ''}
+          ${doseValue ? `<doseQuantity value="${doseValue}" unit="${doseUnit}" />` : ''}
+          <consumable>
+            <manufacturedProduct classCode="MANU">
+              <templateId root="2.16.840.1.113883.10.20.22.4.54" extension="2014-06-09" />
+              <manufacturedMaterial>
+                <code code="${code}" codeSystem="2.16.840.1.113883.12.292" displayName="${name}" />
+                ${lot ? `<lotNumberText>${lot}</lotNumberText>` : ''}
+              </manufacturedMaterial>
+              ${mfr ? `<manufacturerOrganization>
+                <name>${mfr}</name>
+              </manufacturerOrganization>` : ''}
+            </manufacturedProduct>
+          </consumable>
+          ${(data.administeringProviderNPI
+          || data.administeringProviderGiven
+          || data.administeringProviderMiddle
+          || data.administeringProviderFamily
+          || data.administeringProviderPhone
+          || data.administeringProviderOrgName) ? `
+          <performer typeCode="PRF">
+            <assignedEntity>
+              ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}" />` : ''}
+              ${data.administeringProviderPhone ? `<telecom use="WP" value="tel:${data.administeringProviderPhone}" />` : ''}
+              <assignedPerson>
+                <name>
+                  ${data.administeringProviderGiven ? `<given>${data.administeringProviderGiven}</given>` : ''}
+                  ${data.administeringProviderMiddle ? `<given>${data.administeringProviderMiddle}</given>` : ''}
+                  ${data.administeringProviderFamily ? `<family>${data.administeringProviderFamily}</family>` : ''}
+                </name>
+              </assignedPerson>
+              ${data.administeringProviderOrgName ? `<representedOrganization>
+                ${data.administeringProviderOrgId ? `<id root="${data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19'}" extension="${data.administeringProviderOrgId}" />` : ''}
+                <name>${data.administeringProviderOrgName}</name>
+              </representedOrganization>` : ''}
+            </assignedEntity>
+          </performer>` : ''}
+          <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615120000"/>
+            <assignedAuthor>
+              <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+              <code code="${getProviderTaxonomyCode('physician').code}"
+                    codeSystem="2.16.840.1.113883.6.101"
+                    displayName="${getProviderTaxonomyCode('physician').display}"/>
+              <assignedPerson>
+                <name>
+                  <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+                  <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
+        </substanceAdministration>
+      </entry>`;
   };
 
   return mkEntry(1) + mkEntry(2);
@@ -825,131 +811,128 @@ function generateProcedureEntries(data) {
 
   if (data.currentProc1Code && data.currentProc1Name) {
     entries += `
-                <entry typeCode="DRIV">
-                    <procedure classCode="PROC" moodCode="EVN">
-                        <templateId root="2.16.840.1.113883.10.20.22.4.14" extension="2014-06-09" />
-                        <id root="${generateGUID()}" />
-                        <code code="${data.currentProc1Code}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.currentProc1Name}">
-          <originalText>${data.currentProc1Name}</originalText>
-        </code>
-                        <statusCode code="completed" />
-                        <effectiveTime value="${data.currentProc1Date}" />
-                        <targetSiteCode code="421060004" codeSystem="2.16.840.1.113883.6.96" displayName="Structure of vertebral column"/>
-                        <author>
-                    <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-                    <time value="${data.currentProc1Date}"/>
-                    <assignedAuthor>
-                        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-                        <code code="${getProviderTaxonomyCode('physician').code}"
-      codeSystem="2.16.840.1.113883.6.101"
-      displayName="${getProviderTaxonomyCode('physician').display}"/>
-                        <assignedPerson>
-                            <name>
-                                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-                                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-                            </name>
-                        </assignedPerson>
-                    </assignedAuthor>
-                </author>
-                <performer>
-        <assignedEntity>
-            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-            <addr use="WP">
-                <streetAddressLine>${data.facilityAddress}</streetAddressLine>
-                <city>${data.patientCity}</city>
-                <state>${data.patientState}</state>
-                <postalCode>${data.patientZip}</postalCode>
-                <country>US</country>
-            </addr>
-            <telecom use="WP" value="tel:${data.providerPhone}"/>
-            <assignedPerson>
-                <name>
+        <entry typeCode="DRIV">
+          <procedure classCode="PROC" moodCode="EVN">
+            <templateId root="2.16.840.1.113883.10.20.22.4.14" extension="2014-06-09" />
+            <id root="${generateGUID()}" />
+            <code code="${data.currentProc1Code}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.currentProc1Name}">
+              <originalText>${data.currentProc1Name}</originalText>
+            </code>
+            <statusCode code="completed" />
+            <effectiveTime value="${data.currentProc1Date}" />
+            <targetSiteCode code="421060004" codeSystem="2.16.840.1.113883.6.96" displayName="Structure of vertebral column"/>
+            <performer>
+              <assignedEntity>
+                <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+                <addr use="WP">
+                  <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+                  <city>${data.patientCity}</city>
+                  <state>${data.patientState}</state>
+                  <postalCode>${data.patientZip}</postalCode>
+                  <country>US</country>
+                </addr>
+                <telecom use="WP" value="tel:${data.providerPhone}"/>
+                <assignedPerson>
+                  <name>
                     <given>${(data.providerName || 'Unknown').split(' ')[0]}</given>
                     <family>${(data.providerName || 'Unknown').split(' ').slice(1).join(' ') || 'Provider'}</family>
-                </name>
-            </assignedPerson>
-            <representedOrganization>
-                <id extension="${data.organizationId || data.facilityId}" root="2.16.840.1.113883.4.6"/>
-                <name>${data.facilityName}</name>
-                <telecom use="WP" value="tel:${data.organizationPhone || data.providerPhone}"/>
-                <addr use="WP">
+                  </name>
+                </assignedPerson>
+                <representedOrganization>
+                  <id extension="${data.organizationId || data.facilityId}" root="2.16.840.1.113883.4.6"/>
+                  <name>${data.facilityName}</name>
+                  <telecom use="WP" value="tel:${data.organizationPhone || data.providerPhone}"/>
+                  <addr use="WP">
                     <streetAddressLine>${data.facilityAddress}</streetAddressLine>
                     <city>${data.patientCity}</city>
                     <state>${data.patientState}</state>
                     <postalCode>${data.patientZip}</postalCode>
                     <country>US</country>
-                </addr>
-            </representedOrganization>
-        </assignedEntity>
-    </performer>
-                
-                    </procedure>
-                </entry>`;
+                  </addr>
+                </representedOrganization>
+              </assignedEntity>
+            </performer>
+            <author>
+              <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+              <time value="${data.currentProc1Date}"/>
+              <assignedAuthor>
+                <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+                <code code="${getProviderTaxonomyCode('physician').code}"
+                      codeSystem="2.16.840.1.113883.6.101"
+                      displayName="${getProviderTaxonomyCode('physician').display}"/>
+                <assignedPerson>
+                  <name>
+                    <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+                    <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+                  </name>
+                </assignedPerson>
+              </assignedAuthor>
+            </author>
+          </procedure>
+        </entry>`;
   }
 
   if (data.currentProc2Code && data.currentProc2Name) {
     entries += `
-                <entry typeCode="DRIV">
-                    <procedure classCode="PROC" moodCode="EVN">
-                        <templateId root="2.16.840.1.113883.10.20.22.4.14" extension="2014-06-09" />
-                        <id root="${generateGUID()}" />
-                        <code code="${data.currentProc2Code}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.currentProc2Name}">
-          <originalText>${data.currentProc2Name}</originalText>
-        </code>
-                        <statusCode code="completed" />
-                        <effectiveTime value="${data.currentProc2Date}" />
-                        <author>
-                    <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-                    <time value="${data.currentProc2Date}"/>
-                    <assignedAuthor>
-                        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-                        <code code="${getProviderTaxonomyCode('physician').code}"
-      codeSystem="2.16.840.1.113883.6.101"
-      displayName="${getProviderTaxonomyCode('physician').display}"/>
-                        <assignedPerson>
-                            <name>
-                                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-                                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-                            </name>
-                        </assignedPerson>
-                    </assignedAuthor>
-                </author>
-                 <performer>
-            <assignedEntity>
+        <entry typeCode="DRIV">
+          <procedure classCode="PROC" moodCode="EVN">
+            <templateId root="2.16.840.1.113883.10.20.22.4.14" extension="2014-06-09" />
+            <id root="${generateGUID()}" />
+            <code code="${data.currentProc2Code}" codeSystem="2.16.840.1.113883.6.96" displayName="${data.currentProc2Name}">
+              <originalText>${data.currentProc2Name}</originalText>
+            </code>
+            <statusCode code="completed" />
+            <effectiveTime value="${data.currentProc2Date}" />
+            <targetSiteCode code="421060004" codeSystem="2.16.840.1.113883.6.96" displayName="Structure of vertebral column"/>
+            <performer>
+              <assignedEntity>
                 <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
                 <addr use="WP">
+                  <streetAddressLine>${data.facilityAddress}</streetAddressLine>
+                  <city>${data.patientCity}</city>
+                  <state>${data.patientState}</state>
+                  <postalCode>${data.patientZip}</postalCode>
+                  <country>US</country>
+                </addr>
+                <telecom use="WP" value="tel:${data.providerPhone}"/>
+                <assignedPerson>
+                  <name>
+                    <given>${(data.providerName || 'Unknown').split(' ')[0]}</given>
+                    <family>${(data.providerName || 'Unknown').split(' ').slice(1).join(' ') || 'Provider'}</family>
+                  </name>
+                </assignedPerson>
+                <representedOrganization>
+                  <id extension="${data.organizationId || data.facilityId}" root="2.16.840.1.113883.4.6"/>
+                  <name>${data.facilityName}</name>
+                  <telecom use="WP" value="tel:${data.organizationPhone || data.providerPhone}"/>
+                  <addr use="WP">
                     <streetAddressLine>${data.facilityAddress}</streetAddressLine>
                     <city>${data.patientCity}</city>
                     <state>${data.patientState}</state>
                     <postalCode>${data.patientZip}</postalCode>
                     <country>US</country>
-                </addr>
-                <telecom use="WP" value="tel:${data.providerPhone}"/>
-                <assignedPerson>
-                    <name>
-                        <given>${(data.providerName || 'Unknown').split(' ')[0]}</given>
-                        <family>${(data.providerName || 'Unknown').split(' ').slice(1).join(' ') || 'Provider'}</family>
-                    </name>
-                </assignedPerson>
-                <representedOrganization>
-                    <id extension="${data.organizationId || data.facilityId}" root="2.16.840.1.113883.4.6"/>
-                    <name>${data.facilityName}</name>
-                    <telecom use="WP" value="tel:${data.organizationPhone || data.providerPhone}"/>
-                    <addr use="WP">
-                        <streetAddressLine>${data.facilityAddress}</streetAddressLine>
-                        <city>${data.patientCity}</city>
-                        <state>${data.patientState}</state>
-                        <postalCode>${data.patientZip}</postalCode>
-                        <country>US</country>
-                    </addr>
+                  </addr>
                 </representedOrganization>
-            </assignedEntity>
-        </performer>
-                 <targetSiteCode code="421060004"
-                       codeSystem="2.16.840.1.113883.6.96"
-                       displayName="Structure of vertebral column"/>
-                    </procedure>
-                </entry>`;
+              </assignedEntity>
+            </performer>
+            <author>
+              <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+              <time value="${data.currentProc2Date}"/>
+              <assignedAuthor>
+                <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+                <code code="${getProviderTaxonomyCode('physician').code}"
+                      codeSystem="2.16.840.1.113883.6.101"
+                      displayName="${getProviderTaxonomyCode('physician').display}"/>
+                <assignedPerson>
+                  <name>
+                    <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+                    <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+                  </name>
+                </assignedPerson>
+              </assignedAuthor>
+            </author>
+          </procedure>
+        </entry>`;
   }
 
   // Add specimen collection procedures
@@ -1380,9 +1363,10 @@ function buildResultsSectionXML(labEvidence, rctcVersion = '2016-12-01') {
               ${effectiveTimeXml}
               ${valueXml}
               ${interp}
-              ${refRange}
               ${performer}
               ${orderingAuthor}
+              ${refRange}
+             
             </observation>
           </component>
         </organizer>
@@ -1857,13 +1841,15 @@ function buildEICRXml() {
         <statusCode code="${data.adminMed1Status}" />
         <effectiveTime value="${data.adminMed1Time}" />
         <routeCode code="${data.adminMed1Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
-  <translation code="${getRouteTranslation(data.adminMed1Route).code}" 
-               codeSystem="2.16.840.1.113883.6.96" 
-               displayName="${getRouteTranslation(data.adminMed1Route).display}"/>
-</routeCode>
+          <translation code="${getRouteTranslation(data.adminMed1Route).code}"
+                       codeSystem="2.16.840.1.113883.6.96"
+                       displayName="${getRouteTranslation(data.adminMed1Route).display}"/>
+        </routeCode>
         <doseQuantity value="${data.adminMed1DoseValue}" unit="${fixDoseUnit(data.adminMed1DoseUnit)}" />
-        ${data.adminMed1VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed1VolValue}" unit="${data.adminMed1VolUnit || '1'}" /><denominator value="1" unit="1"/></maxDoseQuantity>` : ''}
-        
+        ${data.adminMed1VolValue ? `<maxDoseQuantity>
+          <numerator value="${data.adminMed1VolValue}" unit="${data.adminMed1VolUnit || '1'}" />
+          <denominator value="1" unit="1"/>
+        </maxDoseQuantity>` : ''}
         <consumable>
           <manufacturedProduct classCode="MANU">
             <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
@@ -1877,41 +1863,40 @@ function buildEICRXml() {
             </manufacturedMaterial>
           </manufacturedProduct>
         </consumable>
-         ${(data.administeringProviderNPI || data.administeringProviderGiven || data.administeringProviderFamily) ? `
-    <performer typeCode="PRF">
-      <assignedEntity>
-        ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}"/>` : ''}
-        ${data.administeringProviderPhone ? `<telecom use="WP" value="tel:${data.administeringProviderPhone}"/>` : ''}
-        <assignedPerson>
-          <name>
-            ${data.administeringProviderGiven ? `<given>${data.administeringProviderGiven}</given>` : ''}
-            ${data.administeringProviderMiddle ? `<given>${data.administeringProviderMiddle}</given>` : ''}
-            ${data.administeringProviderFamily ? `<family>${data.administeringProviderFamily}</family>` : ''}
-          </name>
-        </assignedPerson>
-        ${data.administeringProviderOrgName ? `
-        <representedOrganization>
-          ${data.administeringProviderOrgId ? `<id root="${data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19'}" extension="${data.administeringProviderOrgId}"/>` : ''}
-          <name>${data.administeringProviderOrgName}</name>
-        </representedOrganization>` : ''}
-      </assignedEntity>
-    </performer>` : ''}
-    <author>
-      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-      <time value="20240615120000"/>
-      <assignedAuthor>
-        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-        <code code="${getProviderTaxonomyCode('physician').code}" 
-      codeSystem="2.16.840.1.113883.6.101" 
-      displayName="${getProviderTaxonomyCode('physician').display}"/>
-        <assignedPerson>
-          <name>
-            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-          </name>
-        </assignedPerson>
-      </assignedAuthor>
-    </author>
+        ${(data.administeringProviderNPI || data.administeringProviderGiven || data.administeringProviderFamily) ? `
+        <performer typeCode="PRF">
+          <assignedEntity>
+            ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}"/>` : ''}
+            ${data.administeringProviderPhone ? `<telecom use="WP" value="tel:${data.administeringProviderPhone}"/>` : ''}
+            <assignedPerson>
+              <name>
+                ${data.administeringProviderGiven ? `<given>${data.administeringProviderGiven}</given>` : ''}
+                ${data.administeringProviderMiddle ? `<given>${data.administeringProviderMiddle}</given>` : ''}
+                ${data.administeringProviderFamily ? `<family>${data.administeringProviderFamily}</family>` : ''}
+              </name>
+            </assignedPerson>
+            ${data.administeringProviderOrgName ? `<representedOrganization>
+              ${data.administeringProviderOrgId ? `<id root="${data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19'}" extension="${data.administeringProviderOrgId}"/>` : ''}
+              <name>${data.administeringProviderOrgName}</name>
+            </representedOrganization>` : ''}
+          </assignedEntity>
+        </performer>` : ''}
+        <author>
+          <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+          <time value="20240615120000"/>
+          <assignedAuthor>
+            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+            <code code="${getProviderTaxonomyCode('physician').code}"
+                  codeSystem="2.16.840.1.113883.6.101"
+                  displayName="${getProviderTaxonomyCode('physician').display}"/>
+            <assignedPerson>
+              <name>
+                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+              </name>
+            </assignedPerson>
+          </assignedAuthor>
+        </author>
       </substanceAdministration>
     </entry>
     
@@ -1921,15 +1906,16 @@ function buildEICRXml() {
         <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09" />
         <id extension="${data.adminMed2Id}" root="2.16.840.1.113883.19.5.99999.1" />
         <statusCode code="${data.adminMed2Status}" />
-        <effectiveTime value="${data.adminMed2Time}" />      
-  <routeCode code="${data.adminMed2Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
-  <translation code="${getRouteTranslation(data.adminMed2Route).code}" 
-               codeSystem="2.16.840.1.113883.6.96" 
-               displayName="${getRouteTranslation(data.adminMed2Route).display}"/>
-</routeCode>
+        <effectiveTime value="${data.adminMed2Time}" />
+        <routeCode code="${data.adminMed2Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
+          <translation code="${getRouteTranslation(data.adminMed2Route).code}"
+                       codeSystem="2.16.840.1.113883.6.96"
+                       displayName="${getRouteTranslation(data.adminMed2Route).display}"/>
+        </routeCode>
         <doseQuantity value="${data.adminMed2DoseValue}" unit="${data.adminMed2DoseUnit === '1' || data.adminMed2DoseUnit === 'each' ? 'mg' : data.adminMed2DoseUnit}" />
-        ${data.adminMed2VolValue ? `<maxDoseQuantity><numerator value="${data.adminMed2VolValue}" unit="${data.adminMed2VolUnit}" /></maxDoseQuantity>` : ''}
-        
+        ${data.adminMed2VolValue ? `<maxDoseQuantity>
+          <numerator value="${data.adminMed2VolValue}" unit="${data.adminMed2VolUnit}" />
+        </maxDoseQuantity>` : ''}
         <consumable>
           <manufacturedProduct classCode="MANU">
             <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
@@ -1943,41 +1929,40 @@ function buildEICRXml() {
             </manufacturedMaterial>
           </manufacturedProduct>
         </consumable>
-         ${(data.administeringProviderNPI || data.administeringProviderGiven || data.administeringProviderFamily) ? `
-    <performer typeCode="PRF">
-      <assignedEntity>
-        ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}"/>` : ''}
-        ${data.administeringProviderPhone ? `<telecom use="WP" value="tel:${data.administeringProviderPhone}"/>` : ''}
-        <assignedPerson>
-          <name>
-            ${data.administeringProviderGiven ? `<given>${data.administeringProviderGiven}</given>` : ''}
-            ${data.administeringProviderMiddle ? `<given>${data.administeringProviderMiddle}</given>` : ''}
-            ${data.administeringProviderFamily ? `<family>${data.administeringProviderFamily}</family>` : ''}
-          </name>
-        </assignedPerson>
-        ${data.administeringProviderOrgName ? `
-        <representedOrganization>
-          ${data.administeringProviderOrgId ? `<id root="${data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19'}" extension="${data.administeringProviderOrgId}"/>` : ''}
-          <name>${data.administeringProviderOrgName}</name>
-        </representedOrganization>` : ''}
-      </assignedEntity>
-    </performer>` : ''}
-    <author>
-      <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-      <time value="20240615120000"/>
-      <assignedAuthor>
-        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-        <code code="${getProviderTaxonomyCode('physician').code}" 
-      codeSystem="2.16.840.1.113883.6.101" 
-      displayName="${getProviderTaxonomyCode('physician').display}"/>
-        <assignedPerson>
-          <name>
-            <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-            <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-          </name>
-        </assignedPerson>
-      </assignedAuthor>
-    </author>
+        ${(data.administeringProviderNPI || data.administeringProviderGiven || data.administeringProviderFamily) ? `
+        <performer typeCode="PRF">
+          <assignedEntity>
+            ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}"/>` : ''}
+            ${data.administeringProviderPhone ? `<telecom use="WP" value="tel:${data.administeringProviderPhone}"/>` : ''}
+            <assignedPerson>
+              <name>
+                ${data.administeringProviderGiven ? `<given>${data.administeringProviderGiven}</given>` : ''}
+                ${data.administeringProviderMiddle ? `<given>${data.administeringProviderMiddle}</given>` : ''}
+                ${data.administeringProviderFamily ? `<family>${data.administeringProviderFamily}</family>` : ''}
+              </name>
+            </assignedPerson>
+            ${data.administeringProviderOrgName ? `<representedOrganization>
+              ${data.administeringProviderOrgId ? `<id root="${data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19'}" extension="${data.administeringProviderOrgId}"/>` : ''}
+              <name>${data.administeringProviderOrgName}</name>
+            </representedOrganization>` : ''}
+          </assignedEntity>
+        </performer>` : ''}
+        <author>
+          <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+          <time value="20240615120000"/>
+          <assignedAuthor>
+            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+            <code code="${getProviderTaxonomyCode('physician').code}"
+                  codeSystem="2.16.840.1.113883.6.101"
+                  displayName="${getProviderTaxonomyCode('physician').display}"/>
+            <assignedPerson>
+              <name>
+                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+              </name>
+            </assignedPerson>
+          </assignedAuthor>
+        </author>
       </substanceAdministration>
     </entry>
         </section>
@@ -2095,7 +2080,12 @@ function buildEICRXml() {
         <statusCode code="completed"/>
         <!-- use the encounter/assessment date if known -->
         <effectiveTime value="20240520"/>
-           <author>
+        <!-- SNOMED CT concept from the Smoking Status value set -->
+        <value xsi:type="CD"
+               code="266919005"
+               codeSystem="2.16.840.1.113883.6.96"
+               displayName="Never smoker"/>   
+        <author>
             <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
             <time value="20240615"/>
             <assignedAuthor>
@@ -2111,11 +2101,7 @@ function buildEICRXml() {
               </assignedPerson>
             </assignedAuthor>
           </author>
-        <!-- SNOMED CT concept from the Smoking Status value set -->
-        <value xsi:type="CD"
-               code="266919005"
-               codeSystem="2.16.840.1.113883.6.96"
-               displayName="Never smoker"/>
+        
       </observation>
     </entry>
 
@@ -2145,6 +2131,7 @@ function buildEICRXml() {
               <code code="76691-5" codeSystem="2.16.840.1.113883.6.1" displayName="Gender identity" />
               <statusCode code="completed" />
               <effectiveTime value="${data.patientBirthDate}" />
+               <value xsi:type="CD" code="${data.patientGenderIdentity || data.patientGender}" codeSystem="2.16.840.1.113883.6.96" />
                 <author>
             <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
             <time value="20240615"/>
@@ -2161,7 +2148,7 @@ function buildEICRXml() {
               </assignedPerson>
             </assignedAuthor>
           </author>
-              <value xsi:type="CD" code="${data.patientGenderIdentity || data.patientGender}" codeSystem="2.16.840.1.113883.6.96" />
+             
             </observation>
           </entry>
 
@@ -2259,6 +2246,7 @@ function buildEICRXml() {
         <code code="87729-0" codeSystem="2.16.840.1.113883.6.1" displayName="Current occupation" />
         <statusCode code="completed" />
         <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+         <value xsi:type="ST">${data.currentOccupation}</value>
         <author>
           <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
           <time value="${data.encounterDate}"/>
@@ -2275,7 +2263,7 @@ function buildEICRXml() {
             </assignedPerson>
           </assignedAuthor>
         </author>
-        <value xsi:type="ST">${data.currentOccupation}</value>
+       
         <participant typeCode="IND">
           <participantRole classCode="ASSIGNED">
             ${data.currentEmployerAddress ? `<addr><streetAddressLine>${data.currentEmployerAddress}</streetAddressLine></addr>` : ''}
@@ -2296,6 +2284,7 @@ function buildEICRXml() {
         <code code="21843-8" codeSystem="2.16.840.1.113883.6.1" displayName="History of Occupation industry" />
         <statusCode code="active" />
         <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+         <value xsi:type="ST">${data.currentIndustry}</value>
         <author>
           <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
           <time value="${data.encounterDate}"/>
@@ -2312,7 +2301,6 @@ function buildEICRXml() {
             </assignedPerson>
           </assignedAuthor>
         </author>
-        <value xsi:type="ST">${data.currentIndustry}</value>
       </observation>
     </entry>
   </section>
@@ -2428,10 +2416,6 @@ function buildEICRXml() {
         </section>
       </component>
 
-      // Find this section in your buildEICRXml() function around line 1600+ and replace it:
-
-// Find this section in your buildEICRXml() function around line 1600+ and replace it:
-
 <!-- Admission Medications Section -->
 <component>
   <section>
@@ -2477,22 +2461,6 @@ function buildEICRXml() {
             <id root="${generateGUID()}"/>
             <statusCode code="active"/>
             <effectiveTime value="${data.encounterDate}"/>
-               <author>
-            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-            <time value="20240615"/>
-            <assignedAuthor>
-              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
-              <code code="207Q00000X" 
-      codeSystem="2.16.840.1.113883.6.101" 
-      displayName="Family Medicine Physician"/>
-              <assignedPerson>
-                <name>
-                  <given>Royce</given>
-                  <family>Hemlock</family>
-                </name>
-              </assignedPerson>
-            </assignedAuthor>
-          </author>
             <routeCode code="${data.adminMed1Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
               <translation code="${getRouteTranslation(data.adminMed1Route).code}" 
                            codeSystem="2.16.840.1.113883.6.96" 
