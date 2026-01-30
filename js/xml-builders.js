@@ -725,17 +725,6 @@ function generateImmunizationEntries(data) {
         <id root="${generateGUID()}" />
         <statusCode code="${status}" />
         <effectiveTime value="${date}" />
-        <entryRelationship typeCode="COMP" inversionInd="true">
-  <act classCode="ACT" moodCode="EVN">
-    <templateId root="2.16.840.1.113883.10.20.22.4.118"/>
-    <id root="${generateGUID()}"/>
-    <code code="416118004"
-          codeSystem="2.16.840.1.113883.6.96"
-          displayName="Administration of substance (procedure)"/>
-    <statusCode code="completed"/>
-    ${date ? `<effectiveTime value="${date}"/>` : ''}
-  </act>
-</entryRelationship>
         ${route ? `<routeCode code="${routeTranslation.code}" codeSystem="2.16.840.1.113883.3.26.1.1" displayName="${routeTranslation.display}">
           <translation code="${routeTranslation.snomed}"
                        codeSystem="2.16.840.1.113883.6.96"
@@ -792,6 +781,17 @@ function generateImmunizationEntries(data) {
             </assignedPerson>
           </assignedAuthor>
         </author>
+        <entryRelationship typeCode="COMP" inversionInd="true">
+  <act classCode="ACT" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.118"/>
+    <id root="${generateGUID()}"/>
+    <code code="416118004"
+          codeSystem="2.16.840.1.113883.6.96"
+          displayName="Administration of substance (procedure)"/>
+    <statusCode code="completed"/>
+    ${date ? `<effectiveTime value="${date}"/>` : ''}
+  </act>
+</entryRelationship>
       </substanceAdministration>
     </entry>`;
   };
@@ -835,23 +835,7 @@ function generateProcedureEntries(data) {
                         <statusCode code="completed" />
                         <effectiveTime value="${data.currentProc1Date}" />
                         <targetSiteCode code="421060004" codeSystem="2.16.840.1.113883.6.96" displayName="Structure of vertebral column"/>
-                        <author>
-                    <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-                    <time value="${data.currentProc1Date}"/>
-                    <assignedAuthor>
-                        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-                        <code code="${getProviderTaxonomyCode('physician').code}"
-      codeSystem="2.16.840.1.113883.6.101"
-      displayName="${getProviderTaxonomyCode('physician').display}"/>
-                        <assignedPerson>
-                            <name>
-                                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-                                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-                            </name>
-                        </assignedPerson>
-                    </assignedAuthor>
-                </author>
-                <performer>
+                        <performer>
         <assignedEntity>
             <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
             <addr use="WP">
@@ -882,6 +866,22 @@ function generateProcedureEntries(data) {
             </representedOrganization>
         </assignedEntity>
     </performer>
+                        <author>
+                    <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+                    <time value="${data.currentProc1Date}"/>
+                    <assignedAuthor>
+                        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+                        <code code="${getProviderTaxonomyCode('physician').code}"
+      codeSystem="2.16.840.1.113883.6.101"
+      displayName="${getProviderTaxonomyCode('physician').display}"/>
+                        <assignedPerson>
+                            <name>
+                                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+                                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+                            </name>
+                        </assignedPerson>
+                    </assignedAuthor>
+                </author>
                 
                     </procedure>
                 </entry>`;
@@ -898,23 +898,10 @@ function generateProcedureEntries(data) {
         </code>
                         <statusCode code="completed" />
                         <effectiveTime value="${data.currentProc2Date}" />
-                        <author>
-                    <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-                    <time value="${data.currentProc2Date}"/>
-                    <assignedAuthor>
-                        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-                        <code code="${getProviderTaxonomyCode('physician').code}"
-      codeSystem="2.16.840.1.113883.6.101"
-      displayName="${getProviderTaxonomyCode('physician').display}"/>
-                        <assignedPerson>
-                            <name>
-                                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-                                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-                            </name>
-                        </assignedPerson>
-                    </assignedAuthor>
-                </author>
-                 <performer>
+                        <targetSiteCode code="421060004"
+                       codeSystem="2.16.840.1.113883.6.96"
+                       displayName="Structure of vertebral column"/>
+                        <performer>
             <assignedEntity>
                 <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
                 <addr use="WP">
@@ -945,9 +932,22 @@ function generateProcedureEntries(data) {
                 </representedOrganization>
             </assignedEntity>
         </performer>
-                 <targetSiteCode code="421060004"
-                       codeSystem="2.16.840.1.113883.6.96"
-                       displayName="Structure of vertebral column"/>
+                        <author>
+                    <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+                    <time value="${data.currentProc2Date}"/>
+                    <assignedAuthor>
+                        <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+                        <code code="${getProviderTaxonomyCode('physician').code}"
+      codeSystem="2.16.840.1.113883.6.101"
+      displayName="${getProviderTaxonomyCode('physician').display}"/>
+                        <assignedPerson>
+                            <name>
+                                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
+                                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+                            </name>
+                        </assignedPerson>
+                    </assignedAuthor>
+                </author>
                     </procedure>
                 </entry>`;
   }
@@ -1380,9 +1380,9 @@ function buildResultsSectionXML(labEvidence, rctcVersion = '2016-12-01') {
               ${effectiveTimeXml}
               ${valueXml}
               ${interp}
-              ${refRange}
               ${performer}
               ${orderingAuthor}
+              ${refRange}
             </observation>
           </component>
         </organizer>
@@ -2095,13 +2095,18 @@ function buildEICRXml() {
         <statusCode code="completed"/>
         <!-- use the encounter/assessment date if known -->
         <effectiveTime value="20240520"/>
-           <author>
+        <!-- SNOMED CT concept from the Smoking Status value set -->
+        <value xsi:type="CD"
+               code="266919005"
+               codeSystem="2.16.840.1.113883.6.96"
+               displayName="Never smoker"/>
+        <author>
             <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
             <time value="20240615"/>
             <assignedAuthor>
               <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
-              <code code="207Q00000X" 
-      codeSystem="2.16.840.1.113883.6.101" 
+              <code code="207Q00000X"
+      codeSystem="2.16.840.1.113883.6.101"
       displayName="Family Medicine Physician"/>
               <assignedPerson>
                 <name>
@@ -2111,11 +2116,6 @@ function buildEICRXml() {
               </assignedPerson>
             </assignedAuthor>
           </author>
-        <!-- SNOMED CT concept from the Smoking Status value set -->
-        <value xsi:type="CD"
-               code="266919005"
-               codeSystem="2.16.840.1.113883.6.96"
-               displayName="Never smoker"/>
       </observation>
     </entry>
 
@@ -2145,13 +2145,14 @@ function buildEICRXml() {
               <code code="76691-5" codeSystem="2.16.840.1.113883.6.1" displayName="Gender identity" />
               <statusCode code="completed" />
               <effectiveTime value="${data.patientBirthDate}" />
-                <author>
+              <value xsi:type="CD" code="${data.patientGenderIdentity || data.patientGender}" codeSystem="2.16.840.1.113883.6.96" />
+              <author>
             <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
             <time value="20240615"/>
             <assignedAuthor>
               <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
-              <code code="207Q00000X" 
-      codeSystem="2.16.840.1.113883.6.101" 
+              <code code="207Q00000X"
+      codeSystem="2.16.840.1.113883.6.101"
       displayName="Family Medicine Physician"/>
               <assignedPerson>
                 <name>
@@ -2161,7 +2162,6 @@ function buildEICRXml() {
               </assignedPerson>
             </assignedAuthor>
           </author>
-              <value xsi:type="CD" code="${data.patientGenderIdentity || data.patientGender}" codeSystem="2.16.840.1.113883.6.96" />
             </observation>
           </entry>
 
@@ -2176,13 +2176,14 @@ function buildEICRXml() {
               <code code="87729-0" codeSystem="2.16.840.1.113883.6.1" displayName="Current occupation" />
               <statusCode code="completed" />
               <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
-                <author>
+              <value xsi:type="ST">${data.currentOccupation}</value>
+              <author>
             <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
             <time value="20240615"/>
             <assignedAuthor>
               <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
-              <code code="207Q00000X" 
-      codeSystem="2.16.840.1.113883.6.101" 
+              <code code="207Q00000X"
+      codeSystem="2.16.840.1.113883.6.101"
       displayName="Family Medicine Physician"/>
               <assignedPerson>
                 <name>
@@ -2192,7 +2193,6 @@ function buildEICRXml() {
               </assignedPerson>
             </assignedAuthor>
           </author>
-              <value xsi:type="ST">${data.currentOccupation}</value>
               <participant typeCode="IND">
                 <participantRole classCode="ASSIGNED">
                    
@@ -2259,13 +2259,14 @@ function buildEICRXml() {
         <code code="87729-0" codeSystem="2.16.840.1.113883.6.1" displayName="Current occupation" />
         <statusCode code="completed" />
         <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
+        <value xsi:type="ST">${data.currentOccupation}</value>
         <author>
           <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
           <time value="${data.encounterDate}"/>
           <assignedAuthor>
             <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-            <code code="${getProviderTaxonomyCode('physician').code}" 
-                  codeSystem="2.16.840.1.113883.6.101" 
+            <code code="${getProviderTaxonomyCode('physician').code}"
+                  codeSystem="2.16.840.1.113883.6.101"
                   displayName="${getProviderTaxonomyCode('physician').display}"/>
             <assignedPerson>
               <name>
@@ -2275,7 +2276,6 @@ function buildEICRXml() {
             </assignedPerson>
           </assignedAuthor>
         </author>
-        <value xsi:type="ST">${data.currentOccupation}</value>
         <participant typeCode="IND">
           <participantRole classCode="ASSIGNED">
             ${data.currentEmployerAddress ? `<addr><streetAddressLine>${data.currentEmployerAddress}</streetAddressLine></addr>` : ''}
@@ -2312,7 +2312,6 @@ function buildEICRXml() {
             </assignedPerson>
           </assignedAuthor>
         </author>
-        <value xsi:type="ST">${data.currentIndustry}</value>
       </observation>
     </entry>
   </section>
@@ -2477,25 +2476,9 @@ function buildEICRXml() {
             <id root="${generateGUID()}"/>
             <statusCode code="active"/>
             <effectiveTime value="${data.encounterDate}"/>
-               <author>
-            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-            <time value="20240615"/>
-            <assignedAuthor>
-              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
-              <code code="207Q00000X" 
-      codeSystem="2.16.840.1.113883.6.101" 
-      displayName="Family Medicine Physician"/>
-              <assignedPerson>
-                <name>
-                  <given>Royce</given>
-                  <family>Hemlock</family>
-                </name>
-              </assignedPerson>
-            </assignedAuthor>
-          </author>
             <routeCode code="${data.adminMed1Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
-              <translation code="${getRouteTranslation(data.adminMed1Route).code}" 
-                           codeSystem="2.16.840.1.113883.6.96" 
+              <translation code="${getRouteTranslation(data.adminMed1Route).code}"
+                           codeSystem="2.16.840.1.113883.6.96"
                            displayName="${getRouteTranslation(data.adminMed1Route).display}"/>
             </routeCode>
             <doseQuantity value="${data.adminMed1DoseValue}" unit="${data.adminMed1DoseUnit}"/>
@@ -2507,6 +2490,22 @@ function buildEICRXml() {
                 </manufacturedMaterial>
               </manufacturedProduct>
             </consumable>
+            <author>
+            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+            <time value="20240615"/>
+            <assignedAuthor>
+              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
+              <code code="207Q00000X"
+      codeSystem="2.16.840.1.113883.6.101"
+      displayName="Family Medicine Physician"/>
+              <assignedPerson>
+                <name>
+                  <given>Royce</given>
+                  <family>Hemlock</family>
+                </name>
+              </assignedPerson>
+            </assignedAuthor>
+          </author>
           </substanceAdministration>
         </entryRelationship>
       </act>
