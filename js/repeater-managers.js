@@ -198,7 +198,7 @@ function addProblemEvidence(prefill = {}) {
     if (prefill.problemCode) row.querySelector('.pe-problem-code').value = prefill.problemCode;
     if (prefill.problemName) row.querySelector('.pe-problem-name').value = prefill.problemName;
     if (prefill.onsetDate) row.querySelector('.pe-onset-date').value = prefill.onsetDate;
-    if (prefill.status) row.querySelector('.pe-status').value = prefill.status;
+    // Note: .pe-status doesn't exist in the problem evidence template, only .pe-concern-status
     if (prefill.concernStatus) row.querySelector('.pe-concern-status').value = prefill.concernStatus;
 
     document.getElementById('problemEvidenceList').appendChild(clone);
