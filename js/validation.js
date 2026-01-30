@@ -649,7 +649,23 @@ function displayValidationSuccess() {
         successContainer = document.createElement('div');
         successContainer.id = 'validation-success';
         successContainer.style.cssText = 'background: #efe; border: 2px solid #0a0; padding: 20px; margin: 20px 0; border-radius: 5px; color: #060;';
-        document.querySelector('.container').insertBefore(successContainer, document.querySelector('.footer-buttons'));
+
+        // Try to find a reference node, fall back to appendChild if not found
+        const container = document.querySelector('.container');
+        const footerButtons = document.querySelector('.footer-buttons');
+
+        if (container && footerButtons && container.contains(footerButtons)) {
+            container.insertBefore(successContainer, footerButtons);
+        } else if (container) {
+            // If footer-buttons doesn't exist or isn't a child, just append to container
+            container.appendChild(successContainer);
+        } else {
+            // Fallback: insert before validation errors if container doesn't exist
+            const validationErrors = document.getElementById('validation-errors');
+            if (validationErrors && validationErrors.parentNode) {
+                validationErrors.parentNode.insertBefore(successContainer, validationErrors);
+            }
+        }
     }
 
     successContainer.innerHTML = `
