@@ -2090,8 +2090,8 @@ function buildEICRXml() {
             <time value="20240615"/>
             <assignedAuthor>
               <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
-              <code code="207Q00000X" 
-      codeSystem="2.16.840.1.113883.6.101" 
+              <code code="207Q00000X"
+      codeSystem="2.16.840.1.113883.6.101"
       displayName="Family Medicine Physician"/>
               <assignedPerson>
                 <name>
@@ -2137,8 +2137,8 @@ function buildEICRXml() {
             <time value="20240615"/>
             <assignedAuthor>
               <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
-              <code code="207Q00000X" 
-      codeSystem="2.16.840.1.113883.6.101" 
+              <code code="207Q00000X"
+      codeSystem="2.16.840.1.113883.6.101"
       displayName="Family Medicine Physician"/>
               <assignedPerson>
                 <name>
@@ -2163,13 +2163,14 @@ function buildEICRXml() {
               <code code="87729-0" codeSystem="2.16.840.1.113883.6.1" displayName="Current occupation" />
               <statusCode code="completed" />
               <effectiveTime><low value="${data.encounterDate}" /></effectiveTime>
-                <author>
+              <value xsi:type="ST">${data.currentOccupation}</value>
+              <author>
             <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
             <time value="20240615"/>
             <assignedAuthor>
               <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
-              <code code="207Q00000X" 
-      codeSystem="2.16.840.1.113883.6.101" 
+              <code code="207Q00000X"
+      codeSystem="2.16.840.1.113883.6.101"
       displayName="Family Medicine Physician"/>
               <assignedPerson>
                 <name>
@@ -2179,7 +2180,6 @@ function buildEICRXml() {
               </assignedPerson>
             </assignedAuthor>
           </author>
-              <value xsi:type="ST">${data.currentOccupation}</value>
               <participant typeCode="IND">
                 <participantRole classCode="ASSIGNED">
                    
@@ -2252,8 +2252,8 @@ function buildEICRXml() {
           <time value="${data.encounterDate}"/>
           <assignedAuthor>
             <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-            <code code="${getProviderTaxonomyCode('physician').code}" 
-                  codeSystem="2.16.840.1.113883.6.101" 
+            <code code="${getProviderTaxonomyCode('physician').code}"
+                  codeSystem="2.16.840.1.113883.6.101"
                   displayName="${getProviderTaxonomyCode('physician').display}"/>
             <assignedPerson>
               <name>
