@@ -10,7 +10,7 @@
   "patientCounty": "Cole",
   "patientCountry": "US",
   "patientGender": "M",
-  "patientBirthDate": "20250715",
+  "patientBirthDate": "20260115",
   "patientRace": "2028-9",
   "patientEthnicity": "2186-5",
   "patientBirthSex": "M",
@@ -240,6 +240,25 @@
       "status": "completed",
       "interpretation": "N",
       "isRCTC": false
+    }
+  ],
+  "diagnosisEvidence": [
+    {
+      "diagnosisCode": "414819007",
+      "diagnosisName": "Neonatal abstinence syndrome (disorder)",
+      "diagnosisDate": "20250715",
+      "onsetDate": "20250715",
+      "status": "active",
+      "isRCTC": true
+    }
+  ],
+  "problemEvidence": [
+    {
+      "problemCode": "414819007",
+      "problemName": "Neonatal abstinence syndrome (disorder)",
+      "onsetDate": "20250715",
+      "status": "active",
+      "concernStatus": "active"
     }
   ]
 }

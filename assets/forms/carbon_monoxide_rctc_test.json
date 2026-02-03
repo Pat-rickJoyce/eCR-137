@@ -1,0 +1,31 @@
+{
+    "patientGivenName": "Alex",
+    "patientFamilyName": "Reed",
+    "patientBirthDate": "1978-11-05T00:00",
+    "patientGender": "other",
+    "resultLabCLIA": "14D0987654",
+    "resultLabName": "Emergency Diagnostics Unit",
+    "resultPerformerNPI": "1675849302",
+    "resultPerformerGiven": "Morgan",
+    "resultPerformerFamily": "Lee",
+    "resultOrderingNPI": "1122334455",
+    "resultOrderingGiven": "Alex",
+    "resultOrderingFamily": "Reed",
+    "labEvidence": [
+        {
+            "orderCode": "20563-3",
+            "orderName": "Carboxyhemoglobin/Hemoglobin.total in Blood",
+            "orderId": "ORD-2024-CMP-01",
+            "orderTime": "2024-08-05T08:00",
+            "testCode": "20563-3",
+            "testName": "Carboxyhemoglobin/Hemoglobin.total in Blood",
+            "valueKind": "quantity",
+            "qtyValue": "15",
+            "qtyUnit": "%",
+            "time": "2024-08-06T14:30",
+            "status": "completed",
+            "interpretation": "H",
+            "referenceRange": "< 2.5%"
+        }
+    ]
+}

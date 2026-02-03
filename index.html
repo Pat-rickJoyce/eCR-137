@@ -279,7 +279,7 @@
             <div class="patient-info">
                 <span class="snapshot-label">Patient Snapshot</span>
                 <h1 class="patient-name" id="patientOverviewName" style="margin-bottom: 12px;">
-                    Patient Name
+                    <span id="patientNameText">Patient Name</span>
                     <span class="verified-badge"><i class="fas fa-check-circle"></i> Verified</span>
                 </h1>
 
@@ -1152,7 +1152,7 @@
             <!-- ───────────── Administered Medication 1 ───────────── -->
             <div class="input-group">
                 <label>Administered Medication 1 Code</label>
-                <input type="text" id="adminMed1Code" value="42946">
+                <input type="text" id="adminMed1Code" class="me-medication-code" value="42946">
             </div>
 
             <div class="input-group">
@@ -1231,7 +1231,7 @@
             <!-- ───────────── Administered Medication 2 ───────────── -->
             <div class="input-group">
                 <label>Administered Medication 2 Code</label>
-                <input type="text" id="adminMed2Code" value="161">
+                <input type="text" id="adminMed2Code" class="me-medication-code" value="161">
             </div>
 
             <div class="input-group">
@@ -1328,7 +1328,6 @@ Take 1 tablet daily with food for nutritional support during neural tube defect 
         </div>
     </div>
     <!-- ░░░=============================================================== -->
-
 
     <div class="section">
         <h2 class="section-title"><i class="fas fa-syringe"></i> Immunizations</h2>
@@ -1958,6 +1957,9 @@ Procedure: Use for therapeutic interventions that alter the patient's physical c
 
     <!-- UI Enhancements - Visual overlay module -->
     <script type="module" src="js/ui-enhancements.js" defer></script>
+
+    <!-- Reportability Engine Integration (Bundled for local file:// usage) -->
+    <script src="js/reportability-engine/bundle.js"></script>
 
 </body>
 

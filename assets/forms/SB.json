@@ -10,7 +10,7 @@
   "patientCounty": "Linn",
   "patientCountry": "US",
   "patientGender": "F",
-  "patientBirthDate": "20250822210500",
+  "patientBirthDate": "20260122210500",
   "patientRace": "2054-5",
   "patientEthnicity": "2186-5",
   "patientBirthSex": "F",
@@ -244,12 +244,21 @@
   ],
   "diagnosisEvidence": [
     {
-      "diagnosisCode": "Q05.0",
-      "diagnosisName": "Cervical spina bifida with hydrocephalus",
-      "diagnosisDate": "20250822093000+000",
-      "onsetDate": "20250822093000+000",
-      "status": "completed",
-      "isRCTC": false
+      "diagnosisCode": "1003445004",
+      "diagnosisName": "Spina bifida of cervical spine (disorder)",
+      "diagnosisDate": "20250910",
+      "onsetDate": "20250910",
+      "status": "active",
+      "isRCTC": true
+    }
+  ],
+  "problemEvidence": [
+    {
+      "problemCode": "1003445004",
+      "problemName": "Spina bifida of cervical spine (disorder)",
+      "onsetDate": "20250910",
+      "status": "active",
+      "concernStatus": "active"
     }
   ]
 }

@@ -117,6 +117,10 @@ async function searchRCTCCodes(fieldId) {
         if (typeof validateTriggerCode === 'function') validateTriggerCode(el.id);
       }
       resultsDiv.style.display = 'none';
+      // Trigger reportability re-evaluation after selection
+      if (typeof window.triggerReportabilityEvaluation === 'function') {
+        window.triggerReportabilityEvaluation();
+      }
     };
 
     list.appendChild(item);
@@ -180,6 +184,10 @@ async function searchRCTCForDiagnosis(btn) {
                     codeInput.value = d.code;
                     nameInput.value = d.name;
                     resultsDiv.style.display = 'none';
+                    // Trigger reportability re-evaluation after selection
+                    if (typeof window.triggerReportabilityEvaluation === 'function') {
+                        window.triggerReportabilityEvaluation();
+                    }
                 };
                 list.appendChild(item);
             });
@@ -250,6 +258,10 @@ async function searchRCTCForDiagnosisByName(btn) {
                     codeInput.value = d.code;
                     nameInput.value = d.name;
                     resultsDiv.style.display = 'none';
+                    // Trigger reportability re-evaluation after selection
+                    if (typeof window.triggerReportabilityEvaluation === 'function') {
+                        window.triggerReportabilityEvaluation();
+                    }
                 };
                 list.appendChild(item);
             });
@@ -321,6 +333,10 @@ async function searchSNOMEDForProblem(btn) {
                     codeInput.value = d.code;
                     nameInput.value = d.name;
                     resultsDiv.style.display = 'none';
+                    // Trigger reportability re-evaluation after selection
+                    if (typeof window.triggerReportabilityEvaluation === 'function') {
+                        window.triggerReportabilityEvaluation();
+                    }
                 };
                 list.appendChild(item);
             });
@@ -392,6 +408,10 @@ async function searchSNOMEDForProblemByName(btn) {
                     codeInput.value = d.code;
                     nameInput.value = d.name;
                     resultsDiv.style.display = 'none';
+                    // Trigger reportability re-evaluation after selection
+                    if (typeof window.triggerReportabilityEvaluation === 'function') {
+                        window.triggerReportabilityEvaluation();
+                    }
                 };
                 list.appendChild(item);
             });
@@ -463,6 +483,10 @@ async function searchRCTCForTest(btn) {
           codeInput.value = t.code;
           nameInput.value = t.name;
           resultsDiv.style.display = 'none';
+          // Trigger reportability re-evaluation after selection
+          if (typeof window.triggerReportabilityEvaluation === 'function') {
+            window.triggerReportabilityEvaluation();
+          }
         };
         list.appendChild(item);
       });
@@ -472,6 +496,10 @@ async function searchRCTCForTest(btn) {
     } else {
       codeInput.value = matches[0].code;
       nameInput.value = matches[0].name;
+      // Trigger reportability re-evaluation after selection
+      if (typeof window.triggerReportabilityEvaluation === 'function') {
+        window.triggerReportabilityEvaluation();
+      }
     }
   } catch (err) {
     console.error('Test code search error:', err);
@@ -538,6 +566,10 @@ async function searchRCTCForTestByName(btn) {
           codeInput.value = t.code;
           nameInput.value = t.name;
           resultsDiv.style.display = 'none';
+          // Trigger reportability re-evaluation after selection
+          if (typeof window.triggerReportabilityEvaluation === 'function') {
+            window.triggerReportabilityEvaluation();
+          }
         };
         list.appendChild(item);
       });
@@ -547,6 +579,10 @@ async function searchRCTCForTestByName(btn) {
     } else {
       codeInput.value = matches[0].code;
       nameInput.value = matches[0].name;
+      // Trigger reportability re-evaluation after selection
+      if (typeof window.triggerReportabilityEvaluation === 'function') {
+        window.triggerReportabilityEvaluation();
+      }
     }
   } catch (err) {
     console.error('Test name search error:', err);
@@ -612,6 +648,10 @@ async function searchRCTCForOrganism(btn) {
           codeInput.value = o.code;
           nameInput.value = o.name;
           resultsDiv.style.display = 'none';
+          // Trigger reportability re-evaluation after selection
+          if (typeof window.triggerReportabilityEvaluation === 'function') {
+            window.triggerReportabilityEvaluation();
+          }
         };
         list.appendChild(item);
       });
@@ -622,6 +662,10 @@ async function searchRCTCForOrganism(btn) {
       // Fallback
       codeInput.value = matches[0].code;
       nameInput.value = matches[0].name;
+      // Trigger reportability re-evaluation after selection
+      if (typeof window.triggerReportabilityEvaluation === 'function') {
+        window.triggerReportabilityEvaluation();
+      }
     }
   } catch (err) {
     console.error('Organism code search error:', err);
@@ -688,6 +732,10 @@ async function searchRCTCForOrganismByName(btn) {
           codeInput.value = o.code;
           nameInput.value = o.name;
           resultsDiv.style.display = 'none';
+          // Trigger reportability re-evaluation after selection
+          if (typeof window.triggerReportabilityEvaluation === 'function') {
+            window.triggerReportabilityEvaluation();
+          }
         };
         list.appendChild(item);
       });
@@ -697,6 +745,10 @@ async function searchRCTCForOrganismByName(btn) {
     } else {
       codeInput.value = matches[0].code;
       nameInput.value = matches[0].name;
+      // Trigger reportability re-evaluation after selection
+      if (typeof window.triggerReportabilityEvaluation === 'function') {
+        window.triggerReportabilityEvaluation();
+      }
     }
   } catch (err) {
     console.error('Organism name search error:', err);
@@ -761,6 +813,10 @@ async function searchRCTCForLabOrder(btn) {
                     codeInput.value = o.code;
                     nameInput.value = o.name;
                     resultsDiv.style.display = 'none';
+                    // Trigger reportability re-evaluation after selection
+                    if (typeof window.triggerReportabilityEvaluation === 'function') {
+                        window.triggerReportabilityEvaluation();
+                    }
                 };
                 list.appendChild(item);
             });
@@ -831,6 +887,10 @@ async function searchRCTCForLabOrderByName(btn) {
                     codeInput.value = o.code;
                     nameInput.value = o.name;
                     resultsDiv.style.display = 'none';
+                    // Trigger reportability re-evaluation after selection
+                    if (typeof window.triggerReportabilityEvaluation === 'function') {
+                        window.triggerReportabilityEvaluation();
+                    }
                 };
                 list.appendChild(item);
             });

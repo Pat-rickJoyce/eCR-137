@@ -45,7 +45,7 @@ function updatePatientOverview() {
         if (el) el.textContent = text;
     };
 
-    safeUpdate('patientOverviewName', patientName);
+    safeUpdate('patientNameText', patientName);
     safeUpdate('patientOverviewDOB', `DOB: ${formattedDOB}`);
     safeUpdate('patientOverviewGender', gender);
     safeUpdate('patientOverviewRace', race);

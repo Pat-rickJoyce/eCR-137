@@ -235,6 +235,66 @@ function collectProblemEvidence() {
 }
 
 /**
+ * Add Medication Evidence Row
+ * Adds a new medication evidence entry to the form with optional pre-filled data
+ * @param {object} prefill - Optional data to pre-populate the row
+ */
+function addMedicationEvidence(prefill = {}) {
+    const template = document.getElementById('medicationEvidenceTemplate');
+    const clone = template.content.cloneNode(true);
+    const row = clone.querySelector('.medication-evidence-row');
+
+    // Populate with prefill data if provided
+    if (prefill.medicationCode) row.querySelector('.me-medication-code').value = prefill.medicationCode;
+    if (prefill.medicationName) row.querySelector('.me-medication-name').value = prefill.medicationName;
+    if (prefill.administrationTime) row.querySelector('.me-administration-time').value = prefill.administrationTime;
+    if (prefill.status) row.querySelector('.me-status').value = prefill.status;
+    if (prefill.route) row.querySelector('.me-route').value = prefill.route;
+    if (prefill.doseValue) row.querySelector('.me-dose-value').value = prefill.doseValue;
+    if (prefill.doseUnit) row.querySelector('.me-dose-unit').value = prefill.doseUnit;
+
+    document.getElementById('medicationEvidenceList').appendChild(row);
+
+    // Trigger reportability evaluation if available
+    if (typeof window.triggerReportabilityEvaluation === 'function') {
+        window.triggerReportabilityEvaluation();
+    }
+}
+
+/**
+ * Remove Medication Evidence Row
+ * Removes a medication evidence entry from the form
+ * @param {HTMLElement} btn - The remove button element
+ */
+function removeMedicationEvidence(btn) {
+    btn.closest('.medication-evidence-row')?.remove();
+
+    // Trigger reportability evaluation if available
+    if (typeof window.triggerReportabilityEvaluation === 'function') {
+        window.triggerReportabilityEvaluation();
+    }
+}
+
+/**
+ * Collect Medication Evidence
+ * Extracts all medication evidence data from the form
+ * @returns {object[]} Array of medication evidence objects
+ */
+function collectMedicationEvidence() {
+    return Array.from(document.querySelectorAll('.medication-evidence-row')).map(r => {
+        return {
+            medicationCode: r.querySelector('.me-medication-code')?.value.trim() || '',
+            medicationName: r.querySelector('.me-medication-name')?.value.trim() || '',
+            administrationTime: r.querySelector('.me-administration-time')?.value.trim() || '',
+            status: r.querySelector('.me-status')?.value || 'completed',
+            route: r.querySelector('.me-route')?.value || '',
+            doseValue: r.querySelector('.me-dose-value')?.value || '',
+            doseUnit: r.querySelector('.me-dose-unit')?.value || ''
+        };
+    }).filter(x => x.medicationCode || x.medicationName);
+}
+
+/**
  * Migrate Legacy Labs to New System
  * Converts old single-field lab data to new evidence-based system
  * Run once during initialization to preserve backward compatibility
