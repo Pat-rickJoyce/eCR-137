@@ -261,6 +261,14 @@ window.loadFormDataFromAssets = async function(filename) {
 
         console.log(`Successfully loaded form template: ${filename}`);
 
+        // Trigger reportability evaluation after form data is loaded
+        if (typeof window.triggerReportabilityEvaluation === 'function') {
+            console.log('[FormLoader] Triggering reportability evaluation...');
+            setTimeout(() => window.triggerReportabilityEvaluation(), 100);
+        } else {
+            console.warn('[FormLoader] window.triggerReportabilityEvaluation not available');
+        }
+
         // Show success message with Clean UI styling
         showCleanUINotification(`✅ ${filename.replace('.json', '')} template loaded successfully!`, 'success');
         return true;
@@ -432,6 +440,13 @@ reader.onload = function(e) {
         }
 
         alert('Form data loaded successfully!');
+
+        // Trigger reportability evaluation after form loads
+        if (window.triggerReportabilityEvaluation) {
+            setTimeout(() => {
+                window.triggerReportabilityEvaluation();
+            }, 500);
+        }
     } catch (error) {
         alert('Error loading file: ' + error.message);
         console.error('Load error:', error);

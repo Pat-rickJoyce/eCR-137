@@ -10,7 +10,7 @@
   "patientCounty": "Jackson",
   "patientCountry": "US",
   "patientGender": "M",
-  "patientBirthDate": "20250709210500",
+  "patientBirthDate": "20260109210500",
   "patientRace": "2131-1",
   "patientEthnicity": "2135-2",
   "patientBirthSex": "M",
@@ -244,12 +244,21 @@
   ],
   "diagnosisEvidence": [
     {
-      "diagnosisCode": "86299006",
-      "diagnosisName": "Tetralogy of Fallot",
+      "diagnosisCode": "253512000",
+      "diagnosisName": "Tetralogy of Fallot (disorder)",
       "diagnosisDate": "20250916093000",
       "onsetDate": "20250916093000",
-      "status": "completed",
-      "isRCTC": false
+      "status": "active",
+      "isRCTC": true
+    }
+  ],
+  "problemEvidence": [
+    {
+      "problemCode": "253512000",
+      "problemName": "Tetralogy of Fallot (disorder)",
+      "onsetDate": "20250916093000",
+      "status": "active",
+      "concernStatus": "active"
     }
   ]
 }

@@ -1,0 +1,23 @@
+{
+    "patientGivenName": "Robert",
+    "patientFamilyName": "Thompson",
+    "patientBirthDate": "1975-03-15T00:00",
+    "patientGender": "male",
+    "resultLabCLIA": "22D2038475",
+    "resultLabName": "City General Hospital Lab",
+    "resultPerformerNPI": "1234567891",
+    "resultPerformerGiven": "Jennifer",
+    "resultPerformerFamily": "Lee",
+    "resultOrderingNPI": "1876543210",
+    "resultOrderingGiven": "David",
+    "resultOrderingFamily": "Patel",
+    "adminMed1Code": "1734636",
+    "adminMed1Name": "Elbasvir 50 MG / Grazoprevir 100 MG Oral Tablet",
+    "adminMed1Time": "2024-06-10T09:00",
+    "adminMed1Status": "completed",
+    "adminMed1Route": "PO",
+    "adminMed1DoseValue": "1",
+    "adminMed1DoseUnit": "1",
+    "adminMed2Code": "",
+    "adminMed2Name": ""
+}

@@ -1,0 +1,23 @@
+{
+    "patientGivenName": "Baby",
+    "patientFamilyName": "Martinez",
+    "patientBirthDate": "2024-06-01T00:00",
+    "patientGender": "male",
+    "resultLabCLIA": "11D1029384",
+    "resultLabName": "Regional Medical Center Lab",
+    "resultPerformerNPI": "1092837465",
+    "resultPerformerGiven": "Sarah",
+    "resultPerformerFamily": "Chen",
+    "resultOrderingNPI": "1987654321",
+    "resultOrderingGiven": "Michael",
+    "resultOrderingFamily": "Rodriguez",
+    "adminMed1Code": "1658147",
+    "adminMed1Name": "Hepatitis B Immune Globulin 0.5 mL Intramuscular Injection",
+    "adminMed1Time": "2024-06-01T14:30",
+    "adminMed1Status": "completed",
+    "adminMed1Route": "IM",
+    "adminMed1DoseValue": "0.5",
+    "adminMed1DoseUnit": "mL",
+    "adminMed2Code": "",
+    "adminMed2Name": ""
+}

@@ -1,0 +1,23 @@
+{
+    "patientGivenName": "Maria",
+    "patientFamilyName": "Garcia",
+    "patientBirthDate": "1990-08-22T00:00",
+    "patientGender": "female",
+    "resultLabCLIA": "33D3047586",
+    "resultLabName": "County Health Department Lab",
+    "resultPerformerNPI": "1345678902",
+    "resultPerformerGiven": "Thomas",
+    "resultPerformerFamily": "Anderson",
+    "resultOrderingNPI": "1765432109",
+    "resultOrderingGiven": "Lisa",
+    "resultOrderingFamily": "Williams",
+    "adminMed1Code": "731541",
+    "adminMed1Name": "Penicillin G Benzathine 2400000 UNT Injection",
+    "adminMed1Time": "2024-06-05T11:15",
+    "adminMed1Status": "completed",
+    "adminMed1Route": "IM",
+    "adminMed1DoseValue": "2.4",
+    "adminMed1DoseUnit": "1",
+    "adminMed2Code": "",
+    "adminMed2Name": ""
+}

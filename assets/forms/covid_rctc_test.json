@@ -1,0 +1,31 @@
+{
+    "patientGivenName": "Emma Rose",
+    "patientFamilyName": "Johnson",
+    "patientBirthDate": "1985-04-12T00:00",
+    "patientGender": "female",
+    "resultLabCLIA": "26D1234567",
+    "resultLabName": "Springfield Public Health Laboratory",
+    "resultPerformerNPI": "1568493720",
+    "resultPerformerGiven": "Avery",
+    "resultPerformerFamily": "Cole",
+    "resultOrderingNPI": "1234567890",
+    "resultOrderingGiven": "Royce",
+    "resultOrderingFamily": "Hemlock",
+    "labEvidence": [
+        {
+            "orderCode": "94309-2",
+            "orderName": "SARS-CoV-2 RNA Specimen NAA+probe",
+            "orderId": "ORD-2024-C001",
+            "orderTime": "2024-06-15T12:00",
+            "testCode": "94309-2",
+            "testName": "SARS-CoV-2 (COVID-19) RNA [Presence] in Specimen by NAA with probe detection",
+            "valueKind": "coded",
+            "valueCode": "840539006",
+            "valueName": "Disease caused by severe acute respiratory syndrome coronavirus 2 (disorder)",
+            "time": "2024-06-16T10:00",
+            "status": "completed",
+            "interpretation": "A",
+            "referenceRange": "Negative"
+        }
+    ]
+}
