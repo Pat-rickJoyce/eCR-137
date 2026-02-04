@@ -169,6 +169,9 @@ if (element) {
     // Collect administered medications
     data.administeredMedications = collectAdministeredMedications();
 
+    // Collect immunizations
+    data.immunizations = collectImmunizations();
+
     return data;
 }
 
@@ -265,6 +268,17 @@ window.loadFormDataFromAssets = async function(filename) {
                 medicationList.innerHTML = '';
                 data.administeredMedications.forEach(medicationEntry => {
                     addAdministeredMedication(medicationEntry);
+                });
+            }
+        }
+
+        // Handle immunizations if present
+        if (data.immunizations && Array.isArray(data.immunizations)) {
+            const immunizationList = document.getElementById('immunizationList');
+            if (immunizationList) {
+                immunizationList.innerHTML = '';
+                data.immunizations.forEach(immunizationEntry => {
+                    addImmunization(immunizationEntry);
                 });
             }
         }

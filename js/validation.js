@@ -358,6 +358,11 @@ function validateDQTriggerCodes() {
         hasTriggerCode = data.administeredMedications.some(med => med.medicationCode);
     }
 
+    // Check immunizations from repeater
+    if (!hasTriggerCode && Array.isArray(data.immunizations)) {
+        hasTriggerCode = data.immunizations.some(imm => imm.vaccineCode);
+    }
+
     // Check remaining legacy fields for other sections
     const legacyTriggerFields = [
         'labTest1Code', 'labTest2Code', 'labOrder1Code',
@@ -471,47 +476,27 @@ function validateDQMedicationAdministration() {
  */
 function validateDQImmunizations() {
     const errors = [];
+    const data = getFormData();
 
-    // Immunization 1 validation
-    const imm1Id = document.getElementById('immunization1Id');
-    const imm1Date = document.getElementById('immunization1Date');
-    const vac1Code = document.getElementById('vaccine1Code');
+    // Validate immunizations from repeater
+    if (Array.isArray(data.immunizations)) {
+        data.immunizations.forEach((imm, index) => {
+            if (imm.immunizationId && (!imm.immunizationId.trim() || imm.immunizationId === 'nullFlavor')) {
+                errors.push(`dq-immunizationActivity-id-001: Immunization ${index + 1} ID cannot be nullFlavor`);
+            }
 
-    if (imm1Id?.value && (!imm1Id.value.trim() || imm1Id.value === 'nullFlavor')) {
-        errors.push('dq-immunizationActivity-id-001: Immunization 1 ID cannot be nullFlavor');
-    }
+            if (imm.immunizationDate && (!imm.immunizationDate.trim() || imm.immunizationDate === 'nullFlavor')) {
+                errors.push(`dq-immunization-effectiveTime-001: Immunization ${index + 1} effective time cannot be nullFlavor`);
+            }
 
-    if (imm1Date?.value && (!imm1Date.value.trim() || imm1Date.value === 'nullFlavor')) {
-        errors.push('dq-immunization-effectiveTime-001: Immunization 1 effective time cannot be nullFlavor');
-    }
+            if (imm.immunizationDate && imm.immunizationDate.length < 8) {
+                errors.push(`dq-immunization-effectiveTime-003: Immunization ${index + 1} effective time must be at least 8 characters (YYYYMMDD)`);
+            }
 
-    if (imm1Date?.value && imm1Date.value.length < 8) {
-        errors.push('dq-immunization-effectiveTime-003: Immunization 1 effective time must be at least 8 characters (YYYYMMDD)');
-    }
-
-    if (vac1Code?.value && (!vac1Code.value.trim() || vac1Code.value === 'nullFlavor')) {
-        errors.push('dq-immunization-vaccineCode-001/002: Vaccine 1 code cannot be blank or nullFlavor');
-    }
-
-    // Immunization 2 validation
-    const imm2Id = document.getElementById('immunization2Id');
-    const imm2Date = document.getElementById('immunization2Date');
-    const vac2Code = document.getElementById('vaccine2Code');
-
-    if (imm2Id?.value && (!imm2Id.value.trim() || imm2Id.value === 'nullFlavor')) {
-        errors.push('dq-immunizationActivity-id-001: Immunization 2 ID cannot be nullFlavor');
-    }
-
-    if (imm2Date?.value && (!imm2Date.value.trim() || imm2Date.value === 'nullFlavor')) {
-        errors.push('dq-immunization-effectiveTime-001: Immunization 2 effective time cannot be nullFlavor');
-    }
-
-    if (imm2Date?.value && imm2Date.value.length < 8) {
-        errors.push('dq-immunization-effectiveTime-003: Immunization 2 effective time must be at least 8 characters (YYYYMMDD)');
-    }
-
-    if (vac2Code?.value && (!vac2Code.value.trim() || vac2Code.value === 'nullFlavor')) {
-        errors.push('dq-immunization-vaccineCode-001/002: Vaccine 2 code cannot be blank or nullFlavor');
+            if (imm.vaccineCode && (!imm.vaccineCode.trim() || imm.vaccineCode === 'nullFlavor')) {
+                errors.push(`dq-immunization-vaccineCode-001/002: Immunization ${index + 1} vaccine code cannot be blank or nullFlavor`);
+            }
+        });
     }
 
     return errors;

@@ -690,28 +690,62 @@ function generateMedicationEntries(d) {
 }
 
 /**
+ * Builds immunization table rows for narrative text
+ * @param {Object} data - Form data
+ * @returns {string} Immunization table rows HTML
+ */
+function buildImmunizationsTableRows(data) {
+  // Use immunizations array from repeater
+  const immunizations = data.immunizations || [];
+
+  if (immunizations.length === 0) {
+    return '<tr><td colspan="4">No immunizations recorded</td></tr>';
+  }
+
+  return immunizations.map(imm => {
+    const dose = `${imm.doseValue || ''} ${imm.doseUnit || ''}`.trim();
+    const status = imm.negated ? 'Not Given' : (imm.status || 'completed');
+    return `<tr>
+            <td><content ID="Immunization_${imm.vaccineCode}">${xmlEscape(imm.vaccineName || '')}</content></td>
+            <td>${xmlEscape(imm.immunizationDate || '')}</td>
+            <td>${xmlEscape(status)}</td>
+            <td>${xmlEscape(imm.manufacturer || '')}</td>
+          </tr>`;
+  }).join('');
+}
+
+/**
  * Generates immunization entries XML
  * @param {Object} data - Form data
  * @returns {string} Immunization entries XML
  */
 function generateImmunizationEntries(data) {
-  const mkEntry = (i) => {
-    const code = data[`vaccine${i}Code`];
-    const name = data[`vaccine${i}Name`];
-    if (!code || !name) return '';
+  // Use immunizations array from repeater
+  const immunizations = data.immunizations || [];
 
-    const status = data[`immunization${i}Status`] || 'completed';
-    const negation = (status === 'not-done' || status === 'refused') ? 'true' : 'false';
-    const date = data[`immunization${i}Date`] || '';
-    const route = data[`vaccine${i}Route`] || 'IM';
-    const doseStr = (data[`vaccine${i}Dose`] || '').trim();
-    const [doseValue, doseUnitRaw] = doseStr.split(/\s+/, 2);
-    const doseUnit = (doseUnitRaw === '1' || doseUnitRaw === 'each') ? '{tbl}' : (doseUnitRaw || 'mL');
-    const mfr = data[`vaccine${i}Manufacturer`] || '';
-    const lot = data[`vaccine${i}Lot`] || '';
+  if (immunizations.length === 0) return '';
+
+  return immunizations.map((imm, index) => {
+    // Determine performer: use per-immunization override, else global administering provider, else empty
+    const performerNPI = imm.performerNPI || data.administeringProviderNPI || '';
+    const performerGiven = imm.performerGivenName || data.administeringProviderGiven || '';
+    const performerMiddle = imm.performerMiddleName || data.administeringProviderMiddle || '';
+    const performerFamily = imm.performerFamilyName || data.administeringProviderFamily || '';
+    const performerPhone = imm.performerPhone || data.administeringProviderPhone || '';
+    const performerOrgName = data.administeringProviderOrgName || '';
+    const performerOrgId = data.administeringProviderOrgId || '';
+    const performerOrgIdRoot = data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19';
+
+    // Author: use performer data if available, else global provider
+    const authorNPI = performerNPI || data.providerId || '';
+    const authorGiven = performerGiven || (data.providerName ? data.providerName.split(' ')[1] : 'Unknown');
+    const authorFamily = performerFamily || (data.providerName ? data.providerName.split(' ')[2] : 'Provider');
+    const authorTime = imm.immunizationDate || '20240615120000';
 
     // Get the correct route translation
-    const routeTranslation = getImmunizationRouteTranslation(route);
+    const routeTranslation = getImmunizationRouteTranslation(imm.route || 'IM');
+
+    const negation = imm.negated ? 'true' : 'false';
 
     return `
       <entry typeCode="DRIV">
@@ -719,70 +753,67 @@ function generateImmunizationEntries(data) {
           <templateId root="2.16.840.1.113883.10.20.22.4.52" />
           <templateId root="2.16.840.1.113883.10.20.22.4.52" extension="2015-08-01" />
           <id root="${generateGUID()}" />
-          <statusCode code="${status}" />
-          <effectiveTime value="${date}" />
-          ${route ? `<routeCode code="${routeTranslation.code}" codeSystem="2.16.840.1.113883.3.26.1.1" displayName="${routeTranslation.display}">
+          <statusCode code="${imm.status || 'completed'}" />
+          <effectiveTime value="${imm.immunizationDate || ''}" />
+          ${imm.route ? `<routeCode code="${routeTranslation.code}" codeSystem="2.16.840.1.113883.3.26.1.1" displayName="${routeTranslation.display}">
             <translation code="${routeTranslation.snomed}"
                          codeSystem="2.16.840.1.113883.6.96"
                          displayName="${routeTranslation.display}"/>
           </routeCode>` : ''}
-          ${doseValue ? `<doseQuantity value="${doseValue}" unit="${doseUnit}" />` : ''}
+          ${imm.doseValue ? `<doseQuantity value="${imm.doseValue}" unit="${imm.doseUnit || 'mL'}" />` : ''}
           <consumable>
             <manufacturedProduct classCode="MANU">
               <templateId root="2.16.840.1.113883.10.20.22.4.54" extension="2014-06-09" />
               <manufacturedMaterial>
-                <code code="${code}" codeSystem="2.16.840.1.113883.12.292" displayName="${name}" />
-                ${lot ? `<lotNumberText>${lot}</lotNumberText>` : ''}
+                <code code="${imm.vaccineCode || ''}" codeSystem="2.16.840.1.113883.12.292" displayName="${xmlEscape(imm.vaccineName || '')}" >
+                  <originalText>
+                    <reference value="#Immunization_${imm.vaccineCode}" />
+                  </originalText>
+                </code>
+                ${imm.lotNumber ? `<lotNumberText>${xmlEscape(imm.lotNumber)}</lotNumberText>` : ''}
               </manufacturedMaterial>
-              ${mfr ? `<manufacturerOrganization>
-                <name>${mfr}</name>
+              ${imm.manufacturer ? `<manufacturerOrganization>
+                <name>${xmlEscape(imm.manufacturer)}</name>
               </manufacturerOrganization>` : ''}
             </manufacturedProduct>
           </consumable>
-          ${(data.administeringProviderNPI
-          || data.administeringProviderGiven
-          || data.administeringProviderMiddle
-          || data.administeringProviderFamily
-          || data.administeringProviderPhone
-          || data.administeringProviderOrgName) ? `
+          ${(performerNPI || performerGiven || performerFamily) ? `
           <performer typeCode="PRF">
             <assignedEntity>
-              ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}" />` : ''}
-              ${data.administeringProviderPhone ? `<telecom use="WP" value="tel:${data.administeringProviderPhone}" />` : ''}
+              ${performerNPI ? `<id root="2.16.840.1.113883.4.6" extension="${performerNPI}" />` : ''}
+              ${performerPhone ? `<telecom use="WP" value="tel:${performerPhone}" />` : ''}
               <assignedPerson>
                 <name>
-                  ${data.administeringProviderGiven ? `<given>${data.administeringProviderGiven}</given>` : ''}
-                  ${data.administeringProviderMiddle ? `<given>${data.administeringProviderMiddle}</given>` : ''}
-                  ${data.administeringProviderFamily ? `<family>${data.administeringProviderFamily}</family>` : ''}
+                  ${performerGiven ? `<given>${xmlEscape(performerGiven)}</given>` : ''}
+                  ${performerMiddle ? `<given>${xmlEscape(performerMiddle)}</given>` : ''}
+                  ${performerFamily ? `<family>${xmlEscape(performerFamily)}</family>` : ''}
                 </name>
               </assignedPerson>
-              ${data.administeringProviderOrgName ? `<representedOrganization>
-                ${data.administeringProviderOrgId ? `<id root="${data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19'}" extension="${data.administeringProviderOrgId}" />` : ''}
-                <name>${data.administeringProviderOrgName}</name>
+              ${performerOrgName ? `<representedOrganization>
+                ${performerOrgId ? `<id root="${performerOrgIdRoot}" extension="${performerOrgId}" />` : ''}
+                <name>${xmlEscape(performerOrgName)}</name>
               </representedOrganization>` : ''}
             </assignedEntity>
           </performer>` : ''}
           <author>
             <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-            <time value="20240615120000"/>
+            <time value="${authorTime}"/>
             <assignedAuthor>
-              <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
+              <id extension="${authorNPI}" root="2.16.840.1.113883.4.6"/>
               <code code="${getProviderTaxonomyCode('physician').code}"
                     codeSystem="2.16.840.1.113883.6.101"
                     displayName="${getProviderTaxonomyCode('physician').display}"/>
               <assignedPerson>
                 <name>
-                  <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-                  <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
+                  <given>${xmlEscape(authorGiven)}</given>
+                  <family>${xmlEscape(authorFamily)}</family>
                 </name>
               </assignedPerson>
             </assignedAuthor>
           </author>
         </substanceAdministration>
       </entry>`;
-  };
-
-  return mkEntry(1) + mkEntry(2);
+  }).join('');
 }
 
 /**
@@ -1179,6 +1210,10 @@ function buildProblemsTableRows(data) {
 function buildMedicationsAdministeredTableRows(data) {
   // Use administeredMedications array from repeater
   const medications = data.administeredMedications || [];
+
+  if (medications.length === 0) {
+    return '<tr><td colspan="5">No medications recorded</td></tr>';
+  }
 
   return medications.map(med => {
     const dose = `${med.doseValue || ''} ${med.doseUnit || ''}${med.volumeValue ? ` (${med.volumeValue} ${med.volumeUnit || ''})` : ''}`.trim();
@@ -2318,7 +2353,7 @@ function buildEICRXml() {
               <thead>
                 <tr><th>Medication</th><th>Dose</th><th>Route</th><th>Date</th><th>Status</th></tr>
               </thead>
-              <tbody>${data.adminMed1Name ? `<tr><td>${data.adminMed1Name}</td><td>${data.adminMed1DoseValue} ${data.adminMed1DoseUnit}${data.adminMed1VolValue ? ' (' + data.adminMed1VolValue + ' ' + data.adminMed1VolUnit + ')' : ''}</td><td>${data.adminMed1Route}</td><td>${data.adminMed1Time}</td><td>${data.adminMed1Status}</td></tr>` : ''}${data.adminMed2Name ? `<tr><td>${data.adminMed2Name}</td><td>${data.adminMed2DoseValue} ${data.adminMed2DoseUnit}${data.adminMed2VolValue ? ' (' + data.adminMed2VolValue + ' ' + data.adminMed2VolUnit + ')' : ''}</td><td>${data.adminMed2Route}</td><td>${data.adminMed2Time}</td><td>${data.adminMed2Status}</td></tr>` : ''}</tbody>
+              <tbody>${buildMedicationsAdministeredTableRows(data)}</tbody>
             </table>
           </text>
           ${generateMedicationEntries(data)}
@@ -2335,11 +2370,13 @@ function buildEICRXml() {
           <code code="11369-6" codeSystem="2.16.840.1.113883.6.1" displayName="Immunizations" />
           <title>Immunizations</title>
           <text>
-            <table>
+            <table border="1" width="100%">
               <thead>
                 <tr><th>Vaccine</th><th>Date</th><th>Status</th><th>Manufacturer</th></tr>
               </thead>
-              <tbody>${data.vaccine1Name ? `<tr><td>${data.vaccine1Name}</td><td>${data.immunization1Date}</td><td>${data.immunization1Status}</td><td>${data.vaccine1Manufacturer}</td></tr>` : ''}${data.vaccine2Name ? `<tr><td>${data.vaccine2Name}</td><td>${data.immunization2Date}</td><td>${data.immunization2Status}</td><td>${data.vaccine2Manufacturer}</td></tr>` : ''}</tbody>
+              <tbody>
+                ${buildImmunizationsTableRows(data)}
+              </tbody>
             </table>
           </text>
           ${generateImmunizationEntries(data)}
@@ -2389,67 +2426,11 @@ function buildEICRXml() {
 
 <!-- Admission Medications Section -->
 <component>
-  <section>
+  <section nullFlavor="NI">
     <templateId root="2.16.840.1.113883.10.20.22.2.44" extension="2015-08-01"/>
     <code code="42346-7" codeSystem="2.16.840.1.113883.6.1" displayName="Medications on admission (narrative) Document"/>
     <title>Admission Medications</title>
-    <text>
-      <table>
-        <thead>
-          <tr><th>Medication</th><th>Dose</th><th>Route</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>${data.adminMed1Name}</td><td>${data.adminMed1DoseValue} ${data.adminMed1DoseUnit}</td><td>${data.adminMed1Route}</td></tr>
-        </tbody>
-      </table>
-    </text>
-    <entry typeCode="DRIV">
-      <act classCode="ACT" moodCode="EVN">
-        <templateId root="2.16.840.1.113883.10.20.22.4.36" extension="2014-06-09"/>
-        <id root="${generateGUID()}"/>
-        <code code="42346-7" codeSystem="2.16.840.1.113883.6.1" displayName="Medications on admission"/>
-        <statusCode code="active"/>
-        <effectiveTime value="${data.encounterDate}"/>
-  <author>
-            <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-            <time value="20240615"/>
-            <assignedAuthor>
-              <id extension="1234567890" root="2.16.840.1.113883.4.6"/>
-              <code code="207Q00000X" 
-      codeSystem="2.16.840.1.113883.6.101" 
-      displayName="Family Medicine Physician"/>
-              <assignedPerson>
-                <name>
-                  <given>Royce</given>
-                  <family>Hemlock</family>
-                </name>
-              </assignedPerson>
-            </assignedAuthor>
-          </author>
-        <entryRelationship typeCode="SUBJ">
-          <substanceAdministration classCode="SBADM" moodCode="INT">
-            <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09"/>
-            <id root="${generateGUID()}"/>
-            <statusCode code="active"/>
-            <effectiveTime value="${data.encounterDate}"/>
-            <routeCode code="${data.adminMed1Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
-              <translation code="${getRouteTranslation(data.adminMed1Route).code}" 
-                           codeSystem="2.16.840.1.113883.6.96" 
-                           displayName="${getRouteTranslation(data.adminMed1Route).display}"/>
-            </routeCode>
-            <doseQuantity value="${data.adminMed1DoseValue}" unit="${data.adminMed1DoseUnit}"/>
-            <consumable>
-              <manufacturedProduct classCode="MANU">
-                <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
-                <manufacturedMaterial>
-                  <code code="${data.adminMed1Code}" codeSystem="2.16.840.1.113883.6.88" displayName="${data.adminMed1Name}"/>
-                </manufacturedMaterial>
-              </manufacturedProduct>
-            </consumable>
-          </substanceAdministration>
-        </entryRelationship>
-      </act>
-    </entry>
+    <text>See Medications Administered Section</text>
   </section>
 </component>
 

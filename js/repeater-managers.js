@@ -397,6 +397,85 @@ function collectAdministeredMedications() {
     }).filter(x => x.medicationCode || x.medicationName);
 }
 
+/**
+ * Add Immunization Row
+ * Adds a new immunization entry to the form with optional pre-filled data
+ * @param {object} prefill - Optional data to pre-populate the row
+ */
+function addImmunization(prefill = {}) {
+    const template = document.getElementById('immunizationTemplate');
+    const clone = template.content.cloneNode(true);
+    const row = clone.querySelector('.immunization-row');
+
+    // Populate with prefill data if provided
+    if (prefill.vaccineCode) row.querySelector('.imm-vaccine-code').value = prefill.vaccineCode;
+    if (prefill.vaccineName) row.querySelector('.imm-vaccine-name').value = prefill.vaccineName;
+    if (prefill.immunizationId) row.querySelector('.imm-immunization-id').value = prefill.immunizationId;
+    if (prefill.immunizationDate) row.querySelector('.imm-immunization-date').value = prefill.immunizationDate;
+    if (prefill.status) row.querySelector('.imm-status').value = prefill.status;
+    if (prefill.route) row.querySelector('.imm-route').value = prefill.route;
+    if (prefill.doseValue) row.querySelector('.imm-dose-value').value = prefill.doseValue;
+    if (prefill.doseUnit) row.querySelector('.imm-dose-unit').value = prefill.doseUnit;
+    if (prefill.lotNumber) row.querySelector('.imm-lot-number').value = prefill.lotNumber;
+    if (prefill.manufacturer) row.querySelector('.imm-manufacturer').value = prefill.manufacturer;
+    if (prefill.negated) row.querySelector('.imm-negated').checked = prefill.negated;
+
+    // Performer fields (optional override)
+    if (prefill.performerNPI) row.querySelector('.imm-performer-npi').value = prefill.performerNPI;
+    if (prefill.performerGivenName) row.querySelector('.imm-performer-given').value = prefill.performerGivenName;
+    if (prefill.performerMiddleName) row.querySelector('.imm-performer-middle').value = prefill.performerMiddleName;
+    if (prefill.performerFamilyName) row.querySelector('.imm-performer-family').value = prefill.performerFamilyName;
+    if (prefill.performerPhone) row.querySelector('.imm-performer-phone').value = prefill.performerPhone;
+
+    document.getElementById('immunizationList').appendChild(clone);
+}
+
+/**
+ * Remove Immunization Row
+ * Removes an immunization entry from the form
+ * @param {HTMLElement} btn - The remove button element
+ */
+function removeImmunization(btn) {
+    btn.closest('.immunization-row')?.remove();
+}
+
+/**
+ * Collect Immunizations
+ * Extracts all immunization data from the form
+ * @returns {object[]} Array of immunization objects
+ */
+function collectImmunizations() {
+    return Array.from(document.querySelectorAll('.immunization-row')).map(r => {
+        // Get immunization date element and convert if datetime-local
+        const immunizationDateElement = r.querySelector('.imm-immunization-date');
+        const immunizationDate = immunizationDateElement?.type === 'datetime-local' ?
+                      datetimeLocalToCda(immunizationDateElement.value) :
+                      immunizationDateElement?.value.trim() || '';
+
+        return {
+            // Core immunization fields
+            vaccineCode: r.querySelector('.imm-vaccine-code')?.value.trim() || '',
+            vaccineName: r.querySelector('.imm-vaccine-name')?.value.trim() || '',
+            immunizationId: r.querySelector('.imm-immunization-id')?.value.trim() || '',
+            immunizationDate: immunizationDate,
+            status: r.querySelector('.imm-status')?.value || 'completed',
+            route: r.querySelector('.imm-route')?.value || '',
+            doseValue: r.querySelector('.imm-dose-value')?.value.trim() || '',
+            doseUnit: r.querySelector('.imm-dose-unit')?.value || '',
+            lotNumber: r.querySelector('.imm-lot-number')?.value.trim() || '',
+            manufacturer: r.querySelector('.imm-manufacturer')?.value.trim() || '',
+            negated: r.querySelector('.imm-negated')?.checked || false,
+
+            // Performer (administering provider) fields - optional override
+            performerNPI: r.querySelector('.imm-performer-npi')?.value.trim() || '',
+            performerGivenName: r.querySelector('.imm-performer-given')?.value.trim() || '',
+            performerMiddleName: r.querySelector('.imm-performer-middle')?.value.trim() || '',
+            performerFamilyName: r.querySelector('.imm-performer-family')?.value.trim() || '',
+            performerPhone: r.querySelector('.imm-performer-phone')?.value.trim() || ''
+        };
+    }).filter(x => x.vaccineCode || x.vaccineName);
+}
+
 // Expose functions globally for onclick attributes
 window.addDiagnosisEvidence = addDiagnosisEvidence;
 window.removeDiagnosisEvidence = removeDiagnosisEvidence;
@@ -408,3 +487,6 @@ window.toggleValueEditors = toggleValueEditors;
 window.addAdministeredMedication = addAdministeredMedication;
 window.removeAdministeredMedication = removeAdministeredMedication;
 window.collectAdministeredMedications = collectAdministeredMedications;
+window.addImmunization = addImmunization;
+window.removeImmunization = removeImmunization;
+window.collectImmunizations = collectImmunizations;

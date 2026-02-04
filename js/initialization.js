@@ -40,6 +40,61 @@ function migrateLegacyMedicationsToRepeater() {
 }
 
 /**
+ * Migrate Legacy Immunization Fields to Repeater
+ * Converts old vaccine1/vaccine2 and immunization1/immunization2 fields to new repeater format
+ * Run once during initialization to preserve backward compatibility with old JSON files
+ */
+function migrateLegacyImmunizationsToRepeater() {
+    // Check if we have any immunization rows already (means user is working with the repeater)
+    if (document.querySelector('.immunization-row')) {
+        console.log('[Migration] Immunization repeater already in use - skipping migration');
+        return;
+    }
+
+    // Migrate immunization 1
+    const vac1Code = document.getElementById('vaccine1Code')?.value;
+    const vac1Name = document.getElementById('vaccine1Name')?.value;
+
+    if (vac1Code || vac1Name) {
+        console.log('[Migration] Migrating legacy immunization 1 to repeater');
+        addImmunization({
+            vaccineCode: vac1Code || '',
+            vaccineName: vac1Name || '',
+            immunizationId: document.getElementById('immunization1Id')?.value || '',
+            immunizationDate: document.getElementById('immunization1Date')?.value || '',
+            status: document.getElementById('immunization1Status')?.value || 'completed',
+            route: document.getElementById('vaccine1Route')?.value || 'IM',
+            doseValue: (document.getElementById('vaccine1Dose')?.value || '').split(/\s+/)[0] || '',
+            doseUnit: (document.getElementById('vaccine1Dose')?.value || '').split(/\s+/)[1] || 'mL',
+            lotNumber: document.getElementById('vaccine1Lot')?.value || '',
+            manufacturer: document.getElementById('vaccine1Manufacturer')?.value || '',
+            negated: false
+        });
+    }
+
+    // Migrate immunization 2
+    const vac2Code = document.getElementById('vaccine2Code')?.value;
+    const vac2Name = document.getElementById('vaccine2Name')?.value;
+
+    if (vac2Code || vac2Name) {
+        console.log('[Migration] Migrating legacy immunization 2 to repeater');
+        addImmunization({
+            vaccineCode: vac2Code || '',
+            vaccineName: vac2Name || '',
+            immunizationId: document.getElementById('immunization2Id')?.value || '',
+            immunizationDate: document.getElementById('immunization2Date')?.value || '',
+            status: document.getElementById('immunization2Status')?.value || 'completed',
+            route: document.getElementById('vaccine2Route')?.value || 'IM',
+            doseValue: (document.getElementById('vaccine2Dose')?.value || '').split(/\s+/)[0] || '',
+            doseUnit: (document.getElementById('vaccine2Dose')?.value || '').split(/\s+/)[1] || 'mL',
+            lotNumber: document.getElementById('vaccine2Lot')?.value || '',
+            manufacturer: document.getElementById('vaccine2Manufacturer')?.value || '',
+            negated: false
+        });
+    }
+}
+
+/**
  * DOMContentLoaded Event Handler
  * Runs when page is fully loaded and ready for initialization
  */
@@ -85,8 +140,42 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Initialize immunizations with default entries
+    if (!document.querySelector('.immunization-row')) {
+        addImmunization({
+            vaccineCode: '08',
+            vaccineName: 'Hepatitis B vaccine, pediatric or pediatric/adolescent dosage',
+            immunizationId: 'HepB-NB-001',
+            immunizationDate: '2024-06-15T09:30',
+            status: 'completed',
+            route: 'IM',
+            doseValue: '0.5',
+            doseUnit: 'mL',
+            lotNumber: 'ABC12345',
+            manufacturer: 'Merck Co, Inc.',
+            negated: false
+        });
+
+        addImmunization({
+            vaccineCode: '87567',
+            vaccineName: 'Vitamin K1 injection (phytonadione)',
+            immunizationId: 'VitK-NB-001',
+            immunizationDate: '2024-06-15T09:45',
+            status: 'completed',
+            route: 'IM',
+            doseValue: '1',
+            doseUnit: 'mg',
+            lotNumber: 'XYZ98765',
+            manufacturer: 'Hospira Inc.',
+            negated: false
+        });
+    }
+
     // Migrate legacy adminMed1/adminMed2 fields to new repeater on page load
     migrateLegacyMedicationsToRepeater();
+
+    // Migrate legacy vaccine1/vaccine2 immunization fields to new repeater on page load
+    migrateLegacyImmunizationsToRepeater();
 
     // Set default birth date to datetime-local format
     const birthDateInput = document.getElementById('patientBirthDate');
