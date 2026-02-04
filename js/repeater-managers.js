@@ -318,6 +318,85 @@ function migrateLegacyLabsToNewSystem() {
     }
 }
 
+/**
+ * Add Administered Medication Evidence Row
+ * Adds a new administered medication entry to the form with optional pre-filled data
+ * @param {object} prefill - Optional data to pre-populate the row
+ */
+function addAdministeredMedication(prefill = {}) {
+    const template = document.getElementById('administeredMedicationTemplate');
+    const clone = template.content.cloneNode(true);
+    const row = clone.querySelector('.medication-administered-evidence-row');
+
+    // Populate with prefill data if provided
+    if (prefill.medicationCode) row.querySelector('.ame-medication-code').value = prefill.medicationCode;
+    if (prefill.medicationName) row.querySelector('.ame-medication-name').value = prefill.medicationName;
+    if (prefill.administrationId) row.querySelector('.ame-administration-id').value = prefill.administrationId;
+    if (prefill.administrationTime) row.querySelector('.ame-administration-time').value = prefill.administrationTime;
+    if (prefill.status) row.querySelector('.ame-status').value = prefill.status;
+    if (prefill.route) row.querySelector('.ame-route').value = prefill.route;
+    if (prefill.doseValue) row.querySelector('.ame-dose-value').value = prefill.doseValue;
+    if (prefill.doseUnit) row.querySelector('.ame-dose-unit').value = prefill.doseUnit;
+    if (prefill.volumeValue) row.querySelector('.ame-volume-value').value = prefill.volumeValue;
+    if (prefill.volumeUnit) row.querySelector('.ame-volume-unit').value = prefill.volumeUnit;
+    if (prefill.negated) row.querySelector('.ame-negated').checked = prefill.negated;
+
+    // Performer fields (optional override)
+    if (prefill.performerNPI) row.querySelector('.ame-performer-npi').value = prefill.performerNPI;
+    if (prefill.performerGivenName) row.querySelector('.ame-performer-given').value = prefill.performerGivenName;
+    if (prefill.performerMiddleName) row.querySelector('.ame-performer-middle').value = prefill.performerMiddleName;
+    if (prefill.performerFamilyName) row.querySelector('.ame-performer-family').value = prefill.performerFamilyName;
+    if (prefill.performerPhone) row.querySelector('.ame-performer-phone').value = prefill.performerPhone;
+
+    document.getElementById('administeredMedicationList').appendChild(clone);
+}
+
+/**
+ * Remove Administered Medication Evidence Row
+ * Removes an administered medication entry from the form
+ * @param {HTMLElement} btn - The remove button element
+ */
+function removeAdministeredMedication(btn) {
+    btn.closest('.medication-administered-evidence-row')?.remove();
+}
+
+/**
+ * Collect Administered Medication Evidence
+ * Extracts all administered medication data from the form
+ * @returns {object[]} Array of administered medication evidence objects
+ */
+function collectAdministeredMedications() {
+    return Array.from(document.querySelectorAll('.medication-administered-evidence-row')).map(r => {
+        // Get administration time element and convert if datetime-local
+        const administrationTimeElement = r.querySelector('.ame-administration-time');
+        const administrationTime = administrationTimeElement?.type === 'datetime-local' ?
+                      datetimeLocalToCda(administrationTimeElement.value) :
+                      administrationTimeElement?.value.trim() || '';
+
+        return {
+            // Core medication fields
+            medicationCode: r.querySelector('.ame-medication-code')?.value.trim() || '',
+            medicationName: r.querySelector('.ame-medication-name')?.value.trim() || '',
+            administrationId: r.querySelector('.ame-administration-id')?.value.trim() || '',
+            administrationTime: administrationTime,
+            status: r.querySelector('.ame-status')?.value || 'completed',
+            route: r.querySelector('.ame-route')?.value || '',
+            doseValue: r.querySelector('.ame-dose-value')?.value.trim() || '',
+            doseUnit: r.querySelector('.ame-dose-unit')?.value || '',
+            volumeValue: r.querySelector('.ame-volume-value')?.value.trim() || '',
+            volumeUnit: r.querySelector('.ame-volume-unit')?.value || '',
+            negated: r.querySelector('.ame-negated')?.checked || false,
+
+            // Performer (administering provider) fields - optional override
+            performerNPI: r.querySelector('.ame-performer-npi')?.value.trim() || '',
+            performerGivenName: r.querySelector('.ame-performer-given')?.value.trim() || '',
+            performerMiddleName: r.querySelector('.ame-performer-middle')?.value.trim() || '',
+            performerFamilyName: r.querySelector('.ame-performer-family')?.value.trim() || '',
+            performerPhone: r.querySelector('.ame-performer-phone')?.value.trim() || ''
+        };
+    }).filter(x => x.medicationCode || x.medicationName);
+}
+
 // Expose functions globally for onclick attributes
 window.addDiagnosisEvidence = addDiagnosisEvidence;
 window.removeDiagnosisEvidence = removeDiagnosisEvidence;
@@ -326,3 +405,6 @@ window.removeProblemEvidence = removeProblemEvidence;
 window.addLabEvidence = addLabEvidence;
 window.removeLabEvidence = removeLabEvidence;
 window.toggleValueEditors = toggleValueEditors;
+window.addAdministeredMedication = addAdministeredMedication;
+window.removeAdministeredMedication = removeAdministeredMedication;
+window.collectAdministeredMedications = collectAdministeredMedications;

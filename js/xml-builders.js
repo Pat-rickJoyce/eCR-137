@@ -1140,7 +1140,7 @@ function generateDiagnosisEntries(data) {
                       codeSystemName="LOINC" displayName="Diagnosis" />
                   </code>
                   <statusCode code="${diagnosis.status || 'completed'}" />
-                  <effectiveTime><low value="${diagnosis.diagnosisDate || data.encounterDate}" /></effectiveTime>
+                  <effectiveTime><low value="${normalizeTS(diagnosis.diagnosisDate || data.encounterDate)}" /></effectiveTime>
                   ${diagnosis.diagnosisCode
         ? `<value xsi:type="CD"
                             code="${xmlEscape(diagnosis.diagnosisCode)}"
@@ -1172,6 +1172,125 @@ function buildProblemsTableRows(data) {
 }
 
 /**
+ * Builds medications administered table rows for narrative text
+ * @param {Object} data - Form data
+ * @returns {string} Medications table rows HTML
+ */
+function buildMedicationsAdministeredTableRows(data) {
+  // Use administeredMedications array from repeater
+  const medications = data.administeredMedications || [];
+
+  return medications.map(med => {
+    const dose = `${med.doseValue || ''} ${med.doseUnit || ''}${med.volumeValue ? ` (${med.volumeValue} ${med.volumeUnit || ''})` : ''}`.trim();
+    const status = med.negated ? 'Not Given' : (med.status || 'completed');
+    return `<tr>
+            <td><content ID="MedAdministered_${med.medicationCode}">${xmlEscape(med.medicationName || '')}</content></td>
+            <td>${xmlEscape(dose)}</td>
+            <td>${xmlEscape(med.route || '')}</td>
+            <td>${xmlEscape(med.administrationTime || '')}</td>
+            <td>${xmlEscape(status)}</td>
+          </tr>`;
+  }).join('');
+}
+
+/**
+ * Generates administered medication entries XML
+ * @param {Object} data - Form data
+ * @returns {string} Medication entries XML
+ */
+function generateAdministeredMedicationEntries(data) {
+  // Use administeredMedications array from repeater
+  const medications = data.administeredMedications || [];
+
+  if (medications.length === 0) return '';
+
+  return medications.map((med, index) => {
+    // Determine performer: use per-med override, else global administering provider, else empty
+    const performerNPI = med.performerNPI || data.administeringProviderNPI || '';
+    const performerGiven = med.performerGivenName || data.administeringProviderGiven || '';
+    const performerMiddle = med.performerMiddleName || data.administeringProviderMiddle || '';
+    const performerFamily = med.performerFamilyName || data.administeringProviderFamily || '';
+    const performerPhone = med.performerPhone || data.administeringProviderPhone || '';
+    const performerOrgName = data.administeringProviderOrgName || '';
+    const performerOrgId = data.administeringProviderOrgId || '';
+    const performerOrgIdRoot = data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19';
+
+    // Author: use performer data if available, else global provider
+    const authorNPI = performerNPI || data.providerId || '';
+    const authorGiven = performerGiven || (data.providerName ? data.providerName.split(' ')[1] : 'Unknown');
+    const authorFamily = performerFamily || (data.providerName ? data.providerName.split(' ')[2] : 'Provider');
+    const authorTime = med.administrationTime || '20240615120000';
+
+    return `
+    <entry typeCode="DRIV">
+      <substanceAdministration classCode="SBADM" moodCode="EVN"${med.negated ? ' negationInd="true"' : ''}>
+        <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09" />
+        <id extension="${med.administrationId || `MED-${index + 1}`}" root="2.16.840.1.113883.19.5.99999.1" />
+        <statusCode code="${med.status || 'completed'}" />
+        <effectiveTime value="${med.administrationTime || ''}" />
+        <routeCode code="${med.route || 'PO'}" codeSystem="2.16.840.1.113883.3.26.1.1">
+          <translation code="${getRouteTranslation(med.route || 'PO').code}"
+                       codeSystem="2.16.840.1.113883.6.96"
+                       displayName="${getRouteTranslation(med.route || 'PO').display}"/>
+        </routeCode>
+        <doseQuantity value="${med.doseValue || '1'}" unit="${fixDoseUnit(med.doseUnit || 'mg')}" />
+        ${med.volumeValue ? `<maxDoseQuantity>
+          <numerator value="${med.volumeValue}" unit="${med.volumeUnit || '1'}" />
+          <denominator value="1" unit="1"/>
+        </maxDoseQuantity>` : ''}
+        <consumable>
+          <manufacturedProduct classCode="MANU">
+            <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
+            <manufacturedMaterial>
+              <code code="${med.medicationCode || ''}" codeSystem="2.16.840.1.113883.6.88">
+                <originalText>
+                  <reference value="#MedAdministered_${med.medicationCode}" />
+                </originalText>
+              </code>
+              <name>${xmlEscape(med.medicationName || '')}</name>
+            </manufacturedMaterial>
+          </manufacturedProduct>
+        </consumable>
+        ${(performerNPI || performerGiven || performerFamily) ? `
+        <performer typeCode="PRF">
+          <assignedEntity>
+            ${performerNPI ? `<id root="2.16.840.1.113883.4.6" extension="${performerNPI}"/>` : ''}
+            ${performerPhone ? `<telecom use="WP" value="tel:${performerPhone}"/>` : ''}
+            <assignedPerson>
+              <name>
+                ${performerGiven ? `<given>${xmlEscape(performerGiven)}</given>` : ''}
+                ${performerMiddle ? `<given>${xmlEscape(performerMiddle)}</given>` : ''}
+                ${performerFamily ? `<family>${xmlEscape(performerFamily)}</family>` : ''}
+              </name>
+            </assignedPerson>
+            ${performerOrgName ? `<representedOrganization>
+              ${performerOrgId ? `<id root="${performerOrgIdRoot}" extension="${performerOrgId}"/>` : ''}
+              <name>${xmlEscape(performerOrgName)}</name>
+            </representedOrganization>` : ''}
+          </assignedEntity>
+        </performer>` : ''}
+        <author>
+          <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
+          <time value="${authorTime}"/>
+          <assignedAuthor>
+            <id extension="${authorNPI}" root="2.16.840.1.113883.4.6"/>
+            <code code="${getProviderTaxonomyCode('physician').code}"
+                  codeSystem="2.16.840.1.113883.6.101"
+                  displayName="${getProviderTaxonomyCode('physician').display}"/>
+            <assignedPerson>
+              <name>
+                <given>${xmlEscape(authorGiven)}</given>
+                <family>${xmlEscape(authorFamily)}</family>
+              </name>
+            </assignedPerson>
+          </assignedAuthor>
+        </author>
+      </substanceAdministration>
+    </entry>`;
+  }).join('');
+}
+
+/**
  * Generates problem entries XML
  * @param {Object} data - Form data
  * @returns {string} Problem entries XML
@@ -1197,7 +1316,7 @@ function generateProblemEntries(data) {
                 </text>
                 <statusCode code="completed"/>
                 <effectiveTime>
-                    <low value="${problem.onsetDate || data.encounterDate}"/>
+                    <low value="${normalizeTS(problem.onsetDate || data.encounterDate)}"/>
                 </effectiveTime>
                 ${problem.problemCode
       ? `<value xsi:type="CD" code="${xmlEscape(problem.problemCode)}"
@@ -1811,160 +1930,12 @@ function buildEICRXml() {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>
-              <content ID="MedAdministered_1">${data.adminMed1Name}</content>
-            </td>
-            <td>${data.adminMed1DoseValue} ${data.adminMed1DoseUnit}${data.adminMed1VolValue ? ` (${data.adminMed1VolValue} ${data.adminMed1VolUnit})` : ''}</td>
-            <td>${data.adminMed1Route}</td>
-            <td>${data.adminMed1Time}</td>
-            <td>${data.adminMed1Negated ? 'Not Given' : data.adminMed1Status}</td>
-          </tr>
-          <tr>
-            <td>
-              <content ID="MedAdministered_2">${data.adminMed2Name}</content>
-            </td>
-            <td>${data.adminMed2DoseValue} ${data.adminMed2DoseUnit}${data.adminMed2VolValue ? ` (${data.adminMed2VolValue} ${data.adminMed2VolUnit})` : ''}</td>
-            <td>${data.adminMed2Route}</td>
-            <td>${data.adminMed2Time}</td>
-            <td>${data.adminMed2Negated ? 'Not Given' : data.adminMed2Status}</td>
-          </tr>
+          ${buildMedicationsAdministeredTableRows(data)}
         </tbody>
       </table>
     </text>
-    
-    <!-- First Medication Entry -->
-    <entry typeCode="DRIV">
-      <substanceAdministration classCode="SBADM" moodCode="EVN" ${data.adminMed1Negated ? 'negationInd="true"' : ''}>
-        <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09" />
-        <id extension="${data.adminMed1Id}" root="2.16.840.1.113883.19.5.99999.1" />
-        <statusCode code="${data.adminMed1Status}" />
-        <effectiveTime value="${data.adminMed1Time}" />
-        <routeCode code="${data.adminMed1Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
-          <translation code="${getRouteTranslation(data.adminMed1Route).code}"
-                       codeSystem="2.16.840.1.113883.6.96"
-                       displayName="${getRouteTranslation(data.adminMed1Route).display}"/>
-        </routeCode>
-        <doseQuantity value="${data.adminMed1DoseValue}" unit="${fixDoseUnit(data.adminMed1DoseUnit)}" />
-        ${data.adminMed1VolValue ? `<maxDoseQuantity>
-          <numerator value="${data.adminMed1VolValue}" unit="${data.adminMed1VolUnit || '1'}" />
-          <denominator value="1" unit="1"/>
-        </maxDoseQuantity>` : ''}
-        <consumable>
-          <manufacturedProduct classCode="MANU">
-            <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
-            <manufacturedMaterial>
-              <code code="${data.adminMed1Code}" codeSystem="2.16.840.1.113883.6.88">
-                <originalText>
-                  <reference value="#MedAdministered_1" />
-                </originalText>
-              </code>
-              <name>${data.adminMed1Name}</name>
-            </manufacturedMaterial>
-          </manufacturedProduct>
-        </consumable>
-        ${(data.administeringProviderNPI || data.administeringProviderGiven || data.administeringProviderFamily) ? `
-        <performer typeCode="PRF">
-          <assignedEntity>
-            ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}"/>` : ''}
-            ${data.administeringProviderPhone ? `<telecom use="WP" value="tel:${data.administeringProviderPhone}"/>` : ''}
-            <assignedPerson>
-              <name>
-                ${data.administeringProviderGiven ? `<given>${data.administeringProviderGiven}</given>` : ''}
-                ${data.administeringProviderMiddle ? `<given>${data.administeringProviderMiddle}</given>` : ''}
-                ${data.administeringProviderFamily ? `<family>${data.administeringProviderFamily}</family>` : ''}
-              </name>
-            </assignedPerson>
-            ${data.administeringProviderOrgName ? `<representedOrganization>
-              ${data.administeringProviderOrgId ? `<id root="${data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19'}" extension="${data.administeringProviderOrgId}"/>` : ''}
-              <name>${data.administeringProviderOrgName}</name>
-            </representedOrganization>` : ''}
-          </assignedEntity>
-        </performer>` : ''}
-        <author>
-          <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-          <time value="20240615120000"/>
-          <assignedAuthor>
-            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-            <code code="${getProviderTaxonomyCode('physician').code}"
-                  codeSystem="2.16.840.1.113883.6.101"
-                  displayName="${getProviderTaxonomyCode('physician').display}"/>
-            <assignedPerson>
-              <name>
-                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-              </name>
-            </assignedPerson>
-          </assignedAuthor>
-        </author>
-      </substanceAdministration>
-    </entry>
-    
-    <!-- Second Medication Entry -->
-    <entry typeCode="DRIV">
-      <substanceAdministration classCode="SBADM" moodCode="EVN" ${data.adminMed2Negated ? 'negationInd="true"' : ''}>
-        <templateId root="2.16.840.1.113883.10.20.22.4.16" extension="2014-06-09" />
-        <id extension="${data.adminMed2Id}" root="2.16.840.1.113883.19.5.99999.1" />
-        <statusCode code="${data.adminMed2Status}" />
-        <effectiveTime value="${data.adminMed2Time}" />
-        <routeCode code="${data.adminMed2Route}" codeSystem="2.16.840.1.113883.3.26.1.1">
-          <translation code="${getRouteTranslation(data.adminMed2Route).code}"
-                       codeSystem="2.16.840.1.113883.6.96"
-                       displayName="${getRouteTranslation(data.adminMed2Route).display}"/>
-        </routeCode>
-        <doseQuantity value="${data.adminMed2DoseValue}" unit="${data.adminMed2DoseUnit === '1' || data.adminMed2DoseUnit === 'each' ? 'mg' : data.adminMed2DoseUnit}" />
-        ${data.adminMed2VolValue ? `<maxDoseQuantity>
-          <numerator value="${data.adminMed2VolValue}" unit="${data.adminMed2VolUnit}" />
-        </maxDoseQuantity>` : ''}
-        <consumable>
-          <manufacturedProduct classCode="MANU">
-            <templateId root="2.16.840.1.113883.10.20.22.4.23" extension="2014-06-09"/>
-            <manufacturedMaterial>
-              <code code="${data.adminMed2Code}" codeSystem="2.16.840.1.113883.6.88">
-                <originalText>
-                  <reference value="#MedAdministered_2" />
-                </originalText>
-              </code>
-              <name>${data.adminMed2Name}</name>
-            </manufacturedMaterial>
-          </manufacturedProduct>
-        </consumable>
-        ${(data.administeringProviderNPI || data.administeringProviderGiven || data.administeringProviderFamily) ? `
-        <performer typeCode="PRF">
-          <assignedEntity>
-            ${data.administeringProviderNPI ? `<id root="2.16.840.1.113883.4.6" extension="${data.administeringProviderNPI}"/>` : ''}
-            ${data.administeringProviderPhone ? `<telecom use="WP" value="tel:${data.administeringProviderPhone}"/>` : ''}
-            <assignedPerson>
-              <name>
-                ${data.administeringProviderGiven ? `<given>${data.administeringProviderGiven}</given>` : ''}
-                ${data.administeringProviderMiddle ? `<given>${data.administeringProviderMiddle}</given>` : ''}
-                ${data.administeringProviderFamily ? `<family>${data.administeringProviderFamily}</family>` : ''}
-              </name>
-            </assignedPerson>
-            ${data.administeringProviderOrgName ? `<representedOrganization>
-              ${data.administeringProviderOrgId ? `<id root="${data.administeringProviderOrgIdRoot || '2.16.840.1.113883.19'}" extension="${data.administeringProviderOrgId}"/>` : ''}
-              <name>${data.administeringProviderOrgName}</name>
-            </representedOrganization>` : ''}
-          </assignedEntity>
-        </performer>` : ''}
-        <author>
-          <templateId root="2.16.840.1.113883.10.20.22.4.119"/>
-          <time value="20240615120000"/>
-          <assignedAuthor>
-            <id extension="${data.providerId}" root="2.16.840.1.113883.4.6"/>
-            <code code="${getProviderTaxonomyCode('physician').code}"
-                  codeSystem="2.16.840.1.113883.6.101"
-                  displayName="${getProviderTaxonomyCode('physician').display}"/>
-            <assignedPerson>
-              <name>
-                <given>${data.providerName.split(' ')[1] || 'Unknown'}</given>
-                <family>${data.providerName.split(' ')[2] || 'Provider'}</family>
-              </name>
-            </assignedPerson>
-          </assignedAuthor>
-        </author>
-      </substanceAdministration>
-    </entry>
+
+    ${generateAdministeredMedicationEntries(data)}
         </section>
       </component>
 

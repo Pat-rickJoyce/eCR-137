@@ -353,10 +353,15 @@ function validateDQTriggerCodes() {
         );
     }
 
-    // Check remaining legacy fields (remove these checks once you've fully migrated)
+    // Check administered medications from repeater
+    if (!hasTriggerCode && Array.isArray(data.administeredMedications)) {
+        hasTriggerCode = data.administeredMedications.some(med => med.medicationCode);
+    }
+
+    // Check remaining legacy fields for other sections
     const legacyTriggerFields = [
         'labTest1Code', 'labTest2Code', 'labOrder1Code',
-        'adminMed1Code', 'adminMed2Code', 'vaccine1Code', 'vaccine2Code'
+        'vaccine1Code', 'vaccine2Code'
     ];
 
     if (!hasTriggerCode) {
@@ -437,33 +442,24 @@ function validateDQLabObservations() {
 
 /**
  * DQ Validation: Medication Administration
+ * Validates medications from the repeater array
  * @returns {string[]} Array of validation errors
  */
 function validateDQMedicationAdministration() {
     const errors = [];
+    const data = getFormData();
 
-    // Medication 1 validation
-    const med1Id = document.getElementById('adminMed1Id');
-    const med1Code = document.getElementById('adminMed1Code');
+    // Validate medications from repeater
+    if (Array.isArray(data.administeredMedications)) {
+        data.administeredMedications.forEach((med, index) => {
+            if (med.administrationId && (!med.administrationId.trim() || med.administrationId === 'nullFlavor')) {
+                errors.push(`dq-medicationAdministration-id-001: Medication ${index + 1} ID cannot be nullFlavor`);
+            }
 
-    if (med1Id?.value && (!med1Id.value.trim() || med1Id.value === 'nullFlavor')) {
-        errors.push('dq-medicationAdministration-id-001: Medication 1 ID cannot be nullFlavor');
-    }
-
-    if (med1Code?.value && (!med1Code.value.trim() || med1Code.value === 'nullFlavor')) {
-        errors.push('dq_medicationsAdministered-001: Medication 1 code cannot be nullFlavor');
-    }
-
-    // Medication 2 validation
-    const med2Id = document.getElementById('adminMed2Id');
-    const med2Code = document.getElementById('adminMed2Code');
-
-    if (med2Id?.value && (!med2Id.value.trim() || med2Id.value === 'nullFlavor')) {
-        errors.push('dq-medicationAdministration-id-001: Medication 2 ID cannot be nullFlavor');
-    }
-
-    if (med2Code?.value && (!med2Code.value.trim() || med2Code.value === 'nullFlavor')) {
-        errors.push('dq_medicationsAdministered-001: Medication 2 code cannot be nullFlavor');
+            if (med.medicationCode && (!med.medicationCode.trim() || med.medicationCode === 'nullFlavor')) {
+                errors.push(`dq_medicationsAdministered-001: Medication ${index + 1} code cannot be nullFlavor`);
+            }
+        });
     }
 
     return errors;
