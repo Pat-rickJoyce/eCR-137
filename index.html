@@ -254,6 +254,127 @@
             transform: translateY(-2px) scale(1.05);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
+
+        /* ========================================
+           MEDICATION ADMINISTERED EVIDENCE ROW STYLING
+           ======================================== */
+        .medication-administered-evidence-row,
+        .diagnosis-evidence-row,
+        .problem-evidence-row,
+        .lab-evidence-row,
+        .medication-evidence-row {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            padding: 24px;
+            margin: 20px 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInDown 0.4s ease-out;
+        }
+
+        .medication-administered-evidence-row:hover,
+        .diagnosis-evidence-row:hover,
+        .problem-evidence-row:hover,
+        .lab-evidence-row:hover,
+        .medication-evidence-row:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-left-color: #8b5cf6;
+        }
+
+        .medication-administered-evidence-row h4,
+        .diagnosis-evidence-row h4,
+        .problem-evidence-row h4,
+        .lab-evidence-row h4,
+        .medication-evidence-row h4 {
+            margin: 0 0 20px 0;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .medication-administered-evidence-row h4::before,
+        .diagnosis-evidence-row h4::before,
+        .problem-evidence-row h4::before,
+        .lab-evidence-row h4::before,
+        .medication-evidence-row h4::before {
+            content: "📋";
+            font-size: 1.3rem;
+        }
+
+        .medication-administered-evidence-controls,
+        .diagnosis-evidence-controls,
+        .problem-evidence-controls,
+        .lab-evidence-controls {
+            margin: 20px 0;
+        }
+
+        /* Code search styling */
+        .code-search {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .code-search input {
+            flex: 1;
+        }
+
+        .code-search .btn {
+            flex-shrink: 0;
+            padding: 10px 16px !important;
+        }
+
+        .search-results {
+            margin-top: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            border-radius: var(--radius-sm);
+            display: none;
+        }
+
+        .search-results-list {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-md);
+        }
+
+        .search-result-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background: var(--accent-weak);
+            color: var(--accent);
+        }
+
+        .no-results {
+            padding: 12px 16px;
+            text-align: center;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -1149,183 +1270,147 @@
                 <input type="text" id="administeringProviderOrgIdRoot" value="2.16.840.1.113883.19">
             </div>
 
-            <!-- ───────────── Administered Medication 1 ───────────── -->
-            <div class="input-group">
-                <label>Administered Medication 1 Code</label>
-                <input type="text" id="adminMed1Code" class="me-medication-code" value="42946">
-            </div>
-
-            <div class="input-group">
-                <label>Administered Medication 1 Name</label>
-                <input type="text" id="adminMed1Name" value="Folic acid">
-            </div>
-
-            <div class="input-group">
-                <label>Administration ID 1</label>
-                <input type="text" id="adminMed1Id" value="MED-2024-001">
-            </div>
-
-            <div class="input-group">
-                <label>Administration Status 1</label>
-                <select id="adminMed1Status">
-                    <option value="completed">Completed</option>
-                    <option value="active">Active</option>
-                    <option value="suspended">Suspended</option>
-                    <option value="aborted">Aborted</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label>Administration Time 1</label>
-                <input type="datetime-local" id="adminMed1Time" value="2024-06-15T12:00">
-            </div>
-
-            <div class="input-group">
-                <label>Route 1</label>
-                <select id="adminMed1Route">
-                    <option value="PO">Oral</option>
-                    <option value="IV">Intravenous</option>
-                    <option value="IM">Intramuscular</option>
-                    <option value="SC">Subcutaneous</option>
-                    <option value="SL">Sublingual</option>
-                    <option value="TOP">Topical</option>
-                    <option value="INH">Inhalation</option>
-                </select>
-            </div>
-
-            <!-- — NEW dose widgets — -->
-            <div class="input-group">
-                <label>Dose 1 • Amount</label>
-                <input type="number" step="0.01" id="adminMed1DoseValue" value="0.4">
-            </div>
-
-            <div class="input-group">
-                <label>Dose 1 • Unit</label>
-                <select id="adminMed1DoseUnit">
-                    <option value="mg">mg</option>
-                    <option value="mcg">mcg</option>
-                    <option value="g">g</option>
-                    <option value="mL">mL</option>
-                    <option value="1">each / tablet</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label>Dose 1 • Volume (opt)</label>
-                <input type="number" step="0.01" id="adminMed1VolValue" value="0.5">
-            </div>
-
-            <div class="input-group">
-                <label>Vol • Unit</label>
-                <select id="adminMed1VolUnit">
-                    <option value=""></option>
-                    <option value="mL">mL</option>
-                    <option value="L">L</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label><input type="checkbox" id="adminMed1Negated"> NOT given</label>
-            </div>
-
-            <!-- ───────────── Administered Medication 2 ───────────── -->
-            <div class="input-group">
-                <label>Administered Medication 2 Code</label>
-                <input type="text" id="adminMed2Code" class="me-medication-code" value="161">
-            </div>
-
-            <div class="input-group">
-                <label>Administered Medication 2 Name</label>
-                <input type="text" id="adminMed2Name" value="Multivitamin preparation">
-            </div>
-
-            <div class="input-group">
-                <label>Administration ID 2</label>
-                <input type="text" id="adminMed2Id" value="MED-2024-002">
-            </div>
-
-            <div class="input-group">
-                <label>Administration Status 2</label>
-                <select id="adminMed2Status">
-                    <option value="completed">Completed</option>
-                    <option value="active">Active</option>
-                    <option value="suspended">Suspended</option>
-                    <option value="aborted">Aborted</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label>Administration Time 2</label>
-                <input type="datetime-local" id="adminMed2Time" value="2024-06-15T13:00">
-            </div>
-
-            <div class="input-group">
-                <label>Route 2</label>
-                <select id="adminMed2Route">
-                    <option value="PO">Oral</option>
-                    <option value="IV">Intravenous</option>
-                    <option value="IM">Intramuscular</option>
-                    <option value="SC">Subcutaneous</option>
-                    <option value="SL">Sublingual</option>
-                    <option value="TOP">Topical</option>
-                    <option value="INH">Inhalation</option>
-                </select>
-            </div>
-
-            <!-- — NEW dose widgets — -->
-            <div class="input-group">
-                <label>Dose 2 • Amount</label>
-                <input type="number" step="0.01" id="adminMed2DoseValue" value="1">
-            </div>
-
-            <div class="input-group">
-                <label>Dose 2 • Unit</label>
-                <select id="adminMed2DoseUnit">
-                    <option value="mg">mg</option>
-                    <option value="mcg">mcg</option>
-                    <option value="g">g</option>
-                    <option value="mL">mL</option>
-                    <option value="1" selected>each / tablet</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label>Dose 2 • Volume (opt)</label>
-                <input type="number" step="0.01" id="adminMed2VolValue" value="">
-            </div>
-
-            <div class="input-group">
-                <label>Vol • Unit</label>
-                <select id="adminMed2VolUnit">
-                    <option value=""></option>
-                    <option value="mL">mL</option>
-                    <option value="L">L</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label><input type="checkbox" id="adminMed2Negated"> NOT given</label>
-            </div>
-
-            <!-- ───────────── Planned Medication (unchanged) ───────────── -->
-            <div class="input-group">
-                <label>Planned Medication 1 Code</label>
-                <input type="text" id="plannedMed1Code" value="161">
-            </div>
-
-            <div class="input-group">
-                <label>Planned Medication 1 Name</label>
-                <input type="text" id="plannedMed1Name" value="Multivitamin with iron">
-            </div>
-
-            <div class="input-group">
-                <label>Planned Medication 1 Instructions</label>
-                <textarea id="plannedMed1Instructions">
-Take 1 tablet daily with food for nutritional support during neural tube defect management
-      </textarea>
-            </div>
-
         </div>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!--    ADMINISTERED MEDICATIONS REPEATER (NEW PATTERN)     -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+
+        <div style="margin-top: 32px;">
+            <div class="medication-administered-evidence-controls">
+                <button class="btn btn-primary" type="button" onclick="addAdministeredMedication()">➕ Add Administered Medication</button>
+            </div>
+
+            <div id="administeredMedicationList"></div>
+
+            <template id="administeredMedicationTemplate">
+                <div class="medication-administered-evidence-row">
+                    <h4>Administered Medication Entry</h4>
+                    <div class="form-grid">
+                        <!-- Core Medication Fields -->
+                        <div class="input-group">
+                            <label>Medication Code (RxNorm)</label>
+                            <input type="text" class="ame-medication-code me-medication-code" placeholder="42946" value="">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Medication Name</label>
+                            <input type="text" class="ame-medication-name" placeholder="Folic acid" value="">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Administration ID</label>
+                            <input type="text" class="ame-administration-id" placeholder="MED-2024-001" value="">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Administration Time</label>
+                            <input type="datetime-local" class="ame-administration-time" value="">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Status</label>
+                            <select class="ame-status">
+                                <option value="completed" selected>Completed</option>
+                                <option value="active">Active</option>
+                                <option value="suspended">Suspended</option>
+                                <option value="aborted">Aborted</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Route</label>
+                            <select class="ame-route">
+                                <option value="PO">Oral</option>
+                                <option value="IV">Intravenous</option>
+                                <option value="IM">Intramuscular</option>
+                                <option value="SC">Subcutaneous</option>
+                                <option value="SL">Sublingual</option>
+                                <option value="TOP">Topical</option>
+                                <option value="INH">Inhalation</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Dose Amount</label>
+                            <input type="number" step="0.01" class="ame-dose-value" placeholder="0.4" value="">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Dose Unit</label>
+                            <select class="ame-dose-unit">
+                                <option value="mg">mg</option>
+                                <option value="mcg">mcg</option>
+                                <option value="g">g</option>
+                                <option value="mL">mL</option>
+                                <option value="1">each / tablet</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Volume Amount (optional)</label>
+                            <input type="number" step="0.01" class="ame-volume-value" placeholder="0.5" value="">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Volume Unit (optional)</label>
+                            <select class="ame-volume-unit">
+                                <option value=""></option>
+                                <option value="mL">mL</option>
+                                <option value="L">L</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label><input type="checkbox" class="ame-negated"> NOT given (negationInd)</label>
+                        </div>
+
+                        <!-- Performer (Administering Provider) Fields - OPTIONAL OVERRIDE -->
+                        <div class="input-group" style="grid-column: 1 / -1; margin-top: 16px;">
+                            <label style="font-weight: 700; color: var(--accent);">Performer Override (Optional)</label>
+                            <small style="color: var(--muted);">Leave blank to use global administering provider above. Performer = who administered. Author will auto-populate from performer or global provider.</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Performer NPI</label>
+                            <input type="text" class="ame-performer-npi" placeholder="1234567890" value="">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Performer Given Name</label>
+                            <input type="text" class="ame-performer-given" placeholder="First Name" value="">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Performer Middle Name (optional)</label>
+                            <input type="text" class="ame-performer-middle" placeholder="Middle Name" value="">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Performer Family Name</label>
+                            <input type="text" class="ame-performer-family" placeholder="Last Name" value="">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Performer Phone</label>
+                            <input type="tel" class="ame-performer-phone" placeholder="555-555-5555" value="">
+                        </div>
+
+                        <!-- Remove Button -->
+                        <div style="grid-column: 1 / -1; margin-top: 16px;">
+                            <button class="btn btn-warning" type="button" onclick="removeAdministeredMedication(this)">🗑️ Remove Medication</button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!--   LEGACY ADMINISTERED MEDICATIONS (FOR BACKWARD COMPAT) -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- Legacy Administered Medication and Planned Medication fields removed -->
+        <!-- Administered medications now use repeater pattern above -->
+        <!-- Planned medications were never implemented in CDA generation -->
     </div>
     <!-- ░░░=============================================================== -->
 

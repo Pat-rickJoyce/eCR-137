@@ -30,6 +30,16 @@ function generateUUID() {
 }
 
 /**
+ * Migrate Legacy Medication Fields to Repeater
+ * DEPRECATED: Legacy adminMed1/adminMed2 fields have been removed from the UI
+ * This function is kept for backward compatibility with old saved JSON files
+ */
+function migrateLegacyMedicationsToRepeater() {
+    // Legacy fields removed from UI - migration no longer needed
+    console.log('[Migration] Legacy medication fields removed from UI - skipping migration');
+}
+
+/**
  * DOMContentLoaded Event Handler
  * Runs when page is fully loaded and ready for initialization
  */
@@ -74,6 +84,9 @@ document.addEventListener('DOMContentLoaded', function() {
             concernStatus: 'active'
         });
     }
+
+    // Migrate legacy adminMed1/adminMed2 fields to new repeater on page load
+    migrateLegacyMedicationsToRepeater();
 
     // Set default birth date to datetime-local format
     const birthDateInput = document.getElementById('patientBirthDate');

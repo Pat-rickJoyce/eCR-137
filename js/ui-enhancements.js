@@ -162,6 +162,7 @@ window.addEventListener('load', () => {
   <option value="NAS.json">Neonatal Abstinence Syndrome</option>
   <option value="SB.json">Cervical Spina Bifida</option>
   <option value="TF.json">Tetralogy of Fallot</option>
+  <option value="hepatitis_b_medication_test.json">Medication</option>
 `;
 
   const bLoad = mk('<i class="fas fa-folder-open"></i> Load Form', 'ghost');

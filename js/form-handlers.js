@@ -71,10 +71,6 @@ function getFormData() {
 'administeringProviderOrgId',
 'administeringProviderOrgIdRoot',
 
-// Planned medication stays as-is
-'plannedMed1Code', 'plannedMed1Name', 'plannedMed1Instructions',
-
-
         // Immunizations
         'immunization1Status', 'immunization1Id', 'immunization1Date', 'vaccine1Code', 'vaccine1Name',
         'vaccine1Dose', 'vaccine1Route', 'vaccine1Manufacturer', 'vaccine1Lot','immunization2Status', 'immunization2Id',
@@ -170,6 +166,9 @@ if (element) {
     data.problemEvidence = collectProblemEvidence();
     console.log('Form data problem evidence:', data.problemEvidence); // DEBUG LINE
 
+    // Collect administered medications
+    data.administeredMedications = collectAdministeredMedications();
+
     return data;
 }
 
@@ -255,6 +254,17 @@ window.loadFormDataFromAssets = async function(filename) {
                 problemList.innerHTML = '';
                 data.problemEvidence.forEach(problemEntry => {
                     addProblemEvidence(problemEntry);
+                });
+            }
+        }
+
+        // Handle administered medications if present
+        if (data.administeredMedications && Array.isArray(data.administeredMedications)) {
+            const medicationList = document.getElementById('administeredMedicationList');
+            if (medicationList) {
+                medicationList.innerHTML = '';
+                data.administeredMedications.forEach(medicationEntry => {
+                    addAdministeredMedication(medicationEntry);
                 });
             }
         }
