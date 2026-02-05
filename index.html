@@ -263,7 +263,8 @@
         .problem-evidence-row,
         .lab-evidence-row,
         .medication-evidence-row,
-        .immunization-row {
+        .immunization-row,
+        .procedure-row {
             background: var(--glass-bg);
             backdrop-filter: blur(var(--glass-blur));
             -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -282,7 +283,8 @@
         .problem-evidence-row:hover,
         .lab-evidence-row:hover,
         .medication-evidence-row:hover,
-        .immunization-row:hover {
+        .immunization-row:hover,
+        .procedure-row:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-lg);
             border-left-color: #8b5cf6;
@@ -1233,57 +1235,60 @@
     <div class="section">
         <h2 class="section-title"><i class="fas fa-pills"></i> Medications</h2>
 
-        <div class="form-grid">
-
-            <!-- Administering Provider (single provider for ALL administered meds) -->
-            <div class="input-group">
-                <label>Administering Provider NPI</label>
-                <input type="text" id="administeringProviderNPI" inputmode="numeric" pattern="\d{10}"
-                    value="1234567890">
-            </div>
-
-            <div class="input-group">
-                <label>First</label>
-                <input type="text" id="administeringProviderGiven" value="Je Suis">
-            </div>
-
-            <div class="input-group">
-                <label>Last</label>
-                <input type="text" id="administeringProviderFamily" value="Médecin">
-            </div>
-
-            <div class="input-group">
-                <label>Phone (opt)</label>
-                <input type="tel" id="administeringProviderPhone" value="555-555-5555">
-            </div>
-
-            <div class="input-group">
-                <label>Organization (opt)</label>
-                <input type="text" id="administeringProviderOrgName">
-            </div>
-
-            <div class="input-group">
-                <label>Org ID (extension) (opt)</label>
-                <input type="text" id="administeringProviderOrgId" value="123456789">
-            </div>
-
-            <div class="input-group">
-                <label>Org ID Root (OID) (opt)</label>
-                <input type="text" id="administeringProviderOrgIdRoot" value="2.16.840.1.113883.19">
-            </div>
-
-        </div>
-
         <!-- ═══════════════════════════════════════════════════════ -->
         <!--    ADMINISTERED MEDICATIONS REPEATER (NEW PATTERN)     -->
         <!-- ═══════════════════════════════════════════════════════ -->
 
-        <div style="margin-top: 32px;">
-            <div class="medication-administered-evidence-controls">
-                <button class="btn btn-primary" type="button" onclick="addAdministeredMedication()">➕ Add Administered Medication</button>
-            </div>
+        <div class="medication-administered-evidence-controls">
+            <button class="btn btn-primary" type="button" onclick="addAdministeredMedication()">➕ Add Administered Medication</button>
+        </div>
 
-            <div id="administeredMedicationList"></div>
+        <!-- Administering Provider (Global - applies to ALL administered meds unless overridden) -->
+        <div class="subsection">
+            <h4>Administering Provider (Global)</h4>
+            <p style="color: var(--muted); font-size: 0.9em; margin-bottom: 16px;">
+                This provider will be used for all administered medications unless overridden in individual medication entries.
+            </p>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Administering Provider NPI</label>
+                    <input type="text" id="administeringProviderNPI" inputmode="numeric" pattern="\d{10}"
+                        value="1234567890">
+                </div>
+
+                <div class="input-group">
+                    <label>First</label>
+                    <input type="text" id="administeringProviderGiven" value="Je Suis">
+                </div>
+
+                <div class="input-group">
+                    <label>Last</label>
+                    <input type="text" id="administeringProviderFamily" value="Médecin">
+                </div>
+
+                <div class="input-group">
+                    <label>Phone (opt)</label>
+                    <input type="tel" id="administeringProviderPhone" value="555-555-5555">
+                </div>
+
+                <div class="input-group">
+                    <label>Organization (opt)</label>
+                    <input type="text" id="administeringProviderOrgName">
+                </div>
+
+                <div class="input-group">
+                    <label>Org ID (extension) (opt)</label>
+                    <input type="text" id="administeringProviderOrgId" value="123456789">
+                </div>
+
+                <div class="input-group">
+                    <label>Org ID Root (OID) (opt)</label>
+                    <input type="text" id="administeringProviderOrgIdRoot" value="2.16.840.1.113883.19">
+                </div>
+            </div>
+        </div>
+
+        <div id="administeredMedicationList"></div>
 
             <template id="administeredMedicationTemplate">
                 <div class="medication-administered-evidence-row">
@@ -1291,13 +1296,21 @@
                     <div class="form-grid">
                         <!-- Core Medication Fields -->
                         <div class="input-group">
-                            <label>Medication Code (RxNorm)</label>
-                            <input type="text" class="ame-medication-code me-medication-code" placeholder="42946" value="">
+                            <label>Medication Code (RxNorm) <span class="help-tooltip" title="Search RCTC (Reportable Condition Trigger Codes) for trigger codes">🔍 RCTC</span></label>
+                            <div class="code-search">
+                                <input type="text" class="ame-medication-code me-medication-code" placeholder="42946" value="">
+                                <button type="button" class="btn btn-secondary" onclick="searchRCTCCodesForMedication(this, 'code')">🔍</button>
+                            </div>
+                            <div class="ame-code-search-results search-results"></div>
                         </div>
 
                         <div class="input-group">
-                            <label>Medication Name</label>
-                            <input type="text" class="ame-medication-name" placeholder="Folic acid" value="">
+                            <label>Medication Name <span class="help-tooltip" title="Search RCTC by medication name">🔍 RCTC</span></label>
+                            <div class="code-search">
+                                <input type="text" class="ame-medication-name" placeholder="Folic acid" value="">
+                                <button type="button" class="btn btn-secondary" onclick="searchRCTCCodesForMedication(this, 'name')">🔍</button>
+                            </div>
+                            <div class="ame-name-search-results search-results"></div>
                         </div>
 
                         <div class="input-group">
@@ -1405,7 +1418,6 @@
                     </div>
                 </div>
             </template>
-        </div>
 
         <!-- ═══════════════════════════════════════════════════════ -->
         <!--   LEGACY ADMINISTERED MEDICATIONS (FOR BACKWARD COMPAT) -->
@@ -1788,121 +1800,146 @@
 
     <div class="section">
         <h2 class="section-title"><i class="fas fa-procedures"></i> Procedures</h2>
-        <div class="form-grid">
-            <div class="input-group">
-                <label>Current Procedure 1 Code</label>
-                <input type="text" id="currentProc1Code" placeholder="e.g., 33747-0" value="80146002">
-            </div>
-            <div class="input-group">
-                <label>Current Procedure 1 Name</label>
-                <input type="text" id="currentProc1Name" placeholder="e.g., Bronchoscopy"
-                    value="Excision of spinal lesion">
-            </div>
-            <div class="input-group">
-                <label>Current Procedure 1 Date</label>
-                <input type="datetime-local" id="currentProc1Date" placeholder="e.g., 20250216"
-                    value="2024-06-15T09:00">
-            </div>
-            <div class="input-group">
-                <label>Current Procedure 1 Type <span class="help-tooltip"
-                        title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
 
-Observation: Use for diagnostic activities that gather information about the patient (lab tests, imaging, assessments) without altering their physical condition.
-
-Procedure: Use for therapeutic interventions that alter the patient's physical condition (surgeries, treatments, manipulations).">ℹ️</span></label>
-                <select id="currentProc1Type">
-                    <option value="act">Act</option>
-                    <option value="observation">Observation</option>
-                    <option value="procedure" selected>Procedure</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>Current Procedure 2 Code</label>
-                <input type="text" id="currentProc2Code" placeholder="e.g., 71388002" value="241615005">
-            </div>
-            <div class="input-group">
-                <label>Current Procedure 2 Name</label>
-                <input type="text" id="currentProc2Name" placeholder="e.g., Chest X-ray"
-                    value="Magnetic resonance imaging of spine">
-            </div>
-            <div class="input-group">
-                <label>Current Procedure 2 Date</label>
-                <input type="datetime-local" id="currentProc2Date" placeholder="e.g., 20250216"
-                    value="2024-06-15T10:00">
-            </div>
-            <div class="input-group">
-                <label>Current Procedure 2 Type <span class="help-tooltip"
-                        title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
-
-Observation: Use for diagnostic activities that gather information about the patient (lab tests, imaging, assessments) without altering their physical condition.
-
-Procedure: Use for therapeutic interventions that alter the patient's physical condition (surgeries, treatments, manipulations).">ℹ️</span></label>
-                <select id="currentProc2Type">
-                    <option value="act">Act</option>
-                    <option value="observation" selected>Observation</option>
-                    <option value="procedure">Procedure</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>Procedure 1 Code </label>
-                <div class="code-search">
-                    <input type="text" id="triggerProc1Code" placeholder="e.g., 168731009"
-                        onblur="validateTriggerCode('triggerProc1Code')" value="230690007">
-                    <button type="button" class="btn btn-secondary"
-                        onclick="searchRCTCCodes('triggerProc1Code')">🔍</button>
-                </div>
-                <div id="triggerProc1Code_results" class="search-results"></div>
-            </div>
-            <div class="input-group">
-                <label>Procedure 1 Name</label>
-                <input type="text" id="triggerProc1Name" placeholder="e.g., Intubation" value="Stroke">
-            </div>
-            <div class="input-group">
-                <label>Procedure 1 Date</label>
-                <input type="datetime-local" id="triggerProc1Date" placeholder="e.g., 20250216"
-                    value="2024-06-15T11:00">
-            </div>
-            <div class="input-group">
-                <label>Procedure 1 Type <span class="help-tooltip"
-                        title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
-
-Observation: Use for diagnostic activities that gather information about the patient (lab tests, imaging, assessments) without altering their physical condition.
-
-Procedure: Use for therapeutic interventions that alter the patient's physical condition (surgeries, treatments, manipulations).">ℹ️</span></label>
-                <select id="triggerProc1Type">
-                    <option value="act">Act</option>
-                    <option value="observation" selected>Observation</option>
-                    <option value="procedure">Procedure</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>Planned Procedure 1 Code</label>
-                <input type="text" id="plannedProc1Code" placeholder="e.g., 182836005" value="182836005">
-            </div>
-            <div class="input-group">
-                <label>Planned Procedure 1 Name</label>
-                <input type="text" id="plannedProc1Name" placeholder="e.g., Follow-up CT scan"
-                    value="Neurosurgical follow-up">
-            </div>
-            <div class="input-group">
-                <label>Planned Procedure 1 Date</label>
-                <input type="datetime-local" id="plannedProc1Date" placeholder="e.g., 20250220"
-                    value="2024-07-15T14:00">
-            </div>
-            <div class="input-group">
-                <label>Planned Procedure 1 Type <span class="help-tooltip"
-                        title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
-
-Observation: Use for diagnostic activities that gather information about the patient (lab tests, imaging, assessments) without altering their physical condition.
-
-Procedure: Use for therapeutic interventions that alter the patient's physical condition (surgeries, treatments, manipulations).">ℹ️</span></label>
-                <select id="plannedProc1Type">
-                    <option value="act" selected>Act</option>
-                    <option value="observation">Observation</option>
-                    <option value="procedure">Procedure</option>
-                </select>
-            </div>
+        <!-- Procedure Repeater -->
+        <div class="procedure-evidence-controls">
+            <button class="btn btn-primary" type="button" onclick="addProcedure()">➕ Add Procedure</button>
         </div>
+
+        <div id="procedureList"></div>
+
+        <!-- Procedure Template -->
+        <template id="procedureTemplate">
+            <div class="procedure-row">
+                <h4>Procedure Entry</h4>
+                <div class="form-grid">
+                    <!-- Core Procedure Fields -->
+                    <div class="input-group">
+                        <label>Procedure Code <span class="help-tooltip" title="Search RCTC (Reportable Condition Trigger Codes) for trigger codes">🔍 RCTC</span></label>
+                        <div class="code-search">
+                            <input type="text" class="proc-procedure-code" placeholder="80146002" value="">
+                            <button type="button" class="btn btn-secondary" onclick="searchRCTCCodesForProcedure(this)">🔍</button>
+                        </div>
+                        <div class="proc-code-search-results search-results"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Procedure Name</label>
+                        <input type="text" class="proc-procedure-name" placeholder="Excision of spinal lesion" value="">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Code System</label>
+                        <select class="proc-code-system">
+                            <option value="2.16.840.1.113883.6.96" selected>SNOMED CT</option>
+                            <option value="2.16.840.1.113883.6.1">LOINC</option>
+                            <option value="2.16.840.1.113883.6.12">CPT-4</option>
+                            <option value="2.16.840.1.113883.6.4">ICD10 PCS</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Procedure ID (optional)</label>
+                        <input type="text" class="proc-procedure-id" placeholder="PROC-2024-001" value="">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Procedure Date</label>
+                        <input type="datetime-local" class="proc-procedure-date" value="">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Status</label>
+                        <select class="proc-status">
+                            <option value="completed" selected>Completed</option>
+                            <option value="active">Active</option>
+                            <option value="aborted">Aborted</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Target Site Code (optional)</label>
+                        <input type="text" class="proc-target-site-code" placeholder="421060004" value="">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Target Site Name (optional)</label>
+                        <input type="text" class="proc-target-site-name" placeholder="Structure of vertebral column" value="">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Method Code (optional)</label>
+                        <input type="text" class="proc-method-code" placeholder="" value="">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Method Name (optional)</label>
+                        <input type="text" class="proc-method-name" placeholder="" value="">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Procedure Type <span class="help-tooltip"
+                                title="Act: Use for general healthcare activities and administrative actions that don't fit the specific criteria for observations or procedures.
+
+Observation: Use for diagnostic activities that gather information about the patient (lab tests, imaging, assessments) without altering their physical condition.
+
+Procedure: Use for therapeutic interventions that alter the patient's physical condition (surgeries, treatments, manipulations).">ℹ️</span></label>
+                        <select class="proc-procedure-type">
+                            <option value="act">Act</option>
+                            <option value="observation">Observation</option>
+                            <option value="procedure" selected>Procedure</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>
+                            <input type="checkbox" class="proc-negated">
+                            Negated (not performed)
+                        </label>
+                    </div>
+
+                    <!-- Performer (Provider) Fields - OPTIONAL OVERRIDE -->
+                    <div class="input-group" style="grid-column: 1 / -1; margin-top: 16px;">
+                        <label style="font-weight: 700; color: var(--accent);">Performer Override (Optional)</label>
+                        <small style="color: var(--muted);">Leave blank to use global provider. Performer = who performed the procedure.</small>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Performer NPI</label>
+                        <input type="text" class="proc-performer-npi" placeholder="1234567890" value="">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Performer Given Name</label>
+                        <input type="text" class="proc-performer-given" placeholder="First Name" value="">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Performer Middle Name (optional)</label>
+                        <input type="text" class="proc-performer-middle" placeholder="Middle Name" value="">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Performer Family Name</label>
+                        <input type="text" class="proc-performer-family" placeholder="Last Name" value="">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Performer Phone</label>
+                        <input type="tel" class="proc-performer-phone" placeholder="555-555-5555" value="">
+                    </div>
+
+                    <!-- Remove Button -->
+                    <div style="grid-column: 1 / -1; margin-top: 16px;">
+                        <button class="btn btn-warning" type="button" onclick="removeProcedure(this)">🗑️ Remove Procedure</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Legacy procedure fields removed -->
+        <!-- Procedures now use repeater pattern above -->
     </div>
 
 

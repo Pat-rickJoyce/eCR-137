@@ -490,3 +490,95 @@ window.collectAdministeredMedications = collectAdministeredMedications;
 window.addImmunization = addImmunization;
 window.removeImmunization = removeImmunization;
 window.collectImmunizations = collectImmunizations;
+
+// ============================================================================
+// PROCEDURE REPEATER FUNCTIONS
+// ============================================================================
+
+/**
+ * Adds a new procedure entry to the procedure list
+ * @param {Object} prefill - Optional object with procedure data to prefill
+ */
+function addProcedure(prefill = {}) {
+  const template = document.getElementById('procedureTemplate');
+  if (!template) {
+    console.error('Procedure template not found');
+    return;
+  }
+
+  const clone = template.content.cloneNode(true);
+  const row = clone.querySelector('.procedure-row');
+
+  // Populate fields if prefill data provided
+  if (prefill.procedureCode) row.querySelector('.proc-procedure-code').value = prefill.procedureCode;
+  if (prefill.procedureName) row.querySelector('.proc-procedure-name').value = prefill.procedureName;
+  if (prefill.codeSystem) row.querySelector('.proc-code-system').value = prefill.codeSystem;
+  if (prefill.procedureId) row.querySelector('.proc-procedure-id').value = prefill.procedureId;
+  if (prefill.procedureDate) row.querySelector('.proc-procedure-date').value = prefill.procedureDate;
+  if (prefill.statusCode) row.querySelector('.proc-status').value = prefill.statusCode;
+  if (prefill.targetSiteCode) row.querySelector('.proc-target-site-code').value = prefill.targetSiteCode;
+  if (prefill.targetSiteName) row.querySelector('.proc-target-site-name').value = prefill.targetSiteName;
+  if (prefill.methodCode) row.querySelector('.proc-method-code').value = prefill.methodCode;
+  if (prefill.methodName) row.querySelector('.proc-method-name').value = prefill.methodName;
+  if (prefill.procedureType) row.querySelector('.proc-procedure-type').value = prefill.procedureType;
+  if (prefill.negated) row.querySelector('.proc-negated').checked = prefill.negated;
+
+  // Performer override fields
+  if (prefill.performerNPI) row.querySelector('.proc-performer-npi').value = prefill.performerNPI;
+  if (prefill.performerGiven) row.querySelector('.proc-performer-given').value = prefill.performerGiven;
+  if (prefill.performerMiddle) row.querySelector('.proc-performer-middle').value = prefill.performerMiddle;
+  if (prefill.performerFamily) row.querySelector('.proc-performer-family').value = prefill.performerFamily;
+  if (prefill.performerPhone) row.querySelector('.proc-performer-phone').value = prefill.performerPhone;
+
+  document.getElementById('procedureList').appendChild(clone);
+}
+
+/**
+ * Removes a procedure entry from the procedure list
+ * @param {HTMLElement} btn - The remove button that was clicked
+ */
+function removeProcedure(btn) {
+  const row = btn.closest('.procedure-row');
+  if (row) {
+    row.remove();
+  }
+}
+
+/**
+ * Collects all procedure data from the procedure list
+ * @returns {Array} Array of procedure objects
+ */
+function collectProcedures() {
+  const procedureRows = document.querySelectorAll('.procedure-row');
+  return Array.from(procedureRows).map(row => {
+    const procedureDateElement = row.querySelector('.proc-procedure-date');
+    const procedureDate = procedureDateElement?.type === 'datetime-local' ?
+                      datetimeLocalToCda(procedureDateElement.value) :
+                      procedureDateElement?.value.trim() || '';
+
+    return {
+      procedureCode: row.querySelector('.proc-procedure-code')?.value.trim() || '',
+      procedureName: row.querySelector('.proc-procedure-name')?.value.trim() || '',
+      codeSystem: row.querySelector('.proc-code-system')?.value.trim() || '2.16.840.1.113883.6.96',
+      procedureId: row.querySelector('.proc-procedure-id')?.value.trim() || '',
+      procedureDate: procedureDate,
+      statusCode: row.querySelector('.proc-status')?.value.trim() || 'completed',
+      targetSiteCode: row.querySelector('.proc-target-site-code')?.value.trim() || '',
+      targetSiteName: row.querySelector('.proc-target-site-name')?.value.trim() || '',
+      methodCode: row.querySelector('.proc-method-code')?.value.trim() || '',
+      methodName: row.querySelector('.proc-method-name')?.value.trim() || '',
+      procedureType: row.querySelector('.proc-procedure-type')?.value.trim() || 'procedure',
+      negated: row.querySelector('.proc-negated')?.checked || false,
+      performerNPI: row.querySelector('.proc-performer-npi')?.value.trim() || '',
+      performerGiven: row.querySelector('.proc-performer-given')?.value.trim() || '',
+      performerMiddle: row.querySelector('.proc-performer-middle')?.value.trim() || '',
+      performerFamily: row.querySelector('.proc-performer-family')?.value.trim() || '',
+      performerPhone: row.querySelector('.proc-performer-phone')?.value.trim() || ''
+    };
+  }).filter(proc => proc.procedureCode || proc.procedureName);
+}
+
+// Expose functions globally
+window.addProcedure = addProcedure;
+window.removeProcedure = removeProcedure;
+window.collectProcedures = collectProcedures;

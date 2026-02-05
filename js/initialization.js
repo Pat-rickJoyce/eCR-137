@@ -95,6 +95,70 @@ function migrateLegacyImmunizationsToRepeater() {
 }
 
 /**
+ * Migrate Legacy Procedure Fields to Repeater
+ * Converts old currentProc1/currentProc2/triggerProc1 fields to new repeater format
+ * Run once during initialization to preserve backward compatibility with old JSON files
+ */
+function migrateLegacyProceduresToRepeater() {
+    // Check if we have any procedure rows already (means user is working with the repeater)
+    if (document.querySelector('.procedure-row')) {
+        console.log('[Migration] Procedure repeater already in use - skipping migration');
+        return;
+    }
+
+    // Check for currentProc1
+    const proc1Code = document.getElementById('currentProc1Code')?.value;
+    const proc1Name = document.getElementById('currentProc1Name')?.value;
+
+    if (proc1Code || proc1Name) {
+        console.log('[Migration] Migrating legacy currentProc1 to repeater');
+        addProcedure({
+            procedureCode: proc1Code || '',
+            procedureName: proc1Name || '',
+            procedureDate: document.getElementById('currentProc1Date')?.value || '',
+            procedureType: document.getElementById('currentProc1Type')?.value || 'procedure',
+            statusCode: 'completed',
+            codeSystem: '2.16.840.1.113883.6.96',
+            negated: false
+        });
+    }
+
+    // Check for currentProc2
+    const proc2Code = document.getElementById('currentProc2Code')?.value;
+    const proc2Name = document.getElementById('currentProc2Name')?.value;
+
+    if (proc2Code || proc2Name) {
+        console.log('[Migration] Migrating legacy currentProc2 to repeater');
+        addProcedure({
+            procedureCode: proc2Code || '',
+            procedureName: proc2Name || '',
+            procedureDate: document.getElementById('currentProc2Date')?.value || '',
+            procedureType: document.getElementById('currentProc2Type')?.value || 'observation',
+            statusCode: 'completed',
+            codeSystem: '2.16.840.1.113883.6.96',
+            negated: false
+        });
+    }
+
+    // Check for triggerProc1
+    const trigProc1Code = document.getElementById('triggerProc1Code')?.value;
+    const trigProc1Name = document.getElementById('triggerProc1Name')?.value;
+
+    if (trigProc1Code || trigProc1Name) {
+        console.log('[Migration] Migrating legacy triggerProc1 to repeater');
+        addProcedure({
+            procedureCode: trigProc1Code || '',
+            procedureName: trigProc1Name || '',
+            procedureDate: document.getElementById('triggerProc1Date')?.value || '',
+            procedureType: document.getElementById('triggerProc1Type')?.value || 'observation',
+            statusCode: 'completed',
+            codeSystem: '2.16.840.1.113883.6.96',
+            negated: false
+        });
+    }
+}
+
+/**
  * DOMContentLoaded Event Handler
  * Runs when page is fully loaded and ready for initialization
  */
@@ -171,11 +235,63 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Initialize administered medications with default entry
+    if (!document.querySelector('.medication-administered-evidence-row')) {
+        addAdministeredMedication({
+            medicationCode: '308971',
+            medicationName: 'Hep B pediatric vaccine (Engerix-B)',
+            administrationTime: '2024-06-15T09:30',
+            doseValue: '0.5',
+            doseUnit: 'mL',
+            route: 'IM',
+            status: 'completed',
+            negated: false
+        });
+    }
+
+    // Initialize procedures with default entries
+    if (!document.querySelector('.procedure-row')) {
+        addProcedure({
+            procedureCode: '80146002',
+            procedureName: 'Excision of spinal lesion',
+            procedureDate: '2024-06-15T09:00',
+            statusCode: 'completed',
+            codeSystem: '2.16.840.1.113883.6.96',
+            procedureType: 'procedure',
+            targetSiteCode: '421060004',
+            targetSiteName: 'Structure of vertebral column',
+            negated: false
+        });
+
+        addProcedure({
+            procedureCode: '241615005',
+            procedureName: 'Magnetic resonance imaging of spine',
+            procedureDate: '2024-06-15T10:00',
+            statusCode: 'completed',
+            codeSystem: '2.16.840.1.113883.6.96',
+            procedureType: 'observation',
+            negated: false
+        });
+
+        addProcedure({
+            procedureCode: '230690007',
+            procedureName: 'Stroke',
+            procedureDate: '2024-06-15T11:00',
+            statusCode: 'completed',
+            codeSystem: '2.16.840.1.113883.6.96',
+            procedureType: 'observation',
+            negated: false
+        });
+    }
+
     // Migrate legacy adminMed1/adminMed2 fields to new repeater on page load
     migrateLegacyMedicationsToRepeater();
 
     // Migrate legacy vaccine1/vaccine2 immunization fields to new repeater on page load
     migrateLegacyImmunizationsToRepeater();
+
+    // Migrate legacy currentProc1/currentProc2/triggerProc1 procedure fields to new repeater on page load
+    migrateLegacyProceduresToRepeater();
 
     // Set default birth date to datetime-local format
     const birthDateInput = document.getElementById('patientBirthDate');

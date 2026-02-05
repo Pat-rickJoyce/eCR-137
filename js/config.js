@@ -25,6 +25,10 @@ let organismLoaded = false;
 let testData = [];
 let testLoaded = false;
 
+// Global variable to store medication data
+let medicationData = [];
+let medicationLoaded = false;
+
 // Global RCTC data storage
 let rctcData = {
     diagnosis: [],
