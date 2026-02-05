@@ -172,6 +172,9 @@ if (element) {
     // Collect immunizations
     data.immunizations = collectImmunizations();
 
+    // Collect procedures
+    data.procedures = collectProcedures();
+
     return data;
 }
 
@@ -279,6 +282,17 @@ window.loadFormDataFromAssets = async function(filename) {
                 immunizationList.innerHTML = '';
                 data.immunizations.forEach(immunizationEntry => {
                     addImmunization(immunizationEntry);
+                });
+            }
+        }
+
+        // Handle procedures if present
+        if (data.procedures && Array.isArray(data.procedures)) {
+            const procedureList = document.getElementById('procedureList');
+            if (procedureList) {
+                procedureList.innerHTML = '';
+                data.procedures.forEach(procedureEntry => {
+                    addProcedure(procedureEntry);
                 });
             }
         }

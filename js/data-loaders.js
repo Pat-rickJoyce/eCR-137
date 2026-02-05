@@ -328,6 +328,70 @@ function getHardcodedOrganisms() {
     ];
 }
 
+// Load medications from RCTC Excel file - Medications tab
+async function loadMedicationsFromRCTC() {
+    try {
+        const response = await fetch('./assets/data/RCTC_Release (2025-03-18).xlsx');
+        if (!response.ok) {
+            throw new Error(`Failed to load RCTC Excel file: ${response.status}`);
+        }
+
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+
+        const allMedications = [];
+
+        // Look for "Medications" sheet
+        const targetSheetName = workbook.SheetNames.find(name =>
+            name.toLowerCase() === 'medications' ||
+            name.toLowerCase().includes('medication')
+        );
+
+        if (targetSheetName) {
+            const worksheet = workbook.Sheets[targetSheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+            console.log('Medications sheet name:', targetSheetName);
+            console.log('First 3 medication rows:', jsonData.slice(0, 4));
+
+            if (jsonData.length > 1) {
+                // Process data rows - Column B for code (RxNorm), Column C for name
+                for (let i = 1; i < jsonData.length; i++) {
+                    const row = jsonData[i];
+                    if (row && row.length > 2 && row[1] && row[2]) {
+                        allMedications.push({
+                            code: row[1] || '', // Column B for RxNorm code
+                            name: row[2] || '', // Column C for medication name
+                            description: row[0] || '' // Column A for description (if available)
+                        });
+                    }
+                }
+            }
+        }
+
+        medicationData = allMedications;
+        medicationLoaded = true;
+
+        console.log(`Loaded ${medicationData.length} medications from RCTC file`);
+        return medicationData;
+
+    } catch (error) {
+        console.warn('Failed to load medications from RCTC file:', error);
+        medicationData = getHardcodedMedications();
+        medicationLoaded = true;
+        return medicationData;
+    }
+}
+
+// Fallback hardcoded medications
+function getHardcodedMedications() {
+    return [
+        { code: "308971", name: "Hep B pediatric vaccine (Engerix-B)", description: "RxNorm" },
+        { code: "1659929", name: "Azithromycin 250 MG Oral Tablet", description: "RxNorm" },
+        { code: "209459", name: "Amoxicillin 500 MG Oral Capsule", description: "RxNorm" }
+    ];
+}
+
 // Load conditions from Excel file
 async function loadConditionsFromExcel() {
     try {

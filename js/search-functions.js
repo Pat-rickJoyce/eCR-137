@@ -131,6 +131,190 @@ async function searchRCTCCodes(fieldId) {
 }
 
 /**
+ * Search RCTC Codes for Procedure Repeater Rows
+ * Works with procedure repeater pattern using button context
+ *
+ * @param {HTMLElement} btn - The search button that was clicked
+ */
+async function searchRCTCCodesForProcedure(btn) {
+  const row = btn.closest('.procedure-row');
+  if (!row) return;
+
+  const codeInput = row.querySelector('.proc-procedure-code');
+  const nameInput = row.querySelector('.proc-procedure-name');
+  const resultsDiv = row.querySelector('.proc-code-search-results');
+
+  if (!codeInput || !resultsDiv) return;
+
+  // Load lab observation data (procedures use lab obs dataset)
+  if (!labObsLoaded) await loadLabObsFromRCTC();
+  const data = labObsData || [];
+
+  // Clear results
+  resultsDiv.innerHTML = '';
+  resultsDiv.style.display = 'none';
+
+  const q = String(codeInput.value ?? '').replace(/\u00A0/g, ' ').trim().toLowerCase();
+  if (!q || data.length === 0) return;
+
+  const asCode = r => String(r.code ?? '').toLowerCase();
+  const asName = r => String((r.name ?? r.description ?? '')).toLowerCase();
+
+  const digitsOnly = /^[0-9]+$/.test(q);
+
+  let matches = [];
+  if (digitsOnly) {
+    // Code search: try exact match first
+    const exact = data.filter(r => asCode(r) === q);
+    const fuzzy = data.filter(r => asCode(r).includes(q) || asName(r).includes(q));
+    const seen = new Set();
+    matches = [...exact, ...fuzzy].filter(r => {
+      const k = r.code + '|' + r.name;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+  } else {
+    // General text search
+    const primary = data.filter(r => asCode(r).includes(q));
+    const secondary = data.filter(r => asName(r).includes(q));
+    const seen = new Set();
+    matches = [...primary, ...secondary].filter(r => {
+      const k = r.code + '|' + r.name;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+  }
+
+  if (matches.length === 0) {
+    resultsDiv.style.display = 'block';
+    resultsDiv.innerHTML = '<div class="no-results">No matching codes found</div>';
+    return;
+  }
+
+  const list = document.createElement('div');
+  list.className = 'search-results-list';
+
+  matches.slice(0, 10).forEach(row => {
+    const item = document.createElement('div');
+    item.className = 'search-result-item';
+    item.innerHTML = `<strong>${row.code}</strong>: ${row.name}${row.description ? `<br><small>${row.description}</small>` : ''}`;
+
+    item.onclick = () => {
+      codeInput.value = row.code;
+      if (nameInput) nameInput.value = row.name;
+      resultsDiv.style.display = 'none';
+    };
+
+    list.appendChild(item);
+  });
+
+  resultsDiv.appendChild(list);
+  resultsDiv.style.display = 'block';
+}
+
+// Expose function globally
+window.searchRCTCCodesForProcedure = searchRCTCCodesForProcedure;
+
+/**
+ * Search RCTC Codes for Medication Repeater Rows
+ * Works with medication repeater pattern using button context
+ *
+ * @param {HTMLElement} btn - The search button that was clicked
+ * @param {string} searchType - 'code' or 'name' to indicate which field triggered search
+ */
+async function searchRCTCCodesForMedication(btn, searchType) {
+  const row = btn.closest('.medication-administered-evidence-row');
+  if (!row) return;
+
+  const codeInput = row.querySelector('.ame-medication-code');
+  const nameInput = row.querySelector('.ame-medication-name');
+  const resultsDiv = searchType === 'code'
+    ? row.querySelector('.ame-code-search-results')
+    : row.querySelector('.ame-name-search-results');
+
+  if (!codeInput || !nameInput || !resultsDiv) return;
+
+  // Load medication data from RCTC Medications tab
+  if (!medicationLoaded) await loadMedicationsFromRCTC();
+  const data = medicationData || [];
+
+  // Clear results
+  resultsDiv.innerHTML = '';
+  resultsDiv.style.display = 'none';
+
+  const searchInput = searchType === 'code' ? codeInput : nameInput;
+  const q = String(searchInput.value ?? '').replace(/\u00A0/g, ' ').trim().toLowerCase();
+  if (!q || data.length === 0) return;
+
+  const asCode = r => String(r.code ?? '').toLowerCase();
+  const asName = r => String((r.name ?? r.description ?? '')).toLowerCase();
+
+  const digitsOnly = /^[0-9]+$/.test(q);
+  const searchingName = searchType === 'name';
+
+  let matches = [];
+  if (!searchingName && digitsOnly) {
+    // Code search: try exact match first
+    const exact = data.filter(r => asCode(r) === q);
+    const fuzzy = data.filter(r => asCode(r).includes(q) || asName(r).includes(q));
+    const seen = new Set();
+    matches = [...exact, ...fuzzy].filter(r => {
+      const k = r.code + '|' + r.name;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+  } else {
+    // General text search - prioritize the field being searched
+    const primary = data.filter(r => (searchingName ? asName(r) : asCode(r)).includes(q));
+    const secondary = data.filter(r => (searchingName ? asCode(r) : asName(r)).includes(q));
+    const seen = new Set();
+    matches = [...primary, ...secondary].filter(r => {
+      const k = r.code + '|' + r.name;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+  }
+
+  if (matches.length === 0) {
+    resultsDiv.style.display = 'block';
+    resultsDiv.innerHTML = '<div class="no-results">No matching medications found</div>';
+    return;
+  }
+
+  const list = document.createElement('div');
+  list.className = 'search-results-list';
+
+  matches.slice(0, 10).forEach(row => {
+    const item = document.createElement('div');
+    item.className = 'search-result-item';
+
+    if (searchingName) {
+      item.innerHTML = `<strong>${row.name}</strong><br><small>RxNorm: ${row.code}</small>`;
+    } else {
+      item.innerHTML = `<strong>${row.code}</strong>: ${row.name}`;
+    }
+
+    item.onclick = () => {
+      codeInput.value = row.code;
+      nameInput.value = row.name;
+      resultsDiv.style.display = 'none';
+    };
+
+    list.appendChild(item);
+  });
+
+  resultsDiv.appendChild(list);
+  resultsDiv.style.display = 'block';
+}
+
+// Expose function globally
+window.searchRCTCCodesForMedication = searchRCTCCodesForMedication;
+
+/**
  * Search RCTC for Diagnosis Code
  * Searches the diagnosis evidence rows for matching SNOMED CT codes
  *
