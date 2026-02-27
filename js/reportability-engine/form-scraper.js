@@ -70,10 +70,12 @@ export class FormScraper {
         const rows = document.querySelectorAll('#problemEvidenceList .problem-evidence-row');
         rows.forEach(row => {
             const code = row.querySelector('.pe-problem-code')?.value;
+            const name = row.querySelector('.pe-problem-name')?.value;
             const status = row.querySelector('.pe-concern-status')?.value;
             if (code) {
                 list.push({
                     code: code,
+                    name: name,
                     status: status, // active, completed
                     oids: []
                 });
@@ -104,16 +106,24 @@ export class FormScraper {
             const interpretation = row.querySelector('.le-interpretation')?.value;
 
             if (testCode) {
-                list.push({
+                const testNameElement = row.querySelector('.le-test-name');
+                const testNameValue = testNameElement?.value;
+                console.log(`[FormScraper] Lab Test - code: ${testCode}, testName: "${testNameValue}", element found: ${!!testNameElement}`);
+                const labObj = {
+                    code: testCode, // For consistency with diagnosis/problem evaluator
                     testCode: testCode,
+                    testName: testNameValue,
                     resultValue: value, // The code or number
                     resultKind: valueKind,
                     interpretation: interpretation,
                     oids: [], // Test code OIDs
                     resultOids: [] // Result code OIDs (crucial for "Positive Lab Result" value set)
-                });
+                };
+                list.push(labObj);
+                console.log(`[FormScraper] Pushed lab object:`, labObj);
             }
         });
+        console.log(`[FormScraper] Total labs scraped: ${list.length}`, list);
         return list;
     }
 

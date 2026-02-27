@@ -321,7 +321,7 @@ export class UIController {
                     (matchedData.code ? ` <span style="color:#666;">(${matchedData.code})</span>` : '');
 
             case 'lab_test':
-                return `<strong>Lab Test:</strong> ${matchedData.display}` +
+                return `<strong>Lab Test:</strong> ${matchedData.display || 'Lab test'}` +
                     (matchedData.code ? ` <span style="color:#666;">(${matchedData.code})</span>` : '');
 
             case 'lab_result':
