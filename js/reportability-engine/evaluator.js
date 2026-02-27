@@ -183,7 +183,7 @@ export class ReportabilityEvaluator {
                 matchedData: {
                     type: 'diagnosis',
                     code: match.code,
-                    display: match.display || match.code,
+                    display: match.name || match.code,
                     codeSystem: match.codeSystem,
                     valueSetName: criterion.valueSetName
                 }
@@ -216,7 +216,7 @@ export class ReportabilityEvaluator {
                 matchedData: {
                     type: 'problem',
                     code: match.code,
-                    display: match.display || match.code,
+                    display: match.name || match.code,
                     status: match.status,
                     valueSetName: criterion.valueSetName
                 }
@@ -269,12 +269,16 @@ export class ReportabilityEvaluator {
         if (!labs) return { matched: false };
         const match = labs.find(l => l.oids && l.oids.includes(criterion.valueSetOid));
         if (match) {
+            console.log(`[Evaluator] LAB TEST MATCHED for OID ${criterion.valueSetOid}:`, match);
+            console.log(`[Evaluator] Lab Test fields - display: "${match.display}", testName: "${match.testName}", code: "${match.code}", testCode: "${match.testCode}"`);
+            const displayValue = match.display || match.testName || match.code;
+            console.log(`[Evaluator] *** FINAL DISPLAY VALUE: "${displayValue}" ***`);
             return {
                 matched: true,
                 matchedData: {
                     type: 'lab_test',
                     code: match.code,
-                    display: match.display || match.testName || match.code,
+                    display: displayValue,
                     valueSetName: criterion.valueSetName
                 }
             };
