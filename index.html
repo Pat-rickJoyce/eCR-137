@@ -13,6 +13,10 @@
             padding: 40px 20px;
         }
 
+        .section {
+            margin: 0 0 30px 0;
+        }
+
         .patient-overview-card {
             background:
                 radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
@@ -27,7 +31,7 @@
                 0 20px 40px -4px rgba(0, 0, 0, 0.1),
                 inset 0 1px 0 rgba(255, 255, 255, 0.8);
             padding: 28px 40px;
-            margin: 0 32px 32px;
+            margin: 0 20px 30px 20px;
             display: flex;
             align-items: center;
             gap: 32px;
@@ -109,18 +113,6 @@
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-
-        .patient-overview-card .patient-name .verified-badge {
-            font-size: 10px;
-            background: #f0fdf4;
-            color: #16a34a;
-            padding: 4px 10px;
-            border-radius: 8px;
-            border: 1px solid #dcfce7;
-            letter-spacing: 0.08em;
-            font-weight: 800;
-            text-transform: uppercase;
         }
 
         .patient-overview-card .patient-meta {
@@ -397,77 +389,72 @@
         <div class="name">eCeleRate</div>
     </div>
 
-    <div class="container">
-        <!-- Patient Demographics Overview -->
-        <div class="patient-overview-card">
-            <div class="patient-avatar" id="patientAvatarInitials">P</div>
-            <div class="patient-info">
-                <span class="snapshot-label">Patient Snapshot</span>
-                <h1 class="patient-name" id="patientOverviewName" style="margin-bottom: 12px;">
-                    <span id="patientNameText">Patient Name</span>
-                    <span class="verified-badge"><i class="fas fa-check-circle"></i> Verified</span>
-                </h1>
+    <!-- Patient Demographics Overview -->
+    <div class="patient-overview-card">
+        <div class="patient-avatar" id="patientAvatarInitials">P</div>
+        <div class="patient-info">
+            <span class="snapshot-label">Patient Snapshot</span>
+            <h1 class="patient-name" id="patientOverviewName" style="margin-bottom: 12px;">
+                <span id="patientNameText">Patient Name</span>
+            </h1>
 
-                <!-- Main Demographics Row -->
-                <div class="patient-meta" style="margin-bottom: 16px;">
-                    <div class="meta-chip">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span id="patientOverviewDOB">DOB: 06/15/2024</span>
-                    </div>
-                    <div class="meta-chip">
-                        <i class="fas fa-venus-mars"></i>
-                        <span id="patientOverviewGender">Female</span>
-                    </div>
-                    <div class="meta-chip">
-                        <i class="fas fa-users"></i>
-                        <span id="patientOverviewRace">White</span>
-                    </div>
-                    <div class="meta-chip">
-                        <i class="fas fa-globe"></i>
-                        <span id="patientOverviewEthnicity">Non-Hispanic</span>
-                    </div>
+            <!-- Main Demographics Row -->
+            <div class="patient-meta" style="margin-bottom: 16px;">
+                <div class="meta-chip">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span id="patientOverviewDOB">DOB: 06/15/2024</span>
                 </div>
+                <div class="meta-chip">
+                    <i class="fas fa-venus-mars"></i>
+                    <span id="patientOverviewGender">Female</span>
+                </div>
+                <div class="meta-chip">
+                    <i class="fas fa-users"></i>
+                    <span id="patientOverviewRace">White</span>
+                </div>
+                <div class="meta-chip">
+                    <i class="fas fa-globe"></i>
+                    <span id="patientOverviewEthnicity">Non-Hispanic</span>
+                </div>
+            </div>
 
-                <!-- Clinical Counts Row -->
-                <div class="patient-meta">
-                    <div class="meta-chip clinical-count"
-                        style="border-color: #fecaca; background: #fef2f2; color: #991b1b;">
-                        <i class="fas fa-file-medical-alt" style="color: #ef4444;"></i>
-                        <span id="patientOverviewDiagCount">0 Diagnoses</span>
-                    </div>
-                    <div class="meta-chip clinical-count"
-                        style="border-color: #fde68a; background: #fffbeb; color: #92400e;">
-                        <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
-                        <span id="patientOverviewProbCount">0 Problems</span>
-                    </div>
-                    <div class="meta-chip clinical-count"
-                        style="border-color: #bfdbfe; background: #eff6ff; color: #1e40af;">
-                        <i class="fas fa-vials" style="color: #3b82f6;"></i>
-                        <span id="patientOverviewLabCount">0 Labs</span>
-                    </div>
+            <!-- Clinical Counts Row -->
+            <div class="patient-meta">
+                <div class="meta-chip clinical-count"
+                    style="border-color: #fecaca; background: #fef2f2; color: #991b1b;">
+                    <i class="fas fa-file-medical-alt" style="color: #ef4444;"></i>
+                    <span id="patientOverviewDiagCount">0 Diagnoses</span>
+                </div>
+                <div class="meta-chip clinical-count"
+                    style="border-color: #fde68a; background: #fffbeb; color: #92400e;">
+                    <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
+                    <span id="patientOverviewProbCount">0 Problems</span>
+                </div>
+                <div class="meta-chip clinical-count"
+                    style="border-color: #bfdbfe; background: #eff6ff; color: #1e40af;">
+                    <i class="fas fa-vials" style="color: #3b82f6;"></i>
+                    <span id="patientOverviewLabCount">0 Labs</span>
                 </div>
             </div>
         </div>
-        <div class="buttons">
-            <!-- Hidden functional gateway buttons - User now uses the floating dock as requested -->
-            <div style="display:none !important;">
-                <button class="ui81-btn" onclick="saveFormData()"><i class="fas fa-save"></i> Save Data</button>
-                <button class="ui81-btn secondary" onclick="downloadZipOfEICRandRR()"><i
-                        class="fas fa-file-archive"></i> Package ZIP</button>
-                <button id="generate-cda-btn" onclick="generateAndDownloadCDA()">Generate CDA</button>
-                <button id="generate-rr-btn" onclick="generateAndDownloadRR()">Generate RR</button>
-                <button id="zip-btn" onclick="downloadZipOfEICRandRR()">Download ZIP (eICR + RR)</button>
-                <button onclick="loadFormDataDialog()">Load Form Data</button>
-                <button onclick="saveFormData()">Save Form Data</button>
-                <input type="file" id="loadFormDataInput" accept=".json" onchange="loadFormData(event)">
-            </div>
-        </div>
+    </div>
+
+    <!-- Hidden functional gateway buttons - User now uses the floating dock as requested -->
+    <div style="display:none !important;">
+        <button class="ui81-btn" onclick="saveFormData()"><i class="fas fa-save"></i> Save Data</button>
+        <button class="ui81-btn secondary" onclick="downloadZipOfEICRandRR()"><i
+                class="fas fa-file-archive"></i> Package ZIP</button>
+        <button id="generate-cda-btn" onclick="generateAndDownloadCDA()">Generate CDA</button>
+        <button id="generate-rr-btn" onclick="generateAndDownloadRR()">Generate RR</button>
+        <button id="zip-btn" onclick="downloadZipOfEICRandRR()">Download ZIP (eICR + RR)</button>
+        <button onclick="loadFormDataDialog()">Load Form Data</button>
+        <button onclick="saveFormData()">Save Form Data</button>
+        <input type="file" id="loadFormDataInput" accept=".json" onchange="loadFormData(event)">
     </div>
 
     <!-- Safety container for validation errors (JS looks for .footer-buttons or #validation-errors) -->
     <div id="validation-errors" style="display:none;"></div>
     <div class="footer-buttons" style="display:none !important;"></div>
-
 
     <div class="section">
         <h2 class="section-title"><i class="fas fa-user"></i> Patient Demographics</h2>
@@ -1239,56 +1226,57 @@
         <!--    ADMINISTERED MEDICATIONS REPEATER (NEW PATTERN)     -->
         <!-- ═══════════════════════════════════════════════════════ -->
 
-        <div class="medication-administered-evidence-controls">
-            <button class="btn btn-primary" type="button" onclick="addAdministeredMedication()">➕ Add Administered Medication</button>
-        </div>
+        <div>
+            <div class="medication-administered-evidence-controls">
+                <button class="btn btn-primary" type="button" onclick="addAdministeredMedication()">➕ Add Administered Medication</button>
+            </div>
 
-        <!-- Administering Provider (Global - applies to ALL administered meds unless overridden) -->
-        <div class="subsection">
-            <h4>Administering Provider (Global)</h4>
-            <p style="color: var(--muted); font-size: 0.9em; margin-bottom: 16px;">
-                This provider will be used for all administered medications unless overridden in individual medication entries.
-            </p>
-            <div class="form-grid">
-                <div class="input-group">
-                    <label>Administering Provider NPI</label>
-                    <input type="text" id="administeringProviderNPI" inputmode="numeric" pattern="\d{10}"
-                        value="1234567890">
-                </div>
+            <!-- Administering Provider (Global - applies to ALL administered meds unless overridden) -->
+            <div class="subsection">
+                <h4>Administering Provider (Global)</h4>
+                <p style="color: var(--muted); font-size: 0.9em; margin-bottom: 16px;">
+                    This provider will be used for all administered medications unless overridden in individual medication entries.
+                </p>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Administering Provider NPI</label>
+                        <input type="text" id="administeringProviderNPI" inputmode="numeric" pattern="\d{10}"
+                            value="1234567890">
+                    </div>
 
-                <div class="input-group">
-                    <label>First</label>
-                    <input type="text" id="administeringProviderGiven" value="Je Suis">
-                </div>
+                    <div class="input-group">
+                        <label>First</label>
+                        <input type="text" id="administeringProviderGiven" value="Je Suis">
+                    </div>
 
-                <div class="input-group">
-                    <label>Last</label>
-                    <input type="text" id="administeringProviderFamily" value="Médecin">
-                </div>
+                    <div class="input-group">
+                        <label>Last</label>
+                        <input type="text" id="administeringProviderFamily" value="Médecin">
+                    </div>
 
-                <div class="input-group">
-                    <label>Phone (opt)</label>
-                    <input type="tel" id="administeringProviderPhone" value="555-555-5555">
-                </div>
+                    <div class="input-group">
+                        <label>Phone (opt)</label>
+                        <input type="tel" id="administeringProviderPhone" value="555-555-5555">
+                    </div>
 
-                <div class="input-group">
-                    <label>Organization (opt)</label>
-                    <input type="text" id="administeringProviderOrgName">
-                </div>
+                    <div class="input-group">
+                        <label>Organization (opt)</label>
+                        <input type="text" id="administeringProviderOrgName">
+                    </div>
 
-                <div class="input-group">
-                    <label>Org ID (extension) (opt)</label>
-                    <input type="text" id="administeringProviderOrgId" value="123456789">
-                </div>
+                    <div class="input-group">
+                        <label>Org ID (extension) (opt)</label>
+                        <input type="text" id="administeringProviderOrgId" value="123456789">
+                    </div>
 
-                <div class="input-group">
-                    <label>Org ID Root (OID) (opt)</label>
-                    <input type="text" id="administeringProviderOrgIdRoot" value="2.16.840.1.113883.19">
+                    <div class="input-group">
+                        <label>Org ID Root (OID) (opt)</label>
+                        <input type="text" id="administeringProviderOrgIdRoot" value="2.16.840.1.113883.19">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div id="administeredMedicationList"></div>
+            <div id="administeredMedicationList"></div>
 
             <template id="administeredMedicationTemplate">
                 <div class="medication-administered-evidence-row">
@@ -1418,6 +1406,7 @@
                     </div>
                 </div>
             </template>
+        </div>
 
         <!-- ═══════════════════════════════════════════════════════ -->
         <!--   LEGACY ADMINISTERED MEDICATIONS (FOR BACKWARD COMPAT) -->
@@ -1802,14 +1791,15 @@
         <h2 class="section-title"><i class="fas fa-procedures"></i> Procedures</h2>
 
         <!-- Procedure Repeater -->
-        <div class="procedure-evidence-controls">
-            <button class="btn btn-primary" type="button" onclick="addProcedure()">➕ Add Procedure</button>
-        </div>
+        <div>
+            <div class="procedure-evidence-controls">
+                <button class="btn btn-primary" type="button" onclick="addProcedure()">➕ Add Procedure</button>
+            </div>
 
-        <div id="procedureList"></div>
+            <div id="procedureList"></div>
 
-        <!-- Procedure Template -->
-        <template id="procedureTemplate">
+            <!-- Procedure Template -->
+            <template id="procedureTemplate">
             <div class="procedure-row">
                 <h4>Procedure Entry</h4>
                 <div class="form-grid">
@@ -1936,7 +1926,8 @@ Procedure: Use for therapeutic interventions that alter the patient's physical c
                     </div>
                 </div>
             </div>
-        </template>
+            </template>
+        </div>
 
         <!-- Legacy procedure fields removed -->
         <!-- Procedures now use repeater pattern above -->
