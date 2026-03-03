@@ -373,19 +373,37 @@ function handleRelationshipTypeChange() {
     const relationshipType = relationshipTypeEl.value;
     const relatedDocIdGroup = document.getElementById('relatedDocIdGroup');
     const setIdGroup = document.getElementById('setIdGroup');
-    const versionGroup = document.getElementById('versionGroup');
 
-    // Check if all elements exist before manipulating
-    if (!relatedDocIdGroup || !setIdGroup || !versionGroup) return;
+    if (!relatedDocIdGroup || !setIdGroup) return;
 
     if (relationshipType === 'RPLC' || relationshipType === 'APND') {
+        // Show the Related Document Set ID field, hide the Set ID field
         relatedDocIdGroup.style.display = 'block';
-        setIdGroup.style.display = 'block';
-        versionGroup.style.display = 'block';
-    } else {
-        relatedDocIdGroup.style.display = 'none';
         setIdGroup.style.display = 'none';
-        versionGroup.style.display = 'none';
+
+        // Increment the version number
+        const versionNumberField = document.getElementById('versionNumber');
+        if (versionNumberField) {
+            const currentVersion = parseInt(versionNumberField.value) || 1;
+            versionNumberField.value = currentVersion + 1;
+        }
+    } else {
+        // NEW: show Set ID field, hide Related Document Set ID field
+        relatedDocIdGroup.style.display = 'none';
+        setIdGroup.style.display = 'block';
+
+        // Clear any previously entered related doc ID and reset version to 1
+        const relatedDocIdField = document.getElementById('relatedDocumentId');
+        if (relatedDocIdField) relatedDocIdField.value = '';
+
+        const versionNumberField = document.getElementById('versionNumber');
+        if (versionNumberField) versionNumberField.value = '1';
+
+        // Generate a fresh Set ID for the new document
+        const setIdField = document.getElementById('setId');
+        if (setIdField && typeof generateUUID === 'function') {
+            setIdField.value = generateUUID();
+        }
     }
 }
 
