@@ -1,0 +1,132 @@
+{
+  "mnemonic": "BLA_V1",
+  "conditionId": "BLA",
+  "name": "Blastomycosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Blastomycosis.v4.20260227.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Blastomycosis.v4.20260227.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "BLA-R1",
+      "description": "Blastomycosis (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1244", "name": "Blastomycosis (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1245", "name": "Blastomycosis (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1244", "name": "Blastomycosis (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1245", "name": "Blastomycosis (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BLA-R2",
+      "description": "Identification of Blastomyces species by culture or isolate identification",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1249", "name": "Blastomycosis (Tests for Blastomyces species by Culture and Identification Method)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1246", "name": "Blastomycosis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+            ] },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1246", "name": "Blastomycosis (Organism or Substance in Lab Results)" } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BLA-R3",
+      "description": "Histopathology or cytopathology with a result consistent with Blastomycosis",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2210", "name": "Histopathology or Cytopathology Tests by Microscopic Observation" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1244", "name": "Blastomycosis (Disorders) (SNOMED)" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1245", "name": "Blastomycosis (Disorders) (ICD10CM)" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1246", "name": "Blastomycosis (Organism or Substance in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BLA-R4",
+      "description": "Detection of Blastomyces species nucleic acid by any method",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1251", "name": "Blastomycosis (Tests for Blastomyces species Nucleic Acid)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1246", "name": "Blastomycosis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3079", "name": "Blastomycosis (Combination Tests that include Blastomyces species Nucleic Acid)" } }
+            ] },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1246", "name": "Blastomycosis (Organism or Substance in Lab Results)" } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BLA-R5",
+      "description": "Detection of Blastomyces species antigen by any method",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1253", "name": "Blastomycosis (Tests for Blastomyces species Antigen)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1246", "name": "Blastomycosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BLA-R6",
+      "description": "Detection of Blastomyces species antibody by any method (coded or abnormal results; numeric > 0 not modeled)",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1252", "name": "Blastomycosis (Tests for Blastomyces species Antibody)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1246", "name": "Blastomycosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Numeric Blastomyces antibody result > 0",
+      "reason": "SEM_V1 has no numeric laboratory result comparison; the numeric alternative in source rule 6 is omitted"
+    },
+    {
+      "valueSet": "Epidemiologic link to a confirmed Blastomycosis case",
+      "reason": "source rule 7 is explicitly inoperable and SEM_V1 has no epidemiologic-link evidence or predicate, so the rule is omitted"
+    }
+  ]
+}

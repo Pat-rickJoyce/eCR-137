@@ -1,0 +1,157 @@
+{
+  "mnemonic": "CPO_V1",
+  "conditionId": "CPO",
+  "name": "Carbapenemase-Producing Organisms (CPO)",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Carbapenemase_Producing_Organisms.v5.20240202.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Carbapenemase_Producing_Organisms.v5.20240202.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CPO-R2",
+      "description": "Carbapenemase-producing carbapenem-resistant bacterial infection (SNOMED diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2255",
+                  "name": "Carbapenem Resistant Bacterial Infection [Carbapenemase Producing] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2255",
+                  "name": "Carbapenem Resistant Bacterial Infection [Carbapenemase Producing] (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CPO-R3",
+      "description": "Demonstration of carbapenemase production by a phenotypic method",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1215",
+                  "name": "Tests for carbapenemase production"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": ["A", "AA", "HH", "LL", "H", "L"]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "predicate": "labResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1882",
+              "name": "Carbapenemase production (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "CPO-R4",
+      "description": "Detection of a known carbapenemase resistance gene or other mechanism by a recognized test",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1216",
+                  "name": "Tests for carbapenemase resistance mechanism"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": ["A", "AA", "HH", "LL", "H", "L"]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "predicate": "labResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1214",
+              "name": "Carbapenemase resistance mechanism (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Carbapenemase resistance mechanism (Disorders) (SNOMED and ICD10CM)",
+      "reason": "not implemented - no codes available for either value set per source docx Table 3; source rule 1 is omitted"
+    },
+    {
+      "valueSet": "Carbapenem Resistant Bacterial Infection [Carbapenemase Producing] (ICD10CM)",
+      "reason": "not implemented - no ICD-10-CM codes available per source docx Table 3; the unavailable diagnosis/problem branches are omitted from source rule 2"
+    }
+  ]
+}

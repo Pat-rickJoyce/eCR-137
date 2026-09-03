@@ -1,0 +1,90 @@
+{
+  "mnemonic": "SAL_V1",
+  "conditionId": "SAL",
+  "name": "Salmonellosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Salmonellosis.v5.20260227.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Salmonellosis.v5.20260227.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2025-11-18)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SAL-R1",
+      "description": "Salmonellosis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.48", "name": "Salmonellosis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.47", "name": "Salmonellosis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.48", "name": "Salmonellosis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.47", "name": "Salmonellosis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SAL-R2",
+      "description": "Salmonella species or serovar identified by culture with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.70", "name": "Salmonellosis (Tests for Salmonella except S. typhi and S. paratyphi by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.70", "name": "Salmonellosis (Tests for Salmonella except S. typhi and S. paratyphi by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.96", "resultName": "Salmonellosis [Salmonella species and subspecies] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.70", "name": "Salmonellosis (Tests for Salmonella except S. typhi and S. paratyphi by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.631", "resultName": "Salmonellosis [Salmonella serovar] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.70", "name": "Salmonellosis (Tests for Salmonella except S. typhi and S. paratyphi by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.96", "resultName": "Salmonellosis [Salmonella species and subspecies] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.631", "resultName": "Salmonellosis [Salmonella serovar] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.96", "resultName": "Salmonellosis [Salmonella species and subspecies] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.631", "resultName": "Salmonellosis [Salmonella serovar] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3074", "name": "Salmonellosis (Combination Tests that include Salmonella except S. typhi and S. paratyphi by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.96", "resultName": "Salmonellosis [Salmonella species and subspecies] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3074", "name": "Salmonellosis (Combination Tests that include Salmonella except S. typhi and S. paratyphi by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.631", "resultName": "Salmonellosis [Salmonella serovar] (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SAL-R3",
+      "description": "Salmonella species or serovar nucleic acid detected with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.71", "name": "Salmonellosis (Tests for Salmonella except S. typhi and S. paratyphi Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.71", "name": "Salmonellosis (Tests for Salmonella except S. typhi and S. paratyphi Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.96", "resultName": "Salmonellosis [Salmonella species and subspecies] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.71", "name": "Salmonellosis (Tests for Salmonella except S. typhi and S. paratyphi Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.631", "resultName": "Salmonellosis [Salmonella serovar] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.71", "name": "Salmonellosis (Tests for Salmonella except S. typhi and S. paratyphi Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.96", "resultName": "Salmonellosis [Salmonella species and subspecies] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.631", "resultName": "Salmonellosis [Salmonella serovar] (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 4 epidemiologic exposure criteria",
+      "reason": "the authoritative source marks contact with a diagnosed person and membership in an outbreak risk group not implemented; the wholly inoperable clinical-plus-epidemiologic rule is omitted"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-record reporter types",
+      "reason": "the authoritative snapshot marks these reporter types not implemented in RCKMS; SEM_V1 does not carry reporter-source or death-certificate cause/contributing-condition evidence"
+    }
+  ]
+}

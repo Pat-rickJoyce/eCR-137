@@ -1,0 +1,150 @@
+{
+  "mnemonic": "CEAT_V1",
+  "conditionId": "CEAT",
+  "name": "Cadmium Exposure and Toxicity",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Cadmium_Exposure_and_Toxicity.v3.20240202.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Cadmium_Exposure_and_Toxicity.v3.20240202.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CEAT-R1",
+      "description": "Toxic effect of cadmium and its compounds (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1589",
+                      "name": "Cadmium Exposure and Toxicity (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1588",
+                      "name": "Cadmium Exposure and Toxicity (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1589",
+                      "name": "Cadmium Exposure and Toxicity (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1588",
+                      "name": "Cadmium Exposure and Toxicity (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CEAT-R4",
+      "description": "High interpretation flag on a quantitative cadmium-in-blood test (general-test-plus-blood-specimen alternative not modeled)",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1590",
+              "name": "Cadmium Exposure and Toxicity (Tests for Cadmium [Quantitative] in Blood)"
+            }
+          },
+          {
+            "predicate": "labInterpretationIn",
+            "params": {
+              "name": "Interpretation of an Observation (High)",
+              "codes": [
+                "H",
+                "HH"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "CEAT-R5",
+      "description": "High interpretation flag on a quantitative cadmium-in-urine test (general-test-plus-urine-specimen alternative not modeled)",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1591",
+              "name": "Cadmium Exposure and Toxicity (Tests for Cadmium [Quantitative] in Urine)"
+            }
+          },
+          {
+            "predicate": "labInterpretationIn",
+            "params": {
+              "name": "Interpretation of an Observation (High)",
+              "codes": [
+                "H",
+                "HH"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Quantitative cadmium concentration thresholds",
+      "reason": "SEM_V1 has no numeric laboratory result value/unit comparison predicate; source rule 2 (blood >= 5 ug/L or >= 0.0445 umol/L) and rule 3 (urine >= 10 ug/L or >= 0.089 umol/L) are omitted entirely"
+    },
+    {
+      "valueSet": "Blood (Specimen Type) (HL7)",
+      "reason": "not implemented - HL7 table 0487 unavailable in VSAC per source docx Table 3"
+    },
+    {
+      "valueSet": "Urine (Specimen Type) (HL7)",
+      "reason": "not implemented - HL7 table 0487 unavailable in VSAC per source docx Table 3"
+    },
+    {
+      "valueSet": "Blood and urine specimen-type constraints",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate; general cadmium-test branches using Blood (SNOMED OID ...1348) or Urine (SNOMED OID ...1513) are omitted from CEAT-R4/R5, while specimen-specific test branches remain modeled"
+    }
+  ]
+}

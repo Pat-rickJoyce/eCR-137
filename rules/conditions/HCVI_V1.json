@@ -1,0 +1,218 @@
+{
+  "mnemonic": "HCVI_V1",
+  "conditionId": "HCVI",
+  "name": "Hepatitis C Virus Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Hepatitis_C_Virus_Infection.v10.20250703.docx",
+    "rckmsVersion": "v10",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Hepatitis_C_Virus_Infection.v10.20250703.docx on 2026-07-18 (authoritative RCKMS Content Repository)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "HCVI-R1",
+      "description": "Hepatitis C virus infection diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.154", "name": "Hepatitis C Virus Infection (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.153", "name": "Hepatitis C Virus Infection (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.154", "name": "Hepatitis C Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.153", "name": "Hepatitis C Virus Infection (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HCVI-R2",
+      "description": "Detection of hepatitis C virus nucleic acid",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.398", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.398", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.409", "resultName": "Hepatitis C Virus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.398", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.409", "resultName": "Hepatitis C Virus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2457", "name": "Hepatitis C Virus Infection (Combination Tests that include hepatitis C virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.409", "resultName": "Hepatitis C Virus Infection (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "HCVI-R3",
+      "description": "Detection of hepatitis C virus antigen",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.399", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.399", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.409", "resultName": "Hepatitis C Virus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.399", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HCVI-R4",
+      "description": "Detection of hepatitis C virus antibody",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.407", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.407", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.409", "resultName": "Hepatitis C Virus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.407", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HCVI-R5",
+      "description": "Hepatitis C virus infection diagnosis or active problem (timeboxed) in a pregnant patient",
+      "logic": { "all": [
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.154", "name": "Hepatitis C Virus Infection (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.153", "name": "Hepatitis C Virus Infection (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.154", "name": "Hepatitis C Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.153", "name": "Hepatitis C Virus Infection (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] },
+        { "any": [
+          { "predicate": "pregnancyStatus", "params": { "value": "pregnant" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.676", "name": "Pregnant (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1986", "name": "Pregnant (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.676", "name": "Pregnant (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1986", "name": "Pregnant (ICD10CM)", "status": "active" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "HCVI-R6",
+      "description": "Pregnancy and detection of hepatitis C virus nucleic acid, antigen, or antibody",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "pregnancyStatus", "params": { "value": "pregnant" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.676", "name": "Pregnant (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1986", "name": "Pregnant (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.676", "name": "Pregnant (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1986", "name": "Pregnant (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.398", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.398", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.409", "resultName": "Hepatitis C Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.398", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.409", "resultName": "Hepatitis C Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2457", "name": "Hepatitis C Virus Infection (Combination Tests that include hepatitis C virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.409", "resultName": "Hepatitis C Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.399", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.399", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.409", "resultName": "Hepatitis C Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.399", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.407", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.407", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.409", "resultName": "Hepatitis C Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.407", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "HCVI-R7",
+      "description": "Hepatitis C virus infection diagnosis or active problem (timeboxed) in a patient older than 36 months",
+      "logic": { "all": [
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.154", "name": "Hepatitis C Virus Infection (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.153", "name": "Hepatitis C Virus Infection (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.154", "name": "Hepatitis C Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.153", "name": "Hepatitis C Virus Infection (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": ">", "value": 36, "unit": "months" }, "gate": true }
+      ] }
+    },
+    { "id": "HCVI-R8", "description": "All results of hepatitis C virus nucleic-acid tests", "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.398", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Nucleic Acid)" } } },
+    { "id": "HCVI-R9", "description": "All results of hepatitis C virus antigen tests", "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.399", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antigen)" } } },
+    { "id": "HCVI-R10", "description": "All results of hepatitis C virus antibody tests", "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.407", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antibody)" } } },
+    { "id": "HCVI-R11", "description": "Indeterminate or equivocal hepatitis C virus nucleic-acid result", "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.398", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1035", "resultName": "Indeterminate or Equivocal Lab Result Value" } } },
+    { "id": "HCVI-R12", "description": "Indeterminate or equivocal hepatitis C virus antigen result", "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.399", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.1035", "resultName": "Indeterminate or Equivocal Lab Result Value" } } },
+    { "id": "HCVI-R13", "description": "Indeterminate or equivocal hepatitis C virus antibody result", "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.407", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1035", "resultName": "Indeterminate or Equivocal Lab Result Value" } } },
+    { "id": "HCVI-R14", "description": "Negative or undetected hepatitis C virus nucleic-acid result", "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.398", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1034", "resultName": "Negative or Undetected Lab Result Value" } } },
+    { "id": "HCVI-R15", "description": "Negative or undetected hepatitis C virus antigen result", "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.399", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.1034", "resultName": "Negative or Undetected Lab Result Value" } } },
+    { "id": "HCVI-R16", "description": "Negative or undetected hepatitis C virus antibody result", "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.407", "name": "Hepatitis C Virus Infection (Tests for hepatitis C virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1034", "resultName": "Negative or Undetected Lab Result Value" } } },
+    { "id": "HCVI-R17", "description": "Elbasvir-grazoprevir prescribed, ordered, or administered", "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1631", "name": "Elbasvir Grazoprevir Combination (RXNORM)" } } },
+    { "id": "HCVI-R18", "description": "Glecaprevir-pibrentasvir prescribed, ordered, or administered", "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1632", "name": "Glecaprevir Pibrentasvir Combination (RXNORM)" } } },
+    { "id": "HCVI-R19", "description": "Ledipasvir-sofosbuvir prescribed, ordered, or administered", "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1633", "name": "Ledipasvir Sofosbuvir Combination (RXNORM)" } } },
+    { "id": "HCVI-R20", "description": "Sofosbuvir-velpatasvir prescribed, ordered, or administered", "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1634", "name": "Sofosbuvir Velpatasvir Combination (RXNORM)" } } },
+    { "id": "HCVI-R21", "description": "Sofosbuvir-velpatasvir-voxilaprevir prescribed, ordered, or administered", "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1635", "name": "Sofosbuvir Velpatasvir Voxilaprevir Combination (RXNORM)" } } },
+    { "id": "HCVI-R22", "description": "Sofosbuvir prescribed, ordered, or administered", "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1636", "name": "Sofosbuvir (RXNORM)" } } },
+    {
+      "id": "HCVI-R23",
+      "description": "Acute hepatitis C virus infection diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2679", "name": "Acute Hepatitis C Virus Infection (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2678", "name": "Acute Hepatitis C Virus Infection (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2679", "name": "Acute Hepatitis C Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2678", "name": "Acute Hepatitis C Virus Infection (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HCVI-R26",
+      "description": "Hepatitis C virus infection diagnosis or active problem (timeboxed) plus jaundice",
+      "logic": { "all": [
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.154", "name": "Hepatitis C Virus Infection (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.153", "name": "Hepatitis C Virus Infection (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.154", "name": "Hepatitis C Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.153", "name": "Hepatitis C Virus Infection (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.650", "name": "Jaundice (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.651", "name": "Jaundice (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.650", "name": "Jaundice (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.651", "name": "Jaundice (ICD10CM)", "status": "active" } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "HCVI-R24 total bilirubin at least 3.0 mg/dL (or 51.3 umol/L) in serum or plasma plus hepatitis C laboratory evidence",
+      "reason": "SEM_V1 has neither numeric laboratory-result comparison nor specimen-type linkage; the source also marks the HL7 serum and plasma specimen value sets unavailable, so the required quantitative branch cannot be evaluated and the rule is omitted"
+    },
+    {
+      "valueSet": "HCVI-R25 alanine aminotransferase greater than 200 IU/L in serum or plasma plus hepatitis C laboratory evidence",
+      "reason": "SEM_V1 has neither numeric laboratory-result comparison nor specimen-type linkage; the source also marks the HL7 serum and plasma specimen value sets unavailable, so the required quantitative branch cannot be evaluated and the rule is omitted"
+    }
+  ]
+}

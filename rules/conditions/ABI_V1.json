@@ -1,0 +1,284 @@
+{
+  "mnemonic": "ABI_V1",
+  "conditionId": "ABI",
+  "name": "Animal Bite Injury",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Animal_Bite_Injury.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "docx Rules: detailed logic + Table 3 (parsed 2026-07-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "ABI-R1",
+      "description": "Animal bite injury due to a dog (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1580",
+                      "name": "Animal Bite [Dog] (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1585",
+                      "name": "Animal Bite [Dog] (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "gate": true,
+                "predicate": "withinTimebox",
+                "params": {}
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1580",
+                      "name": "Animal Bite [Dog] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1585",
+                      "name": "Animal Bite [Dog] (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "gate": true,
+                "predicate": "withinTimebox",
+                "params": {}
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ABI-R2",
+      "description": "Animal bite injury due to a mammal excluding dogs (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1581",
+                      "name": "Animal Bite [Mammal, Excluding Dogs] (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1586",
+                      "name": "Animal Bite [Mammal, Excluding Dogs] (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "gate": true,
+                "predicate": "withinTimebox",
+                "params": {}
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1581",
+                      "name": "Animal Bite [Mammal, Excluding Dogs] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1586",
+                      "name": "Animal Bite [Mammal, Excluding Dogs] (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "gate": true,
+                "predicate": "withinTimebox",
+                "params": {}
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ABI-R3",
+      "description": "Animal bite injury due to a non-mammalian animal (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1582",
+                      "name": "Animal Bite [Excluding Mammals] (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1587",
+                      "name": "Animal Bite [Excluding Mammals] (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "gate": true,
+                "predicate": "withinTimebox",
+                "params": {}
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1582",
+                      "name": "Animal Bite [Excluding Mammals] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1587",
+                      "name": "Animal Bite [Excluding Mammals] (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "gate": true,
+                "predicate": "withinTimebox",
+                "params": {}
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ABI-R4",
+      "description": "Animal bite injury due to an unspecified animal (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1584",
+                      "name": "Animal Bite [Unspecified Animal] (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": null,
+                      "name": "Animal Bite [Unspecified Animal] (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "gate": true,
+                "predicate": "withinTimebox",
+                "params": {}
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1584",
+                      "name": "Animal Bite [Unspecified Animal] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": null,
+                      "name": "Animal Bite [Unspecified Animal] (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "gate": true,
+                "predicate": "withinTimebox",
+                "params": {}
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Animal Bite [Unspecified Animal] (Disorders) (ICD10CM)",
+      "reason": "no codes available per source docx Table 3"
+    },
+    {
+      "valueSet": "Timebox windows (encounter/problem effective dates)",
+      "reason": "evidence model carries no event dates yet"
+    }
+  ]
+}

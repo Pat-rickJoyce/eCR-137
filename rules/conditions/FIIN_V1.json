@@ -1,0 +1,88 @@
+{
+  "mnemonic": "FIIN_V1",
+  "conditionId": "FIIN",
+  "name": "Firearm-related injury",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Firearm-related_injury.v3.20250228.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2025-02-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Firearm-related_injury.v3.20250228.docx on 2026-07-18 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "FIIN-R1",
+      "description": "Firearm-related injury diagnosis or active problem (timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2407",
+                      "name": "Firearm Injury (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2408",
+                      "name": "Firearm Injury (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2407",
+                      "name": "Firearm Injury (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2408",
+                      "name": "Firearm Injury (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Patient deceased status or Discharge Disposition [Expired] (2.16.840.1.113762.1.4.1146.1108)",
+      "reason": "SEM_V1 carries neither patient-deceased status nor encounter discharge disposition, so source rule 2 cannot identify the fatal subset and is omitted; source rule 1 already reports every firearm-related injury, so this does not narrow condition-level reportability"
+    }
+  ]
+}

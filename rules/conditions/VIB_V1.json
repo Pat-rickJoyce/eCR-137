@@ -1,0 +1,149 @@
+{
+  "mnemonic": "VIB_V1",
+  "conditionId": "VIB",
+  "name": "Vibriosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Vibriosis.v5.20250703.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Vibriosis.v5.20250703.docx on 2026-07-29 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "VIB-R1",
+      "description": "Vibriosis diagnosis or active problem (timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.161",
+                      "name": "Vibriosis (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.156",
+                      "name": "Vibriosis (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.161",
+                      "name": "Vibriosis (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.156",
+                      "name": "Vibriosis (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VIB-R2",
+      "description": "Identification of a Vibrionaceae species other than toxigenic Vibrio cholerae O1 or O139 by culture and identification",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.387",
+              "name": "Vibriosis (Tests for Vibrionaceae species [except Toxigenic Vibrio cholera O1 and O139] by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.386",
+              "resultName": "Vibriosis (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1041",
+              "name": "Organisms (Tests by Culture and Identification)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.386",
+              "resultName": "Vibriosis (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1040",
+              "name": "Organisms (Tests by Unspecified Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.386",
+              "resultName": "Vibriosis (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "VIB-R3",
+      "description": "Detection of Vibrionaceae nucleic acid other than toxigenic Vibrio cholerae O1 or O139 nucleic acid",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.388",
+              "name": "Vibriosis (Tests for Vibrionaceae species [except Toxigenic Vibrio cholera O1 and O139] Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.386",
+              "resultName": "Vibriosis (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.386",
+              "resultName": "Vibriosis (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 4: one or more compatible clinical findings plus a Vibriosis epidemiologic link",
+      "reason": "the authoritative source marks the entire optional rule inoperable because RCKMS cannot implement either a link to a person with vibriosis or membership in an outbreak-defined risk group; SEM_V1 likewise has no epidemiologic-link evidence, so the rule is omitted rather than allowing clinical findings alone to report"
+    }
+  ]
+}

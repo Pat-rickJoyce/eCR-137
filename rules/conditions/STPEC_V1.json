@@ -1,0 +1,176 @@
+{
+  "mnemonic": "STPEC_V1",
+  "conditionId": "STPEC",
+  "name": "Shiga toxin-producing Escherichia coli Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Shiga_toxin_producing_Escherichia_coli_Infection.v4.20240628.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Shiga_toxin_producing_Escherichia_coli_Infection.v4.20240628.docx on 2026-07-29 (authoritative RCKMS Content Release 20240628; latest revision 2025-05-19)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "STPEC-R1",
+      "description": "STEC infection diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.40", "name": "STEC Infection (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.39", "name": "STEC Infection (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.40", "name": "STEC Infection (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.39", "name": "STEC Infection (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "STPEC-R2",
+      "description": "Diarrhea-associated hemolytic uremic syndrome diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.78", "name": "Diarrhea Associated Hemolytic Uremic Syndrome (HUS) (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.78", "name": "Diarrhea Associated Hemolytic Uremic Syndrome (HUS) (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "STPEC-R4",
+      "description": "Culture or identification evidence of STEC, E. coli O157:H7, or E. coli O157",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.425", "name": "STEC Infection (Tests for STEC, E. coli O157 H7, or E. coli O157 by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.425", "name": "STEC Infection (Tests for STEC, E. coli O157 H7, or E. coli O157 by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.435", "resultName": "STEC Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.425", "name": "STEC Infection (Tests for STEC, E. coli O157 H7, or E. coli O157 by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.435", "resultName": "STEC Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.435", "resultName": "STEC Infection (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "STPEC-R5",
+      "description": "Detection of E. coli Shiga toxin or Shiga-like toxin",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.426", "name": "STEC Infection (Tests for E. coli Shiga Toxin or Shiga Like Toxin)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.426", "name": "STEC Infection (Tests for E. coli Shiga Toxin or Shiga Like Toxin)", "resultOid": "2.16.840.1.113762.1.4.1146.435", "resultName": "STEC Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.426", "name": "STEC Infection (Tests for E. coli Shiga Toxin or Shiga Like Toxin)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "STPEC-R6",
+      "description": "Detection of Shiga toxin genes, STEC, EHEC, or E. coli O157 nucleic acid",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.427", "name": "STEC Infection (Tests for Shiga toxin genes, or STEC, EHEC, or E. coli O157 Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.427", "name": "STEC Infection (Tests for Shiga toxin genes, or STEC, EHEC, or E. coli O157 Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.435", "resultName": "STEC Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.427", "name": "STEC Infection (Tests for Shiga toxin genes, or STEC, EHEC, or E. coli O157 Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.435", "resultName": "STEC Infection (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "STPEC-R7",
+      "description": "Detection of STEC or E. coli O157 antigen",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.428", "name": "STEC Infection (Tests for STEC or E. coli O157 Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.428", "name": "STEC Infection (Tests for STEC or E. coli O157 Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.435", "resultName": "STEC Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.428", "name": "STEC Infection (Tests for STEC or E. coli O157 Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "STPEC-R10",
+      "description": "Optional detection of antibody against E. coli Shiga toxin or a known Shiga toxin-producing E. coli serogroup",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.433", "name": "STEC Infection (Tests for STEC, E. coli O157, or Shiga Toxin [Verotoxin] Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.433", "name": "STEC Infection (Tests for STEC, E. coli O157, or Shiga Toxin [Verotoxin] Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.435", "resultName": "STEC Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.433", "name": "STEC Infection (Tests for STEC, E. coli O157, or Shiga Toxin [Verotoxin] Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "STPEC-R11",
+      "description": "Diarrhea plus hemolytic uremic syndrome or thrombotic thrombocytopenic purpura as a diagnosis or active problem",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.353", "name": "Diarrhea (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.56", "name": "Diarrhea (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.353", "name": "Diarrhea (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.56", "name": "Diarrhea (ICD10CM)", "status": "active" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.86", "name": "Hemolytic Uremic Syndrome (HUS) (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.88", "name": "Hemolytic Uremic Syndrome (HUS) (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.86", "name": "Hemolytic Uremic Syndrome (HUS) (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.88", "name": "Hemolytic Uremic Syndrome (HUS) (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.87", "name": "Thrombotic Thrombocytopenic Purpura (TTP) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.92", "name": "Thrombotic Thrombocytopenic Purpura (TTP) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.87", "name": "Thrombotic Thrombocytopenic Purpura (TTP) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.92", "name": "Thrombotic Thrombocytopenic Purpura (TTP) (ICD10CM)", "status": "active" } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2 diarrhea-associated HUS ICD-10-CM branch",
+      "reason": "the authoritative source marks the ICD-10-CM value set not implementable because no codes are available; the supported SNOMED branch remains implemented"
+    },
+    {
+      "valueSet": "Rule 3 diarrhea-associated TTP diagnosis or active problem",
+      "reason": "the authoritative source marks the entire rule inoperable because neither the SNOMED nor ICD-10-CM value set has codes, so the rule is omitted"
+    },
+    {
+      "valueSet": "Rule 8 symptoms plus contact with a person with STEC infection",
+      "reason": "the authoritative source marks the rule inoperable because the epidemiologic contact criterion is not implemented; SEM_V1 also has no contact evidence, so the rule is omitted rather than allowing symptoms alone to report"
+    },
+    {
+      "valueSet": "Rule 9 symptoms plus membership in an outbreak risk group",
+      "reason": "the authoritative source marks the rule inoperable because the epidemiologic outbreak-risk criterion is not implemented; SEM_V1 also has no outbreak-risk evidence, so the rule is omitted rather than allowing symptoms alone to report"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence, but the reporter type is unavailable in RCKMS and SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

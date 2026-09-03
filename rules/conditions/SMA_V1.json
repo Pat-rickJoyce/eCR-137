@@ -1,0 +1,131 @@
+{
+  "mnemonic": "SMA_V1",
+  "conditionId": "SMA",
+  "name": "Smallpox",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Smallpox.v4.20240628.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Smallpox.v4.20240628.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2025-05-19)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SMA-R1",
+      "description": "Smallpox diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.151", "name": "Smallpox (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.150", "name": "Smallpox (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.151", "name": "Smallpox (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.150", "name": "Smallpox (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SMA-R2",
+      "description": "Suspected Smallpox SNOMED diagnosis or active problem, timeboxed when configured (ICD-10-CM alternative has no codes)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1442", "name": "Smallpox [Suspected] (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1442", "name": "Smallpox [Suspected] (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SMA-R3",
+      "description": "Identification of variola virus by a general culture or organism-identification test with a Smallpox-specific result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.534", "resultName": "Smallpox (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.534", "resultName": "Smallpox (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SMA-R4",
+      "description": "Detection of variola virus nucleic acid with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.345", "name": "Smallpox (Tests for variola virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.345", "name": "Smallpox (Tests for variola virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.534", "resultName": "Smallpox (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.345", "name": "Smallpox (Tests for variola virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.534", "resultName": "Smallpox (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SMA-R6",
+      "description": "Lab test ordered for detection of variola virus nucleic acid (test-panel alternative has no codes)",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.345",
+          "name": "Smallpox (Tests for variola virus Nucleic Acid)"
+        }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "SMA-R2 suspected Smallpox ICD-10-CM disorders",
+      "reason": "the authoritative source marks the ICD-10-CM value set not implemented with no codes; the SNOMED diagnosis and active-problem alternatives remain modeled"
+    },
+    {
+      "valueSet": "SMA-R3 organism-specific variola culture test",
+      "reason": "the authoritative source marks the condition-specific culture-test value set not implemented with no LOINC codes; generic culture and organism-test alternatives with a Smallpox-specific result remain modeled"
+    },
+    {
+      "valueSet": "SMA-R5 variola culture laboratory test orders",
+      "reason": "the source marks both the organism-specific culture-test and culture-panel value sets not implemented with no LOINC codes; the wholly inoperable numbered rule is omitted"
+    },
+    {
+      "valueSet": "SMA-R6 variola nucleic-acid test-panel orders",
+      "reason": "the source marks the nucleic-acid test-panel value set not implemented with no LOINC codes; the coded individual-test order alternative remains modeled, although SEM_V1 does not distinguish ordered from completed laboratory observations"
+    },
+    {
+      "valueSet": "SMA-R7 fever-onset timing, quantitative temperature, and vesicular or pustular rash",
+      "reason": "the source marks the entire rule not implemented because fever onset cannot be compared with rash onset; SEM_V1 also has no vital-sign numeric threshold or event-date linkage, so the numbered rule is omitted"
+    },
+    {
+      "valueSet": "SMA-R8 epidemiologic contact with a laboratory-confirmed Smallpox case",
+      "reason": "the source marks the entire clinical-plus-epidemiologic rule not implemented because the contact criterion has no codes; SEM_V1 has no epidemiologic-contact evidence, so the numbered rule is omitted"
+    },
+    {
+      "valueSet": "Laboratory and vital-record reporter types",
+      "reason": "the source marks these reporter types unavailable in RCKMS; equivalent provider/facility laboratory rules remain modeled, while SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

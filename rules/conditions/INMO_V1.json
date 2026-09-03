@@ -1,0 +1,350 @@
+{
+  "mnemonic": "INMO_V1",
+  "conditionId": "INMO",
+  "name": "Influenza-Associated Mortality",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Influenza-Associated_Mortality.v5.20260227.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Influenza-Associated_Mortality.v5.20260227.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2026-01-07)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "INMO-R1",
+      "description": "Influenza diagnosis or active problem together with patient deceased status or an expired discharge disposition (timeboxed when configured in RCKMS)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.130",
+                  "name": "Influenza (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.133",
+                  "name": "Influenza (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.130",
+                  "name": "Influenza (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.133",
+                  "name": "Influenza (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "patientDeceased",
+                "params": {}
+              },
+              {
+                "predicate": "encounterDischargeDispositionInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1108",
+                  "name": "Discharge Disposition [Expired]"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "INMO-R2",
+      "description": "Patient deceased status or expired discharge disposition together with qualifying influenza A or B culture, nucleic-acid, or antigen evidence (post-mortem specimen and paired-titer alternatives not modeled)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "patientDeceased",
+                "params": {}
+              },
+              {
+                "predicate": "encounterDischargeDispositionInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1108",
+                  "name": "Discharge Disposition [Expired]"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.797",
+                  "name": "Influenza (Tests for influenza A or B virus by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.797",
+                  "name": "Influenza (Tests for influenza A or B virus by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.340",
+                  "resultName": "Influenza (influenza A or B virus in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.797",
+                  "name": "Influenza (Tests for influenza A or B virus by Culture and Identification Method)",
+                  "codes": ["A", "AA", "HH", "LL", "H", "L"]
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1041",
+                  "name": "Organisms (Tests by Culture and Identification)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.340",
+                  "resultName": "Influenza (influenza A or B virus in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1040",
+                  "name": "Organisms (Tests by Unspecified Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.340",
+                  "resultName": "Influenza (influenza A or B virus in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2454",
+                  "name": "Influenza (Tests for unspecified influenza virus by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.340",
+                  "resultName": "Influenza (influenza A or B virus in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.336",
+                  "name": "Influenza (Tests for influenza A or B virus Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.336",
+                  "name": "Influenza (Tests for influenza A or B virus Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.340",
+                  "resultName": "Influenza (influenza A or B virus in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.336",
+                  "name": "Influenza (Tests for influenza A or B virus Nucleic Acid)",
+                  "codes": ["A", "AA", "HH", "LL", "H", "L"]
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.994",
+                  "name": "Organisms (Tests for Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.340",
+                  "resultName": "Influenza (influenza A or B virus in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2740",
+                  "name": "Influenza (Combination Tests that include Influenza Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.340",
+                  "resultName": "Influenza (influenza A or B virus in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2448",
+                  "name": "Influenza (Tests for unspecified influenza virus Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.340",
+                  "resultName": "Influenza (influenza A or B virus in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.337",
+                  "name": "Influenza (Tests for influenza A or B virus Antigen)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.337",
+                  "name": "Influenza (Tests for influenza A or B virus Antigen)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.340",
+                  "resultName": "Influenza (influenza A or B virus in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.337",
+                  "name": "Influenza (Tests for influenza A or B virus Antigen)",
+                  "codes": ["A", "AA", "HH", "LL", "H", "L"]
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2450",
+                  "name": "Influenza (Tests for unspecified influenza virus Antigen)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.340",
+                  "resultName": "Influenza (influenza A or B virus in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "INMO-R3",
+      "description": "Optional logic: influenza diagnosis or active problem together with patient deceased status or expired discharge disposition and pregnancy evidence (timeboxed when configured in RCKMS)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.130",
+                  "name": "Influenza (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.133",
+                  "name": "Influenza (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.130",
+                  "name": "Influenza (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.133",
+                  "name": "Influenza (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "patientDeceased",
+                "params": {}
+              },
+              {
+                "predicate": "encounterDischargeDispositionInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1108",
+                  "name": "Discharge Disposition [Expired]"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "pregnancyStatus",
+                "params": {
+                  "value": "pregnant"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.676",
+                  "name": "Pregnant (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1986",
+                  "name": "Pregnant (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.676",
+                  "name": "Pregnant (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1986",
+                  "name": "Pregnant (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Post-mortem influenza antigen specimen constraints and post-mortem-specific test names",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate; the source HL7 postmortem specimen value set is not implemented, and both post-mortem-specific influenza antigen test-name value sets have no codes. The specimen-dependent post-mortem antigen alternatives in INMO-R2 are omitted while coded clinical-specimen antigen branches remain modeled"
+    },
+    {
+      "valueSet": "Four-fold or greater influenza A or B antibody titer increase between paired acute and convalescent sera collected 10-180 days apart",
+      "reason": "the source marks this alternative not operational; SEM_V1 cannot compare paired specimens, collection intervals, or four-fold titer rises, so the alternative in INMO-R2 is omitted"
+    }
+  ]
+}

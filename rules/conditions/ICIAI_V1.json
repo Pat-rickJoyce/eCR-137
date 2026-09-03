@@ -1,0 +1,107 @@
+{
+  "mnemonic": "ICIAI_V1",
+  "conditionId": "ICIAI",
+  "name": "Invasive Cronobacter Infection Among Infants",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Invasive_Cronobacter_Infection_Among_Infants.v3.20260626.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Invasive_Cronobacter_Infection_Among_Infants.v3.20260626.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2026-03-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "ICIAI-R3",
+      "description": "Compatible meningitis, sepsis, brain abscess, urinary tract infection, or necrotizing enterocolitis with positive Cronobacter culture or nucleic-acid evidence in an infant",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1031", "name": "Meningitis [Unspecified Cause] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1030", "name": "Meningitis [Unspecified Cause] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1031", "name": "Meningitis [Unspecified Cause] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1030", "name": "Meningitis [Unspecified Cause] (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2716", "name": "Meningitis [Unspecified for Bacterial Conditions] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2715", "name": "Meningitis [Unspecified for Bacterial Conditions] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2716", "name": "Meningitis [Unspecified for Bacterial Conditions] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2715", "name": "Meningitis [Unspecified for Bacterial Conditions] (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.714", "name": "Sepsis [Septicemia] [Unspecified Organism] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.713", "name": "Sepsis [Septicemia] [Unspecified Organism] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.714", "name": "Sepsis [Septicemia] [Unspecified Organism] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.713", "name": "Sepsis [Septicemia] [Unspecified Organism] (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2216", "name": "Abscess [Brain] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2217", "name": "Abscess [Brain] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2216", "name": "Abscess [Brain] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2217", "name": "Abscess [Brain] (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2218", "name": "Urinary Tract Infection (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2219", "name": "Urinary Tract Infection (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2218", "name": "Urinary Tract Infection (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2219", "name": "Urinary Tract Infection (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2214", "name": "Necrotizing Enterocolitis (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2215", "name": "Necrotizing Enterocolitis (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2214", "name": "Necrotizing Enterocolitis (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2215", "name": "Necrotizing Enterocolitis (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2213", "name": "Invasive Cronobacter Infection (Tests for Cronobacter species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2213", "name": "Invasive Cronobacter Infection (Tests for Cronobacter species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.2212", "resultName": "Invasive Cronobacter Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2213", "name": "Invasive Cronobacter Infection (Tests for Cronobacter species by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.2212", "resultName": "Invasive Cronobacter Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.2212", "resultName": "Invasive Cronobacter Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.2212", "resultName": "Invasive Cronobacter Infection (Organism or Substance in Lab Results)" } }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+      ] }
+    },
+    {
+      "id": "ICIAI-R5",
+      "description": "Optional compatible clinical observation with a Cronobacter culture test ordered in an infant",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1031", "name": "Meningitis [Unspecified Cause] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1030", "name": "Meningitis [Unspecified Cause] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1031", "name": "Meningitis [Unspecified Cause] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1030", "name": "Meningitis [Unspecified Cause] (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2716", "name": "Meningitis [Unspecified for Bacterial Conditions] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2715", "name": "Meningitis [Unspecified for Bacterial Conditions] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2716", "name": "Meningitis [Unspecified for Bacterial Conditions] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2715", "name": "Meningitis [Unspecified for Bacterial Conditions] (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.714", "name": "Sepsis [Septicemia] [Unspecified Organism] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.713", "name": "Sepsis [Septicemia] [Unspecified Organism] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.714", "name": "Sepsis [Septicemia] [Unspecified Organism] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.713", "name": "Sepsis [Septicemia] [Unspecified Organism] (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2216", "name": "Abscess [Brain] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2217", "name": "Abscess [Brain] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2216", "name": "Abscess [Brain] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2217", "name": "Abscess [Brain] (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2218", "name": "Urinary Tract Infection (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2219", "name": "Urinary Tract Infection (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2218", "name": "Urinary Tract Infection (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2219", "name": "Urinary Tract Infection (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2214", "name": "Necrotizing Enterocolitis (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2215", "name": "Necrotizing Enterocolitis (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2214", "name": "Necrotizing Enterocolitis (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2215", "name": "Necrotizing Enterocolitis (ICD10CM)", "status": "active" } }
+        ] },
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2213", "name": "Invasive Cronobacter Infection (Tests for Cronobacter species by Culture and Identification Method)" } },
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Invasive and suspected Cronobacter infection diagnosis/problem value sets",
+      "reason": "the source provides no SNOMED or ICD-10-CM codes and marks rules 1 and 2 inoperable; ICIAI-R1 and ICIAI-R2 are omitted"
+    },
+    {
+      "valueSet": "Shared exposure with a confirmed or suspect case",
+      "reason": "SEM_V1 has no epidemiologic exposure-link evidence or predicate, and the source marks rule 4 inoperable; ICIAI-R4 is omitted"
+    },
+    {
+      "valueSet": "Cronobacter nucleic-acid tests and culture/nucleic-acid test panels",
+      "reason": "the source reports no codes available; those test-specific and order alternatives are omitted from ICIAI-R3 and ICIAI-R5, while generic nucleic-acid testing paired with a Cronobacter result remains modeled in ICIAI-R3"
+    }
+  ]
+}

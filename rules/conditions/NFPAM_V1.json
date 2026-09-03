@@ -1,0 +1,403 @@
+{
+  "mnemonic": "NFPAM_V1",
+  "conditionId": "NFPAM",
+  "name": "Naegleria fowleri Primary Amebic Meningoencephalitis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Naegleria_fowleri_Primary_Amebic_Meningoencephalitis.v7.20260626.docx",
+    "rckmsVersion": "v7",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Naegleria_fowleri_Primary_Amebic_Meningoencephalitis.v7.20260626.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2026-04-28)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "NFPAM-R1",
+      "description": "Naegleria fowleri primary amebic meningoencephalitis diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1283",
+                      "name": "Naegleria fowleri PAM (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1284",
+                      "name": "Naegleria fowleri PAM (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1283",
+                      "name": "Naegleria fowleri PAM (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1284",
+                      "name": "Naegleria fowleri PAM (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "NFPAM-R2",
+      "description": "Parasitic or unspecified encephalitis or meningoencephalitis diagnosis/active problem plus qualifying Naegleria fowleri culture, nucleic-acid, antigen, or CSF microscopy evidence",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1702",
+                  "name": "Encephalitis [Parasitic] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1702",
+                  "name": "Encephalitis [Parasitic] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1708",
+                  "name": "Encephalitis [Parasitic] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1708",
+                  "name": "Encephalitis [Parasitic] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1033",
+                  "name": "Encephalitis [Unspecified Cause] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1033",
+                  "name": "Encephalitis [Unspecified Cause] (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1032",
+                  "name": "Encephalitis [Unspecified Cause] (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1032",
+                  "name": "Encephalitis [Unspecified Cause] (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1097",
+                  "name": "Meningoencephalitis [Unspecified Cause] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1097",
+                  "name": "Meningoencephalitis [Unspecified Cause] (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1105",
+                  "name": "Meningoencephalitis [Unspecified Cause] (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1105",
+                  "name": "Meningoencephalitis [Unspecified Cause] (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1286",
+                  "name": "Naegleria fowleri PAM (Tests for Naegleria fowleri by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1286",
+                  "name": "Naegleria fowleri PAM (Tests for Naegleria fowleri by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1282",
+                  "resultName": "Naegleria fowleri PAM (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1286",
+                  "name": "Naegleria fowleri PAM (Tests for Naegleria fowleri by Culture and Identification Method)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1041",
+                  "name": "Organisms (Tests by Culture and Identification)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1282",
+                  "resultName": "Naegleria fowleri PAM (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1040",
+                  "name": "Organisms (Tests by Unspecified Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1282",
+                  "resultName": "Naegleria fowleri PAM (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.3281",
+                  "name": "Amoeba (Tests for Unspecified Amoeba by Culture and Identification)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1282",
+                  "resultName": "Naegleria fowleri PAM (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1285",
+                  "name": "Naegleria fowleri PAM (Tests for Naegleria fowleri Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1285",
+                  "name": "Naegleria fowleri PAM (Tests for Naegleria fowleri Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1282",
+                  "resultName": "Naegleria fowleri PAM (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1285",
+                  "name": "Naegleria fowleri PAM (Tests for Naegleria fowleri Nucleic Acid)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.994",
+                  "name": "Organisms (Tests for Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1282",
+                  "resultName": "Naegleria fowleri PAM (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1539",
+                  "name": "Naegleria fowleri PAM (Tests for Naegleria fowleri Antigen)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1539",
+                  "name": "Naegleria fowleri PAM (Tests for Naegleria fowleri Antigen)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1282",
+                  "resultName": "Naegleria fowleri PAM (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1539",
+                  "name": "Naegleria fowleri PAM (Tests for Naegleria fowleri Antigen)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.891",
+                  "name": "Organisms (Tests by Microscopic Observation by Immunofluorescence)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1282",
+                  "resultName": "Naegleria fowleri PAM (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2181",
+                  "name": "Organisms (Tests by Microscopic Observation in Cerebrospinal Fluid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1282",
+                  "resultName": "Naegleria fowleri PAM (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "NFPAM-R4",
+      "description": "Order for identification of Naegleria fowleri by culture, including isolate-identification testing",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1286",
+          "name": "Naegleria fowleri PAM (Tests for Naegleria fowleri by Culture and Identification Method)"
+        }
+      }
+    },
+    {
+      "id": "NFPAM-R5",
+      "description": "Order for detection of Naegleria fowleri nucleic acid, including test panels",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1285",
+              "name": "Naegleria fowleri PAM (Tests for Naegleria fowleri Nucleic Acid)"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2152",
+              "name": "Naegleria fowleri PAM (Test Panels for Naegleria fowleri Nucleic Acid)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "NFPAM-R6",
+      "description": "Order for detection of Naegleria fowleri antigen",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1539",
+          "name": "Naegleria fowleri PAM (Tests for Naegleria fowleri Antigen)"
+        }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Suspected Naegleria fowleri PAM (Disorders) (SNOMED and ICD10CM)",
+      "reason": "the authoritative source provides no codes for either value set; source rule 3 is explicitly inoperable and is omitted"
+    },
+    {
+      "valueSet": "Motile amebae wet-mount test and CSF specimen constraints",
+      "reason": "the source provides no codes for the dedicated motile-amebae wet-mount test, and SEM_V1 has no specimen-type linkage; NFPAM-R2 retains the coded CSF-specific generic microscopy branch and omits general microscopy-plus-CSF alternatives"
+    },
+    {
+      "valueSet": "Naegleria fowleri culture and antigen test panels",
+      "reason": "the authoritative source provides no codes for either panel; NFPAM-R4 and NFPAM-R6 retain their coded organism-specific test-order paths"
+    },
+    {
+      "valueSet": "Vital-records reporter type",
+      "reason": "the authoritative source marks this reporter type unavailable in RCKMS; the death-certificate criterion is not represented as a detailed condition-pack rule"
+    }
+  ]
+}

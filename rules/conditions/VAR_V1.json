@@ -1,0 +1,284 @@
+{
+  "mnemonic": "VAR_V1",
+  "conditionId": "VAR",
+  "name": "Varicella",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Varicella.v8.20250703.docx",
+    "rckmsVersion": "v8",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Varicella.v8.20250703.docx on 2026-07-29 (authoritative RCKMS Content Release 20250703; latest revision 2025-04-23)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "VAR-R1",
+      "description": "Varicella diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.145", "name": "Varicella (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.146", "name": "Varicella (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.145", "name": "Varicella (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.146", "name": "Varicella (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VAR-R2",
+      "description": "Identification of varicella zoster virus by specific, combination, or generic culture testing",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.282", "name": "Varicella (Tests for varicella zoster virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.282", "name": "Varicella (Tests for varicella zoster virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.282", "name": "Varicella (Tests for varicella zoster virus by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2634", "name": "Varicella (Combination Tests that include varicella zoster virus by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "VAR-R3",
+      "description": "Detection of varicella zoster virus nucleic acid by specific or generic testing",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.283", "name": "Varicella (Tests for varicella zoster virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.283", "name": "Varicella (Tests for varicella zoster virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.283", "name": "Varicella (Tests for varicella zoster virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "VAR-R4",
+      "description": "Detection of varicella zoster virus antigen",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.284", "name": "Varicella (Tests for varicella zoster virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.284", "name": "Varicella (Tests for varicella zoster virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.284", "name": "Varicella (Tests for varicella zoster virus Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "VAR-R7",
+      "description": "Optional varicella diagnosis or active problem, timeboxed when configured, plus an inpatient encounter",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.145", "name": "Varicella (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.146", "name": "Varicella (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.145", "name": "Varicella (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.146", "name": "Varicella (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1323", "name": "Hospitalized [Inpatient] (EncounterTypeCode)" } },
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1320", "name": "Hospitalized [Inpatient] (ActEncounterCode)" } },
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1335", "name": "Hospitalized [Inpatient] (SNOMED)" } }
+            ],
+            "gate": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "VAR-R8",
+      "description": "Optional qualifying varicella culture, nucleic-acid, antigen, or IgM evidence plus an inpatient encounter",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.282", "name": "Varicella (Tests for varicella zoster virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.282", "name": "Varicella (Tests for varicella zoster virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.282", "name": "Varicella (Tests for varicella zoster virus by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2634", "name": "Varicella (Combination Tests that include varicella zoster virus by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.283", "name": "Varicella (Tests for varicella zoster virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.283", "name": "Varicella (Tests for varicella zoster virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.283", "name": "Varicella (Tests for varicella zoster virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.284", "name": "Varicella (Tests for varicella zoster virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.284", "name": "Varicella (Tests for varicella zoster virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.284", "name": "Varicella (Tests for varicella zoster virus Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.286", "name": "Varicella (Tests for varicella zoster virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.286", "name": "Varicella (Tests for varicella zoster virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.286", "name": "Varicella (Tests for varicella zoster virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1323", "name": "Hospitalized [Inpatient] (EncounterTypeCode)" } },
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1320", "name": "Hospitalized [Inpatient] (ActEncounterCode)" } },
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1335", "name": "Hospitalized [Inpatient] (SNOMED)" } }
+            ],
+            "gate": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "VAR-R9",
+      "description": "Optional rash diagnosis or active problem plus qualifying varicella IgM evidence",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.668", "name": "Rash (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.669", "name": "Rash (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.668", "name": "Rash (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.669", "name": "Rash (ICD10CM)", "status": "active" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.286", "name": "Varicella (Tests for varicella zoster virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.286", "name": "Varicella (Tests for varicella zoster virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.287", "resultName": "Varicella (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.286", "name": "Varicella (Tests for varicella zoster virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VAR-R10",
+      "description": "Optional varicella diagnosis or active problem, timeboxed when configured, plus deceased or expired-discharge evidence",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.145", "name": "Varicella (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.146", "name": "Varicella (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.145", "name": "Varicella (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.146", "name": "Varicella (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "patientDeceased", "params": {} },
+              { "predicate": "encounterDischargeDispositionInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1108", "name": "Discharge Disposition [Expired]" } }
+            ],
+            "gate": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "VAR-R11",
+      "description": "Optional varicella diagnosis or active problem, timeboxed when configured, in a patient younger than the source default of 50 years",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.145", "name": "Varicella (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.146", "name": "Varicella (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.145", "name": "Varicella (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.146", "name": "Varicella (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 50, "unit": "years" }, "gate": true }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 5 paired acute and convalescent varicella IgG evidence",
+      "reason": "the source marks four-fold-rise logic not operational and the IgG-ratio test value set not implemented with no LOINC codes; SEM_V1 cannot pair serial specimens, enforce the 10-to-180-day interval, or compare antibody titers, so the wholly inoperable rule is omitted"
+    },
+    {
+      "valueSet": "Rule 6 epidemiologic linkage",
+      "reason": "the source marks both contact-with-a-case and outbreak-risk-group criteria not implemented; SEM_V1 has no epidemiologic contact or outbreak-membership evidence, so the wholly inoperable rash-plus-epidemiology rule is omitted rather than allowing rash alone to report"
+    },
+    {
+      "valueSet": "Rule 8 paired varicella IgG alternative",
+      "reason": "the source's inoperable four-fold-rise and IgG-ratio alternatives are omitted from VAR-R8; the implemented culture, nucleic-acid, antigen, and IgM alternatives remain"
+    },
+    {
+      "valueSet": "Rule 11 user-defined age threshold",
+      "reason": "the pack implements the source default of age younger than 50 years; SEM_V1 rule packs do not carry a jurisdiction-authored override for this threshold"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate varicella evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

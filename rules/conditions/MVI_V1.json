@@ -1,0 +1,192 @@
+{
+  "mnemonic": "MVI_V1",
+  "conditionId": "MVI",
+  "name": "Motor Vehicle Injury",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Motor_Vehicle_Injury.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Motor_Vehicle_Injury.v2.20240202.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2026-02-10)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "MVI-R1",
+      "description": "Motor Vehicle Injury diagnosis or active problem in a patient who is not deceased or has a not-expired discharge disposition (timeboxed when configured in RCKMS)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1718",
+                          "name": "Motor Vehicle Injury (Disorders) (SNOMED)"
+                        }
+                      },
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1719",
+                          "name": "Motor Vehicle Injury (Disorders) (ICD10CM)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1718",
+                          "name": "Motor Vehicle Injury (Disorders) (SNOMED)",
+                          "status": "active"
+                        }
+                      },
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1719",
+                          "name": "Motor Vehicle Injury (Disorders) (ICD10CM)",
+                          "status": "active"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "not": {
+                  "predicate": "patientDeceased",
+                  "params": {}
+                }
+              },
+              {
+                "predicate": "encounterDischargeDispositionInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1107",
+                  "name": "Discharge Disposition [Not Expired]"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "MVI-R2",
+      "description": "Motor Vehicle Injury diagnosis or active problem in a patient who is deceased or has an expired discharge disposition (timeboxed when configured in RCKMS)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1718",
+                          "name": "Motor Vehicle Injury (Disorders) (SNOMED)"
+                        }
+                      },
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1719",
+                          "name": "Motor Vehicle Injury (Disorders) (ICD10CM)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1718",
+                          "name": "Motor Vehicle Injury (Disorders) (SNOMED)",
+                          "status": "active"
+                        }
+                      },
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1719",
+                          "name": "Motor Vehicle Injury (Disorders) (ICD10CM)",
+                          "status": "active"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "patientDeceased",
+                "params": {}
+              },
+              {
+                "predicate": "encounterDischargeDispositionInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1108",
+                  "name": "Discharge Disposition [Expired]"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Vital-records reporter type and death-certificate criterion",
+      "reason": "the authoritative source marks the vital-records reporter type unavailable in RCKMS; its death-certificate criterion is not represented as a detailed condition-pack rule"
+    }
+  ]
+}

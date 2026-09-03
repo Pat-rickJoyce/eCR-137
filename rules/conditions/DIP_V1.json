@@ -1,0 +1,517 @@
+{
+  "mnemonic": "DIP_V1",
+  "conditionId": "DIP",
+  "name": "Diphtheria",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Diphtheria.v5.20240628.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs live RCKMS Release 16 docx (2026-07-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "DIP-R1",
+      "description": "Diphtheria diagnosis or active problem (timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.6",
+                  "name": "Diphtheria (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.116",
+                  "name": "Diphtheria (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.6",
+                  "name": "Diphtheria (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.116",
+                  "name": "Diphtheria (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DIP-R2",
+      "description": "Suspected diphtheria diagnosis or active problem (timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1435",
+                  "name": "Diphtheria [Suspected] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Diphtheria [Suspected] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1435",
+                  "name": "Diphtheria [Suspected] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Diphtheria [Suspected] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DIP-R3",
+      "description": "Identification of C. diphtheriae by culture",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.10",
+                  "name": "Diphtheria (Tests for Corynebacterium diphtheriae by Culture and Identification Method)"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.346",
+                      "name": "Diphtheria (Organism or Substance in Lab Results)"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": [
+                        "A",
+                        "AA",
+                        "HH",
+                        "LL",
+                        "H",
+                        "L"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1041",
+                      "name": "Organisms (Tests by Culture and Identification)"
+                    }
+                  },
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1040",
+                      "name": "Organisms (Tests by Unspecified Method)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.346",
+                  "name": "Diphtheria (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "DIP-R4",
+      "description": "Detection of diphtheria toxin nucleic acid",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2344",
+                  "name": "Diphtheria (Tests for Diphtheria Toxin Nucleic Acid)"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": null,
+                      "name": "Diphtheria [C diphtheriae Toxin Nucleic Acid] (Organism or Substance in Lab Results)"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": [
+                        "A",
+                        "AA",
+                        "HH",
+                        "LL",
+                        "H",
+                        "L"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.994",
+                  "name": "Organisms (Tests for Nucleic Acid)"
+                }
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Diphtheria [C diphtheriae Toxin Nucleic Acid] (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "DIP-R5",
+      "description": "Acute upper respiratory illness AND a diphtheria test ordered",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.727",
+                  "name": "Acute Upper Respiratory Illness (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.755",
+                  "name": "Acute Upper Respiratory Illness (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.727",
+                  "name": "Acute Upper Respiratory Illness (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.755",
+                  "name": "Acute Upper Respiratory Illness (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.10",
+                  "name": "Diphtheria (Tests for Corynebacterium diphtheriae by Culture and Identification Method)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2344",
+                  "name": "Diphtheria (Tests for Diphtheria Toxin Nucleic Acid)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Diphtheria (Test Panels for Corynebacterium diphtheriae Culture)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Diphtheria (Test Panels for Diphtheria Toxin Nucleic Acid)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "DIP-R6",
+      "description": "Diphtheria test ordered AND epidemiologic contact with confirmed diphtheria (epi not implementable)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.10",
+                  "name": "Diphtheria (Tests for Corynebacterium diphtheriae by Culture and Identification Method)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2344",
+                  "name": "Diphtheria (Tests for Diphtheria Toxin Nucleic Acid)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Diphtheria (Test Panels for Corynebacterium diphtheriae Culture)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Diphtheria (Test Panels for Diphtheria Toxin Nucleic Acid)"
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "epidemiologicalFact",
+            "params": {
+              "fact": "contact with a person with laboratory-confirmed diphtheria"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "DIP-R7",
+      "description": "Diphtheria test ordered AND outbreak risk-group membership (epi not implementable)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.10",
+                  "name": "Diphtheria (Tests for Corynebacterium diphtheriae by Culture and Identification Method)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2344",
+                  "name": "Diphtheria (Tests for Diphtheria Toxin Nucleic Acid)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Diphtheria (Test Panels for Corynebacterium diphtheriae Culture)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Diphtheria (Test Panels for Diphtheria Toxin Nucleic Acid)"
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "epidemiologicalFact",
+            "params": {
+              "fact": "member of outbreak risk group for diphtheria"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "DIP-R8",
+      "description": "Acute upper respiratory illness AND pseudomembrane of nose/pharynx/tonsils/larynx",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.727",
+                  "name": "Acute Upper Respiratory Illness (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.755",
+                  "name": "Acute Upper Respiratory Illness (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.727",
+                  "name": "Acute Upper Respiratory Illness (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.755",
+                  "name": "Acute Upper Respiratory Illness (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2062",
+                  "name": "Pseudomembrane [Nose, pharynx, tonsils, or larynx] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Pseudomembrane [Nose, pharynx, tonsils, or larynx] (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2062",
+                  "name": "Pseudomembrane [Nose, pharynx, tonsils, or larynx] (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Pseudomembrane [Nose, pharynx, tonsils, or larynx] (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Diphtheria [Suspected] (ICD10CM); Pseudomembrane (ICD10CM); toxin-gene organism-in-results (SNOMED); test panels (LOINC)",
+      "reason": "no codes in Table 3; affected branches skip, coded branches functional"
+    },
+    {
+      "valueSet": "Epidemiologic contact / outbreak risk group",
+      "reason": "not implementable; DIP-R6/R7 indeterminate"
+    },
+    {
+      "valueSet": "Timebox windows",
+      "reason": "platform-unimplemented; does not reduce coverage"
+    }
+  ]
+}

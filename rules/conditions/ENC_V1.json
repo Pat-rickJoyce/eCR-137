@@ -1,0 +1,1412 @@
+{
+  "mnemonic": "ENC_V1",
+  "conditionId": "ENC",
+  "name": "Encephalitis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Encephalitis.v4.20250228.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2025-02-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Encephalitis.v4.20250228.docx on 2026-07-18 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "ENC-R1",
+      "description": "Encephalitis (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.766",
+                      "name": "Encephalitis (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.285",
+                      "name": "Encephalitis (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.766",
+                      "name": "Encephalitis (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.285",
+                      "name": "Encephalitis (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ENC-R2",
+      "description": "Viral encephalitis (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1700",
+                      "name": "Encephalitis [Viral] (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1706",
+                      "name": "Encephalitis [Viral] (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1700",
+                      "name": "Encephalitis [Viral] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1706",
+                      "name": "Encephalitis [Viral] (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ENC-R3",
+      "description": "Bacterial encephalitis (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1699",
+                      "name": "Encephalitis [Bacterial] (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1705",
+                      "name": "Encephalitis [Bacterial] (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1699",
+                      "name": "Encephalitis [Bacterial] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1705",
+                      "name": "Encephalitis [Bacterial] (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ENC-R4",
+      "description": "Fungal encephalitis (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1701",
+                      "name": "Encephalitis [Fungal] (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1707",
+                      "name": "Encephalitis [Fungal] (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1701",
+                      "name": "Encephalitis [Fungal] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1707",
+                      "name": "Encephalitis [Fungal] (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ENC-R5",
+      "description": "Parasitic/protozoal encephalitis (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1702",
+                      "name": "Encephalitis [Parasitic] (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1708",
+                      "name": "Encephalitis [Parasitic] (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1702",
+                      "name": "Encephalitis [Parasitic] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1708",
+                      "name": "Encephalitis [Parasitic] (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ENC-R6",
+      "description": "Altered mental status plus at least two clinical findings and CSF evidence of a virus causing encephalitis",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1225",
+                  "name": "Altered Mental Status (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1226",
+                  "name": "Altered Mental Status (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1225",
+                  "name": "Altered Mental Status (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1226",
+                  "name": "Altered Mental Status (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "atLeast": {
+              "n": 2,
+              "of": [
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.670",
+                        "name": "Fever (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.671",
+                        "name": "Fever (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.670",
+                        "name": "Fever (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.671",
+                        "name": "Fever (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.809",
+                        "name": "Headache (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.808",
+                        "name": "Headache (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.809",
+                        "name": "Headache (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.808",
+                        "name": "Headache (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1295",
+                        "name": "Seizure [Unspecified Cause] (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1299",
+                        "name": "Seizure [Unspecified Cause] (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1295",
+                        "name": "Seizure [Unspecified Cause] (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1299",
+                        "name": "Seizure [Unspecified Cause] (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2169",
+                      "name": "Viruses [Causing Encephalitis] (Tests for Viruses Causing Encephalitis in Cerebrospinal Fluid by Culture and Identification)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1715",
+                          "name": "Viruses [Causing Encephalitis] (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2167",
+                      "name": "Organisms (Tests in Cerebrospinal Fluid by Culture and Identification Method)"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1715",
+                      "name": "Viruses [Causing Encephalitis] (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2192",
+                      "name": "Viruses [Causing Encephalitis] (Tests for Viruses Causing Encephalitis Nucleic Acid in Cerebrospinal Fluid)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1715",
+                          "name": "Viruses [Causing Encephalitis] (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2193",
+                      "name": "Viruses [Causing Encephalitis] (Tests for Viruses Causing Encephalitis Antigen in Cerebrospinal Fluid)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1715",
+                          "name": "Viruses [Causing Encephalitis] (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ENC-R7",
+      "description": "Altered mental status plus at least two clinical findings and CSF evidence of a bacterium causing encephalitis",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1225",
+                  "name": "Altered Mental Status (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1226",
+                  "name": "Altered Mental Status (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1225",
+                  "name": "Altered Mental Status (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1226",
+                  "name": "Altered Mental Status (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "atLeast": {
+              "n": 2,
+              "of": [
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.670",
+                        "name": "Fever (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.671",
+                        "name": "Fever (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.670",
+                        "name": "Fever (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.671",
+                        "name": "Fever (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.809",
+                        "name": "Headache (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.808",
+                        "name": "Headache (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.809",
+                        "name": "Headache (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.808",
+                        "name": "Headache (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1295",
+                        "name": "Seizure [Unspecified Cause] (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1299",
+                        "name": "Seizure [Unspecified Cause] (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1295",
+                        "name": "Seizure [Unspecified Cause] (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1299",
+                        "name": "Seizure [Unspecified Cause] (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2167",
+                      "name": "Organisms (Tests in Cerebrospinal Fluid by Culture and Identification Method)"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1712",
+                      "name": "Bacteria [Causing Encephalitis] (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2183",
+                      "name": "Bacteria [Causing Encephalitis] (Tests for Bacteria Causing Encephalitis Nucleic Acid in Cerebrospinal Fluid)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1712",
+                          "name": "Bacteria [Causing Encephalitis] (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ENC-R8",
+      "description": "Altered mental status plus at least two clinical findings and CSF evidence of a fungus causing encephalitis",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1225",
+                  "name": "Altered Mental Status (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1226",
+                  "name": "Altered Mental Status (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1225",
+                  "name": "Altered Mental Status (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1226",
+                  "name": "Altered Mental Status (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "atLeast": {
+              "n": 2,
+              "of": [
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.670",
+                        "name": "Fever (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.671",
+                        "name": "Fever (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.670",
+                        "name": "Fever (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.671",
+                        "name": "Fever (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.809",
+                        "name": "Headache (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.808",
+                        "name": "Headache (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.809",
+                        "name": "Headache (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.808",
+                        "name": "Headache (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1295",
+                        "name": "Seizure [Unspecified Cause] (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1299",
+                        "name": "Seizure [Unspecified Cause] (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1295",
+                        "name": "Seizure [Unspecified Cause] (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1299",
+                        "name": "Seizure [Unspecified Cause] (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2167",
+                      "name": "Organisms (Tests in Cerebrospinal Fluid by Culture and Identification Method)"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1563",
+                      "name": "Fungi [Causing Meningitis and Encephalitis] (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2187",
+                      "name": "Fungi [Causing Encephalitis] (Tests for Fungi Causing Encephalitis Nucleic Acid in Cerebrospinal Fluid)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1563",
+                          "name": "Fungi [Causing Meningitis and Encephalitis] (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2188",
+                      "name": "Fungi [Causing Encephalitis] (Tests for Fungi Causing Encephalitis Antigen in Cerebrospinal Fluid)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1563",
+                          "name": "Fungi [Causing Meningitis and Encephalitis] (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ENC-R9",
+      "description": "Altered mental status plus at least two clinical findings and CSF evidence of a parasite/protozoan causing encephalitis",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1225",
+                  "name": "Altered Mental Status (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1226",
+                  "name": "Altered Mental Status (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1225",
+                  "name": "Altered Mental Status (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1226",
+                  "name": "Altered Mental Status (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "atLeast": {
+              "n": 2,
+              "of": [
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.670",
+                        "name": "Fever (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.671",
+                        "name": "Fever (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.670",
+                        "name": "Fever (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.671",
+                        "name": "Fever (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.809",
+                        "name": "Headache (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.808",
+                        "name": "Headache (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.809",
+                        "name": "Headache (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.808",
+                        "name": "Headache (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1295",
+                        "name": "Seizure [Unspecified Cause] (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1299",
+                        "name": "Seizure [Unspecified Cause] (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1295",
+                        "name": "Seizure [Unspecified Cause] (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1299",
+                        "name": "Seizure [Unspecified Cause] (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2189",
+                      "name": "Parasites [Causing Encephalitis] (Tests for Parasites Causing Encephalitis in Cerebrospinal Fluid by Microscopic Observation)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1714",
+                          "name": "Parasites [Causing Encephalitis] (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2181",
+                      "name": "Organisms (Tests by Microscopic Observation in Cerebrospinal Fluid)"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1714",
+                      "name": "Parasites [Causing Encephalitis] (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2190",
+                      "name": "Parasites [Causing Encephalitis] (Tests for Parasites Causing Encephalitis Nucleic Acid in Cerebrospinal Fluid)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1714",
+                          "name": "Parasites [Causing Encephalitis] (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Body temperature >= 38 degC or >= 100.4 degF",
+      "reason": "SEM_V1 has no vital-sign measurement or numeric threshold predicate; fever diagnosis/active-problem alternatives remain modeled in ENC-R6 through ENC-R9"
+    },
+    {
+      "valueSet": "Cerebrospinal fluid specimen constraints",
+      "reason": "SEM_V1 has no laboratory specimen-type evidence or predicate; unspecified-specimen and generic non-CSF test branches in ENC-R6 through ENC-R9 are omitted while CSF-specific test-name branches remain modeled"
+    },
+    {
+      "valueSet": "Bacteria [Causing Encephalitis] (Tests for Bacteria Causing Encephalitis in Cerebrospinal Fluid by Culture and Identification)",
+      "reason": "not implemented - no codes per source docx Table 3; ENC-R7 retains the generic CSF culture plus bacteria-result branch"
+    },
+    {
+      "valueSet": "Bacteria [Causing Encephalitis] (Tests for Bacteria Causing Encephalitis Antigen in Cerebrospinal Fluid)",
+      "reason": "not implemented - no codes per source docx Table 3; this ENC-R7 laboratory alternative is omitted"
+    },
+    {
+      "valueSet": "Fungi [Causing Encephalitis] (Tests for Fungi Causing Encephalitis in Cerebrospinal Fluid by Culture and Identification)",
+      "reason": "not implemented - no codes per source docx Table 3; ENC-R8 retains the generic CSF culture plus fungi-result branch"
+    },
+    {
+      "valueSet": "Parasites [Causing Encephalitis] (Tests for Parasites Causing Encephalitis Antigen in Cerebrospinal Fluid)",
+      "reason": "not implemented - no codes per source docx Table 3; this ENC-R9 laboratory alternative is omitted"
+    },
+    {
+      "valueSet": "Organisms (Tests for Nucleic Acid in Cerebrospinal Fluid)",
+      "reason": "not implemented - no codes per source docx Table 3; generic CSF nucleic-acid alternatives in ENC-R6 through ENC-R9 are omitted"
+    },
+    {
+      "valueSet": "Organisms (Combination Tests by Unspecified Method)",
+      "reason": "not implemented - no codes per source docx Table 3; this specimen-dependent ENC-R6 culture alternative is omitted"
+    },
+    {
+      "valueSet": "Numeric CSF lymphocyte, neutrophil, protein, and glucose comparisons",
+      "reason": "SEM_V1 has no numeric laboratory result or unit comparison; optional source rules 10 and 11 are omitted entirely"
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "mnemonic": "AEAT_V1",
+  "conditionId": "AEAT",
+  "name": "Arsenic Exposure and Toxicity",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Arsenic_Exposure_and_Toxicity.v3.20240202.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Arsenic_Exposure_and_Toxicity.v3.20240202.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "AEAT-R1",
+      "description": "Toxic effect of arsenic and its compounds (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1507",
+                      "name": "Arsenic Exposure and Toxicity (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1508",
+                      "name": "Arsenic Exposure and Toxicity (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1507",
+                      "name": "Arsenic Exposure and Toxicity (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1508",
+                      "name": "Arsenic Exposure and Toxicity (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "AEAT-R4",
+      "description": "High interpretation flag on a quantitative arsenic-in-blood test (general-test-plus-blood-specimen alternative not modeled)",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1511",
+              "name": "Arsenic Exposure and Toxicity (Tests for Arsenic [Quantitative] in Blood)"
+            }
+          },
+          {
+            "predicate": "labInterpretationIn",
+            "params": {
+              "name": "Interpretation of an Observation (High)",
+              "codes": [
+                "H",
+                "HH"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "AEAT-R5",
+      "description": "High interpretation flag on a quantitative arsenic-in-urine test (general-test-plus-urine-specimen alternative not modeled)",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1510",
+              "name": "Arsenic Exposure and Toxicity (Tests for Arsenic [Quantitative] in Urine)"
+            }
+          },
+          {
+            "predicate": "labInterpretationIn",
+            "params": {
+              "name": "Interpretation of an Observation (High)",
+              "codes": [
+                "H",
+                "HH"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Quantitative arsenic concentration thresholds",
+      "reason": "SEM_V1 has no numeric laboratory result value/unit comparison predicate; source rule 2 (blood >= 1 ug/L or >= 0.0133 umol/L) and rule 3 (urine >= 50 ug/L or >= 0.668 umol/L) are omitted entirely"
+    },
+    {
+      "valueSet": "Blood (Specimen Type) (HL7)",
+      "reason": "not implemented - HL7 table 0487 unavailable in VSAC per source docx Table 3"
+    },
+    {
+      "valueSet": "Urine (Specimen Type) (HL7)",
+      "reason": "not implemented - HL7 table 0487 unavailable in VSAC per source docx Table 3"
+    },
+    {
+      "valueSet": "Blood and urine specimen-type constraints",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate; general arsenic-test branches using Blood (SNOMED OID ...1348) or Urine (SNOMED OID ...1513) are omitted from AEAT-R4/R5, while specimen-specific test branches remain modeled"
+    }
+  ]
+}

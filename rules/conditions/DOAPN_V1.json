@@ -1,0 +1,655 @@
+{
+  "mnemonic": "DOAPN_V1",
+  "conditionId": "DOAPN",
+  "name": "Drug Overdose and Poisoning Non-opioid",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Drug_Overdose_and_Poisoning_Non-opioid.v4.20260227.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs live RCKMS Release 16 docx (2026-07-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "DOAPN-R1",
+      "description": "Non-opioid CNS stimulant overdose (dx/active problem, timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1532",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [CNS Stimulant] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1540",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [CNS Stimulant] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1532",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [CNS Stimulant] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1540",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [CNS Stimulant] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DOAPN-R2",
+      "description": "Non-opioid CNS depressant overdose",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1533",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [CNS Depressant] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1541",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [CNS Depressant] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1533",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [CNS Depressant] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1541",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [CNS Depressant] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DOAPN-R3",
+      "description": "Non-opioid cannabinoid overdose",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1534",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Cannabinoid] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1543",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Cannabinoid] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1534",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Cannabinoid] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1543",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Cannabinoid] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DOAPN-R4",
+      "description": "Non-opioid hallucinogen overdose",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1536",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Hallucinogen] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1542",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Hallucinogen] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1536",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Hallucinogen] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1542",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Hallucinogen] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DOAPN-R5",
+      "description": "Non-opioid analgesic overdose",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1535",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Analgesic] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1544",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Analgesic] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1535",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Analgesic] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1544",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Analgesic] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DOAPN-R6",
+      "description": "Non-opioid other-drug overdose",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1538",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Other Drug] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1545",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Other Drug] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1538",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Other Drug] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1545",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Other Drug] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DOAPN-R7",
+      "description": "Suspected non-opioid overdose (no codes available - not implemented)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Suspected] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Suspected] (ICD10CM)"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DOAPN-R8",
+      "description": "Non-opioid accidental overdose",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2724",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Accidental] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2725",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Accidental] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2724",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Accidental] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2725",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Accidental] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DOAPN-R9",
+      "description": "Non-opioid intentional overdose",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2726",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Intentional] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2727",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Intentional] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2726",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Intentional] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2727",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Intentional] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DOAPN-R10",
+      "description": "Non-opioid unspecified-intent overdose",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2728",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Unspecified Intent] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2729",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Unspecified Intent] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2728",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Unspecified Intent] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2729",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Unspecified Intent] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DOAPN-R12",
+      "description": "Non-opioid muscle relaxant overdose (reports on dx; disposition split immaterial)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1966",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Muscle Relaxant] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1967",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Muscle Relaxant] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1966",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Muscle Relaxant] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1967",
+                  "name": "Drug Overdose and Poisoning [Non opioid] [Muscle Relaxant] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DOAPN-R11",
+      "description": "Suspected drug overdose AND positive non-opioid drug screen",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1074",
+                  "name": "Drug Overdose and Poisoning [Suspected] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1075",
+                  "name": "Drug Overdose and Poisoning [Suspected] (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1074",
+                  "name": "Drug Overdose and Poisoning [Suspected] (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1075",
+                  "name": "Drug Overdose and Poisoning [Suspected] (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1547",
+                          "name": "Drugs [Non opioid] (Tests by Screen or Unspecified Method in Blood)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1548",
+                          "name": "Drugs [Non opioid] (Tests by Screen or Unspecified Method in Urine)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1546",
+                          "name": "Drug Overdose and Poisoning [Non opioid] (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.806",
+                      "name": "Drugs [Unspecified] (Tests by Screen or Unspecified Method)"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1546",
+                      "name": "Drug Overdose and Poisoning [Non opioid] (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Suspected non-opioid overdose (SNOMED/ICD10CM)",
+      "reason": "no codes; DOAPN-R7 skips"
+    },
+    {
+      "valueSet": "Discharge disposition / deceased status (source rules 12-13)",
+      "reason": "not modeled; both dispositions report so any class dx already reportable via R1-R12"
+    },
+    {
+      "valueSet": "Clinical-sign syndrome path (source rule 14, >=2 signs)",
+      "reason": "redundant for reportability (class dx alone already reports); Bradypnea/Gurgling ICD10 have no codes"
+    },
+    {
+      "valueSet": "Timebox windows",
+      "reason": "platform-unimplemented; does not reduce coverage"
+    }
+  ]
+}

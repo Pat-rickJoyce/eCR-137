@@ -1,0 +1,328 @@
+{
+  "mnemonic": "WNVI_V1",
+  "conditionId": "WNVI",
+  "name": "West Nile Virus Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "West_Nile_Virus_Infection.v3.20240202.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs West_Nile_Virus_Infection.v3.20240202.docx on 2026-07-29 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "WNVI-R1",
+      "description": "West Nile Virus Infection (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.175",
+                      "name": "West Nile Virus Infection (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.176",
+                      "name": "West Nile Virus Infection (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.175",
+                      "name": "West Nile Virus Infection (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.176",
+                      "name": "West Nile Virus Infection (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "WNVI-R2",
+      "description": "Identification of West Nile Virus by culture and identification method, including preliminary results",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.526",
+              "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.565",
+              "resultName": "West Nile Virus Infection (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1041",
+              "name": "Organisms (Tests by Culture and Identification)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.565",
+              "resultName": "West Nile Virus Infection (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1040",
+              "name": "Organisms (Tests by Unspecified Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.565",
+              "resultName": "West Nile Virus Infection (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "WNVI-R3",
+      "description": "Detection of West Nile Virus antigen by any method",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.561",
+              "name": "West Nile Virus Infection (Tests for West Nile virus Antigen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.561",
+              "name": "West Nile Virus Infection (Tests for West Nile virus Antigen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.565",
+              "resultName": "West Nile Virus Infection (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.561",
+              "name": "West Nile Virus Infection (Tests for West Nile virus Antigen)",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "WNVI-R4",
+      "description": "Detection of West Nile Virus nucleic acid by any method",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.560",
+              "name": "West Nile Virus Infection (Tests for West Nile virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.560",
+              "name": "West Nile Virus Infection (Tests for West Nile virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.565",
+              "resultName": "West Nile Virus Infection (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.560",
+              "name": "West Nile Virus Infection (Tests for West Nile virus Nucleic Acid)",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.565",
+              "resultName": "West Nile Virus Infection (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "WNVI-R5",
+      "description": "Detection of West Nile Virus IgM antibody (coded or abnormal results; numeric > 0 not modeled)",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.562",
+              "name": "West Nile Virus Infection (Tests for West Nile virus IgM Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.562",
+              "name": "West Nile Virus Infection (Tests for West Nile virus IgM Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.565",
+              "resultName": "West Nile Virus Infection (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.562",
+              "name": "West Nile Virus Infection (Tests for West Nile virus IgM Antibody)",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "WNVI-R7",
+      "description": "Optional logic: detection of West Nile Virus IgM, IgG, or total antibody (coded or abnormal results; numeric > 0 not modeled)",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.562",
+              "name": "West Nile Virus Infection (Tests for West Nile virus IgM Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.562",
+              "name": "West Nile Virus Infection (Tests for West Nile virus IgM Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.565",
+              "resultName": "West Nile Virus Infection (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.562",
+              "name": "West Nile Virus Infection (Tests for West Nile virus IgM Antibody)",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.564",
+              "name": "West Nile Virus Infection (Tests for West Nile virus IgG or Total Antibody [Qualitative])",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.564",
+              "name": "West Nile Virus Infection (Tests for West Nile virus IgG or Total Antibody [Qualitative])",
+              "resultOid": "2.16.840.1.113762.1.4.1146.565",
+              "resultName": "West Nile Virus Infection (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.564",
+              "name": "West Nile Virus Infection (Tests for West Nile virus IgG or Total Antibody [Qualitative])",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.563",
+              "name": "West Nile Virus Infection (Tests for West Nile virus IgG or Total Antibody [Quantitative])",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.563",
+              "name": "West Nile Virus Infection (Tests for West Nile virus IgG or Total Antibody [Quantitative])",
+              "resultOid": "2.16.840.1.113762.1.4.1146.565",
+              "resultName": "West Nile Virus Infection (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.563",
+              "name": "West Nile Virus Infection (Tests for West Nile virus IgG or Total Antibody [Quantitative])",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "West Nile Virus Infection (Tests for West Nile virus by Culture and Identification Method)",
+      "reason": "not implemented - no codes available per source docx Table 3; WNVI-R2 retains the generic culture-test plus organism-result branches"
+    },
+    {
+      "valueSet": "Paired acute/convalescent West Nile Virus antibody comparison",
+      "reason": "source rule 6 is explicitly not operational and SEM_V1 cannot compare paired specimens, collection intervals, or four-fold titer rises; the rule is omitted"
+    },
+    {
+      "valueSet": "Numeric laboratory result > 0",
+      "reason": "SEM_V1 has no numeric laboratory result comparison; numeric alternatives in WNVI-R5 and WNVI-R7 are omitted"
+    }
+  ]
+}

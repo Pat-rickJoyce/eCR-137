@@ -1,0 +1,65 @@
+{
+  "mnemonic": "MAL_V1",
+  "conditionId": "MAL",
+  "name": "Malaria",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Malaria.v3.20240202.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Malaria.v3.20240202.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2025-06-04)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "MAL-R1",
+      "description": "Malaria as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.229", "name": "Malaria (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.230", "name": "Malaria (Disorders) (ICD10CM)" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "any": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.229", "name": "Malaria (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.230", "name": "Malaria (Disorders) (ICD10CM)", "status": "active" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "MAL-R2",
+      "description": "Microscopic observation of Plasmodium species in blood with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.466", "name": "Plasmodium species (Tests by Microscopic Observation in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.466", "name": "Plasmodium species (Tests by Microscopic Observation in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.467", "resultName": "Malaria (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.466", "name": "Plasmodium species (Tests by Microscopic Observation in Blood)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.884", "name": "Tests by Microscopic Observation in Blood", "resultOid": "2.16.840.1.113762.1.4.1146.467", "resultName": "Malaria (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "MAL-R3",
+      "description": "Detection of Plasmodium-species nucleic acid with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.464", "name": "Malaria (Tests for Plasmodium species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.464", "name": "Malaria (Tests for Plasmodium species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.467", "resultName": "Malaria (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.464", "name": "Malaria (Tests for Plasmodium species Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.467", "resultName": "Malaria (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "MAL-R4",
+      "description": "Detection of Plasmodium-species antigen, including rapid diagnostic testing, with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.465", "name": "Malaria (Tests for Plasmodium species Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.465", "name": "Malaria (Tests for Plasmodium species Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.467", "resultName": "Malaria (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.465", "name": "Malaria (Tests for Plasmodium species Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    }
+  ],
+  "gaps": [
+    { "valueSet": "Blood specimen constraints for microscopy", "reason": "SEM_V1 cannot enforce the source blood-specimen requirement on Plasmodium-specific microscopy (OID 2.16.840.1.113762.1.4.1146.2248) or generic microscopy (OIDs 2.16.840.1.113762.1.4.1146.900 and 2.16.840.1.113762.1.4.1146.1040); MAL-R2 retains the specimen-specific test-name branches (OIDs 2.16.840.1.113762.1.4.1146.466 and 2.16.840.1.113762.1.4.1146.884)" },
+    { "valueSet": "Positive numeric microscopy result", "reason": "SEM_V1 has no same-observation numeric comparison predicate for the source lab-result-value-greater-than-zero alternative; MAL-R2 retains the coded positive, organism, and abnormal-interpretation alternatives" }
+  ]
+}

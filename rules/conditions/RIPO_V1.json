@@ -1,0 +1,207 @@
+{
+  "mnemonic": "RIPO_V1",
+  "conditionId": "RIPO",
+  "name": "Ricin Poisoning",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Ricin_Poisoning.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Ricin_Poisoning.v2.20240202.docx on 2026-07-21 (authoritative RCKMS Content Release 16; latest revision 2025-05-19)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "RIPO-R1",
+      "description": "Ricin poisoning diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1342",
+                  "name": "Ricin Poisoning (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1342",
+                  "name": "Ricin Poisoning (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "RIPO-R2",
+      "description": "Ricin or ricin toxin detected in a clinical specimen",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1343",
+              "name": "Ricin Poisoning (Tests for Ricin)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1343",
+              "name": "Ricin Poisoning (Tests for Ricin)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1346",
+              "resultName": "Ricin Poisoning (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1343",
+              "name": "Ricin Poisoning (Tests for Ricin)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "RIPO-R3",
+      "description": "Ricin nucleic acid detected through a condition-specific ricin-substance result",
+      "logic": {
+        "predicate": "labResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1346",
+          "name": "Ricin Poisoning (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "RIPO-R4",
+      "description": "Ricinine detected in a clinical specimen, including urine",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1345",
+              "name": "Ricin Poisoning (Tests for Ricinine)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1345",
+              "name": "Ricin Poisoning (Tests for Ricinine)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1346",
+              "resultName": "Ricin Poisoning (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1345",
+              "name": "Ricin Poisoning (Tests for Ricinine)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "RIPO-R5",
+      "description": "Ricin or ricin toxin antibody detected in a clinical specimen",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1344",
+              "name": "Ricin Poisoning (Tests for Ricin Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1344",
+              "name": "Ricin Poisoning (Tests for Ricin Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1346",
+              "resultName": "Ricin Poisoning (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1344",
+              "name": "Ricin Poisoning (Tests for Ricin Antibody)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 1: Ricin Poisoning (Disorders) (ICD10CM)",
+      "reason": "the authoritative Table 3 value set is not implemented and has no codes, so its diagnosis and problem branches are omitted"
+    },
+    {
+      "valueSet": "Rule 3: Ricin Poisoning (Tests for Ricin Nucleic Acid)",
+      "reason": "the authoritative test-name value set is not implemented and has no codes; the source's alternate ricin-substance result branch, which includes Ricinus communis DNA, is modeled"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-record reporter types",
+      "reason": "the authoritative snapshot marks these reporter types not implemented in RCKMS; SEM_V1 does not carry reporter-source or death-certificate cause/contributing-condition evidence"
+    }
+  ]
+}

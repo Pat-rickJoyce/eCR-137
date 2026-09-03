@@ -1,0 +1,214 @@
+{
+  "mnemonic": "VEST_V1",
+  "conditionId": "VEST",
+  "name": "Vesicular Stomatitis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Vesicular_Stomatitis.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Vesicular_Stomatitis.v2.20240202.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2025-06-02)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "VEST-R1",
+      "description": "Vesicular stomatitis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1914",
+                  "name": "Vesicular stomatitis (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1914",
+                  "name": "Vesicular stomatitis (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VEST-R2",
+      "description": "Identification of vesicular stomatitis virus by a generic culture or organism test with a same-observation vesicular-stomatitis-virus result",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1041",
+              "name": "Organisms (Tests by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1915",
+              "resultName": "Vesicular stomatitis (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1040",
+              "name": "Organisms (Tests by Unspecified Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1915",
+              "resultName": "Vesicular stomatitis (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "VEST-R3",
+      "description": "Detection of vesicular stomatitis virus nucleic acid by specific or generic testing",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1918",
+              "name": "Vesicular stomatitis (Tests for Vesicular stomatitis virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1918",
+              "name": "Vesicular stomatitis (Tests for Vesicular stomatitis virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1915",
+              "resultName": "Vesicular stomatitis (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1918",
+              "name": "Vesicular stomatitis (Tests for Vesicular stomatitis virus Nucleic Acid)",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1915",
+              "resultName": "Vesicular stomatitis (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "VEST-R4",
+      "description": "Detection of vesicular stomatitis virus antigen by any method",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1916",
+              "name": "Vesicular stomatitis (Tests for Vesicular stomatitis virus Antigen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1916",
+              "name": "Vesicular stomatitis (Tests for Vesicular stomatitis virus Antigen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1915",
+              "resultName": "Vesicular stomatitis (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1916",
+              "name": "Vesicular stomatitis (Tests for Vesicular stomatitis virus Antigen)",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "VEST-R5",
+      "description": "Detection of vesicular stomatitis virus antibody by any method (coded or abnormal results; numeric > 0 not modeled)",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1917",
+              "name": "Vesicular stomatitis (Tests for Vesicular stomatitis virus Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1917",
+              "name": "Vesicular stomatitis (Tests for Vesicular stomatitis virus Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1915",
+              "resultName": "Vesicular stomatitis (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1917",
+              "name": "Vesicular stomatitis (Tests for Vesicular stomatitis virus Antibody)",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Vesicular stomatitis (Disorders) (ICD10CM)",
+      "reason": "the source marks this diagnosis/problem value set not implemented with no codes; VEST-R1 retains the implemented SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Vesicular stomatitis (Tests for Vesicular stomatitis virus by Culture and Identification Method)",
+      "reason": "the source marks this organism-specific culture-test value set not implemented with no codes; VEST-R2 retains both implemented generic-test alternatives with same-observation vesicular-stomatitis-virus results"
+    },
+    {
+      "valueSet": "Numeric antibody result > 0",
+      "reason": "SEM_V1 has no numeric laboratory result value or comparison predicate; the numeric alternative in source rule 5 is omitted"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate vesicular-stomatitis evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

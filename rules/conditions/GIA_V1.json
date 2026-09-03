@@ -1,0 +1,81 @@
+{
+  "mnemonic": "GIA_V1",
+  "conditionId": "GIA",
+  "name": "Giardiasis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Giardiasis.v5.20250703.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Giardiasis.v5.20250703.docx on 2026-07-18 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "GIA-R1",
+      "description": "Giardiasis diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.204", "name": "Giardiasis (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.205", "name": "Giardiasis (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.204", "name": "Giardiasis (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.205", "name": "Giardiasis (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "GIA-R2",
+      "description": "Microscopic observation of Giardia organisms in a clinical specimen",
+      "logic": { "any": [
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2343", "name": "Giardiasis (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2343", "name": "Giardiasis (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.378", "resultName": "Giardiasis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2343", "name": "Giardiasis (Tests by Microscopic Observation)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.900", "name": "Organisms (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.378", "resultName": "Giardiasis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.378", "resultName": "Giardiasis (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "GIA-R3",
+      "description": "Detection of Giardia species nucleic acid in a clinical specimen by any method",
+      "logic": { "any": [
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.379", "name": "Giardiasis (Tests for Giardia species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.379", "name": "Giardiasis (Tests for Giardia species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.378", "resultName": "Giardiasis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.379", "name": "Giardiasis (Tests for Giardia species Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.378", "resultName": "Giardiasis (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "GIA-R4",
+      "description": "Detection of Giardia species antigen in a clinical specimen by any method",
+      "logic": { "any": [
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.380", "name": "Giardiasis (Tests for Giardia species Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.380", "name": "Giardiasis (Tests for Giardia species Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.378", "resultName": "Giardiasis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.380", "name": "Giardiasis (Tests for Giardia species Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2680", "name": "Giardiasis (Combination Tests that include Giardia species Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.378", "resultName": "Giardiasis (Organism or Substance in Lab Results)" } }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rules 5-6: gastrointestinal symptoms plus a Giardiasis epidemiologic link",
+      "reason": "the authoritative source marks both rules inoperable because RCKMS cannot implement contact-with-case or outbreak-risk-group criteria; SEM_V1 likewise has no epidemiologic-link evidence, so the rules are omitted rather than allowing symptoms alone to report"
+    }
+  ]
+}

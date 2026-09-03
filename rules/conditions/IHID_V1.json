@@ -1,0 +1,166 @@
+{
+  "mnemonic": "IHID_V1",
+  "conditionId": "IHID",
+  "name": "Invasive Haemophilus Influenzae Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Invasive_Haemophilus_Influenzae_Disease.v7.20260626.docx",
+    "rckmsVersion": "v7",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Invasive_Haemophilus_Influenzae_Disease.v7.20260626.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2026-05-22)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "IHID-R1",
+      "description": "Invasive Haemophilus influenzae disease as a diagnosis or active problem",
+      "logic": { "any": [
+        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.139", "name": "Invasive Haemophilus influenzae Disease (Disorders) (SNOMED)" } },
+        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.140", "name": "Invasive Haemophilus influenzae Disease (Disorders) (ICD10CM)" } },
+        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.139", "name": "Invasive Haemophilus influenzae Disease (Disorders) (SNOMED)", "status": "active" } },
+        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.140", "name": "Invasive Haemophilus influenzae Disease (Disorders) (ICD10CM)", "status": "active" } }
+      ] }
+    },
+    {
+      "id": "IHID-R2",
+      "description": "Identification of Haemophilus influenzae in a normally sterile-site specimen by culture, including preliminary isolate-identification results",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.772", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.772", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.772", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae in Specimen from Normally Sterile Site by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1461", "name": "Organisms (Tests in Specimen from Normally Sterile Site by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "IHID-R3",
+      "description": "Detection of Haemophilus influenzae nucleic acid in a normally sterile-site specimen",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.773", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.773", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.773", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Nucleic Acid in Specimen from Normally Sterile Site)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1085", "name": "Organisms (Tests for Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "IHID-R4",
+      "description": "Meningitis with detection of Haemophilus influenzae type B antigen in cerebrospinal fluid",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1031", "name": "Meningitis [Unspecified Cause] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1030", "name": "Meningitis [Unspecified Cause] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1031", "name": "Meningitis [Unspecified Cause] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1030", "name": "Meningitis [Unspecified Cause] (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2716", "name": "Meningitis [Unspecified for Bacterial Conditions] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2715", "name": "Meningitis [Unspecified for Bacterial Conditions] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2716", "name": "Meningitis [Unspecified for Bacterial Conditions] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2715", "name": "Meningitis [Unspecified for Bacterial Conditions] (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.278", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Type B Antigen in Cerebrospinal Fluid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.278", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Type B Antigen in Cerebrospinal Fluid)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.278", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Type B Antigen in Cerebrospinal Fluid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "IHID-R5",
+      "description": "Optional epiglottitis as a diagnosis or active problem",
+      "logic": { "any": [
+        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1362", "name": "Epiglottitis (Disorders) (SNOMED)" } },
+        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1363", "name": "Epiglottitis (Disorders) (ICD10CM)" } },
+        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1362", "name": "Epiglottitis (Disorders) (SNOMED)", "status": "active" } },
+        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1363", "name": "Epiglottitis (Disorders) (ICD10CM)", "status": "active" } }
+      ] }
+    },
+    {
+      "id": "IHID-R6",
+      "description": "Optional bacteremia or pneumonia with detection of Haemophilus influenzae type B antigen in cerebrospinal fluid",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2129", "name": "Bacteremia (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2130", "name": "Bacteremia (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2129", "name": "Bacteremia (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2130", "name": "Bacteremia (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.357", "name": "Pneumonia (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.712", "name": "Pneumonia (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.357", "name": "Pneumonia (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.712", "name": "Pneumonia (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.278", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Type B Antigen in Cerebrospinal Fluid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.278", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Type B Antigen in Cerebrospinal Fluid)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.278", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Type B Antigen in Cerebrospinal Fluid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "IHID-R7",
+      "description": "Optional identification of Haemophilus influenzae in a clinical specimen by culture or isolate-identification testing",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.276", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.276", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.276", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3072", "name": "Invasive Haemophilus influenzae Disease (Combination Tests that include Haemophilus species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "IHID-R8",
+      "description": "Optional detection of Haemophilus influenzae nucleic acid in a clinical specimen",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.277", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.277", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.277", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3086", "name": "Invasive Haemophilus influenzae Disease (Combination Tests that include Haemophilus influenzae Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "IHID-R9",
+      "description": "Optional invasive Haemophilus influenzae disease diagnosis or active problem in a child younger than five years",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.139", "name": "Invasive Haemophilus influenzae Disease (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.140", "name": "Invasive Haemophilus influenzae Disease (Disorders) (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.139", "name": "Invasive Haemophilus influenzae Disease (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.140", "name": "Invasive Haemophilus influenzae Disease (Disorders) (ICD10CM)", "status": "active" } }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 5, "unit": "years" }, "gate": true }
+      ] }
+    },
+    {
+      "id": "IHID-R10",
+      "description": "Optional sterile-site culture, sterile-site nucleic-acid, or cerebrospinal-fluid Hib antigen evidence in a child younger than five years",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.772", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.772", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.772", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae in Specimen from Normally Sterile Site by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1461", "name": "Organisms (Tests in Specimen from Normally Sterile Site by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.773", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.773", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.773", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Nucleic Acid in Specimen from Normally Sterile Site)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1085", "name": "Organisms (Tests for Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.278", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Type B Antigen in Cerebrospinal Fluid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.278", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Type B Antigen in Cerebrospinal Fluid)", "resultOid": "2.16.840.1.113762.1.4.1146.275", "resultName": "Invasive Haemophilus influenzae Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.278", "name": "Invasive Haemophilus influenzae Disease (Tests for Haemophilus influenzae Type B Antigen in Cerebrospinal Fluid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 5, "unit": "years" }, "gate": true }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Normally sterile-site specimen constraints",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate, and the source HL7 specimen value set has no codes; general culture and nucleic-acid test alternatives requiring a separate sterile-site specimen criterion are omitted from IHID-R2, IHID-R3, and IHID-R10, while sterile-site-specific test-name alternatives remain modeled"
+    },
+    {
+      "valueSet": "Cerebrospinal-fluid specimen constraints",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate, and the source HL7 CSF value set has no codes; the general Hib antigen test alternative requiring a separate CSF criterion is omitted from IHID-R4, IHID-R6, and IHID-R10, while the CSF-specific antigen test-name alternative remains modeled"
+    }
+  ]
+}

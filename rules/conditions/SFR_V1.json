@@ -1,0 +1,202 @@
+{
+  "mnemonic": "SFR_V1",
+  "conditionId": "SFR",
+  "name": "Spotted Fever Rickettsiosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Spotted_Fever_Rickettsiosis.v4.20240628.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Spotted_Fever_Rickettsiosis.v4.20240628.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2025-05-19)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SFR-R1",
+      "description": "Spotted Fever Rickettsiosis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.248", "name": "Spotted Fever Rickettsiosis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.249", "name": "Spotted Fever Rickettsiosis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.248", "name": "Spotted Fever Rickettsiosis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.249", "name": "Spotted Fever Rickettsiosis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFR-R2",
+      "description": "Rickettsia spotted fever group identified by culture or identification testing with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.539", "name": "Rickettsioses (Tests for Rickettsia species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.539", "name": "Rickettsioses (Tests for Rickettsia species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.542", "resultName": "Spotted Fever Rickettsiosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.539", "name": "Rickettsioses (Tests for Rickettsia species by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.542", "resultName": "Spotted Fever Rickettsiosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.542", "resultName": "Spotted Fever Rickettsiosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SFR-R3",
+      "description": "Rickettsia spotted fever group nucleic acid detected by a qualifying test and result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.538", "name": "Spotted Fever Rickettsiosis (Tests for Rickettsia Spotted Fever Group Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.538", "name": "Spotted Fever Rickettsiosis (Tests for Rickettsia Spotted Fever Group Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.542", "resultName": "Spotted Fever Rickettsiosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.538", "name": "Spotted Fever Rickettsiosis (Tests for Rickettsia Spotted Fever Group Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.535", "name": "Rickettsioses (Tests for Rickettsia species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.542", "resultName": "Spotted Fever Rickettsiosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.542", "resultName": "Spotted Fever Rickettsiosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SFR-R4",
+      "description": "Rickettsia spotted fever group antigen detected by immune staining with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.540", "name": "Spotted Fever Rickettsiosis (Tests for Rickettsia Spotted Fever Group Antigen in Tissue by Immune Staining)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.540", "name": "Spotted Fever Rickettsiosis (Tests for Rickettsia Spotted Fever Group Antigen in Tissue by Immune Staining)", "resultOid": "2.16.840.1.113762.1.4.1146.542", "resultName": "Spotted Fever Rickettsiosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.540", "name": "Spotted Fever Rickettsiosis (Tests for Rickettsia Spotted Fever Group Antigen in Tissue by Immune Staining)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SFR-R5",
+      "description": "Rickettsia spotted fever group IgG antibody detected with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.536", "name": "Spotted Fever Rickettsiosis (Tests for Rickettsia Spotted Fever Group IgG Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.536", "name": "Spotted Fever Rickettsiosis (Tests for Rickettsia Spotted Fever Group IgG Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.542", "resultName": "Spotted Fever Rickettsiosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.536", "name": "Spotted Fever Rickettsiosis (Tests for Rickettsia Spotted Fever Group IgG Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SFR-R7",
+      "description": "Optional logic: Rickettsia spotted fever group IgM antibody detected with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.537", "name": "Spotted Fever Rickettsiosis (Tests for Rickettsia Spotted Fever Group IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.537", "name": "Spotted Fever Rickettsiosis (Tests for Rickettsia Spotted Fever Group IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.542", "resultName": "Spotted Fever Rickettsiosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.537", "name": "Spotted Fever Rickettsiosis (Tests for Rickettsia Spotted Fever Group IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SFR-R8",
+      "description": "Optional logic: Spotted Fever Rickettsiosis diagnosis or active problem, timeboxed when configured, and an inpatient encounter",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.248", "name": "Spotted Fever Rickettsiosis (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.249", "name": "Spotted Fever Rickettsiosis (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.248", "name": "Spotted Fever Rickettsiosis (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.249", "name": "Spotted Fever Rickettsiosis (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1323", "name": "Hospitalized [Inpatient] (EncounterTypeCode)" } },
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1320", "name": "Hospitalized [Inpatient] (ActEncounterCode)" } },
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1335", "name": "Hospitalized [Inpatient] (SNOMED)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SFR-R9",
+      "description": "Optional logic: Spotted Fever Rickettsiosis diagnosis or active problem, timeboxed when configured, and patient deceased or discharged expired",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.248", "name": "Spotted Fever Rickettsiosis (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.249", "name": "Spotted Fever Rickettsiosis (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.248", "name": "Spotted Fever Rickettsiosis (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.249", "name": "Spotted Fever Rickettsiosis (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "patientDeceased", "params": {} },
+              { "predicate": "encounterDischargeDispositionInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1108", "name": "Discharge Disposition [Expired]" } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "SFR-R6 four-fold or greater IgG antibody titer increase between paired acute and convalescent specimens",
+      "reason": "the source explicitly marks rule 6 not implemented because the four-fold rise between paired specimens is not operational; SEM_V1 cannot compare paired titers or onset-relative specimen timing, so the numbered rule is omitted"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence for Spotted Fever Rickettsiosis, but the reporter type is unavailable in RCKMS and SEM_V1 has no death-certificate evidence"
+    },
+    {
+      "valueSet": "Laboratory reporter type",
+      "reason": "the source snapshot identifies laboratory reporting for implemented culture, nucleic-acid, antigen, and IgG criteria, but that reporter type is unavailable in RCKMS; the corresponding provider/facility rules remain modeled"
+    }
+  ]
+}

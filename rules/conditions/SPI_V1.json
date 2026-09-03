@@ -1,0 +1,96 @@
+{
+  "mnemonic": "SPI_V1",
+  "conditionId": "SPI",
+  "name": "S. Paratyphi Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "S_Paratyphi_Infection.v6.20260227.docx",
+    "rckmsVersion": "v6",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs S_Paratyphi_Infection.v6.20260227.docx on 2026-07-29 (authoritative RCKMS Content Release 20260227; latest revision 2025-11-12)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SPI-R1",
+      "description": "S. Paratyphi infection or paratyphoid fever diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1016", "name": "S. Paratyphi Infection (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1015", "name": "S. Paratyphi Infection (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1016", "name": "S. Paratyphi Infection (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1015", "name": "S. Paratyphi Infection (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SPI-R2",
+      "description": "Culture or identification evidence of Salmonella Paratyphi",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2360", "name": "S. Paratyphi Infection (Tests for S. Paratyphi by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2360", "name": "S. Paratyphi Infection (Tests for S. Paratyphi by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1014", "resultName": "S. Paratyphi Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2360", "name": "S. Paratyphi Infection (Tests for S. Paratyphi by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.70", "name": "Salmonellosis (Tests for Salmonella except S. Typhi and S. Paratyphi by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1014", "resultName": "S. Paratyphi Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3070", "name": "S. Paratyphi Infection (Combination Tests that include S. Paratyphi by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1014", "resultName": "S. Paratyphi Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1014", "resultName": "S. Paratyphi Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1014", "resultName": "S. Paratyphi Infection (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SPI-R3",
+      "description": "Detection of Salmonella Paratyphi nucleic acid",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2361", "name": "S. Paratyphi Infection (Tests for S. Paratyphi Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2361", "name": "S. Paratyphi Infection (Tests for S. Paratyphi Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1014", "resultName": "S. Paratyphi Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2361", "name": "S. Paratyphi Infection (Tests for S. Paratyphi Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1014", "resultName": "S. Paratyphi Infection (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SPI-R4",
+      "description": "Detection of Salmonella Paratyphi antibody",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1020", "name": "S. Paratyphi Infection (Tests for S. Paratyphi Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1020", "name": "S. Paratyphi Infection (Tests for S. Paratyphi Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1014", "resultName": "S. Paratyphi Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1020", "name": "S. Paratyphi Infection (Tests for S. Paratyphi Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 5 clinical observations plus epidemiologic link",
+      "reason": "the authoritative source marks the entire rule inoperable because its contact and outbreak-risk criteria are not implemented; SEM_V1 also carries neither epidemiologic contact nor outbreak-risk evidence, so the rule is omitted rather than allowing nonspecific symptoms alone to report"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence, but the reporter type is unavailable in RCKMS and SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

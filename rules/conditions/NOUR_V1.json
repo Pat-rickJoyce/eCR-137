@@ -1,0 +1,80 @@
+{
+  "mnemonic": "NOUR_V1",
+  "conditionId": "NOUR",
+  "name": "Nongonococcal Urethritis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "complete",
+  "source": {
+    "document": "Nongonococcal_Urethritis.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Nongonococcal_Urethritis.v2.20240202.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2025-06-18)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "NOUR-R1",
+      "description": "Nongonococcal urethritis diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2087", "name": "Nongonococcal Urethritis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2088", "name": "Nongonococcal Urethritis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2087", "name": "Nongonococcal Urethritis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2088", "name": "Nongonococcal Urethritis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "NOUR-R2",
+      "description": "Urethritis, urethral discharge, or dysuria diagnosis/active problem plus a negative organism-specific gonorrhea culture, nucleic-acid, or antigen result on the same observation",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2089", "name": "Urethritis (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2090", "name": "Urethritis (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2089", "name": "Urethritis (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2090", "name": "Urethritis (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2091", "name": "Urethral discharge (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2092", "name": "Urethral discharge (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2091", "name": "Urethral discharge (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2092", "name": "Urethral discharge (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2093", "name": "Dysuria (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2094", "name": "Dysuria (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2093", "name": "Dysuria (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2094", "name": "Dysuria (ICD10CM)", "status": "active" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.245", "name": "Gonorrhea (Tests for Neisseria gonorrhoeae by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1034", "resultName": "Negative or Undetected Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.244", "name": "Gonorrhea (Tests for Neisseria gonorrhoeae Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1034", "resultName": "Negative or Undetected Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2095", "name": "Gonorrhea (Tests for Neisseria gonorrhoeae Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.1034", "resultName": "Negative or Undetected Lab Result Value" } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": []
+}

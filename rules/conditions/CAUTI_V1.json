@@ -1,0 +1,41 @@
+{
+  "mnemonic": "CAUTI_V1",
+  "conditionId": "CAUTI",
+  "name": "Catheter-associated Urinary Tract Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "complete",
+  "source": {
+    "document": "Catheter_associated_Urinary_Tract_Infection.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Catheter_associated_Urinary_Tract_Infection.v2.20240628.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CAUTI-R1",
+      "description": "Catheter-associated Urinary Tract Infection diagnosis or active problem (timeboxed)",
+      "logic": {
+        "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1862", "name": "CAUTI (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1863", "name": "CAUTI (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1862", "name": "CAUTI (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1863", "name": "CAUTI (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    }
+  ],
+  "gaps": []
+}

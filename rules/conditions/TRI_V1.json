@@ -1,0 +1,98 @@
+{
+  "mnemonic": "TRI_V1",
+  "conditionId": "TRI",
+  "name": "Trichinellosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Trichinellosis.v7.20240202.docx",
+    "rckmsVersion": "v7",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Trichinellosis.v7.20240202.docx on 2026-07-29 (authoritative RCKMS Content Release 20240202; latest revision 2025-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "TRI-R1",
+      "description": "Trichinellosis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.202", "name": "Trichinellosis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.201", "name": "Trichinellosis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.202", "name": "Trichinellosis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.201", "name": "Trichinellosis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TRI-R2",
+      "description": "Detection of Trichinella species antibody by a specific antibody test",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.390", "name": "Trichinellosis (Tests for Trichinella species Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.390", "name": "Trichinellosis (Tests for Trichinella species Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.389", "resultName": "Trichinellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.390", "name": "Trichinellosis (Tests for Trichinella species Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "TRI-R3",
+      "description": "Detection of Trichinella species nucleic acid by a specific or generic organism test",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1055", "name": "Trichinellosis (Tests for Trichinella species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1055", "name": "Trichinellosis (Tests for Trichinella species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.389", "resultName": "Trichinellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1055", "name": "Trichinellosis (Tests for Trichinella species Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.389", "resultName": "Trichinellosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TRI-R4",
+      "description": "Microscopic observation of Trichinella larvae by a specific or generic organism test",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.391", "name": "Trichinella species (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.391", "name": "Trichinella species (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.389", "resultName": "Trichinellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.391", "name": "Trichinella species (Tests by Microscopic Observation)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.900", "name": "Organisms (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.389", "resultName": "Trichinellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.389", "resultName": "Trichinellosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2 antibody laboratory result value greater than zero",
+      "reason": "SEM_V1 has no numeric laboratory-result comparison; TRI-R2 retains the source's coded positive, Trichinella-result, and abnormal-interpretation alternatives"
+    },
+    {
+      "valueSet": "Rule 5 epidemiologic food-exposure criteria",
+      "reason": "the source rule requires consumption of an implicated meal or food with suspected or confirmed Trichinella contamination; both criteria are marked not implemented with no codes and SEM_V1 has no equivalent evidence, so the rule is omitted rather than allowing clinical findings alone to report"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

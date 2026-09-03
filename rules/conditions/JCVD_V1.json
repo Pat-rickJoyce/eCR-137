@@ -1,0 +1,105 @@
+{
+  "mnemonic": "JCVD_V1",
+  "conditionId": "JCVD",
+  "name": "Jamestown Canyon virus disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Jamestown_Canyon_virus_disease.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Jamestown_Canyon_virus_disease.v2.20240202.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2025-06-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "JCVD-R1",
+      "description": "Jamestown Canyon virus disease or infection as a diagnosis or active problem (timeboxed when configured in RCKMS; ICD-10-CM alternative has no codes)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1943", "name": "Jamestown Canyon Virus Diseases (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1943", "name": "Jamestown Canyon Virus Diseases (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "JCVD-R2",
+      "description": "Identification of Jamestown Canyon virus by culture, including preliminary results, through a generic culture or unspecified-method test with a Jamestown Canyon virus result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.526", "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1947", "resultName": "Jamestown Canyon Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1947", "resultName": "Jamestown Canyon Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1947", "resultName": "Jamestown Canyon Virus Diseases (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "JCVD-R3",
+      "description": "Detection of Jamestown Canyon virus nucleic acid by a specific or generic test with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1944", "name": "Jamestown Canyon Virus Diseases (Tests for Jamestown Canyon Virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1944", "name": "Jamestown Canyon Virus Diseases (Tests for Jamestown Canyon Virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1947", "resultName": "Jamestown Canyon Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1944", "name": "Jamestown Canyon Virus Diseases (Tests for Jamestown Canyon Virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1947", "resultName": "Jamestown Canyon Virus Diseases (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "JCVD-R5",
+      "description": "Detection of Jamestown Canyon virus IgM antibody with a coded positive, organism, or abnormal-interpretation result on the same observation (numeric result greater than zero not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1945", "name": "Jamestown Canyon Virus Diseases (Tests for Jamestown Canyon Virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1945", "name": "Jamestown Canyon Virus Diseases (Tests for Jamestown Canyon Virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1947", "resultName": "Jamestown Canyon Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1945", "name": "Jamestown Canyon Virus Diseases (Tests for Jamestown Canyon Virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "JCVD-R7",
+      "description": "Optional logic: detection of Jamestown Canyon virus antibody with a coded positive, organism, or abnormal-interpretation result on the same observation (numeric result greater than zero not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1946", "name": "Jamestown Canyon Virus Diseases (Tests for Jamestown Canyon Virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1946", "name": "Jamestown Canyon Virus Diseases (Tests for Jamestown Canyon Virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1947", "resultName": "Jamestown Canyon Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1946", "name": "Jamestown Canyon Virus Diseases (Tests for Jamestown Canyon Virus Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Jamestown Canyon Virus Diseases (Disorders) (ICD10CM)",
+      "reason": "the authoritative source reports no codes available; JCVD-R1 retains the coded SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Jamestown Canyon Virus Diseases (Tests for Jamestown Canyon Virus by Culture and Identification Method)",
+      "reason": "the authoritative source reports no codes available; JCVD-R2 retains the generic culture and unspecified-method test branches that require a Jamestown Canyon virus result"
+    },
+    {
+      "valueSet": "Jamestown Canyon Virus Diseases (Tests for Jamestown Canyon Virus Antigen)",
+      "reason": "the authoritative source reports no codes available and marks source rule 4 inoperable; the rule is omitted"
+    },
+    {
+      "valueSet": "Paired Jamestown Canyon virus antibody comparison",
+      "reason": "source rule 6 is explicitly not operational; SEM_V1 cannot compare paired specimens, collection intervals, four-fold titer rises, or seroconversion, so the rule is omitted"
+    },
+    {
+      "valueSet": "Numeric laboratory result > 0",
+      "reason": "SEM_V1 has no numeric laboratory-result comparison; the numeric alternatives in JCVD-R5 and JCVD-R7 are omitted while coded-result and abnormal-interpretation alternatives remain modeled"
+    }
+  ]
+}

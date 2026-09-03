@@ -1,0 +1,207 @@
+{
+  "mnemonic": "TOX_V1",
+  "conditionId": "TOX",
+  "name": "Toxoplasmosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Toxoplasmosis.v4.20250228.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2025-02-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Toxoplasmosis.v4.20250228.docx on 2026-07-29 (authoritative RCKMS Content Release 20250228; latest revision 2025-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "TOX-R1",
+      "description": "Toxoplasmosis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1892", "name": "Toxoplasmosis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1893", "name": "Toxoplasmosis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1892", "name": "Toxoplasmosis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1893", "name": "Toxoplasmosis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TOX-R2",
+      "description": "Qualifying Toxoplasma gondii culture or identification result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1896", "name": "Toxoplasmosis (Tests for Toxoplasma gondii by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1896", "name": "Toxoplasmosis (Tests for Toxoplasma gondii by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1895", "resultName": "Toxoplasmosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1896", "name": "Toxoplasmosis (Tests for Toxoplasma gondii by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1895", "resultName": "Toxoplasmosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1895", "resultName": "Toxoplasmosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TOX-R3",
+      "description": "Qualifying Toxoplasma gondii nucleic acid result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1898", "name": "Toxoplasmosis (Tests for Toxoplasma gondii Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1898", "name": "Toxoplasmosis (Tests for Toxoplasma gondii Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1895", "resultName": "Toxoplasmosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1898", "name": "Toxoplasmosis (Tests for Toxoplasma gondii Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1895", "resultName": "Toxoplasmosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TOX-R4",
+      "description": "Qualifying microscopic observation of Toxoplasma gondii",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1897", "name": "Toxoplasmosis (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1897", "name": "Toxoplasmosis (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.1895", "resultName": "Toxoplasmosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1897", "name": "Toxoplasmosis (Tests by Microscopic Observation)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.900", "name": "Organisms (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.1895", "resultName": "Toxoplasmosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1895", "resultName": "Toxoplasmosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TOX-R5",
+      "description": "Qualifying tissue-specific Toxoplasma gondii antigen immunohistochemical stain result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2236", "name": "Toxoplasmosis (Tests for Toxoplasma gondii Antigen in Tissue by Immunohistochemical Stain)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2236", "name": "Toxoplasmosis (Tests for Toxoplasma gondii Antigen in Tissue by Immunohistochemical Stain)", "resultOid": "2.16.840.1.113762.1.4.1146.1895", "resultName": "Toxoplasmosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2236", "name": "Toxoplasmosis (Tests for Toxoplasma gondii Antigen in Tissue by Immunohistochemical Stain)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "TOX-R6",
+      "description": "Qualifying blood-specific Toxoplasma gondii IgG, IgM, IgA, or IgE antibody result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2238", "name": "Toxoplasmosis (Tests for Toxoplasma gondii IgG IgM IgA or IgE Antibody in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2238", "name": "Toxoplasmosis (Tests for Toxoplasma gondii IgG IgM IgA or IgE Antibody in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.1895", "resultName": "Toxoplasmosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2238", "name": "Toxoplasmosis (Tests for Toxoplasma gondii IgG IgM IgA or IgE Antibody in Blood)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "TOX-R7",
+      "description": "Qualifying cerebrospinal-fluid-specific Toxoplasma gondii IgG or IgM antibody result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2240", "name": "Toxoplasmosis (Tests for Toxoplasma gondii IgG or IgM Antibody in Cerebrospinal Fluid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2240", "name": "Toxoplasmosis (Tests for Toxoplasma gondii IgG or IgM Antibody in Cerebrospinal Fluid)", "resultOid": "2.16.840.1.113762.1.4.1146.1895", "resultName": "Toxoplasmosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2240", "name": "Toxoplasmosis (Tests for Toxoplasma gondii IgG or IgM Antibody in Cerebrospinal Fluid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "TOX-R8",
+      "description": "Qualifying Toxoplasma gondii antibody result in a pregnant patient",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1901", "name": "Toxoplasmosis (Tests for Toxoplasma gondii Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1901", "name": "Toxoplasmosis (Tests for Toxoplasma gondii Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1895", "resultName": "Toxoplasmosis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1901", "name": "Toxoplasmosis (Tests for Toxoplasma gondii Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "pregnancyStatus", "params": { "value": "pregnant" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.676", "name": "Pregnant (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1986", "name": "Pregnant (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.676", "name": "Pregnant (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1986", "name": "Pregnant (ICD10CM)", "status": "active" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TOX-R9",
+      "description": "Qualifying Toxoplasma gondii antibody result in a patient younger than 12 months",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1901", "name": "Toxoplasmosis (Tests for Toxoplasma gondii Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1901", "name": "Toxoplasmosis (Tests for Toxoplasma gondii Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1895", "resultName": "Toxoplasmosis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1901", "name": "Toxoplasmosis (Tests for Toxoplasma gondii Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 12, "unit": "months" }, "gate": true }
+        ]
+      }
+    },
+    {
+      "id": "TOX-R11",
+      "description": "Optional Toxoplasma encephalitis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1891", "name": "Toxoplasma encephalitis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1894", "name": "Toxoplasma encephalitis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1891", "name": "Toxoplasma encephalitis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1894", "name": "Toxoplasma encephalitis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rules 5-7 generic tests with tissue, blood, or cerebrospinal-fluid specimen constraints",
+      "reason": "SEM_V1 has no specimen predicate, and the corresponding HL7 specimen value sets are unavailable; the source's specimen-specific test-name branches remain implemented"
+    },
+    {
+      "valueSet": "Rules 8 and 9 numeric antibody result greater than zero",
+      "reason": "SEM_V1 has no numeric laboratory threshold predicate; coded-positive, organism-result, and abnormal-interpretation branches remain implemented"
+    },
+    {
+      "valueSet": "Rule 10 maternal infection linkage",
+      "reason": "SEM_V1 cannot represent a fetus or infant delivered to a particular pregnant person or constrain that person's infection timing to gestation or six months before conception; TOX-R10 is omitted"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

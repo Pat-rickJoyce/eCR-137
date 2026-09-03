@@ -1,0 +1,108 @@
+{
+  "mnemonic": "AFM_V1",
+  "conditionId": "AFM",
+  "name": "Acute Flaccid Myelitis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "complete",
+  "source": {
+    "document": "Acute_Flaccid_Myelitis.v7.20260227.docx",
+    "rckmsVersion": "v7",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Acute_Flaccid_Myelitis.v7.20260227.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "AFM-R1",
+      "description": "Acute flaccid myelitis (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1387",
+                      "name": "Acute Flaccid Myelitis (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1429",
+                      "name": "Acute Flaccid Myelitis (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1387",
+                      "name": "Acute Flaccid Myelitis (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1429",
+                      "name": "Acute Flaccid Myelitis (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Acute Flaccid Limb Weakness (SNOMED and ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; source rule 2 is also inoperable because required MRI findings are unavailable"
+    },
+    {
+      "valueSet": "Acute Flaccid Paralysis (Disorders) (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; source rule 2 remains inoperable because required MRI findings are unavailable"
+    },
+    {
+      "valueSet": "Limb Paralysis [Flaccid Monoplegia and Diplegia] [Unspecified Cause] (Disorders) (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; source rule 3 additionally requires unsupported acute-onset qualifiers and MRI findings"
+    },
+    {
+      "valueSet": "Spinal Cord Lesion Affecting Gray Matter (Finding by MRI in Imaging Results)",
+      "reason": "not implemented - no codes available per source docx Table 3, and SEM_V1 has no imaging results; source rules 2-3 and the optional imaging block are omitted"
+    },
+    {
+      "valueSet": "Acute-onset diagnosis/problem qualifiers",
+      "reason": "SEM_V1 diagnoses and problems do not carry qualifier value-set OIDs; required by source rule 3"
+    },
+    {
+      "valueSet": "Autopsy and spinal-cord histopathology findings",
+      "reason": "source marks the criterion inoperable; SEM_V1 has no autopsy or pathology-result evidence"
+    }
+  ]
+}

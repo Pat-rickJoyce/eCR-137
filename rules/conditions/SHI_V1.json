@@ -1,0 +1,112 @@
+{
+  "mnemonic": "SHI_V1",
+  "conditionId": "SHI",
+  "name": "Shigellosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Shigellosis.v4.20240628.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Shigellosis.v4.20240628.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2025-05-19)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SHI-R1",
+      "description": "Shigellosis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.98", "name": "Shigellosis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.99", "name": "Shigellosis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.98", "name": "Shigellosis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.99", "name": "Shigellosis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SHI-R2",
+      "description": "Shigella species identified by culture or identification testing with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.301", "name": "Shigellosis (Tests for Shigella species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.301", "name": "Shigellosis (Tests for Shigella species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.333", "resultName": "Shigellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.301", "name": "Shigellosis (Tests for Shigella species by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.333", "resultName": "Shigellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.333", "resultName": "Shigellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2351", "name": "Shigellosis (Combination Tests that include Shigella species by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.333", "resultName": "Shigellosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SHI-R3",
+      "description": "Shigella species nucleic acid detected by a qualifying test and result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.317", "name": "Shigellosis (Tests for Shigella species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.317", "name": "Shigellosis (Tests for Shigella species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.333", "resultName": "Shigellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.317", "name": "Shigellosis (Tests for Shigella species Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.333", "resultName": "Shigellosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SHI-R4",
+      "description": "Enteroinvasive E. coli nucleic acid detected by a qualifying test and result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.998", "name": "Shigellosis (Tests for Enteroinvasive E. coli Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.998", "name": "Shigellosis (Tests for Enteroinvasive E. coli Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.334", "resultName": "Enteroinvasive E. coli (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.998", "name": "Shigellosis (Tests for Enteroinvasive E. coli Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.334", "resultName": "Enteroinvasive E. coli (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "SHI-R5 Shigella species antigen test name",
+      "reason": "the source marks rule 5 inoperable because the antigen test-name value set has no LOINC codes; the entire numbered rule is omitted"
+    },
+    {
+      "valueSet": "SHI-R6 Enteroinvasive E. coli antigen test name",
+      "reason": "the source marks rule 6 inoperable because the antigen test-name value set has no LOINC codes; the entire numbered rule is omitted"
+    },
+    {
+      "valueSet": "SHI-R7 contact with a person with shigellosis",
+      "reason": "the source marks rule 7 inoperable because the required epidemiologic contact criterion cannot be implemented; the entire clinical-plus-epidemiologic rule is omitted"
+    },
+    {
+      "valueSet": "SHI-R8 membership in an outbreak risk group",
+      "reason": "the source marks rule 8 inoperable because the required epidemiologic risk-group criterion cannot be implemented; the entire clinical-plus-epidemiologic rule is omitted"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence for shigellosis, but the reporter type is unavailable in RCKMS and SEM_V1 has no death-certificate evidence"
+    },
+    {
+      "valueSet": "Laboratory reporter type",
+      "reason": "the source snapshot identifies laboratory reporting for the implemented culture and nucleic-acid criteria, but that reporter type is unavailable in RCKMS; the corresponding provider/facility rules remain modeled"
+    }
+  ]
+}

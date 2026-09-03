@@ -1,0 +1,51 @@
+{
+  "mnemonic": "MCACD_V1",
+  "conditionId": "MCACD",
+  "name": "Medium Chain Acyl CoA Dehydrogenase Deficiency",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Medium_Chain_Acyl_CoA_Dehydrogenase_Deficiency.v1.20250703.docx",
+    "rckmsVersion": "v1",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Medium_Chain_Acyl_CoA_Dehydrogenase_Deficiency.v1.20250703.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2025-05-05)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "MCACD-R1",
+      "description": "Medium-chain acyl-CoA dehydrogenase deficiency as a diagnosis or active problem (timeboxed when configured in RCKMS) in a patient younger than one year",
+      "logic": { "all": [
+        { "any": [
+          { "all": [ { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2571", "name": "Medium chain Acyl CoA Dehydrogenase Deficiency (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2572", "name": "Medium chain Acyl CoA Dehydrogenase Deficiency (Disorders) (ICD10CM)" } }
+          ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+          { "all": [ { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2571", "name": "Medium chain Acyl CoA Dehydrogenase Deficiency (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2572", "name": "Medium chain Acyl CoA Dehydrogenase Deficiency (Disorders) (ICD10CM)", "status": "active" } }
+          ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+      ] }
+    },
+    {
+      "id": "MCACD-R3",
+      "description": "Patient younger than one year with a generic newborn-screening interpretation test indicating medium-chain acyl-CoA dehydrogenase deficiency",
+      "logic": { "all": [
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true },
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2575", "name": "Newborn Screening Interpretation Tests", "resultOid": "2.16.840.1.113762.1.4.1146.2571", "resultName": "Medium chain Acyl CoA Dehydrogenase Deficiency (Disorders) (SNOMED)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2575", "name": "Newborn Screening Interpretation Tests", "resultOid": "2.16.840.1.113762.1.4.1146.2576", "resultName": "Medium chain Acyl CoA Dehydrogenase Deficiency (LOINC Answer)" } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    { "valueSet": "Fetal medium-chain acyl-CoA dehydrogenase deficiency diagnoses", "reason": "both authoritative fetal diagnosis value sets have no codes, so source rule 2 is inoperable and is omitted entirely" },
+    { "valueSet": "Condition-specific newborn-screening interpretation tests", "reason": "the authoritative condition-specific newborn-screening test-name value set has no codes, so MCACD-R3 retains the coded generic newborn-screening test alternatives with condition-specific results" },
+    { "valueSet": "Quantitative acylcarnitine C8 threshold in blood", "reason": "SEM_V1 cannot enforce the source blood-specimen constraint for the general quantitative test or compare the same-observation numeric result against greater than 2 nmol/mL or 2 umol/L; the entire quantitative C8 branch of source rule 3 is omitted" }
+  ]
+}

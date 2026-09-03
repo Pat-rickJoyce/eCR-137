@@ -1,0 +1,340 @@
+{
+  "mnemonic": "QFE_V1",
+  "conditionId": "QFE",
+  "name": "Q Fever",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Q_Fever.v5.20240628.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Q_Fever.v5.20240628.docx on 2026-07-21 (authoritative RCKMS Content Release 16; latest revision 2025-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "QFE-R1",
+      "description": "Q fever diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.259",
+                      "name": "Q Fever (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.260",
+                      "name": "Q Fever (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.259",
+                      "name": "Q Fever (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.260",
+                      "name": "Q Fever (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "QFE-R3",
+      "description": "Coxiella burnetii identified by culture, including preliminary results",
+      "logic": {
+        "any": [
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.501",
+                  "name": "Q Fever (Tests for Coxiella burnetii by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.501",
+                  "name": "Q Fever (Tests for Coxiella burnetii by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.502",
+                  "resultName": "Q Fever (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.501",
+                  "name": "Q Fever (Tests for Coxiella burnetii by Culture and Identification Method)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1041",
+              "name": "Organisms (Tests by Culture and Identification)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.502",
+              "resultName": "Q Fever (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1040",
+              "name": "Organisms (Tests by Unspecified Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.502",
+              "resultName": "Q Fever (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "QFE-R4",
+      "description": "Coxiella burnetii nucleic acid detected",
+      "logic": {
+        "any": [
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.500",
+                  "name": "Q Fever (Tests for Coxiella burnetii Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.500",
+                  "name": "Q Fever (Tests for Coxiella burnetii Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.502",
+                  "resultName": "Q Fever (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.500",
+                  "name": "Q Fever (Tests for Coxiella burnetii Nucleic Acid)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.502",
+              "resultName": "Q Fever (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "QFE-R5",
+      "description": "Coxiella burnetii antigen detected",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.499",
+              "name": "Q Fever (Tests for Coxiella burnetii Antigen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.499",
+              "name": "Q Fever (Tests for Coxiella burnetii Antigen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.502",
+              "resultName": "Q Fever (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.499",
+              "name": "Q Fever (Tests for Coxiella burnetii Antigen)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "QFE-R12",
+      "description": "Coxiella burnetii IgM or IgG antibody detected, excluding quantitative phase I/II IgG IFA tests",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.496",
+              "name": "Q Fever (Tests for Coxiella burnetii IgM IgG Antibody [Excluding Quantitative IFA Tests for IgG Antibody against Phase I or II Antigen])",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.496",
+              "name": "Q Fever (Tests for Coxiella burnetii IgM IgG Antibody [Excluding Quantitative IFA Tests for IgG Antibody against Phase I or II Antigen])",
+              "resultOid": "2.16.840.1.113762.1.4.1146.502",
+              "resultName": "Q Fever (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.496",
+              "name": "Q Fever (Tests for Coxiella burnetii IgM IgG Antibody [Excluding Quantitative IFA Tests for IgG Antibody against Phase I or II Antigen])",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "QFE-R13",
+      "description": "Lab test ordered for Coxiella burnetii culture and identification",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.501",
+          "name": "Q Fever (Tests for Coxiella burnetii by Culture and Identification Method)"
+        }
+      }
+    },
+    {
+      "id": "QFE-R14",
+      "description": "Lab test ordered for Coxiella burnetii nucleic-acid detection",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.500",
+          "name": "Q Fever (Tests for Coxiella burnetii Nucleic Acid)"
+        }
+      }
+    },
+    {
+      "id": "QFE-R15",
+      "description": "Lab test ordered for Coxiella burnetii antigen detection",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.499",
+          "name": "Q Fever (Tests for Coxiella burnetii Antigen)"
+        }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2: Q fever [Suspected] (Disorders) (SNOMED and ICD10CM)",
+      "reason": "both authoritative Table 3 rows are not implemented and have no codes, so entirely inoperable Rule 2 is omitted with source numbering preserved"
+    },
+    {
+      "valueSet": "Rule 6: four-fold Coxiella burnetii phase II IgG antibody titer rise in paired specimens",
+      "reason": "the authoritative source marks this rule not operational; SEM_V1 cannot compare paired specimens, the 21-180 day interval, or fold changes, so Rule 6 is omitted"
+    },
+    {
+      "valueSet": "Rules 7-8 and 10-11: Coxiella burnetii phase I/II IgG antibody titer thresholds",
+      "reason": "the authoritative source marks the 1:128 and 1:32 titer rules inoperable because of eICR result formatting; SEM_V1 has no numeric/titer comparison, so all four rules are omitted"
+    },
+    {
+      "valueSet": "Rule 9: clinical findings or observations plus contact with a laboratory-confirmed Q fever case",
+      "reason": "the authoritative source marks the logic set inoperable because the epidemiologic-link criterion is not implemented; SEM_V1 also lacks numeric temperature thresholds and several clinical value sets have no codes, so Rule 9 is omitted rather than allowing clinical findings alone to report"
+    },
+    {
+      "valueSet": "Rules 13-15: laboratory test orders and code-less test-panel value sets",
+      "reason": "SEM_V1 lab evidence does not distinguish orders from completed observations, so coded order-name alternatives use labTestInValueSet; all three authoritative panel value sets have no codes and their branches are omitted"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-record reporter types",
+      "reason": "the authoritative snapshot marks these reporter types not implemented in RCKMS; SEM_V1 does not carry reporter-source or death-certificate cause/contributing-condition evidence"
+    }
+  ]
+}

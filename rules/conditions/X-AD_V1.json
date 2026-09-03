@@ -1,0 +1,118 @@
+{
+  "mnemonic": "X-AD_V1",
+  "conditionId": "X-AD",
+  "name": "X-linked Adrenoleukodystrophy",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "X-linked_Adrenoleukodystrophy.v1.20250703.docx",
+    "rckmsVersion": "v1",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs X-linked_Adrenoleukodystrophy.v1.20250703.docx on 2026-07-29 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "X-AD-R1",
+      "description": "X-linked Adrenoleukodystrophy diagnosis or active problem (timeboxed) in a patient younger than 1 year",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2604", "name": "X-linked Adrenoleukodystrophy (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2605", "name": "X-linked Adrenoleukodystrophy (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2604", "name": "X-linked Adrenoleukodystrophy (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2605", "name": "X-linked Adrenoleukodystrophy (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+        ]
+      }
+    },
+    {
+      "id": "X-AD-R3",
+      "description": "Newborn-screening interpretation consistent with X-linked Adrenoleukodystrophy in a patient younger than 1 year",
+      "logic": {
+        "all": [
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2606", "name": "X-linked Adrenoleukodystrophy (Newborn Screening Interpretation Tests)", "resultOid": "2.16.840.1.113762.1.4.1146.2577", "resultName": "Interpretation Out of Range (LOINC Answer)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2606", "name": "X-linked Adrenoleukodystrophy (Newborn Screening Interpretation Tests)", "resultOid": "2.16.840.1.113762.1.4.1146.2604", "resultName": "X-linked Adrenoleukodystrophy (Disorders) (SNOMED)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2606", "name": "X-linked Adrenoleukodystrophy (Newborn Screening Interpretation Tests)", "resultOid": "2.16.840.1.113762.1.4.1146.2618", "resultName": "X-linked Adrenoleukodystrophy (LOINC Answer)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2606", "name": "X-linked Adrenoleukodystrophy (Newborn Screening Interpretation Tests)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2575", "name": "Newborn Screening Interpretation Tests", "resultOid": "2.16.840.1.113762.1.4.1146.2604", "resultName": "X-linked Adrenoleukodystrophy (Disorders) (SNOMED)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2575", "name": "Newborn Screening Interpretation Tests", "resultOid": "2.16.840.1.113762.1.4.1146.2618", "resultName": "X-linked Adrenoleukodystrophy (LOINC Answer)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "X-AD-R4",
+      "description": "High interpretation on a blood-specific C22:0, C24:0, C26:0, C24:0/C22:0, or C26:0/C22:0 test in a patient younger than 1 year (numeric thresholds and general-test-plus-blood-specimen alternatives not modeled)",
+      "logic": {
+        "all": [
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true },
+          {
+            "any": [
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2607", "name": "X-linked Adrenoleukodystrophy (Tests for Docosanoic Acid [Quantitative] in Blood by Any Method)", "codes": ["H", "HH"] } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2609", "name": "X-linked Adrenoleukodystrophy (Tests for Tetracosanoic Acid [Quantitative] in Blood by Any Method)", "codes": ["H", "HH"] } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2611", "name": "X-linked Adrenoleukodystrophy (Tests for Hexacosanoic Acid [Quantitative] in Blood by Any Method)", "codes": ["H", "HH"] } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2613", "name": "X-linked Adrenoleukodystrophy (Tests for Tetracosanoic Acid to Docosanoic Acid [Ratio] in Blood by Any Method)", "codes": ["H", "HH"] } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2615", "name": "X-linked Adrenoleukodystrophy (Tests for Hexacosanoic Acid to Docosanoic Acid [Ratio] in Blood by Any Method)", "codes": ["H", "HH"] } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "X-AD-R5",
+      "description": "Abnormal interpretation on an ABCD1 pathogenic-variant test in a patient younger than 1 year",
+      "logic": {
+        "all": [
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2617", "name": "X-linked Adrenoleukodystrophy (Tests for Pathogenic Variant of ABCD1 Gene)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Fetal X-linked Adrenoleukodystrophy (Disorders) (SNOMED and ICD10CM)",
+      "reason": "the authoritative source says no codes are available for either fetal value set; source rule 2 is explicitly inoperable and is omitted"
+    },
+    {
+      "valueSet": "Quantitative C22:0, C24:0, C26:0, C24:0/C22:0, and C26:0/C22:0 result thresholds",
+      "reason": "SEM_V1 has no numeric laboratory result value/unit comparison predicate; source rule 4 remains partially executable through same-observation high interpretations"
+    },
+    {
+      "valueSet": "Blood (Specimen Type) (HL7)",
+      "reason": "not implemented - HL7 table 0487 unavailable in VSAC per source document"
+    },
+    {
+      "valueSet": "Blood specimen constraints for general quantitative fatty-acid tests",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate; general-test-plus-blood-specimen branches using Blood (SNOMED OID 2.16.840.1.113762.1.4.1146.1348) are omitted from X-AD-R4, while blood-specific test-name branches remain modeled"
+    }
+  ]
+}

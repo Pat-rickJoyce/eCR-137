@@ -1,0 +1,85 @@
+{
+  "mnemonic": "NOIN_V1",
+  "conditionId": "NOIN",
+  "name": "Norovirus Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Norovirus_Infection.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Norovirus_Infection.v2.20240628.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2025-06-18)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "NOIN-R1",
+      "description": "Norovirus infection diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1480", "name": "Norovirus infection (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1481", "name": "Norovirus infection (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1480", "name": "Norovirus infection (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1481", "name": "Norovirus infection (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "NOIN-R2",
+      "description": "Detection of Norovirus nucleic acid in a clinical specimen, with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1482", "name": "Norovirus (Tests for Norovirus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1482", "name": "Norovirus (Tests for Norovirus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1485", "resultName": "Norovirus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1482", "name": "Norovirus (Tests for Norovirus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1485", "resultName": "Norovirus (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "NOIN-R3",
+      "description": "Detection of Norovirus antigen in stool by EIA using the stool-specific test value set and a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1484", "name": "Norovirus (Tests for Norovirus Antigen in Stool by EIA)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1484", "name": "Norovirus (Tests for Norovirus Antigen in Stool by EIA)", "resultOid": "2.16.840.1.113762.1.4.1146.1485", "resultName": "Norovirus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1484", "name": "Norovirus (Tests for Norovirus Antigen in Stool by EIA)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Stool specimen constraints on the unrestricted Norovirus antigen EIA test",
+      "reason": "SEM_V1 has no laboratory specimen-type evidence or predicate, and the source HL7 stool value set has no codes; NOIN-R3 omits the unrestricted antigen-test-plus-stool branch while retaining the stool-specific antigen test value set"
+    },
+    {
+      "valueSet": "Norovirus contact and outbreak-risk epidemiologic criteria",
+      "reason": "the authoritative source explicitly marks source rule 4 inoperable because epidemiologic criteria are unavailable; the rule is omitted, including its uncoded Abdominal Cramps ICD10CM alternative"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-records reporter types",
+      "reason": "the authoritative source marks these reporter types unavailable in RCKMS; reporter-type routing and the death-certificate criterion are not represented in the condition pack"
+    }
+  ]
+}

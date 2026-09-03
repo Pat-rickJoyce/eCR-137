@@ -1,0 +1,71 @@
+{
+  "mnemonic": "TOTGA_V1",
+  "conditionId": "TOTGA",
+  "name": "Transposition of the Great Arteries",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Transposition_of_the_Great_Arteries.v1.20240628.docx",
+    "rckmsVersion": "v1",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Transposition_of_the_Great_Arteries.v1.20240628.docx on 2026-07-29 (authoritative RCKMS Content Release 20240628; latest revision 2025-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "TOTGA-R1",
+      "description": "Supported d-, l-, or unspecified Transposition of the Great Arteries diagnosis or active problem, timeboxed when configured, in a patient younger than one year",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2307", "name": "D_Transposition of the Great Arteries (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2308", "name": "L_Transposition of the Great Arteries (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2309", "name": "Transposition of the Great Arteries [Unspecified] (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2310", "name": "Transposition of the Great Arteries [Unspecified] (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2307", "name": "D_Transposition of the Great Arteries (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2308", "name": "L_Transposition of the Great Arteries (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2309", "name": "Transposition of the Great Arteries [Unspecified] (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2310", "name": "Transposition of the Great Arteries [Unspecified] (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 1 d- and l-Transposition of the Great Arteries (Disorders) (ICD10CM)",
+      "reason": "the authoritative source provides no codes for either ICD-10-CM value set; the corresponding diagnosis and active-problem branches are omitted"
+    },
+    {
+      "valueSet": "Rules 2-4 fetal d-, l-, and unspecified Transposition of the Great Arteries",
+      "reason": "the authoritative source provides no codes for any of the six fetal SNOMED and ICD-10-CM value sets and marks all three rules inoperable; TOTGA-R2 through TOTGA-R4 are omitted"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies birth-certificate congenital-anomaly and death-certificate evidence, but SEM_V1 has no birth- or death-certificate evidence"
+    }
+  ]
+}

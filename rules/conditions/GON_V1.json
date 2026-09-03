@@ -1,0 +1,189 @@
+{
+  "mnemonic": "GON_V1",
+  "conditionId": "GON",
+  "name": "Gonorrhea",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Gonorrhea.v9.20260227.docx",
+    "rckmsVersion": "v9",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Gonorrhea.v9.20260227.docx on 2026-07-18 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "GON-R1",
+      "description": "Gonococcal cervicitis or urethritis diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.43", "name": "Gonorrhea [Cervicitis Urethritis] (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.44", "name": "Gonorrhea [Cervicitis Urethritis] (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.43", "name": "Gonorrhea [Cervicitis Urethritis] (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.44", "name": "Gonorrhea [Cervicitis Urethritis] (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "GON-R2",
+      "description": "Positive identification of Neisseria gonorrhoeae by culture and identification",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.245", "name": "Gonorrhea (Tests for Neisseria gonorrhoeae by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.245", "name": "Gonorrhea (Tests for Neisseria gonorrhoeae by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.169", "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.245", "name": "Gonorrhea (Tests for Neisseria gonorrhoeae by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.169", "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.169", "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1000", "name": "Gonorrhea (Tests for unspecified Neisseria species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.169", "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3069", "name": "Gonorrhea (Combination Tests that include Neisseria species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.169", "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "GON-R3",
+      "description": "Positive detection of Neisseria gonorrhoeae nucleic acid",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.244", "name": "Gonorrhea (Tests for Neisseria gonorrhoeae Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.244", "name": "Gonorrhea (Tests for Neisseria gonorrhoeae Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.169", "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.244", "name": "Gonorrhea (Tests for Neisseria gonorrhoeae Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.169", "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2530", "name": "Gonorrhea (Combination Tests that include Neisseria Gonorrhea Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.169", "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "GON-R4",
+      "description": "Microscopic observation of Neisseria gonorrhoeae or intracellular gram-negative diplococci using a genital- and urethral-specimen-specific Gram stain test",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.247", "name": "Bacteria (Tests by Microscopic Observation of Genital and Urethral Specimens by Gram Stain)", "resultOid": "2.16.840.1.113762.1.4.1146.169", "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.247", "name": "Bacteria (Tests by Microscopic Observation of Genital and Urethral Specimens by Gram Stain)", "resultOid": "2.16.840.1.113762.1.4.1146.2531", "resultName": "Intracellular Gram Negative Diplococcus (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "GON-R5",
+      "description": "Gonococcal infection at secondary sites, with complications, or chronic/disseminated disease (timeboxed diagnosis or active problem)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.639", "name": "Gonorrhea [Secondary Sites Complications Chronic] (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.641", "name": "Gonorrhea [Secondary Sites Complications Chronic] (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.639", "name": "Gonorrhea [Secondary Sites Complications Chronic] (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.641", "name": "Gonorrhea [Secondary Sites Complications Chronic] (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "GON-R6",
+      "description": "Gonococcal conjunctivitis diagnosis or active problem (timeboxed) in a patient younger than one year",
+      "logic": { "all": [
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" } },
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.640", "name": "Gonorrhea [Conjunctivitis] (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.642", "name": "Gonorrhea [Conjunctivitis] (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.640", "name": "Gonorrhea [Conjunctivitis] (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.642", "name": "Gonorrhea [Conjunctivitis] (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] }
+      ] }
+    },
+    {
+      "id": "GON-R7",
+      "description": "Gonococcal conjunctivitis diagnosis or active problem (timeboxed) in a patient at least one year old",
+      "logic": { "all": [
+        { "predicate": "ageComparison", "params": { "op": ">=", "value": 1, "unit": "years" } },
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.640", "name": "Gonorrhea [Conjunctivitis] (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.642", "name": "Gonorrhea [Conjunctivitis] (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.640", "name": "Gonorrhea [Conjunctivitis] (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.642", "name": "Gonorrhea [Conjunctivitis] (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] }
+      ] }
+    },
+    {
+      "id": "GON-R8",
+      "description": "Positive identification of an unspecified Neisseria species by culture and identification",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1000", "name": "Gonorrhea (Tests for unspecified Neisseria species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1000", "name": "Gonorrhea (Tests for unspecified Neisseria species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1036", "resultName": "Gonorrhea [Neisseria species Unspecified] (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1000", "name": "Gonorrhea (Tests for unspecified Neisseria species by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1036", "resultName": "Gonorrhea [Neisseria species Unspecified] (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1036", "resultName": "Gonorrhea [Neisseria species Unspecified] (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3069", "name": "Gonorrhea (Combination Tests that include Neisseria species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1036", "resultName": "Gonorrhea [Neisseria species Unspecified] (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "GON-R9",
+      "description": "All results of organism-specific Neisseria gonorrhoeae culture and identification tests",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.245", "name": "Gonorrhea (Tests for Neisseria gonorrhoeae by Culture and Identification Method)" } }
+    },
+    {
+      "id": "GON-R10",
+      "description": "All results of organism-specific Neisseria gonorrhoeae nucleic-acid tests",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.244", "name": "Gonorrhea (Tests for Neisseria gonorrhoeae Nucleic Acid)" } }
+    },
+    {
+      "id": "GON-R11",
+      "description": "Indeterminate or equivocal result from an organism-specific Neisseria gonorrhoeae culture and identification test",
+      "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.245", "name": "Gonorrhea (Tests for Neisseria gonorrhoeae by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1035", "resultName": "Indeterminate or Equivocal Lab Result Value" } }
+    },
+    {
+      "id": "GON-R12",
+      "description": "Indeterminate or equivocal result from an organism-specific Neisseria gonorrhoeae nucleic-acid test",
+      "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.244", "name": "Gonorrhea (Tests for Neisseria gonorrhoeae Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1035", "resultName": "Indeterminate or Equivocal Lab Result Value" } }
+    },
+    {
+      "id": "GON-R13",
+      "description": "Negative or undetected result from an organism-specific Neisseria gonorrhoeae culture and identification test",
+      "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.245", "name": "Gonorrhea (Tests for Neisseria gonorrhoeae by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1034", "resultName": "Negative or Undetected Lab Result Value" } }
+    },
+    {
+      "id": "GON-R14",
+      "description": "Negative or undetected result from an organism-specific Neisseria gonorrhoeae nucleic-acid test",
+      "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.244", "name": "Gonorrhea (Tests for Neisseria gonorrhoeae Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1034", "resultName": "Negative or Undetected Lab Result Value" } }
+    },
+    {
+      "id": "GON-R15",
+      "description": "Negative or undetected result from an organism-specific unspecified-Neisseria culture and identification test",
+      "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1000", "name": "Gonorrhea (Tests for unspecified Neisseria species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1034", "resultName": "Negative or Undetected Lab Result Value" } }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 4 generic Gram-stain tests constrained to urethral or endocervical specimen, plus organism-specific Gram-stain test-name alternatives",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate; the source HL7 specimen value sets are unavailable and both organism-specific Gram-stain test-name value sets have no codes. GON-R4 retains the coded Bacteria test-name branch whose value set itself is limited to genital and urethral specimens."
+    }
+  ]
+}

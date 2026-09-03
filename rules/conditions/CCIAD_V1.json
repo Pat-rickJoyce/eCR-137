@@ -1,0 +1,172 @@
+{
+  "mnemonic": "CCIAD_V1",
+  "conditionId": "CCIAD",
+  "name": "Congenital cytomegalovirus infection and disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Congenital_cytomegalovirus_infection_and_disease.v2.20250228.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2025-02-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Congenital_cytomegalovirus_infection_and_disease.v2.20250228.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CCIAD-R1",
+      "description": "Congenital cytomegalovirus infection diagnosis or active problem (timeboxed) in a patient no older than 6 years",
+      "logic": { "all": [
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2231", "name": "Congenital Cytomegalovirus Infection (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2232", "name": "Congenital Cytomegalovirus Infection (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2231", "name": "Congenital Cytomegalovirus Infection (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2232", "name": "Congenital Cytomegalovirus Infection (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": "<=", "value": 6, "unit": "years" }, "gate": true }
+      ] }
+    },
+    {
+      "id": "CCIAD-R2",
+      "description": "Cytomegalovirus disease diagnosis or active problem (timeboxed) in a patient no older than 45 days",
+      "logic": { "all": [
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2233", "name": "Cytomegalovirus Disease (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2234", "name": "Cytomegalovirus Disease (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2233", "name": "Cytomegalovirus Disease (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2234", "name": "Cytomegalovirus Disease (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": "<=", "value": 45, "unit": "days" }, "gate": true }
+      ] }
+    },
+    {
+      "id": "CCIAD-R3",
+      "description": "In a patient younger than 1 year, qualifying CMV nucleic-acid, culture, or whole-blood antigen evidence",
+      "logic": { "all": [
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true },
+        { "any": [
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2230", "name": "Congenital Cytomegalovirus (Tests for CMV Nucleic Acid by NAAT)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2221", "name": "Congenital Cytomegalovirus (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] },
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2221", "name": "Congenital Cytomegalovirus (Organism or Substance in Lab Results)" } }
+          ] },
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2229", "name": "Congenital Cytomegalovirus (Tests for CMV by Culture and Identification Method)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2221", "name": "Congenital Cytomegalovirus (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+            ] },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2221", "name": "Congenital Cytomegalovirus (Organism or Substance in Lab Results)" } }
+          ] },
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2227", "name": "Congenital Cytomegalovirus (Tests for CMV Antigen in Whole Blood)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2221", "name": "Congenital Cytomegalovirus (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] }
+        ] }
+      ] }
+    },
+    {
+      "id": "CCIAD-R4",
+      "description": "Detection of CMV nucleic acid in amniotic fluid by NAAT",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2226", "name": "Congenital Cytomegalovirus (Tests for CMV Nucleic Acid in Amniotic Fluid by NAAT)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2221", "name": "Congenital Cytomegalovirus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "CCIAD-R5",
+      "description": "Identification of CMV in amniotic fluid by culture or isolate identification",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2225", "name": "Congenital Cytomegalovirus (Tests for CMV in Amniotic Fluid by Culture and Identification Method)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2221", "name": "Congenital Cytomegalovirus (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] },
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2222", "name": "Organisms (Tests in Amniotic Fluid by Culture and Identification Method)" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2221", "name": "Congenital Cytomegalovirus (Organism or Substance in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "CCIAD-R6",
+      "description": "Microscopic observation of CMV antigen in tissue by immunohistochemical staining",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2224", "name": "Congenital Cytomegalovirus (Tests for CMV Antigen in Tissue by Immunohistochemical Stain)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2221", "name": "Congenital Cytomegalovirus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "CCIAD-R7",
+      "description": "Optional logic: any result of a CMV culture, nucleic-acid, or antibody test in a patient younger than 1 year",
+      "logic": { "all": [
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true },
+        { "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2229", "name": "Congenital Cytomegalovirus (Tests for CMV by Culture and Identification Method)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2532", "name": "Congenital Cytomegalovirus (Tests for CMV Nucleic Acid)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2533", "name": "Congenital Cytomegalovirus (Tests for CMV Antibody)" } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Generic CMV antigen/NAAT/culture/IHC tests constrained by Blood, Amniotic Fluid, or Tissue specimen type",
+      "reason": "SEM_V1 has no specimen-type predicate, so specimen-constrained generic-test alternatives in source rules 3-6 are omitted while specimen-specific test-name branches are retained"
+    },
+    {
+      "valueSet": "Organisms (Tests for Nucleic Acid in Amniotic Fluid by NAAT)",
+      "reason": "the authoritative source says no codes are available; CCIAD-R4 retains the available CMV-specific amniotic-fluid NAAT branch"
+    }
+  ]
+}

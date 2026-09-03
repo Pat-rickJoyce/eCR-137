@@ -1,0 +1,105 @@
+{
+  "mnemonic": "HADI_V1",
+  "conditionId": "HADI",
+  "name": "Hansen's disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Hansen's_disease.v7.20260626.docx",
+    "rckmsVersion": "v7",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Hansen's_disease.v7.20260626.docx on 2026-07-18 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "HADI-R1",
+      "description": "Hansen's disease diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.362", "name": "Hansen's Disease (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.363", "name": "Hansen's Disease (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.362", "name": "Hansen's Disease (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.363", "name": "Hansen's Disease (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HADI-R2",
+      "description": "Microscopic observation of acid-fast bacilli or a Hansen's disease organism using a test name specific to skin or unspecified tissue",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2353", "name": "Acid Fast Bacilli (Tests by Microscopic Observation in Skin or Unspecified Tissue by Fite Stain)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2353", "name": "Acid Fast Bacilli (Tests by Microscopic Observation in Skin or Unspecified Tissue by Fite Stain)", "resultOid": "2.16.840.1.113762.1.4.1146.839", "resultName": "Acid Fast Bacilli (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2353", "name": "Acid Fast Bacilli (Tests by Microscopic Observation in Skin or Unspecified Tissue by Fite Stain)", "resultOid": "2.16.840.1.113762.1.4.1146.985", "resultName": "Hansen's Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2353", "name": "Acid Fast Bacilli (Tests by Microscopic Observation in Skin or Unspecified Tissue by Fite Stain)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2355", "name": "Organisms (Tests by Microscopic Observation by Unspecified Acid Fast Stain in Skin)", "resultOid": "2.16.840.1.113762.1.4.1146.839", "resultName": "Acid Fast Bacilli (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2355", "name": "Organisms (Tests by Microscopic Observation by Unspecified Acid Fast Stain in Skin)", "resultOid": "2.16.840.1.113762.1.4.1146.985", "resultName": "Hansen's Disease (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "HADI-R3",
+      "description": "Microscopic observation of a noncaseating granuloma using a general microscopy or unspecified-method test",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.900", "name": "Organisms (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.988", "resultName": "Non Caseating Granuloma (Finding by Microscopic Observation in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.988", "resultName": "Non Caseating Granuloma (Finding by Microscopic Observation in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "HADI-R5",
+      "description": "Absence of skin lesions, neuralgia, and peripheral nerve thickening",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2383", "name": "Absence of Skin Lesions (SNOMED)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2383", "name": "Absence of Skin Lesions (SNOMED)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2384", "name": "Neuralgia (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2385", "name": "Neuralgia (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2384", "name": "Neuralgia (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2385", "name": "Neuralgia (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2386", "name": "Peripheral Nerve Thickening (SNOMED)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2386", "name": "Peripheral Nerve Thickening (SNOMED)", "status": "active" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "HADI-R8",
+      "description": "All results of Fite-stain acid-fast-bacilli microscopy tests whose test-name value set is specific to skin or unspecified tissue",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2353", "name": "Acid Fast Bacilli (Tests by Microscopic Observation in Skin or Unspecified Tissue by Fite Stain)" } }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2 generic Fite/acid-fast-stain tests constrained to skin or unspecified-tissue specimen",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate, the source HL7 specimen value sets are unavailable, and the unspecified-tissue-specific acid-fast-stain test-name value set has no codes; HADI-R2 retains the coded test-name branches that themselves identify skin or unspecified tissue"
+    },
+    {
+      "valueSet": "Rule 3 organism-specific Noncaseating Granuloma microscopy test",
+      "reason": "the source value set has no codes, so the positive-result and abnormal-interpretation branch is omitted; HADI-R3 retains the coded general-test branches paired with the noncaseating-granuloma result value set"
+    },
+    {
+      "valueSet": "Rules 4 and 9: M. leprae or M. lepromatosis nucleic-acid testing in skin or nerve",
+      "reason": "every coded source branch requires skin or nerve specimen evidence, which SEM_V1 does not preserve, while all specimen-specific test-name alternatives have no codes; both the positive and all-results rules are omitted rather than dropping the specimen requirement"
+    },
+    {
+      "valueSet": "Rule 6 characteristic skin findings plus exclusion of more common conditions",
+      "reason": "the authoritative source marks the entire rule inoperable because the clinical findings have no codes and RCKMS cannot evaluate absence of other diagnoses, so the rule is omitted"
+    },
+    {
+      "valueSet": "Rule 7 absence of skin lesions, unexplained neuropathy, negative inflammatory markers, and an epidemiologic exposure",
+      "reason": "the authoritative source marks the rule inoperable; the neuropathy and inflammatory-marker value sets have no codes and SEM_V1 has no epidemiologic-link evidence, so the rule is omitted rather than allowing absence of skin lesions alone to report"
+    }
+  ]
+}

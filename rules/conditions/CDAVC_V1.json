@@ -1,0 +1,86 @@
+{
+  "mnemonic": "CDAVC_V1",
+  "conditionId": "CDAVC",
+  "name": "Creutzfeldt-Jakob Disease and Variant CJD",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Creutzfeldt-Jakob_Disease_and_Variant_CJD.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Creutzfeldt-Jakob_Disease_and_Variant_CJD.v2.20240202.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CDAVC-R1",
+      "description": "Creutzfeldt-Jakob Disease diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1336", "name": "Creutzfeldt Jakob Disease (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1338", "name": "Creutzfeldt Jakob Disease (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1336", "name": "Creutzfeldt Jakob Disease (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1338", "name": "Creutzfeldt Jakob Disease (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "CDAVC-R2",
+      "description": "Variant Creutzfeldt-Jakob Disease diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1337", "name": "Variant Creutzfeldt Jakob Disease (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1339", "name": "Variant Creutzfeldt Jakob Disease (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1337", "name": "Variant Creutzfeldt Jakob Disease (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1339", "name": "Variant Creutzfeldt Jakob Disease (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "CDAVC-R3",
+      "description": "Optional logic: detection of abnormal prion protein by any method with a positive or abnormal result",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1341", "name": "Prion Disease (Tests for Abnormal Prion Protein)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "CDAVC-R4",
+      "description": "Optional logic: detection of 14-3-3 protein by any method with a positive or abnormal result",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1340", "name": "Prion Disease (Tests for 14_3_3 Protein)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Neuropathological findings consistent with CJD or variant CJD in tissue or by post-mortem examination",
+      "reason": "the authoritative source marks all four neuropathology/pathology criteria inoperable because the findings are not coded in the EHR unless represented as a diagnosis or active problem; those criteria are omitted"
+    }
+  ]
+}

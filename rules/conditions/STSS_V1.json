@@ -1,0 +1,135 @@
+{
+  "mnemonic": "STSS_V1",
+  "conditionId": "STSS",
+  "name": "Streptococcal Toxic Shock Syndrome",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Streptococcal_Toxic_Shock_Syndrome.v3.20240628.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Streptococcal_Toxic_Shock_Syndrome.v3.20240628.docx on 2026-07-29 (authoritative RCKMS Content Release 20240628; latest revision 2025-05-21)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "STSS-R1",
+      "description": "Streptococcal toxic shock syndrome diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.984", "name": "Streptococcal Toxic Shock Syndrome (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.984", "name": "Streptococcal Toxic Shock Syndrome (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "STSS-R2",
+      "description": "Optional simplified clinical and laboratory criteria: hypotension, at least two complication categories, and Group A Streptococcus culture evidence from a sterile or nonsterile site",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1231", "name": "Hypotension (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1232", "name": "Hypotension (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1231", "name": "Hypotension (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1232", "name": "Hypotension (ICD10CM)", "status": "active" } }
+            ]
+          },
+          {
+            "atLeast": {
+              "n": 2,
+              "of": [
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2371", "name": "Renal Impairment [Acute or Unspecified] (SNOMED)" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2372", "name": "Renal Impairment [Acute or Unspecified] (ICD10CM)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2371", "name": "Renal Impairment [Acute or Unspecified] (SNOMED)", "status": "active" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2372", "name": "Renal Impairment [Acute or Unspecified] (ICD10CM)", "status": "active" } }
+                  ]
+                },
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2373", "name": "Coagulopathy [Unspecified Cause] (SNOMED)" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2374", "name": "Coagulopathy [Unspecified Cause] (ICD10CM)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2373", "name": "Coagulopathy [Unspecified Cause] (SNOMED)", "status": "active" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2374", "name": "Coagulopathy [Unspecified Cause] (ICD10CM)", "status": "active" } }
+                  ]
+                },
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1785", "name": "Elevated liver enzyme (SNOMED)" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1786", "name": "Elevated liver enzyme (ICD10CM)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1785", "name": "Elevated liver enzyme (SNOMED)", "status": "active" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1786", "name": "Elevated liver enzyme (ICD10CM)", "status": "active" } }
+                  ]
+                },
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.879", "name": "Acute Respiratory Distress Syndrome (ARDS) (SNOMED)" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.880", "name": "Acute Respiratory Distress Syndrome (ARDS) (ICD10CM)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.879", "name": "Acute Respiratory Distress Syndrome (ARDS) (SNOMED)", "status": "active" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.880", "name": "Acute Respiratory Distress Syndrome (ARDS) (ICD10CM)", "status": "active" } }
+                  ]
+                },
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2375", "name": "Rash [Erythematous, Macular, or Desquamating of Unspecified Cause] (SNOMED)" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2376", "name": "Rash [Erythematous, Macular, or Desquamating of Unspecified Cause] (ICD10CM)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2375", "name": "Rash [Erythematous, Macular, or Desquamating of Unspecified Cause] (SNOMED)", "status": "active" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2376", "name": "Rash [Erythematous, Macular, or Desquamating of Unspecified Cause] (ICD10CM)", "status": "active" } }
+                  ]
+                },
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2377", "name": "Soft Tissue Necrosis (SNOMED)" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2378", "name": "Soft Tissue Necrosis (ICD10CM)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2377", "name": "Soft Tissue Necrosis (SNOMED)", "status": "active" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2378", "name": "Soft Tissue Necrosis (ICD10CM)", "status": "active" } }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2379", "name": "Group A Streptococcus (Tests for Group A Strep in Specimen from Nonsterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2379", "name": "Group A Streptococcus (Tests for Group A Strep in Specimen from Nonsterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1575", "resultName": "Group A Streptococcus (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2379", "name": "Group A Streptococcus (Tests for Group A Strep in Specimen from Nonsterile Site by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2380", "name": "Organisms (Tests in Specimen from Nonsterile Site by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1575", "resultName": "Group A Streptococcus (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2299", "name": "Group A Streptococcus (Tests for Group A Strep in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2299", "name": "Group A Streptococcus (Tests for Group A Strep in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1575", "resultName": "Group A Streptococcus (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2299", "name": "Group A Streptococcus (Tests for Group A Strep in Specimen from Normally Sterile Site by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1461", "name": "Organisms (Tests in Specimen from Normally Sterile Site by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1575", "resultName": "Group A Streptococcus (Organism or Substance in Lab Results)" } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 1 Streptococcal Toxic Shock Syndrome ICD-10-CM branch",
+      "reason": "the authoritative source marks the ICD-10-CM value set not implemented because no codes are available; the supported SNOMED branch remains implemented"
+    },
+    {
+      "valueSet": "Rule 2 generic culture tests with sterile or nonsterile specimen qualifiers",
+      "reason": "SEM_V1 has no specimen evidence, so the required specimen-site qualifiers cannot be evaluated; the specimen-specific culture test-name branches remain implemented"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence, but the reporter type is unavailable in RCKMS and SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

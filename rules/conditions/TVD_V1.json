@@ -1,0 +1,103 @@
+{
+  "mnemonic": "TVD_V1",
+  "conditionId": "TVD",
+  "name": "Trivittatus virus disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Trivittatus_virus_disease.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Trivittatus_virus_disease.v2.20240202.docx on 2026-07-29 (authoritative RCKMS Content Release 20240202; latest revision 2025-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "TVD-R1",
+      "description": "Trivittatus virus disease or infection diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1951", "name": "Trivittatus Virus Diseases (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1951", "name": "Trivittatus Virus Diseases (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TVD-R2",
+      "description": "Identification of Trivittatus virus by a generic culture or organism test with a condition-specific result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.526", "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1962", "resultName": "Trivittatus Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1962", "resultName": "Trivittatus Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1962", "resultName": "Trivittatus Virus Diseases (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TVD-R3",
+      "description": "Detection of Trivittatus virus nucleic acid by a generic nucleic-acid test with a condition-specific result",
+      "logic": {
+        "predicate": "labTestWithResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.994",
+          "name": "Organisms (Tests for Nucleic Acid)",
+          "resultOid": "2.16.840.1.113762.1.4.1146.1962",
+          "resultName": "Trivittatus Virus Diseases (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "TVD-R7",
+      "description": "Detection of Trivittatus virus antibody by coded result or abnormal interpretation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1958", "name": "Trivittatus Virus Diseases (Tests for Trivittatus Virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1958", "name": "Trivittatus Virus Diseases (Tests for Trivittatus Virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1962", "resultName": "Trivittatus Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1958", "name": "Trivittatus Virus Diseases (Tests for Trivittatus Virus Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 1 Trivittatus Virus Diseases (Disorders) (ICD10CM)",
+      "reason": "the authoritative value-set row is not implemented and has no codes; TVD-R1 retains the implemented SNOMED diagnosis and active-problem alternatives"
+    },
+    {
+      "valueSet": "Rule 2 organism-specific culture test",
+      "reason": "the authoritative Trivittatus-specific culture-test value set is not implemented and has no codes; TVD-R2 retains all three implemented generic-test alternatives with same-observation organism results"
+    },
+    {
+      "valueSet": "Rule 3 organism-specific nucleic-acid test",
+      "reason": "the authoritative Trivittatus-specific nucleic-acid-test value set is not implemented and has no codes; TVD-R3 retains the implemented generic nucleic-acid test with same-observation organism result"
+    },
+    {
+      "valueSet": "Rules 4 and 5 Trivittatus antigen and IgM antibody tests",
+      "reason": "the source marks both test-name value sets not implemented with no codes, so the wholly inoperable rules are omitted with source numbering preserved"
+    },
+    {
+      "valueSet": "Rule 6 paired acute and convalescent antibody evidence",
+      "reason": "the source marks four-fold rise and seroconversion logic not implemented; SEM_V1 cannot pair serial observations or compare titers across collection intervals, so the wholly inoperable rule is omitted"
+    },
+    {
+      "valueSet": "Rule 7 antibody result greater than zero",
+      "reason": "SEM_V1 has no numeric laboratory-result threshold predicate; TVD-R7 retains the coded positive, condition-specific organism, and abnormal-interpretation alternatives"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

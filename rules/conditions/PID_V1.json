@@ -1,0 +1,973 @@
+{
+  "mnemonic": "PID_V1",
+  "conditionId": "PID",
+  "name": "Pelvic Inflammatory Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Pelvic_Inflammatory_Disease.v4.20260227.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Pelvic_Inflammatory_Disease.v4.20260227.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2026-01-05)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "PID-R1",
+      "description": "Pelvic inflammatory disease diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2069",
+                      "name": "Pelvic Inflammatory Disease (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2072",
+                      "name": "Pelvic Inflammatory Disease (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2069",
+                      "name": "Pelvic Inflammatory Disease (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2072",
+                      "name": "Pelvic Inflammatory Disease (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PID-R2",
+      "description": "Lower abdominal, cervical-motion, and adnexal tenderness plus at least one supporting clinical finding",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2075",
+                  "name": "Lower Abdominal Tenderness (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2075",
+                  "name": "Lower Abdominal Tenderness (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2076",
+                  "name": "Lower Abdominal Tenderness (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2076",
+                  "name": "Lower Abdominal Tenderness (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2077",
+                  "name": "Tenderness with motion of the cervix (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2077",
+                  "name": "Tenderness with motion of the cervix (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2078",
+                  "name": "Adnexal Tenderness (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2078",
+                  "name": "Adnexal Tenderness (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.670",
+                  "name": "Fever (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.670",
+                  "name": "Fever (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.671",
+                  "name": "Fever (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.671",
+                  "name": "Fever (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2080",
+                  "name": "Leukocytosis (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2080",
+                  "name": "Leukocytosis (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2081",
+                  "name": "Leukocytosis (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2081",
+                  "name": "Leukocytosis (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2082",
+                  "name": "Purulent material in the peritoneal cavity (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2082",
+                  "name": "Purulent material in the peritoneal cavity (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2083",
+                  "name": "Pelvic Abscess (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2083",
+                  "name": "Pelvic Abscess (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2084",
+                  "name": "Pelvic Abscess (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2084",
+                  "name": "Pelvic Abscess (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.52",
+                  "name": "Chlamydia trachomatis Infection [Cervicitis Urethritis LGV] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.52",
+                  "name": "Chlamydia trachomatis Infection [Cervicitis Urethritis LGV] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.53",
+                  "name": "Chlamydia trachomatis Infection [Cervicitis Urethritis LGV] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.53",
+                  "name": "Chlamydia trachomatis Infection [Cervicitis Urethritis LGV] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.43",
+                  "name": "Gonorrhea [Cervicitis Urethritis] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.43",
+                  "name": "Gonorrhea [Cervicitis Urethritis] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.44",
+                  "name": "Gonorrhea [Cervicitis Urethritis] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.44",
+                  "name": "Gonorrhea [Cervicitis Urethritis] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PID-R3",
+      "description": "Lower abdominal, cervical-motion, and adnexal tenderness plus qualifying Chlamydia or gonorrhea laboratory evidence on one observation",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2075",
+                  "name": "Lower Abdominal Tenderness (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2075",
+                  "name": "Lower Abdominal Tenderness (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2076",
+                  "name": "Lower Abdominal Tenderness (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2076",
+                  "name": "Lower Abdominal Tenderness (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2077",
+                  "name": "Tenderness with motion of the cervix (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2077",
+                  "name": "Tenderness with motion of the cervix (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2078",
+                  "name": "Adnexal Tenderness (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2078",
+                  "name": "Adnexal Tenderness (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.238",
+                  "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.238",
+                  "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.170",
+                  "resultName": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.238",
+                  "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis by Culture and Identification Method)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1041",
+                  "name": "Organisms (Tests by Culture and Identification)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.170",
+                  "resultName": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2523",
+                  "name": "Chlamydia trachomatis Infection (Tests for unspecified Chlamydia species by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.170",
+                  "resultName": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1040",
+                  "name": "Organisms (Tests by Unspecified Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.170",
+                  "resultName": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.239",
+                  "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.239",
+                  "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.170",
+                  "resultName": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.239",
+                  "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis Nucleic Acid)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.994",
+                  "name": "Organisms (Tests for Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.170",
+                  "resultName": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2524",
+                  "name": "Chlamydia trachomatis Infection (Tests for unspecified Chlamydia species Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.170",
+                  "resultName": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2526",
+                  "name": "Chlamydia trachomatis Infection (Combination Tests that include Chlamydia trachomatis Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.170",
+                  "resultName": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.240",
+                  "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis Antigen)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.240",
+                  "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis Antigen)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.170",
+                  "resultName": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.240",
+                  "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis Antigen)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2525",
+                  "name": "Chlamydia trachomatis Infection (Tests for unspecified Chlamydia species Antigen)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.170",
+                  "resultName": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.245",
+                  "name": "Gonorrhea (Tests for Neisseria gonorrhoeae by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.245",
+                  "name": "Gonorrhea (Tests for Neisseria gonorrhoeae by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.169",
+                  "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.245",
+                  "name": "Gonorrhea (Tests for Neisseria gonorrhoeae by Culture and Identification Method)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1041",
+                  "name": "Organisms (Tests by Culture and Identification)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.169",
+                  "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1040",
+                  "name": "Organisms (Tests by Unspecified Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.169",
+                  "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1000",
+                  "name": "Gonorrhea (Tests for unspecified Neisseria species by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.169",
+                  "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.244",
+                  "name": "Gonorrhea (Tests for Neisseria gonorrhoeae Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.244",
+                  "name": "Gonorrhea (Tests for Neisseria gonorrhoeae Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.169",
+                  "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.244",
+                  "name": "Gonorrhea (Tests for Neisseria gonorrhoeae Nucleic Acid)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.994",
+                  "name": "Organisms (Tests for Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.169",
+                  "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2530",
+                  "name": "Gonorrhea (Combination Tests that include Neisseria Gonorrhea Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.169",
+                  "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.247",
+                  "name": "Bacteria (Tests by Microscopic Observation of Genital and Urethral Specimens by Gram Stain)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.169",
+                  "resultName": "Gonorrhea [Neisseria gonorrhoeae] (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.247",
+                  "name": "Bacteria (Tests by Microscopic Observation of Genital and Urethral Specimens by Gram Stain)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.2531",
+                  "resultName": "Intracellular Gram Negative Diplococcus (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PID-R5",
+      "description": "Pelvic inflammatory disease, non-Chlamydia trachomatis and non-Neisseria gonorrhoeae diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2070",
+                      "name": "Pelvic Inflammatory Disease [nonGC and nonCT] (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2073",
+                      "name": "Pelvic Inflammatory Disease [nonGC and nonCT] (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2070",
+                      "name": "Pelvic Inflammatory Disease [nonGC and nonCT] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2073",
+                      "name": "Pelvic Inflammatory Disease [nonGC and nonCT] (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PID-R6",
+      "description": "Pelvic inflammatory disease, unspecified cause diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2071",
+                      "name": "Pelvic Inflammatory Disease [Unspecified] (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2074",
+                      "name": "Pelvic Inflammatory Disease [Unspecified] (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2071",
+                      "name": "Pelvic Inflammatory Disease [Unspecified] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2074",
+                      "name": "Pelvic Inflammatory Disease [Unspecified] (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PID-R7",
+      "description": "Pelvic inflammatory disease diagnosis or active problem plus cervical-motion, adnexal, or uterine tenderness",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2069",
+                          "name": "Pelvic Inflammatory Disease (Disorders) (SNOMED)"
+                        }
+                      },
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2072",
+                          "name": "Pelvic Inflammatory Disease (Disorders) (ICD10CM)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2069",
+                          "name": "Pelvic Inflammatory Disease (Disorders) (SNOMED)",
+                          "status": "active"
+                        }
+                      },
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2072",
+                          "name": "Pelvic Inflammatory Disease (Disorders) (ICD10CM)",
+                          "status": "active"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2077",
+                  "name": "Tenderness with motion of the cervix (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2077",
+                  "name": "Tenderness with motion of the cervix (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2078",
+                  "name": "Adnexal Tenderness (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2078",
+                  "name": "Adnexal Tenderness (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2079",
+                  "name": "Uterine Tenderness (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2079",
+                  "name": "Uterine Tenderness (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Source rule 2 numeric fever branch and code-less clinical-finding branches",
+      "reason": "SEM_V1 has no vital-sign numeric comparison, so temperature >= 38 C or >= 100.4 F is omitted while the coded fever alternatives remain; the source also provides no ICD-10-CM codes for cervical-motion tenderness, adnexal tenderness, uterine tenderness, or purulent peritoneal material"
+    },
+    {
+      "valueSet": "Source rule 3 leukocyte concentration > 10,000 cells/uL",
+      "reason": "SEM_V1 has no numeric laboratory result value/unit comparison predicate; the elevated-leukocyte branch is omitted while the coded Chlamydia and gonorrhea laboratory branches remain"
+    },
+    {
+      "valueSet": "Source rule 3 gonorrhea microscopy branches requiring urethral or endocervical specimen evidence",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate, both organism-specific microscopy test value sets have no codes, and the HL7 specimen value sets are unavailable; PID-R3 retains the specimen-encoded genital/urethral Gram-stain test branch with gonorrhea or intracellular-diplococcus results"
+    },
+    {
+      "valueSet": "Source rule 4 exposure to gonorrhea, chlamydia, or nongonococcal urethritis",
+      "reason": "the authoritative source marks the clinical-plus-epidemiologic logic set inoperable because the exposure criterion is not implemented; the rule is omitted while preserving source numbering"
+    },
+    {
+      "valueSet": "Vital-records reporting and death-certificate pelvic inflammatory disease criterion",
+      "reason": "the authoritative source marks the vital-records reporter type unavailable and not implemented in RCKMS; reporter routing and death-certificate evidence are not represented in SEM_V1"
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "mnemonic": "LYFI_V1",
+  "conditionId": "LYFI",
+  "name": "Lymphatic Filariasis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Lymphatic_Filariasis.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Lymphatic_Filariasis.v2.20240202.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2025-06-04)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "LYFI-R1",
+      "description": "Lymphatic filariasis as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1852", "name": "Lymphatic Filariasis (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1853", "name": "Lymphatic Filariasis (Disorders) (ICD10CM)" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "any": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1852", "name": "Lymphatic Filariasis (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1853", "name": "Lymphatic Filariasis (Disorders) (ICD10CM)", "status": "active" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "LYFI-R2",
+      "description": "Microscopic identification of a lymphatic-filariasis organism in blood on the same observation",
+      "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.884", "name": "Tests by Microscopic Observation in Blood", "resultOid": "2.16.840.1.113762.1.4.1146.1861", "resultName": "Lymphatic Filariasis (Organism or Substance in Lab Results)" } }
+    },
+    {
+      "id": "LYFI-R3",
+      "description": "Wuchereria bancrofti, Brugia malayi, or B. timori IgG4 antibody test with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1857", "name": "Lymphatic Filariasis (Tests for Wuchereria bancrofti, Brugia malayi or Brugia timori IgG4 antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1857", "name": "Lymphatic Filariasis (Tests for Wuchereria bancrofti, Brugia malayi or Brugia timori IgG4 antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1861", "resultName": "Lymphatic Filariasis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1857", "name": "Lymphatic Filariasis (Tests for Wuchereria bancrofti, Brugia malayi or Brugia timori IgG4 antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "LYFI-R4",
+      "description": "Filariasis as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1854", "name": "Filariasis (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1855", "name": "Filariasis (Disorders) (ICD10CM)" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "any": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1854", "name": "Filariasis (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1855", "name": "Filariasis (Disorders) (ICD10CM)", "status": "active" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "LYFI-R5",
+      "description": "Optional logic: tropical pulmonary eosinophilia as a SNOMED diagnosis or active problem (timeboxed; ICD-10-CM source branch has no codes)",
+      "logic": { "any": [
+        { "all": [ { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1856", "name": "Tropical Pulmonary Eosinophilia (Disorders) (SNOMED)" } }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1856", "name": "Tropical Pulmonary Eosinophilia (Disorders) (SNOMED)", "status": "active" } }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "LYFI-R6",
+      "description": "Optional logic: Wuchereria bancrofti, Brugia malayi, or B. timori antibody test with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1858", "name": "Lymphatic Filariasis (Tests for Wuchereria bancrofti, Brugia malayi or Brugia timori antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1858", "name": "Lymphatic Filariasis (Tests for Wuchereria bancrofti, Brugia malayi or Brugia timori antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1861", "resultName": "Lymphatic Filariasis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1858", "name": "Lymphatic Filariasis (Tests for Wuchereria bancrofti, Brugia malayi or Brugia timori antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "LYFI-R7",
+      "description": "Optional logic: Wuchereria bancrofti, Brugia malayi, or B. timori antigen test with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1859", "name": "Lymphatic Filariasis (Tests for Wuchereria bancrofti, Brugia malayi or Brugia timori Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1859", "name": "Lymphatic Filariasis (Tests for Wuchereria bancrofti, Brugia malayi or Brugia timori Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.1861", "resultName": "Lymphatic Filariasis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1859", "name": "Lymphatic Filariasis (Tests for Wuchereria bancrofti, Brugia malayi or Brugia timori Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "LYFI-R8",
+      "description": "Optional logic: filarial-species nucleic-acid test with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1860", "name": "Lymphatic Filariasis (Tests for Filarial species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1860", "name": "Lymphatic Filariasis (Tests for Filarial species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1861", "resultName": "Lymphatic Filariasis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1860", "name": "Lymphatic Filariasis (Tests for Filarial species Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1861", "resultName": "Lymphatic Filariasis (Organism or Substance in Lab Results)" } }
+      ] }
+    }
+  ],
+  "gaps": [
+    { "valueSet": "Lymphatic-filariasis microscopy test names and blood specimen constraint", "reason": "the authoritative organism-specific microscopy and microscopy-in-blood test-name value sets have no codes, and SEM_V1 cannot enforce the source blood-specimen constraint on generic microscopy tests; LYFI-R2 retains the coded blood-specific general microscopy test with an organism result on the same observation" },
+    { "valueSet": "Tropical pulmonary eosinophilia ICD-10-CM", "reason": "the authoritative ICD-10-CM value set has no codes, so LYFI-R5 retains only the coded SNOMED diagnosis and active-problem branches" }
+  ]
+}

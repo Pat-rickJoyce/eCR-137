@@ -1,0 +1,289 @@
+{
+  "mnemonic": "HBVI_V1",
+  "conditionId": "HBVI",
+  "name": "Hepatitis B Virus Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Hepatitis_B_Virus_Infection.v5.20250703.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Hepatitis_B_Virus_Infection.v5.20250703.docx on 2026-07-18 (authoritative RCKMS Content Repository)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "HBVI-R1",
+      "description": "Acute, chronic, or unspecified hepatitis B diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.129", "name": "Acute Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.131", "name": "Acute Hepatitis B Virus Infection (Disorders) (ICD10CM)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.135", "name": "Chronic Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.141", "name": "Chronic Hepatitis B Virus Infection (Disorders) (ICD10CM)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.734", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.701", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.129", "name": "Acute Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.131", "name": "Acute Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.135", "name": "Chronic Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.141", "name": "Chronic Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.734", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.701", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HBVI-R2",
+      "description": "Detection of hepatitis B virus IgM antibody",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.400", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.400", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.400", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HBVI-R3",
+      "description": "Detection of hepatitis B virus surface antigen",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.401", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus surface Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.401", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus surface Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.401", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus surface Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HBVI-R4",
+      "description": "Detection of hepatitis B virus nucleic acid by a hepatitis B-specific, general organism, or combination test",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.403", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.403", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.403", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2406", "name": "Hepatitis B Virus Infection (Combination Tests that include hepatitis B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "HBVI-R5",
+      "description": "Detection of hepatitis B virus e antigen",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.402", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus e Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.402", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus e Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.402", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus e Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HBVI-R6",
+      "description": "Pregnancy and acute, chronic, or unspecified hepatitis B diagnosis or active problem (timeboxed)",
+      "logic": { "all": [
+        { "predicate": "pregnancyStatus", "params": { "value": "pregnant" } },
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.129", "name": "Acute Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.131", "name": "Acute Hepatitis B Virus Infection (Disorders) (ICD10CM)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.135", "name": "Chronic Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.141", "name": "Chronic Hepatitis B Virus Infection (Disorders) (ICD10CM)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.734", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.701", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.129", "name": "Acute Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.131", "name": "Acute Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.135", "name": "Chronic Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.141", "name": "Chronic Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.734", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.701", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] }
+      ] }
+    },
+    {
+      "id": "HBVI-R7",
+      "description": "Pregnancy and detection of hepatitis B IgM antibody, surface antigen, nucleic acid, or e antigen",
+      "logic": { "all": [
+        { "predicate": "pregnancyStatus", "params": { "value": "pregnant" } },
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.400", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.400", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.400", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.401", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus surface Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.401", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus surface Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.401", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus surface Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.403", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.403", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.403", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2406", "name": "Hepatitis B Virus Infection (Combination Tests that include hepatitis B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.402", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus e Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.402", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus e Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.402", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus e Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "HBVI-R8",
+      "description": "Acute hepatitis B diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.129", "name": "Acute Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.131", "name": "Acute Hepatitis B Virus Infection (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.129", "name": "Acute Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.131", "name": "Acute Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HBVI-R9",
+      "description": "Chronic hepatitis B diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.135", "name": "Chronic Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.141", "name": "Chronic Hepatitis B Virus Infection (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.135", "name": "Chronic Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.141", "name": "Chronic Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HBVI-R10",
+      "description": "Acute, chronic, or unspecified hepatitis B diagnosis or active problem in a patient older than 24 months (timeboxed)",
+      "logic": { "all": [
+        { "predicate": "ageComparison", "params": { "op": ">", "value": 24, "unit": "months" }, "gate": true },
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.129", "name": "Acute Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.131", "name": "Acute Hepatitis B Virus Infection (Disorders) (ICD10CM)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.135", "name": "Chronic Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.141", "name": "Chronic Hepatitis B Virus Infection (Disorders) (ICD10CM)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.734", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.701", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.129", "name": "Acute Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.131", "name": "Acute Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.135", "name": "Chronic Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.141", "name": "Chronic Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.734", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.701", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] }
+      ] }
+    },
+    {
+      "id": "HBVI-R11",
+      "description": "Detection of hepatitis B virus total core antibody",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2456", "name": "Hepatitis B Virus Infection (Tests for Hepatitis B Virus Total Core Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2456", "name": "Hepatitis B Virus Infection (Tests for Hepatitis B Virus Total Core Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2456", "name": "Hepatitis B Virus Infection (Tests for Hepatitis B Virus Total Core Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HBVI-R12",
+      "description": "All results of hepatitis B virus IgM-antibody tests",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.400", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus IgM Antibody)" } }
+    },
+    {
+      "id": "HBVI-R13",
+      "description": "All results of hepatitis B virus surface-antigen tests",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.401", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus surface Antigen)" } }
+    },
+    {
+      "id": "HBVI-R14",
+      "description": "All results of hepatitis B virus nucleic-acid tests",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.403", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus Nucleic Acid)" } }
+    },
+    {
+      "id": "HBVI-R15",
+      "description": "All results of hepatitis B virus e-antigen tests",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.402", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus e Antigen)" } }
+    },
+    {
+      "id": "HBVI-R16",
+      "description": "All results of hepatitis B virus total-core-antibody tests",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2456", "name": "Hepatitis B Virus Infection (Tests for Hepatitis B Virus Total Core Antibody)" } }
+    },
+    {
+      "id": "HBVI-R17",
+      "description": "Acute, chronic, or unspecified hepatitis B diagnosis or active problem (timeboxed) plus jaundice",
+      "logic": { "all": [
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.129", "name": "Acute Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.131", "name": "Acute Hepatitis B Virus Infection (Disorders) (ICD10CM)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.135", "name": "Chronic Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.141", "name": "Chronic Hepatitis B Virus Infection (Disorders) (ICD10CM)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.734", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.701", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.129", "name": "Acute Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.131", "name": "Acute Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.135", "name": "Chronic Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.141", "name": "Chronic Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.734", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.701", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.650", "name": "Jaundice (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.651", "name": "Jaundice (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.650", "name": "Jaundice (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.651", "name": "Jaundice (ICD10CM)", "status": "active" } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 18 total bilirubin at least 3.0 mg/dL (or 51.3 umol/L) in serum or plasma plus hepatitis B laboratory evidence",
+      "reason": "SEM_V1 has neither numeric laboratory-result comparison nor specimen-type linkage; the source also marks the HL7 serum and plasma specimen value sets unavailable, so the required quantitative branch cannot be evaluated and the rule is omitted"
+    },
+    {
+      "valueSet": "Rule 19 alanine aminotransferase greater than 200 IU/L in serum or plasma plus hepatitis B laboratory evidence",
+      "reason": "SEM_V1 has neither numeric laboratory-result comparison nor specimen-type linkage; the source also marks the HL7 serum and plasma specimen value sets unavailable, so the required quantitative branch cannot be evaluated and the rule is omitted"
+    }
+  ]
+}

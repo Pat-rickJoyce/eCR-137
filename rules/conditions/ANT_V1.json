@@ -1,0 +1,418 @@
+{
+  "mnemonic": "ANT_V1",
+  "conditionId": "ANT",
+  "name": "Anthrax",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Anthrax.v6.20250228.docx",
+    "rckmsVersion": "v6",
+    "rckmsDate": "2025-02-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Anthrax.v6.20250228.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "ANT-R1",
+      "description": "Anthrax (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.410", "name": "Anthrax (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.411", "name": "Anthrax (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.410", "name": "Anthrax (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.411", "name": "Anthrax (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "ANT-R2",
+      "description": "Suspected Anthrax (diagnosis or active problem, timeboxed; SNOMED branch)",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1433", "name": "Anthrax [Suspected] (Disorders) (SNOMED)" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1433", "name": "Anthrax [Suspected] (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "ANT-R3",
+      "description": "Identification of Bacillus anthracis by culture and identification method, including preliminary results",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.478", "name": "Anthrax (Tests for Bacillus anthracis by Culture and Identification Method)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.482", "name": "Anthrax (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2441", "name": "Anthrax (Tests for Bacillus species by Culture and Identification Method)" } },
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+            ] },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.482", "name": "Anthrax (Organism or Substance in Lab Results)" } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "ANT-R4",
+      "description": "Detection of Bacillus anthracis or anthrax toxin nucleic acid by any method",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.479", "name": "Anthrax (Tests for Bacillus anthracis Nucleic Acid)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.482", "name": "Anthrax (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] },
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.482", "name": "Anthrax (Organism or Substance in Lab Results)" } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "ANT-R6",
+      "description": "Detection of Bacillus anthracis protective antigen antibody by any method",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2440", "name": "Anthrax (Tests for Bacillus anthracis Protective Antigen Antibody)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.482", "name": "Anthrax (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "ANT-R7",
+      "description": "Detection of anthrax toxin lethal factor in a clinical specimen",
+      "logic": { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2442", "name": "Anthrax [Anthrax toxin lethal factor] (Organism or Substance in Lab Results)" } }
+    },
+    {
+      "id": "ANT-R8",
+      "description": "At least two compatible clinical observations plus an Anthrax laboratory test order",
+      "logic": { "all": [
+        { "atLeast": { "n": 2, "of": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.681", "name": "Abdominal Pain (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.680", "name": "Abdominal Pain (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.681", "name": "Abdominal Pain (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.680", "name": "Abdominal Pain (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2432", "name": "Abdominal swelling (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2433", "name": "Abdominal swelling (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2432", "name": "Abdominal swelling (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2433", "name": "Abdominal swelling (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2202", "name": "Abnormal Lung Sounds (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2203", "name": "Abnormal Lung Sounds (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2202", "name": "Abnormal Lung Sounds (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2203", "name": "Abnormal Lung Sounds (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1225", "name": "Altered Mental Status (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1226", "name": "Altered Mental Status (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1225", "name": "Altered Mental Status (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1226", "name": "Altered Mental Status (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1227", "name": "Ascites [Unspecified Cause] (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1228", "name": "Ascites [Unspecified Cause] (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1227", "name": "Ascites [Unspecified Cause] (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1228", "name": "Ascites [Unspecified Cause] (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1661", "name": "Cervical lymphadenopathy [Unspecific Cause] (SNOMED)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1661", "name": "Cervical lymphadenopathy [Unspecific Cause] (SNOMED)", "status": "active" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2434", "name": "Neck swelling (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2435", "name": "Neck swelling (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2434", "name": "Neck swelling (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2435", "name": "Neck swelling (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.750", "name": "Chest Pain (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.662", "name": "Chest Pain (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.750", "name": "Chest Pain (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.662", "name": "Chest Pain (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.813", "name": "Chills (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.812", "name": "Chills (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.813", "name": "Chills (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.812", "name": "Chills (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2373", "name": "Coagulopathy [Unspecified Cause] (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2374", "name": "Coagulopathy [Unspecified Cause] (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2373", "name": "Coagulopathy [Unspecified Cause] (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2374", "name": "Coagulopathy [Unspecified Cause] (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.91", "name": "Cough (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.90", "name": "Cough (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.91", "name": "Cough (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.90", "name": "Cough (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2436", "name": "Diaphoresis (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2437", "name": "Diaphoresis (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2436", "name": "Diaphoresis (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2437", "name": "Diaphoresis (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.353", "name": "Diarrhea (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.56", "name": "Diarrhea (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.353", "name": "Diarrhea (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.56", "name": "Diarrhea (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.976", "name": "Dysphagia (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.977", "name": "Dysphagia [Unspecified Cause] (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.976", "name": "Dysphagia (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.977", "name": "Dysphagia [Unspecified Cause] (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.867", "name": "Dyspnea (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.868", "name": "Dyspnea (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.867", "name": "Dyspnea (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.868", "name": "Dyspnea (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2438", "name": "Edema (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2439", "name": "Edema (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2438", "name": "Edema (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2439", "name": "Edema (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1266", "name": "Fatigue (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1265", "name": "Fatigue (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1266", "name": "Fatigue (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1265", "name": "Fatigue (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.809", "name": "Headache (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.808", "name": "Headache (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.809", "name": "Headache (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.808", "name": "Headache (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.935", "name": "Hemoptysis (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.936", "name": "Hemoptysis (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.935", "name": "Hemoptysis (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.936", "name": "Hemoptysis (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1231", "name": "Hypotension (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1232", "name": "Hypotension (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1231", "name": "Hypotension (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1232", "name": "Hypotension (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2080", "name": "Leukocytosis (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2081", "name": "Leukocytosis (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2080", "name": "Leukocytosis (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2081", "name": "Leukocytosis (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1616", "name": "Lymphadenopathy [Unspecified Cause] (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2022", "name": "Lymphadenopathy [Unspecified Cause] (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1616", "name": "Lymphadenopathy [Unspecified Cause] (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2022", "name": "Lymphadenopathy [Unspecified Cause] (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1235", "name": "Meningeal Signs (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1236", "name": "Meningeal Signs (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1235", "name": "Meningeal Signs (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1236", "name": "Meningeal Signs (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.864", "name": "Nausea (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.863", "name": "Nausea (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.864", "name": "Nausea (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.863", "name": "Nausea (ICD10CM)", "status": "active" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.647", "name": "Vomiting (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.648", "name": "Vomiting (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.647", "name": "Vomiting (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.648", "name": "Vomiting (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.794", "name": "Sore Throat (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.760", "name": "Sore Throat (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.794", "name": "Sore Throat (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.760", "name": "Sore Throat (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1237", "name": "Tachycardia (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1238", "name": "Tachycardia (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1237", "name": "Tachycardia (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1238", "name": "Tachycardia (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.904", "name": "Tachypnea [Finding] (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.236", "name": "Tachypnea (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.904", "name": "Tachypnea [Finding] (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.236", "name": "Tachypnea (ICD10CM)", "status": "active" } }
+          ] }
+        ] } },
+        { "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.478", "name": "Anthrax (Tests for Bacillus anthracis by Culture and Identification Method)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.479", "name": "Anthrax (Tests for Bacillus anthracis Nucleic Acid)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.480", "name": "Anthrax (Tests for Bacillus anthracis Antigen)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.481", "name": "Anthrax (Tests for Bacillus anthracis Antibody)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2440", "name": "Anthrax (Tests for Bacillus anthracis Protective Antigen Antibody)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "ANT-R9",
+      "description": "At least one characteristic clinical observation plus an Anthrax laboratory test order",
+      "logic": { "all": [
+        { "atLeast": { "n": 1, "of": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1229", "name": "Blood in CSF (SNOMED)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1229", "name": "Blood in CSF (SNOMED)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1230", "name": "Eschar (SNOMED)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1230", "name": "Eschar (SNOMED)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.357", "name": "Pneumonia (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.712", "name": "Pneumonia (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.357", "name": "Pneumonia (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.712", "name": "Pneumonia (ICD10CM)", "status": "active" } }
+          ] },
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2430", "name": "Pleural effusion (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2431", "name": "Pleural effusion (ICD10CM)" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2430", "name": "Pleural effusion (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2431", "name": "Pleural effusion (ICD10CM)", "status": "active" } }
+          ] }
+        ] } },
+        { "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.478", "name": "Anthrax (Tests for Bacillus anthracis by Culture and Identification Method)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.479", "name": "Anthrax (Tests for Bacillus anthracis Nucleic Acid)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.480", "name": "Anthrax (Tests for Bacillus anthracis Antigen)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.481", "name": "Anthrax (Tests for Bacillus anthracis Antibody)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2440", "name": "Anthrax (Tests for Bacillus anthracis Protective Antigen Antibody)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "ANT-R16",
+      "description": "Optional logic: detection of Bacillus anthracis antigen by any method",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.480", "name": "Anthrax (Tests for Bacillus anthracis Antigen)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.482", "name": "Anthrax (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "ANT-R17",
+      "description": "Optional logic: detection of Bacillus anthracis antibody by any method",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.481", "name": "Anthrax (Tests for Bacillus anthracis Antibody)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.482", "name": "Anthrax (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "ANT-R18",
+      "description": "Optional logic: Anthrax culture and identification test ordered",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.478", "name": "Anthrax (Tests for Bacillus anthracis by Culture and Identification Method)" } }
+    },
+    {
+      "id": "ANT-R19",
+      "description": "Optional logic: Anthrax nucleic-acid test ordered",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.479", "name": "Anthrax (Tests for Bacillus anthracis Nucleic Acid)" } }
+    },
+    {
+      "id": "ANT-R20",
+      "description": "Optional logic: Anthrax antigen test ordered",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.480", "name": "Anthrax (Tests for Bacillus anthracis Antigen)" } }
+    },
+    {
+      "id": "ANT-R21",
+      "description": "Optional logic: Anthrax antibody test ordered",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.481", "name": "Anthrax (Tests for Bacillus anthracis Antibody)" } }
+    },
+    {
+      "id": "ANT-R22",
+      "description": "Optional logic: Anthrax protective-antigen antibody test ordered",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2440", "name": "Anthrax (Tests for Bacillus anthracis Protective Antigen Antibody)" } }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Suspected Anthrax (Disorders) (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; ANT-R2 models the available SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Bacillus species expressing anthrax toxins culture test and Anthrax laboratory panels",
+      "reason": "not implemented - no codes available per source docx Table 3; ANT-R3, ANT-R8, ANT-R9, and ANT-R18 retain the coded organism-specific and general-test alternatives"
+    },
+    {
+      "valueSet": "Anthrax immunohistochemical antigen in tissue",
+      "reason": "both IHC test-name value sets have no codes and SEM_V1 has no specimen-type predicate; source rule 5 is explicitly inoperable and is omitted"
+    },
+    {
+      "valueSet": "Numeric fever temperature threshold",
+      "reason": "SEM_V1 has no vital-sign numeric comparison; ANT-R8 models the coded fever diagnosis and active-problem alternatives but omits temperature >= 38 C or >= 100.4 F"
+    },
+    {
+      "valueSet": "Anthrax exposure epidemiology",
+      "reason": "SEM_V1 has no environmental, contaminated-source, or shared-exposure evidence; source rules 10, 11, 14, and 15 are explicitly inoperable and are omitted"
+    },
+    {
+      "valueSet": "Anthrax imaging findings",
+      "reason": "SEM_V1 has no imaging evidence; source rules 12-15 require mediastinal widening, hemorrhagic mediastinal lymphadenopathy, or radiologic pleural effusion and are omitted"
+    },
+    {
+      "valueSet": "Anthrax Vaccine (CVX and RXNORM) immunization ordered or administered",
+      "reason": "SEM_V1 carries immunization evidence but has no immunization predicate; source rule 23 is omitted rather than misclassifying vaccine evidence as diagnosis or medication evidence"
+    },
+    {
+      "valueSet": "Unavailable ICD10CM clinical-observation branches",
+      "reason": "Blood in CSF, Eschar, and cervical lymphadenopathy ICD10CM value sets have no codes per source docx Table 3; ANT-R8 and ANT-R9 retain the coded SNOMED alternatives"
+    }
+  ]
+}

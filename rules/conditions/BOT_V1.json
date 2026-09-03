@@ -1,0 +1,211 @@
+{
+  "mnemonic": "BOT_V1",
+  "conditionId": "BOT",
+  "name": "Botulism",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Botulism.v6.20260227.docx",
+    "rckmsVersion": "v6",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Botulism.v6.20260227.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "BOT-R1",
+      "description": "Timeboxed botulism diagnosis or active problem",
+      "logic": {
+        "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.359", "name": "Botulism (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.360", "name": "Botulism (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.359", "name": "Botulism (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.360", "name": "Botulism (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BOT-R2",
+      "description": "Timeboxed suspected botulism diagnosis or active problem",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1432", "name": "Botulism [Suspected] (Disorders) (SNOMED)" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1432", "name": "Botulism [Suspected] (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BOT-R3",
+      "description": "At least three distinct compatible clinical finding groups",
+      "logic": {
+        "atLeast": {
+          "n": 3,
+          "of": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.973", "name": "Diplopia (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.972", "name": "Diplopia (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.973", "name": "Diplopia (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.972", "name": "Diplopia (ICD10CM)", "status": "active" } }
+            ] },
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.974", "name": "Slurred Speech (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.975", "name": "Slurred Speech (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.974", "name": "Slurred Speech (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.975", "name": "Slurred Speech (ICD10CM)", "status": "active" } }
+            ] },
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.976", "name": "Dysphagia (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.977", "name": "Dysphagia [Unspecified Cause] (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.976", "name": "Dysphagia (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.977", "name": "Dysphagia [Unspecified Cause] (ICD10CM)", "status": "active" } }
+            ] },
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.970", "name": "Bulbar Weakness (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.971", "name": "Bulbar Weakness (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.970", "name": "Bulbar Weakness (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.971", "name": "Bulbar Weakness (ICD10CM)", "status": "active" } }
+            ] },
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.978", "name": "Impaired Respiration [Unspecified Cause] (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.978", "name": "Impaired Respiration [Unspecified Cause] (SNOMED)", "status": "active" } }
+            ] }
+          ]
+        }
+      }
+    },
+    {
+      "id": "BOT-R5",
+      "description": "Identification of Clostridium botulinum in a clinical specimen by culture, including preliminary isolate-identification results",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.697", "name": "Botulism (Tests for Clostridium botulinum by Culture and Identification Method)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.979", "name": "Botulism (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+            ] },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.979", "name": "Botulism (Organism or Substance in Lab Results)" } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BOT-R6",
+      "description": "Detection of botulinum toxin in a clinical specimen by any method",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.981", "name": "Botulism (Tests for Clostridium botulinum Toxin)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.979", "name": "Botulism (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BOT-R7",
+      "description": "Order for organism-specific Clostridium botulinum culture and identification testing",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": { "oid": "2.16.840.1.113762.1.4.1146.697", "name": "Botulism Culture Test Order" }
+      }
+    },
+    {
+      "id": "BOT-R8",
+      "description": "Order for botulinum toxin testing or a botulinum toxin nucleic-acid panel",
+      "logic": {
+        "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.981", "name": "Botulism Toxin Test Order" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.982", "name": "Botulism Toxin Nucleic Acid Panel Order" } }
+        ]
+      }
+    },
+    {
+      "id": "BOT-R10",
+      "description": "Botulism antitoxin medication ordered or prescribed",
+      "logic": {
+        "predicate": "medicationInValueSet",
+        "params": { "oid": "2.16.840.1.113762.1.4.1146.983", "name": "Botulism Antitoxin (RXNORM)" }
+      }
+    },
+    {
+      "id": "BOT-R11",
+      "description": "Optional timeboxed botulism or suspected botulism diagnosis/active problem in a patient one year old or older",
+      "logic": {
+        "all": [
+          { "predicate": "ageComparison", "params": { "op": ">=", "value": 1, "unit": "years" }, "gate": true },
+          { "any": [
+            { "all": [
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.359", "name": "Botulism (Disorders) (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.360", "name": "Botulism (Disorders) (ICD10CM)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1432", "name": "Botulism [Suspected] (Disorders) (SNOMED)" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ] },
+            { "all": [
+              { "any": [
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.359", "name": "Botulism (Disorders) (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.360", "name": "Botulism (Disorders) (ICD10CM)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1432", "name": "Botulism [Suspected] (Disorders) (SNOMED)", "status": "active" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ] }
+          ] }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Botulism [Suspected] (Disorders) (ICD10CM)",
+      "reason": "the authoritative source says no ICD10CM codes are available; BOT-R2 and BOT-R11 retain the available SNOMED diagnosis and active-problem alternatives"
+    },
+    {
+      "valueSet": "Blurred Vision, Progressive Weakness, and Progressive Symmetric Paralysis (SNOMED and ICD10CM)",
+      "reason": "the authoritative source says no codes are available for these clinical-finding groups; BOT-R3 retains the five implementable groups and preserves the source threshold of three distinct groups"
+    },
+    {
+      "valueSet": "Impaired Respiration [Unspecified Cause] (ICD10CM)",
+      "reason": "the authoritative source says no ICD10CM codes are available; BOT-R3 retains the available SNOMED diagnosis and active-problem alternatives"
+    },
+    {
+      "valueSet": "At least two compatible clinical findings plus an epidemiologic link to botulism",
+      "reason": "the authoritative source says the epidemiologic criteria cannot be implemented because the required historical information is not EHR-coded; source rule 4 is omitted to prevent clinical findings alone from overtriggering"
+    },
+    {
+      "valueSet": "Botulism (Test Panels for Clostridium botulinum by Culture and Identification Method)",
+      "reason": "the authoritative source says no LOINC codes are available; BOT-R7 retains the implementable individual culture-test order alternative"
+    },
+    {
+      "valueSet": "Botulinum toxin detected in a patient's food",
+      "reason": "the authoritative source says RCKMS has no access to food or environmental sample analysis, and SEM_V1 has no specimen-type predicate; source rule 9 is omitted"
+    }
+  ]
+}

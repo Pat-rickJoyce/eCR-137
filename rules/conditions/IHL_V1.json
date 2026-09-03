@@ -1,0 +1,42 @@
+{
+  "mnemonic": "IHL_V1",
+  "conditionId": "IHL",
+  "name": "Infant Hearing Loss",
+  "evidenceModel": "SEM_V1",
+  "coverage": "complete",
+  "source": {
+    "document": "Infant_Hearing_Loss.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Infant_Hearing_Loss.v2.20240628.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2025-06-04)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "IHL-R1",
+      "description": "Congenital hearing loss as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2150", "name": "Congenital Hearing Loss (Disorders) (SNOMED)" } },
+        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2151", "name": "Congenital Hearing Loss (Disorders) (ICD10CM)" } },
+        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2150", "name": "Congenital Hearing Loss (Disorders) (SNOMED)", "status": "active" } },
+        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2151", "name": "Congenital Hearing Loss (Disorders) (ICD10CM)", "status": "active" } }
+      ] }
+    },
+    {
+      "id": "IHL-R2",
+      "description": "Hearing loss as a diagnosis or active problem in a patient younger than the default age of one year (timeboxed when configured in RCKMS)",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.679", "name": "Hearing Loss (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.767", "name": "Hearing Loss (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.679", "name": "Hearing Loss (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.767", "name": "Hearing Loss (ICD10CM)", "status": "active" } }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+      ] }
+    }
+  ],
+  "gaps": []
+}

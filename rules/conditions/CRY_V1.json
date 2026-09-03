@@ -1,0 +1,197 @@
+{
+  "mnemonic": "CRY_V1",
+  "conditionId": "CRY",
+  "name": "Cryptococcosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Cryptococcosis.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Cryptococcosis.v2.20240202.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CRY-R1",
+      "description": "Cryptococcosis, including cryptococcal meningitis (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1516", "name": "Cryptococcosis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1515", "name": "Cryptococcosis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1516", "name": "Cryptococcosis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1515", "name": "Cryptococcosis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRY-R2",
+      "description": "Identification of Cryptococcus neoformans by culture or isolate identification",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1521", "name": "Cryptococcosis (Tests for Cryptococcus neoformans by Culture and Identification Method)" } },
+              {
+                "any": [
+                  { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                  { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1518", "name": "Cryptococcosis [C. neoformans] (Organism or Substance in Lab Results)" } },
+                  { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+                  { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+                ]
+              },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1518", "name": "Cryptococcosis [C. neoformans] (Organism or Substance in Lab Results)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRY-R3",
+      "description": "Identification of Cryptococcus gatii by culture or isolate identification",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1522", "name": "Cryptococcosis (Tests for Cryptococcus gatii by Culture and Identification Method)" } },
+              {
+                "any": [
+                  { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                  { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1519", "name": "Cryptococcosis [C. gatii] (Organism or Substance in Lab Results)" } },
+                  { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+                  { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+                ]
+              },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1519", "name": "Cryptococcosis [C. gatii] (Organism or Substance in Lab Results)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRY-R4",
+      "description": "Identification of Cryptococcus species by culture or isolate identification",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1520", "name": "Cryptococcosis (Tests for Cryptococcus species by Culture and Identification Method)" } },
+              {
+                "any": [
+                  { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                  { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1517", "name": "Cryptococcosis [C. species] (Organism or Substance in Lab Results)" } },
+                  { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+                  { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+                ]
+              },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1517", "name": "Cryptococcosis [C. species] (Organism or Substance in Lab Results)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRY-R5",
+      "description": "Detection of Cryptococcus species nucleic acid by any method",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1523", "name": "Cryptococcosis (Tests for Cryptococcus species Nucleic Acid)" } },
+              {
+                "any": [
+                  { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                  { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1517", "name": "Cryptococcosis [C. species] (Organism or Substance in Lab Results)" } },
+                  { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1517", "name": "Cryptococcosis [C. species] (Organism or Substance in Lab Results)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRY-R6",
+      "description": "Detection of Cryptococcus species antigen by any method",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1524", "name": "Cryptococcosis (Tests for Cryptococcus species Antigen)" } },
+          {
+            "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1517", "name": "Cryptococcosis [C. species] (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Cryptococcosis (Tests by Microscopic Observation)",
+      "reason": "not implemented - no codes available per source docx Table 3; the condition-specific test plus CSF-specimen branch in source rule 7 is omitted"
+    },
+    {
+      "valueSet": "Cryptococcosis (Tests by Microscopic Observation in CSF)",
+      "reason": "not implemented - no codes available per source docx Table 3; that alternative in source rule 7 is omitted"
+    },
+    {
+      "valueSet": "Cerebrospinal fluid specimen constraints",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate, and the source HL7 CSF value set is not implemented; the generic-microscopy alternative and therefore all remaining source rule 7 logic are omitted"
+    }
+  ]
+}

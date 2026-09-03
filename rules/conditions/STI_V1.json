@@ -1,0 +1,96 @@
+{
+  "mnemonic": "STI_V1",
+  "conditionId": "STI",
+  "name": "S. Typhi Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "S_Typhi_Infection.v6.20260227.docx",
+    "rckmsVersion": "v6",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs S_Typhi_Infection.v6.20260227.docx on 2026-07-29 (authoritative RCKMS Content Release 20260227; latest revision 2025-12-03)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "STI-R1",
+      "description": "S. Typhi infection or typhoid fever diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1012", "name": "S. Typhi Infection (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1011", "name": "S. Typhi Infection (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1012", "name": "S. Typhi Infection (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1011", "name": "S. Typhi Infection (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "STI-R2",
+      "description": "Culture or identification evidence of Salmonella Typhi",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1017", "name": "S. Typhi Infection (Tests for S. Typhi by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1017", "name": "S. Typhi Infection (Tests for S. Typhi by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1013", "resultName": "S. Typhi Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1017", "name": "S. Typhi Infection (Tests for S. Typhi by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.70", "name": "Salmonellosis (Tests for Salmonella except S. Typhi and S. Paratyphi by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1013", "resultName": "S. Typhi Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3073", "name": "S. Typhi Infection (Combination Tests that include S. Typhi by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1013", "resultName": "S. Typhi Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1013", "resultName": "S. Typhi Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1013", "resultName": "S. Typhi Infection (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "STI-R3",
+      "description": "Detection of Salmonella Typhi nucleic acid",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1018", "name": "S. Typhi Infection (Tests for S. Typhi Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1018", "name": "S. Typhi Infection (Tests for S. Typhi Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1013", "resultName": "S. Typhi Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1018", "name": "S. Typhi Infection (Tests for S. Typhi Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1013", "resultName": "S. Typhi Infection (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "STI-R4",
+      "description": "Detection of Salmonella Typhi antibody",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1019", "name": "S. Typhi Infection (Tests for S. Typhi Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1019", "name": "S. Typhi Infection (Tests for S. Typhi Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1013", "resultName": "S. Typhi Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1019", "name": "S. Typhi Infection (Tests for S. Typhi Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 5 clinical observations plus epidemiologic link",
+      "reason": "the authoritative source marks the entire rule inoperable because its contact and outbreak-risk criteria are not implemented; SEM_V1 also carries neither epidemiologic contact nor outbreak-risk evidence, so the rule is omitted rather than allowing nonspecific symptoms alone to report"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence, but the reporter type is unavailable in RCKMS and SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

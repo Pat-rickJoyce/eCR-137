@@ -1,0 +1,75 @@
+{
+  "mnemonic": "MEL_V1",
+  "conditionId": "MEL",
+  "name": "Melioidosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Melioidosis.v5.20260626.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Melioidosis.v5.20260626.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2026-04-20)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "MEL-R1",
+      "description": "Melioidosis diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1287", "name": "Melioidosis (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1291", "name": "Melioidosis (Disorders) (ICD10CM)" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "any": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1287", "name": "Melioidosis (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1291", "name": "Melioidosis (Disorders) (ICD10CM)", "status": "active" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "MEL-R3",
+      "description": "Burkholderia pseudomallei identified by culture in a clinical specimen on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1289", "name": "Melioidosis (Tests for Burkholderia pseudomallei by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1289", "name": "Melioidosis (Tests for Burkholderia pseudomallei by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1288", "resultName": "Melioidosis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1289", "name": "Melioidosis (Tests for Burkholderia pseudomallei by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3272", "name": "Burkholderia Species (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1288", "resultName": "Melioidosis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1288", "resultName": "Melioidosis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1288", "resultName": "Melioidosis (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "MEL-R5",
+      "description": "Burkholderia pseudomallei nucleic acid detected in a clinical specimen on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1290", "name": "Melioidosis (Tests for Burkholderia pseudomallei Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1290", "name": "Melioidosis (Tests for Burkholderia pseudomallei Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1288", "resultName": "Melioidosis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1290", "name": "Melioidosis (Tests for Burkholderia pseudomallei Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3271", "name": "Burkholderia Species (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1288", "resultName": "Melioidosis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1288", "resultName": "Melioidosis (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "MEL-R6",
+      "description": "Ordered culture test for identification of Burkholderia pseudomallei in a clinical specimen",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1289", "name": "Melioidosis (Tests for Burkholderia pseudomallei by Culture and Identification Method)" } }
+    },
+    {
+      "id": "MEL-R7",
+      "description": "Ordered nucleic-acid test for detection of Burkholderia pseudomallei in a clinical specimen",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1290", "name": "Melioidosis (Tests for Burkholderia pseudomallei Nucleic Acid)" } }
+    }
+  ],
+  "gaps": [
+    { "valueSet": "Melioidosis [Suspected] (Disorders) (SNOMED and ICD10CM)", "reason": "the authoritative source lists no codes and marks source rule 2 inoperable, so the entire rule is omitted" },
+    { "valueSet": "Paired Burkholderia pseudomallei antibody titers", "reason": "SEM_V1 cannot compare paired quantitative titers or enforce the source's at-least-two-week collection interval; source rule 4 is omitted entirely" },
+    { "valueSet": "Burkholderia pseudomallei antibody titer at least 1:40", "reason": "SEM_V1 has no quantitative/titer comparison predicate; the titer is required by source rule 8, so the entire rule is omitted rather than allowing clinical observations alone to report" },
+    { "valueSet": "Melioidosis epidemiologic links", "reason": "SEM_V1 cannot represent travel/residence in an endemic region, intentional-release or known-source exposure, or occupational exposure; one of these is required by source rule 9, so the entire rule is omitted" },
+    { "valueSet": "Body Temperature greater than 38 C or 100.4 F", "reason": "SEM_V1 has no unit-aware numeric vital-sign comparison predicate; this is one alternative among the clinical observations in omitted source rules 8 and 9" },
+    { "valueSet": "Skin ulcer (ICD10CM)", "reason": "the authoritative source lists no codes; this alternative occurs only within omitted source rules 8 and 9" },
+    { "valueSet": "Melioidosis culture and nucleic-acid test panels", "reason": "the authoritative source lists no codes for the panel alternatives in source rules 6 and 7; each rule retains its coded individual-test branch" },
+    { "valueSet": "Vital-records and lab reporter types", "reason": "the authoritative source marks these reporter types unavailable in RCKMS; they are not modeled as condition-pack rules" }
+  ]
+}

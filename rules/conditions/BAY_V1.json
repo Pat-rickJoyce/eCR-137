@@ -1,0 +1,83 @@
+{
+  "mnemonic": "BAY_V1",
+  "conditionId": "BAY",
+  "name": "Baylisascariasis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Baylisascariasis.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Baylisascariasis.v2.20240202.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "BAY-R1",
+      "description": "Baylisascariasis (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1974", "name": "Baylisascariasis (Disorders) (SNOMED)" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1974", "name": "Baylisascariasis (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BAY-R2",
+      "description": "Microscopic observation of Baylisascaris procyonis larvae using a generic microscopy test paired with a Baylisascariasis organism result",
+      "logic": {
+        "all": [
+          { "any": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.900", "name": "Organisms (Tests by Microscopic Observation)" } },
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+          ] },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1975", "name": "Baylisascariasis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "BAY-R3",
+      "description": "Detection of Baylisascaris species antibody in serum or CSF using the specimen-specific test-name value set and a coded or abnormal result (numeric > 0 not modeled)",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2249", "name": "Baylisascariasis (Tests for Baylisascaris species Antibody in Serum or CSF)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1975", "name": "Baylisascariasis (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Baylisascariasis (Disorders) (ICD10CM)",
+      "reason": "the authoritative source says no ICD-10-CM codes are available; BAY-R1 models the available SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Baylisascaris procyonis (Tests by Microscopic Observation)",
+      "reason": "the authoritative source says no codes are available; the organism-specific branch of source rule 2 is omitted while the generic-test plus organism-result branch remains modeled"
+    },
+    {
+      "valueSet": "Serum or cerebrospinal-fluid specimen constraints for Baylisascaris antibody testing",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate; the general antibody-test branch of source rule 3 is omitted while the serum-or-CSF-specific test-name alternative remains modeled"
+    },
+    {
+      "valueSet": "Numeric Baylisascaris antibody result > 0",
+      "reason": "SEM_V1 has no numeric laboratory result comparison; the numeric alternative in source rule 3 is omitted"
+    },
+    {
+      "valueSet": "Contact with raccoon feces epidemiologic criterion",
+      "reason": "source optional rule 4 is explicitly inoperable and SEM_V1 has no epidemiologic-exposure evidence or predicate, so the larva-migrans plus raccoon-feces pathway is omitted"
+    }
+  ]
+}

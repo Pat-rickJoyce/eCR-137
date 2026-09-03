@@ -1,0 +1,199 @@
+{
+  "mnemonic": "TRF_V1",
+  "conditionId": "TRF",
+  "name": "Tickborne Relapsing Fever",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Tickborne_Relapsing_Fever.v6.20260626.docx",
+    "rckmsVersion": "v6",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Tickborne_Relapsing_Fever.v6.20260626.docx on 2026-07-29 (authoritative RCKMS Content Release 20260626; latest revision 2026-06-07)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "TRF-R1",
+      "description": "Soft tick relapsing fever diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3049", "name": "Soft Tick Relapsing Fever (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3049", "name": "Soft Tick Relapsing Fever (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TRF-R2",
+      "description": "Identification of an STRF-group Borrelia species by culture and identification",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3053", "name": "Tickborne Relapsing Fever (Tests for STRF Group Borrelia Species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3053", "name": "Tickborne Relapsing Fever (Tests for STRF Group Borrelia Species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.3057", "resultName": "Soft Tick Relapsing Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.3053", "name": "Tickborne Relapsing Fever (Tests for STRF Group Borrelia Species by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1128", "name": "Borrelia species (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.3057", "resultName": "Soft Tick Relapsing Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.3057", "resultName": "Soft Tick Relapsing Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.3057", "resultName": "Soft Tick Relapsing Fever (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TRF-R3",
+      "description": "Detection of STRF-group Borrelia nucleic acid by a generic organism test with an STRF organism result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.530", "name": "Borrelia species (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.3057", "resultName": "Soft Tick Relapsing Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.3057", "resultName": "Soft Tick Relapsing Fever (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TRF-R4",
+      "description": "Detection of STRF-group Borrelia antibody by a specific antibody test",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3300", "name": "Tickborne Relapsing Fever (Tests for STRF Group Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3300", "name": "Tickborne Relapsing Fever (Tests for STRF Group Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.3057", "resultName": "Soft Tick Relapsing Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.3300", "name": "Tickborne Relapsing Fever (Tests for STRF Group Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "TRF-R5",
+      "description": "Microscopic observation of spirochetes in blood, bone marrow, or cerebrospinal fluid using specimen-specific test names",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.884", "name": "Tests by Microscopic Observation in Blood", "resultOid": "2.16.840.1.113762.1.4.1146.1824", "resultName": "Spirochetes (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3055", "name": "Tests by Microscopic Observation in Bone Marrow", "resultOid": "2.16.840.1.113762.1.4.1146.1824", "resultName": "Spirochetes (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3056", "name": "Tests by Microscopic Observation in Cerebrospinal Fluid", "resultOid": "2.16.840.1.113762.1.4.1146.1824", "resultName": "Spirochetes (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TRF-R8",
+      "description": "Hard tick relapsing fever diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3299", "name": "Hard Tick Relapsing Fever (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3299", "name": "Hard Tick Relapsing Fever (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TRF-R9",
+      "description": "Unspecified tickborne relapsing fever diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3298", "name": "Unspecified Tickborne Relapsing Fever (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3297", "name": "Unspecified Tickborne Relapsing Fever (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3298", "name": "Unspecified Tickborne Relapsing Fever (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3297", "name": "Unspecified Tickborne Relapsing Fever (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TRF-R10",
+      "description": "Identification of Borrelia miyamotoi by a generic culture test with a B. miyamotoi organism result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1128", "name": "Borrelia species (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.3303", "resultName": "Tickborne Relapsing Fever (Borrelia miyamotoi Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.3303", "resultName": "Tickborne Relapsing Fever (Borrelia miyamotoi Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.3303", "resultName": "Tickborne Relapsing Fever (Borrelia miyamotoi Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TRF-R11",
+      "description": "Detection of Borrelia miyamotoi nucleic acid by a specific or generic organism test",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3302", "name": "Tickborne Relapsing Fever (Tests for Borrelia miyamotoi Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3302", "name": "Tickborne Relapsing Fever (Tests for Borrelia miyamotoi Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.3303", "resultName": "Tickborne Relapsing Fever (Borrelia miyamotoi Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.3302", "name": "Tickborne Relapsing Fever (Tests for Borrelia miyamotoi Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.530", "name": "Borrelia species (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.3303", "resultName": "Tickborne Relapsing Fever (Borrelia miyamotoi Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.3303", "resultName": "Tickborne Relapsing Fever (Borrelia miyamotoi Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TRF-R12",
+      "description": "Detection of Borrelia miyamotoi antibody by a specific antibody test",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3301", "name": "Tickborne Relapsing Fever (Tests for Borrelia miyamotoi Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3301", "name": "Tickborne Relapsing Fever (Tests for Borrelia miyamotoi Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.3303", "resultName": "Tickborne Relapsing Fever (Borrelia miyamotoi Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.3301", "name": "Tickborne Relapsing Fever (Tests for Borrelia miyamotoi Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "TRF-R13",
+      "description": "Microscopic observation of Borrelia species in blood using blood-specific test names",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2461", "name": "Borrelia species (Tests by Microscopic Observation in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2461", "name": "Borrelia species (Tests by Microscopic Observation in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.1823", "resultName": "Borrelia species (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2461", "name": "Borrelia species (Tests by Microscopic Observation in Blood)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.884", "name": "Tests by Microscopic Observation in Blood", "resultOid": "2.16.840.1.113762.1.4.1146.1823", "resultName": "Borrelia species (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Source branches marked not implemented because no codes are available",
+      "reason": "the unavailable branches include Soft Tick Relapsing Fever ICD10CM, Hard Tick Relapsing Fever ICD10CM, the STRF-group nucleic-acid test, the Borrelia miyamotoi culture test, and several specimen-specific spirochete microscopy tests; coded alternatives are retained where the source provides them"
+    },
+    {
+      "valueSet": "Rules 5 and 13 specimen-dependent microscopy branches",
+      "reason": "SEM_V1 has no laboratory specimen-type predicate; the curated rules retain source-authorized blood, bone-marrow, and cerebrospinal-fluid test-name alternatives that do not require specimen matching"
+    },
+    {
+      "valueSet": "Rules 6 and 7 epidemiologic exposure criteria",
+      "reason": "both source rules require an epidemiologic exposure within 21 days of illness onset, which the source marks not implemented and SEM_V1 cannot represent; the rules are omitted rather than allowing clinical findings alone to report"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

@@ -1,0 +1,187 @@
+{
+  "mnemonic": "MEDI_V1",
+  "conditionId": "MEDI",
+  "name": "Meningococcal Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Meningococcal_Disease.v7.20260626.docx",
+    "rckmsVersion": "v7",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Meningococcal_Disease.v7.20260626.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2026-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "MEDI-R1",
+      "description": "Meningococcal disease diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.120", "name": "Meningococcal Disease (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.121", "name": "Meningococcal Disease (Disorders) (ICD10CM)" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "any": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.120", "name": "Meningococcal Disease (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.121", "name": "Meningococcal Disease (Disorders) (ICD10CM)", "status": "active" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "MEDI-R2",
+      "description": "Suspected meningococcal disease diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1445", "name": "Meningococcal Disease [Suspected] (Disorders) (SNOMED)" } }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1445", "name": "Meningococcal Disease [Suspected] (Disorders) (SNOMED)", "status": "active" } }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "MEDI-R3",
+      "description": "Neisseria meningitidis identified by culture in a normally sterile site on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.787", "name": "Meningococcal Disease (Tests for Neisseria meningitidis in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.787", "name": "Meningococcal Disease (Tests for Neisseria meningitidis in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.300", "resultName": "Meningococcal Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.787", "name": "Meningococcal Disease (Tests for Neisseria meningitidis in Specimen from Normally Sterile Site by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1461", "name": "Organisms (Tests in Specimen from Normally Sterile Site by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.300", "resultName": "Meningococcal Disease (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "MEDI-R4",
+      "description": "Neisseria meningitidis nucleic acid detected in a normally sterile site on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.786", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.786", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.300", "resultName": "Meningococcal Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.786", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Nucleic Acid in Specimen from Normally Sterile Site)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1085", "name": "Organisms (Tests for Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.300", "resultName": "Meningococcal Disease (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "MEDI-R5",
+      "description": "Neisseria meningitidis antigen detected in formalin-fixed tissue by immunohistochemistry on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.324", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Antigen in Tissue by Immunohistochemistry)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.324", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Antigen in Tissue by Immunohistochemistry)", "resultOid": "2.16.840.1.113762.1.4.1146.300", "resultName": "Meningococcal Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.324", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Antigen in Tissue by Immunohistochemistry)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "MEDI-R6",
+      "description": "Neisseria meningitidis antigen detected in cerebrospinal fluid by latex agglutination on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1087", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Antigen in CSF by Latex Agglutination)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1087", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Antigen in CSF by Latex Agglutination)", "resultOid": "2.16.840.1.113762.1.4.1146.300", "resultName": "Meningococcal Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1087", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Antigen in CSF by Latex Agglutination)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "MEDI-R7",
+      "description": "Gram-negative diplococci identified by Gram stain in a normally sterile site on the same observation",
+      "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.305", "name": "Organisms (Tests by Microscopic Observation in Specimen from Normally Sterile Site by Gram Stain)", "resultOid": "2.16.840.1.113762.1.4.1146.2305", "resultName": "Gram-negative Diplococcus (Organism or Substance in Lab Results)" } }
+    },
+    {
+      "id": "MEDI-R8",
+      "description": "Purpura diagnosis or active problem together with patient deceased status or an expired discharge disposition",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.789", "name": "Purpura (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.756", "name": "Purpura (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.789", "name": "Purpura (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.756", "name": "Purpura (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "patientDeceased", "params": {} },
+          { "predicate": "encounterDischargeDispositionInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1108", "name": "Discharge Disposition [Expired]" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "MEDI-R9",
+      "description": "Purulent meninges, purpura, or adrenal hemorrhage diagnosis or active problem together with patient deceased status or an expired discharge disposition",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.791", "name": "Purulent Meninges (SNOMED)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.791", "name": "Purulent Meninges (SNOMED)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.789", "name": "Purpura (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.756", "name": "Purpura (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.789", "name": "Purpura (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.756", "name": "Purpura (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.790", "name": "Adrenal Hemorrhage (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2723", "name": "Adrenal Hemorrhage (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.790", "name": "Adrenal Hemorrhage (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2723", "name": "Adrenal Hemorrhage (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "patientDeceased", "params": {} },
+          { "predicate": "encounterDischargeDispositionInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1108", "name": "Discharge Disposition [Expired]" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "MEDI-R10",
+      "description": "Optional logic: Neisseria meningitidis identified by culture in any clinical specimen on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.303", "name": "Meningococcal Disease (Tests for Neisseria meningitidis by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.303", "name": "Meningococcal Disease (Tests for Neisseria meningitidis by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.300", "resultName": "Meningococcal Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.303", "name": "Meningococcal Disease (Tests for Neisseria meningitidis by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.300", "resultName": "Meningococcal Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.300", "resultName": "Meningococcal Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3294", "name": "Organisms (Combination Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.300", "resultName": "Meningococcal Disease (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "MEDI-R11",
+      "description": "Optional logic: Neisseria meningitidis nucleic acid detected in any clinical specimen on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.302", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.302", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.300", "resultName": "Meningococcal Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.302", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.300", "resultName": "Meningococcal Disease (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "MEDI-R12",
+      "description": "Optional logic: Neisseria meningitidis antigen detected in any clinical specimen on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.788", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.788", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.300", "resultName": "Meningococcal Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.788", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "MEDI-R13",
+      "description": "Optional logic: Neisseria meningitidis antigen detected by latex agglutination in a normally sterile site on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.325", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Antigen in Specimen from a Normally Sterile Site by Latex Agglutination)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.325", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Antigen in Specimen from a Normally Sterile Site by Latex Agglutination)", "resultOid": "2.16.840.1.113762.1.4.1146.300", "resultName": "Meningococcal Disease (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.325", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Antigen in Specimen from a Normally Sterile Site by Latex Agglutination)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    { "id": "MEDI-R14", "description": "Optional logic: ordered culture test for Neisseria meningitidis in a normally sterile site", "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.787", "name": "Meningococcal Disease (Tests for Neisseria meningitidis in Specimen from Normally Sterile Site by Culture and Identification Method)" } } },
+    { "id": "MEDI-R15", "description": "Optional logic: ordered nucleic-acid test for Neisseria meningitidis in a normally sterile site", "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.786", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Nucleic Acid in Specimen from Normally Sterile Site)" } } },
+    { "id": "MEDI-R16", "description": "Optional logic: ordered immunohistochemistry test for Neisseria meningitidis antigen in tissue", "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.324", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Antigen in Tissue by Immunohistochemistry)" } } },
+    { "id": "MEDI-R17", "description": "Optional logic: ordered latex-agglutination test for Neisseria meningitidis antigen in cerebrospinal fluid", "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1087", "name": "Meningococcal Disease (Tests for Neisseria meningitidis Antigen in CSF by Latex Agglutination)" } } },
+    {
+      "id": "MEDI-R18",
+      "description": "Purpura fulminans diagnosis or active problem together with patient deceased status or an expired discharge disposition",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3295", "name": "Purpura Fulminans (SNOMED)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3295", "name": "Purpura Fulminans (SNOMED)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "patientDeceased", "params": {} },
+          { "predicate": "encounterDischargeDispositionInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1108", "name": "Discharge Disposition [Expired]" } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    { "valueSet": "Specimen constraints in source rules 3-7 and 13", "reason": "SEM_V1 has no specimen-type evidence or predicate, so general-test branches requiring normally sterile site, tissue, or cerebrospinal-fluid specimens are omitted; specimen-specific test-name branches remain" },
+    { "valueSet": "HL7 specimen-type value sets", "reason": "the authoritative source marks the relevant HL7 table 0487 specimen value sets unavailable in VSAC" },
+    { "valueSet": "Meningococcal Disease [Suspected] (Disorders) (ICD10CM)", "reason": "the authoritative source lists no codes, so the ICD10CM alternative in source rule 2 is omitted" },
+    { "valueSet": "Purulent Meninges (ICD10CM)", "reason": "the authoritative source lists no codes, so the ICD10CM alternative in source rule 9 is omitted" },
+    { "valueSet": "Purpura Fulminans (ICD10CM)", "reason": "the authoritative source lists no codes, so the ICD10CM alternative in source rule 18 is omitted" },
+    { "valueSet": "Meningococcal Disease test panels in source rules 14-17", "reason": "the authoritative source lists no codes for the four panel alternatives, so those branches are omitted; each rule retains its coded individual-test branch" }
+  ]
+}

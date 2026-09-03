@@ -1,0 +1,192 @@
+{
+  "mnemonic": "SYP_V1",
+  "conditionId": "SYP",
+  "name": "Syphilis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Syphilis.v8.20260626.docx",
+    "rckmsVersion": "v8",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Syphilis.v8.20260626.docx on 2026-07-29 (authoritative RCKMS Content Release 20260626; latest revision 2026-06-09)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SYP-R1",
+      "description": "Syphilis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.395", "name": "Syphilis (Disorders) (SNOMED)" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.396", "name": "Syphilis (Disorders) (ICD10CM)" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.395", "name": "Syphilis (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.396", "name": "Syphilis (Disorders) (ICD10CM)", "status": "active" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "SYP-R2",
+      "description": "Qualifying Treponema pallidum nucleic-acid result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.550", "name": "Syphilis (Tests for Treponema pallidum Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.550", "name": "Syphilis (Tests for Treponema pallidum Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.550", "name": "Syphilis (Tests for Treponema pallidum Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SYP-R3",
+      "description": "Qualifying treponemal or non-treponemal antibody result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.705", "name": "Syphilis (Tests for Treponemal or Non Treponemal Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.705", "name": "Syphilis (Tests for Treponemal or Non Treponemal Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.705", "name": "Syphilis (Tests for Treponemal or Non Treponemal Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SYP-R4",
+      "description": "Qualifying microscopic observation of Treponema pallidum",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.746", "name": "Treponema pallidum (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.746", "name": "Treponema pallidum (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.746", "name": "Treponema pallidum (Tests by Microscopic Observation)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.900", "name": "Organisms (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SYP-R5",
+      "description": "Qualifying treponemal antibody result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3304", "name": "Syphilis (Tests for Treponemal Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3304", "name": "Syphilis (Tests for Treponemal Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.3304", "name": "Syphilis (Tests for Treponemal Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SYP-R6",
+      "description": "Qualifying non-treponemal antibody result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3305", "name": "Syphilis (Tests for Non Treponemal Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3305", "name": "Syphilis (Tests for Non Treponemal Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.3305", "name": "Syphilis (Tests for Non Treponemal Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SYP-R7",
+      "description": "Qualifying treponemal antibody result from a CSF-specific test",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3306", "name": "Syphilis (Tests for Treponemal Antibody in CSF)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3306", "name": "Syphilis (Tests for Treponemal Antibody in CSF)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.3306", "name": "Syphilis (Tests for Treponemal Antibody in CSF)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SYP-R8",
+      "description": "Qualifying non-treponemal antibody result from a CSF-specific test",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3307", "name": "Syphilis (Tests for Non Treponemal Antibody in CSF)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3307", "name": "Syphilis (Tests for Non Treponemal Antibody in CSF)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.3307", "name": "Syphilis (Tests for Non Treponemal Antibody in CSF)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SYP-R9",
+      "description": "Negative treponemal or non-treponemal antibody result",
+      "logic": {
+        "predicate": "labTestWithResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.705",
+          "name": "Syphilis (Tests for Treponemal or Non Treponemal Antibody)",
+          "resultOid": "2.16.840.1.113762.1.4.1146.1034",
+          "resultName": "Negative or Undetected Lab Result Value"
+        }
+      }
+    },
+    {
+      "id": "SYP-R10",
+      "description": "Benzathine penicillin G administered parenterally",
+      "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.747", "name": "Penicillin G [Benzathine] [Injectable] [Bicillin] (RXNORM)" } }
+    },
+    {
+      "id": "SYP-R11",
+      "description": "Benzathine penicillin G ordered or prescribed",
+      "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.747", "name": "Penicillin G [Benzathine] [Injectable] [Bicillin] (RXNORM)" } }
+    },
+    {
+      "id": "SYP-R12",
+      "description": "Aqueous crystalline penicillin G administered parenterally",
+      "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1912", "name": "Penicillin G [Aqueous Crystalline] [Injectable] (RXNORM)" } }
+    },
+    {
+      "id": "SYP-R13",
+      "description": "Procaine penicillin G administered parenterally",
+      "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1913", "name": "Penicillin G [Procaine] [Injectable] (RXNORM)" } }
+    },
+    {
+      "id": "SYP-R14",
+      "description": "Patient at least two years old with qualifying syphilis all-results or spirochete microscopy evidence",
+      "logic": {
+        "all": [
+          { "predicate": "ageComparison", "params": { "op": ">=", "value": 2, "unit": "years" }, "gate": true },
+          {
+            "any": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.550", "name": "Syphilis (Tests for Treponema pallidum Nucleic Acid)" } },
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.746", "name": "Treponema pallidum (Tests by Microscopic Observation)" } },
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.705", "name": "Syphilis (Tests for Treponemal or Non Treponemal Antibody)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2462", "name": "Spirochetes (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2462", "name": "Spirochetes (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.1824", "resultName": "Spirochetes (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2462", "name": "Spirochetes (Tests by Microscopic Observation)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rules 7-8 general antibody tests with CSF specimen",
+      "reason": "SEM_V1 has no specimen predicate; the source's CSF-specific test value-set branches remain implemented, while general antibody tests constrained by Cerebrospinal Fluid specimen cannot be represented"
+    },
+    {
+      "valueSet": "Rules 10-13 medication order versus administration status",
+      "reason": "SEM_V1 medication evidence identifies the medication value set but cannot distinguish ordered or prescribed from administered status; source rule numbering is retained and the reportability union is preserved"
+    },
+    {
+      "valueSet": "Rule 14 completed test results versus laboratory orders",
+      "reason": "SEM_V1 laboratory evidence cannot distinguish a completed observation from an order; the three source all-test-results branches are represented by test value-set membership"
+    },
+    {
+      "valueSet": "Vital-record reporter types",
+      "reason": "the source identifies birth-certificate maternal-syphilis and death-certificate syphilis evidence, but SEM_V1 has no birth- or death-certificate evidence"
+    }
+  ]
+}

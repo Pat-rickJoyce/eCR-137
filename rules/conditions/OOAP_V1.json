@@ -1,0 +1,198 @@
+{
+  "mnemonic": "OOAP_V1",
+  "conditionId": "OOAP",
+  "name": "Opioid Overdose and Poisoning",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Opioid_Overdose_and_Poisoning.v4.20260227.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Opioid_Overdose_and_Poisoning.v4.20260227.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2026-05-20)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "OOAP-R1",
+      "description": "Opioid overdose diagnosis/active problem (timeboxed when configured) or at least two coded opioid-overdose clinical finding groups, in a patient not known deceased or with a not-expired disposition",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3289", "name": "Opioid Overdose and Poisoning (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3290", "name": "Opioid Overdose and Poisoning (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3289", "name": "Opioid Overdose and Poisoning (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3290", "name": "Opioid Overdose and Poisoning (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "atLeast": {
+                  "n": 2,
+                  "of": [
+                    {
+                      "any": [
+                        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1064", "name": "Bradypnea (SNOMED)" } },
+                        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1064", "name": "Bradypnea (SNOMED)", "status": "active" } }
+                      ]
+                    },
+                    {
+                      "any": [
+                        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1065", "name": "Consciousness [Decreased Level] (SNOMED)" } },
+                        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1066", "name": "Consciousness [Decreased Level] (ICD10CM)" } },
+                        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1070", "name": "Glasgow Coma Scale Score < 12 (SNOMED)" } },
+                        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1067", "name": "Glasgow Coma Scale Score < 13 (ICD10CM)" } },
+                        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1065", "name": "Consciousness [Decreased Level] (SNOMED)", "status": "active" } },
+                        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1066", "name": "Consciousness [Decreased Level] (ICD10CM)", "status": "active" } },
+                        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1070", "name": "Glasgow Coma Scale Score < 12 (SNOMED)", "status": "active" } },
+                        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1067", "name": "Glasgow Coma Scale Score < 13 (ICD10CM)", "status": "active" } }
+                      ]
+                    },
+                    {
+                      "any": [
+                        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1069", "name": "Cyanosis (SNOMED)" } },
+                        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1068", "name": "Cyanosis (ICD10CM)" } },
+                        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1069", "name": "Cyanosis (SNOMED)", "status": "active" } },
+                        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1068", "name": "Cyanosis (ICD10CM)", "status": "active" } }
+                      ]
+                    },
+                    {
+                      "any": [
+                        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1072", "name": "Miosis (SNOMED)" } },
+                        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1073", "name": "Miosis (ICD10CM)" } },
+                        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1072", "name": "Miosis (SNOMED)", "status": "active" } },
+                        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1073", "name": "Miosis (ICD10CM)", "status": "active" } }
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              { "not": { "predicate": "patientDeceased", "params": {} } },
+              { "predicate": "encounterDischargeDispositionInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1107", "name": "Discharge Disposition [Not Expired]" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "OOAP-R2",
+      "description": "Qualifying opioid laboratory evidence on one observation, a nonfatal/unknown outcome, and an emergency-department encounter",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.785", "name": "Opioid Overdose and Poisoning (Tests for Opioids [Qualitative])", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.785", "name": "Opioid Overdose and Poisoning (Tests for Opioids [Qualitative])", "resultOid": "2.16.840.1.113762.1.4.1146.3293", "resultName": "Opioid Overdose and Poisoning (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.785", "name": "Opioid Overdose and Poisoning (Tests for Opioids [Qualitative])", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1076", "name": "Opioid Overdose and Poisoning (Tests for Opioids [Quantitative])", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1076", "name": "Opioid Overdose and Poisoning (Tests for Opioids [Quantitative])", "resultOid": "2.16.840.1.113762.1.4.1146.3293", "resultName": "Opioid Overdose and Poisoning (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1076", "name": "Opioid Overdose and Poisoning (Tests for Opioids [Quantitative])", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.806", "name": "Drugs [Unspecified] (Tests by Screen or Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.3293", "resultName": "Opioid Overdose and Poisoning (Organism or Substance in Lab Results)" } }
+            ]
+          },
+          {
+            "any": [
+              { "not": { "predicate": "patientDeceased", "params": {} } },
+              { "predicate": "encounterDischargeDispositionInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1107", "name": "Discharge Disposition [Not Expired]" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.2737", "name": "Emergency Department (ActEncounterCode)" } },
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.2738", "name": "Emergency Department (EncounterTypeCode)" } },
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.2739", "name": "Emergency Department (SNOMED)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "OOAP-R4",
+      "description": "Naloxone medication evidence (representing the source's any-response/no-response-information branch) in a patient not known deceased or with a not-expired disposition",
+      "logic": {
+        "all": [
+          { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1078", "name": "Opioid Overdose and Poisoning (Naloxone) (RxNorm)" } },
+          {
+            "any": [
+              { "not": { "predicate": "patientDeceased", "params": {} } },
+              { "predicate": "encounterDischargeDispositionInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1107", "name": "Discharge Disposition [Not Expired]" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "OOAP-R6",
+      "description": "Opioid abuse, dependence, or other use diagnosis/active problem plus suspected drug overdose diagnosis/active problem, in a patient not known deceased or with a not-expired disposition",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3291", "name": "Opioid Abuse, Dependence, and Other Use [Excluding Overdose and Poisoning] (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3292", "name": "Opioid Abuse, Dependence, and Other Use [Excluding Overdose and Poisoning] (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3291", "name": "Opioid Abuse, Dependence, and Other Use [Excluding Overdose and Poisoning] (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3292", "name": "Opioid Abuse, Dependence, and Other Use [Excluding Overdose and Poisoning] (Disorders) (ICD10CM)", "status": "active" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1074", "name": "Drug Overdose and Poisoning [Suspected] (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1075", "name": "Drug Overdose and Poisoning [Suspected] (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1074", "name": "Drug Overdose and Poisoning [Suspected] (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1075", "name": "Drug Overdose and Poisoning [Suspected] (ICD10CM)", "status": "active" } }
+            ]
+          },
+          {
+            "any": [
+              { "not": { "predicate": "patientDeceased", "params": {} } },
+              { "predicate": "encounterDischargeDispositionInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1107", "name": "Discharge Disposition [Not Expired]" } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Opioid Overdose and Poisoning [Suspected] (SNOMED and ICD10CM)",
+      "reason": "the authoritative source marks both suspected-opioid-overdose value sets unimplemented because no codes are available; this alternative is omitted from OOAP-R1"
+    },
+    {
+      "valueSet": "Bradypnea (ICD10CM)",
+      "reason": "the authoritative source marks the ICD10CM bradypnea value set unimplemented because no codes are available; the coded SNOMED branch remains in OOAP-R1"
+    },
+    {
+      "valueSet": "Naloxone administration and Therapeutic Response to Medication [Improved]",
+      "reason": "SEM_V1 medication evidence does not distinguish administered from prescribed/ordered medication and carries no linked therapeutic-response observation; source rule 3 is omitted, while OOAP-R4 retains the broader any-response/no-response-information naloxone branch using available medication evidence"
+    },
+    {
+      "valueSet": "Source rules 5 and 7 opioid outbreak/cluster and exposure criteria",
+      "reason": "the authoritative source explicitly marks both rules inoperable because epidemiologic criteria cannot be implemented; OOAP-R5 and OOAP-R7 are omitted while preserving source numbering"
+    },
+    {
+      "valueSet": "Non-provider reporter types and vital-records death-certificate criterion",
+      "reason": "the authoritative source marks lab, poison-control, EMS, harm-reduction, law-enforcement, crime-lab, and vital-records reporter types unavailable in RCKMS; their routing and death-certificate evidence are not represented in the pack"
+    }
+  ]
+}

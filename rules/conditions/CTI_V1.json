@@ -1,0 +1,996 @@
+{
+  "mnemonic": "CTI_V1",
+  "conditionId": "CTI",
+  "name": "Chlamydia trachomatis infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Chlamydia_trachomatis_infection.v6.20250228.docx",
+    "rckmsVersion": "v6",
+    "rckmsDate": "2025-02-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs live RCKMS Release 16 docx (2026-07-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CTI-R1",
+      "description": "Chlamydial cervicitis, urethritis, or LGV (dx/active problem, timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.52",
+                  "name": "Chlamydia trachomatis Infection [Cervicitis Urethritis LGV] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.53",
+                  "name": "Chlamydia trachomatis Infection [Cervicitis Urethritis LGV] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.52",
+                  "name": "Chlamydia trachomatis Infection [Cervicitis Urethritis LGV] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.53",
+                  "name": "Chlamydia trachomatis Infection [Cervicitis Urethritis LGV] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R2",
+      "description": "Identification of C. trachomatis by culture",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.238",
+                  "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis by Culture and Identification Method)"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.170",
+                      "name": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": [
+                        "A",
+                        "AA",
+                        "HH",
+                        "LL",
+                        "H",
+                        "L"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1041",
+                      "name": "Organisms (Tests by Culture and Identification)"
+                    }
+                  },
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2523",
+                      "name": "Chlamydia trachomatis Infection (Tests for unspecified Chlamydia species by Culture and Identification Method)"
+                    }
+                  },
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1040",
+                      "name": "Organisms (Tests by Unspecified Method)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.170",
+                  "name": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R3",
+      "description": "Detection of C. trachomatis nucleic acid",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.239",
+                  "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis Nucleic Acid)"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.170",
+                      "name": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": [
+                        "A",
+                        "AA",
+                        "HH",
+                        "LL",
+                        "H",
+                        "L"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.994",
+                      "name": "Organisms (Tests for Nucleic Acid)"
+                    }
+                  },
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2524",
+                      "name": "Chlamydia trachomatis Infection (Tests for unspecified Chlamydia species Nucleic Acid)"
+                    }
+                  },
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2526",
+                      "name": "Chlamydia trachomatis Infection (Combination Tests that include Chlamydia trachomatis Nucleic Acid)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.170",
+                  "name": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R4",
+      "description": "Detection of C. trachomatis antigen",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.240",
+                  "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis Antigen)"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.170",
+                      "name": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": [
+                        "A",
+                        "AA",
+                        "HH",
+                        "LL",
+                        "H",
+                        "L"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2525",
+                      "name": "Chlamydia trachomatis Infection (Tests for unspecified Chlamydia species Antigen)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.170",
+                  "name": "Chlamydia trachomatis Infection (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R5",
+      "description": "Trachoma (dx/active problem, timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.609",
+                  "name": "Trachoma (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.610",
+                  "name": "Trachoma (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.609",
+                  "name": "Trachoma (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.610",
+                  "name": "Trachoma (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R6",
+      "description": "C. trachomatis secondary sites/complications (dx/active problem, timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.632",
+                  "name": "Chlamydia trachomatis Infection [Secondary Sites Complications] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.634",
+                  "name": "Chlamydia trachomatis Infection [Secondary Sites Complications] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.632",
+                  "name": "Chlamydia trachomatis Infection [Secondary Sites Complications] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.634",
+                  "name": "Chlamydia trachomatis Infection [Secondary Sites Complications] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R7",
+      "description": "Conjunctivitis, age < 1 year (neonatal)",
+      "logic": {
+        "all": [
+          {
+            "gate": true,
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 1,
+              "unit": "years"
+            }
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.633",
+                  "name": "Chlamydia trachomatis Infection [Conjunctivitis] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.635",
+                  "name": "Chlamydia trachomatis Infection [Conjunctivitis] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.633",
+                  "name": "Chlamydia trachomatis Infection [Conjunctivitis] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.635",
+                  "name": "Chlamydia trachomatis Infection [Conjunctivitis] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R8",
+      "description": "Conjunctivitis, age >= 1 year",
+      "logic": {
+        "all": [
+          {
+            "gate": true,
+            "predicate": "ageComparison",
+            "params": {
+              "op": ">=",
+              "value": 1,
+              "unit": "years"
+            }
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.633",
+                  "name": "Chlamydia trachomatis Infection [Conjunctivitis] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.635",
+                  "name": "Chlamydia trachomatis Infection [Conjunctivitis] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.633",
+                  "name": "Chlamydia trachomatis Infection [Conjunctivitis] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.635",
+                  "name": "Chlamydia trachomatis Infection [Conjunctivitis] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R9",
+      "description": "Identification of unspecified Chlamydia species by culture",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2523",
+                  "name": "Chlamydia trachomatis Infection (Tests for unspecified Chlamydia species by Culture and Identification Method)"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2527",
+                      "name": "Chlamydia species [Unspecified] (Organism or Substance in Lab Results)"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": [
+                        "A",
+                        "AA",
+                        "HH",
+                        "LL",
+                        "H",
+                        "L"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1041",
+                      "name": "Organisms (Tests by Culture and Identification)"
+                    }
+                  },
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1040",
+                      "name": "Organisms (Tests by Unspecified Method)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2527",
+                  "name": "Chlamydia species [Unspecified] (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R10",
+      "description": "Detection of unspecified Chlamydia species nucleic acid",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2524",
+                  "name": "Chlamydia trachomatis Infection (Tests for unspecified Chlamydia species Nucleic Acid)"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2527",
+                      "name": "Chlamydia species [Unspecified] (Organism or Substance in Lab Results)"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": [
+                        "A",
+                        "AA",
+                        "HH",
+                        "LL",
+                        "H",
+                        "L"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.994",
+                      "name": "Organisms (Tests for Nucleic Acid)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2527",
+                  "name": "Chlamydia species [Unspecified] (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R11",
+      "description": "Detection of unspecified Chlamydia species antigen",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2525",
+              "name": "Chlamydia trachomatis Infection (Tests for unspecified Chlamydia species Antigen)"
+            }
+          },
+          {
+            "any": [
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.272",
+                  "name": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2527",
+                  "name": "Chlamydia species [Unspecified] (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labInterpretationIn",
+                "params": {
+                  "name": "Abnormal Interpretation of an Observation",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R12",
+      "description": "All results: C. trachomatis culture test present",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.238",
+          "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis by Culture and Identification Method)"
+        }
+      }
+    },
+    {
+      "id": "CTI-R13",
+      "description": "All results: C. trachomatis nucleic acid test present",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.239",
+          "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis Nucleic Acid)"
+        }
+      }
+    },
+    {
+      "id": "CTI-R14",
+      "description": "All results: C. trachomatis antigen test present",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.240",
+          "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis Antigen)"
+        }
+      }
+    },
+    {
+      "id": "CTI-R15",
+      "description": "All results: unspecified Chlamydia species culture test present",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.2523",
+          "name": "Chlamydia trachomatis Infection (Tests for unspecified Chlamydia species by Culture and Identification Method)"
+        }
+      }
+    },
+    {
+      "id": "CTI-R16",
+      "description": "All results: unspecified Chlamydia species nucleic acid test present",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.2524",
+          "name": "Chlamydia trachomatis Infection (Tests for unspecified Chlamydia species Nucleic Acid)"
+        }
+      }
+    },
+    {
+      "id": "CTI-R17",
+      "description": "All results: unspecified Chlamydia species antigen test present",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.2525",
+          "name": "Chlamydia trachomatis Infection (Tests for unspecified Chlamydia species Antigen)"
+        }
+      }
+    },
+    {
+      "id": "CTI-R18",
+      "description": "Indeterminate C. trachomatis culture result",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.238",
+              "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis by Culture and Identification Method)"
+            }
+          },
+          {
+            "predicate": "labResultInValueSet",
+            "params": {
+              "oid": null,
+              "name": "Indeterminate or Equivocal Lab Result Value"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R19",
+      "description": "Indeterminate C. trachomatis nucleic acid result",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.239",
+              "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis Nucleic Acid)"
+            }
+          },
+          {
+            "predicate": "labResultInValueSet",
+            "params": {
+              "oid": null,
+              "name": "Indeterminate or Equivocal Lab Result Value"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R20",
+      "description": "Indeterminate C. trachomatis antigen result",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.240",
+              "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis Antigen)"
+            }
+          },
+          {
+            "predicate": "labResultInValueSet",
+            "params": {
+              "oid": null,
+              "name": "Indeterminate or Equivocal Lab Result Value"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R21",
+      "description": "Negative C. trachomatis culture result",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.238",
+              "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis by Culture and Identification Method)"
+            }
+          },
+          {
+            "predicate": "labResultInValueSet",
+            "params": {
+              "oid": null,
+              "name": "Negative or Undetected Lab Result Value"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R22",
+      "description": "Negative C. trachomatis nucleic acid result",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.239",
+              "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis Nucleic Acid)"
+            }
+          },
+          {
+            "predicate": "labResultInValueSet",
+            "params": {
+              "oid": null,
+              "name": "Negative or Undetected Lab Result Value"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R23",
+      "description": "Negative C. trachomatis antigen result",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.240",
+              "name": "Chlamydia trachomatis Infection (Tests for Chlamydia trachomatis Antigen)"
+            }
+          },
+          {
+            "predicate": "labResultInValueSet",
+            "params": {
+              "oid": null,
+              "name": "Negative or Undetected Lab Result Value"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R24",
+      "description": "Negative unspecified Chlamydia species culture result",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2523",
+              "name": "Chlamydia trachomatis Infection (Tests for unspecified Chlamydia species by Culture and Identification Method)"
+            }
+          },
+          {
+            "predicate": "labResultInValueSet",
+            "params": {
+              "oid": null,
+              "name": "Negative or Undetected Lab Result Value"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R25",
+      "description": "Negative unspecified Chlamydia species nucleic acid result",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2524",
+              "name": "Chlamydia trachomatis Infection (Tests for unspecified Chlamydia species Nucleic Acid)"
+            }
+          },
+          {
+            "predicate": "labResultInValueSet",
+            "params": {
+              "oid": null,
+              "name": "Negative or Undetected Lab Result Value"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTI-R26",
+      "description": "Negative unspecified Chlamydia species antigen result",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2525",
+              "name": "Chlamydia trachomatis Infection (Tests for unspecified Chlamydia species Antigen)"
+            }
+          },
+          {
+            "predicate": "labResultInValueSet",
+            "params": {
+              "oid": null,
+              "name": "Negative or Undetected Lab Result Value"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Indeterminate or Equivocal Lab Result Value",
+      "reason": "OID not in Table 3 export; R18-R20 indeterminate-result rules skip until OID resolved"
+    },
+    {
+      "valueSet": "Negative or Undetected Lab Result Value",
+      "reason": "OID not in Table 3 export; R21-R26 negative-result rules skip until OID resolved"
+    },
+    {
+      "valueSet": "Timebox windows",
+      "reason": "platform-unimplemented; does not reduce coverage"
+    }
+  ]
+}

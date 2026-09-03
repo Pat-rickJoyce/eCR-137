@@ -1,0 +1,95 @@
+{
+  "mnemonic": "TET_V1",
+  "conditionId": "TET",
+  "name": "Tetanus",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Tetanus.v3.20240628.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Tetanus.v3.20240628.docx on 2026-07-29 (authoritative RCKMS Content Release 20240628; latest revision 2025-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "TET-R1",
+      "description": "Tetanus diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.112", "name": "Tetanus (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.113", "name": "Tetanus (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.112", "name": "Tetanus (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.113", "name": "Tetanus (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TET-R2",
+      "description": "General culture or unspecified-method test with a Tetanus organism result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.318", "resultName": "Tetanus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.318", "resultName": "Tetanus (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TET-R3",
+      "description": "Tetanus immune globulin medication evidence with muscle spasms or hypertonia",
+      "logic": {
+        "all": [
+          { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.339", "name": "Tetanus (Tetanus Immune Globulin) (RXNORM)" } },
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.758", "name": "Muscle Spasms (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.757", "name": "Muscle Spasms (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.758", "name": "Muscle Spasms (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.757", "name": "Muscle Spasms (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.660", "name": "Hypertonia, Excluding Congenital Hypertonia (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.660", "name": "Hypertonia, Excluding Congenital Hypertonia (SNOMED)", "status": "active" } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2 Tetanus-specific culture test",
+      "reason": "the authoritative source marks the Tetanus-specific culture-and-identification test value set not implemented because no codes are available; both general-test branches remain implemented"
+    },
+    {
+      "valueSet": "Rule 3 Hypertonia ICD-10-CM branches",
+      "reason": "the authoritative source marks the Hypertonia ICD-10-CM value set not implemented because no codes are available; the supported SNOMED diagnosis and active-problem branches remain implemented"
+    },
+    {
+      "valueSet": "Rule 3 medication administration status",
+      "reason": "the source requires administered Tetanus immune globulin, but SEM_V1 medication evidence cannot distinguish administration from an order or prescription"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

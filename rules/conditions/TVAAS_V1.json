@@ -1,0 +1,95 @@
+{
+  "mnemonic": "TVAAS_V1",
+  "conditionId": "TVAAS",
+  "name": "Tricuspid Valve Atresia and Stenosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Tricuspid_Valve_Atresia_and_Stenosis.v1.20240628.docx",
+    "rckmsVersion": "v1",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Tricuspid_Valve_Atresia_and_Stenosis.v1.20240628.docx on 2026-07-29 (authoritative RCKMS Content Release 20240628; latest revision 2025-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "TVAAS-R1",
+      "description": "Tricuspid valve atresia or stenosis diagnosis/active problem in a patient younger than the default age threshold of one year, timeboxed when configured",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2336", "name": "Tricuspid valve atresia (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2337", "name": "Tricuspid valve atresia (Disorders) (ICD10CM)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2338", "name": "Tricuspid valve stenosis (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2339", "name": "Tricuspid valve stenosis (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2336", "name": "Tricuspid valve atresia (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2337", "name": "Tricuspid valve atresia (Disorders) (ICD10CM)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2338", "name": "Tricuspid valve stenosis (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2339", "name": "Tricuspid valve stenosis (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+        ]
+      }
+    },
+    {
+      "id": "TVAAS-R3",
+      "description": "Fetal tricuspid valve stenosis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2340", "name": "Fetal Tricuspid valve stenosis (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2340", "name": "Fetal Tricuspid valve stenosis (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 1 user-defined age threshold",
+      "reason": "the authoritative default is age under one year but jurisdictions may configure another threshold; SEM_V1 packs are static, so the default one-year threshold is modeled and jurisdiction-specific overrides are not represented"
+    },
+    {
+      "valueSet": "Rule 2 Fetal Tricuspid valve atresia (Disorders) (SNOMED and ICD10CM)",
+      "reason": "both authoritative value-set rows are not implemented and have no codes, so wholly inoperable Rule 2 is omitted with source numbering preserved"
+    },
+    {
+      "valueSet": "Rule 3 Fetal Tricuspid valve stenosis (Disorders) (ICD10CM)",
+      "reason": "the authoritative value-set row is not implemented and has no codes; the code-less ICD10CM alternatives are omitted while the coded SNOMED alternatives remain operational"
+    },
+    {
+      "valueSet": "Vital-records tricuspid valve atresia/stenosis reporting",
+      "reason": "the authoritative snapshot identifies birth- and death-certificate reporter types as not implemented in RCKMS; SEM_V1 has no certificate congenital-anomaly or cause/contributing-condition evidence"
+    }
+  ]
+}

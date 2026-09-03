@@ -1,0 +1,160 @@
+{
+  "mnemonic": "CPI_V1",
+  "conditionId": "CPI",
+  "name": "Clostridium perfringens infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Clostridium_perfringens_infection.v3.20260227.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Clostridium_perfringens_infection.v3.20260227.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CPI-R1",
+      "description": "Clostridium perfringens enterotoxin poisoning diagnosis or active problem, timeboxed",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1728",
+                      "name": "Clostridium perfringens Enterotoxin Poisoning (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1731",
+                      "name": "Clostridium perfringens Enterotoxin Poisoning (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1728",
+                      "name": "Clostridium perfringens Enterotoxin Poisoning (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1731",
+                      "name": "Clostridium perfringens Enterotoxin Poisoning (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CPI-R3",
+      "description": "Clostridium perfringens infection diagnosis or active problem, timeboxed",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1729",
+                      "name": "Clostridium perfringens Infection (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1732",
+                      "name": "Clostridium perfringens Infection (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1729",
+                      "name": "Clostridium perfringens Infection (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1732",
+                      "name": "Clostridium perfringens Infection (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Acute Onset qualifier on diarrhea and abdominal cramps",
+      "reason": "SEM_V1 does not represent qualifier relationships on diagnoses or problems; required clinical conjunctions in source rules 2 and 4 cannot be evaluated, so both rules are omitted"
+    },
+    {
+      "valueSet": "Stool specimen criteria",
+      "reason": "SEM_V1 has no specimen predicate; the source's general-test-plus-stool branches cannot be represented, and the specimen-specific enterotoxin/culture test value sets have no codes"
+    },
+    {
+      "valueSet": "Clostridium perfringens concentration at least 1,000,000 per gram",
+      "reason": "SEM_V1 has no numeric laboratory comparison, and both concentration test value sets are not implemented because no LOINC codes are available; the quantitative branch of source rule 2 is omitted"
+    }
+  ]
+}

@@ -1,0 +1,965 @@
+{
+  "mnemonic": "CRPA_V1",
+  "conditionId": "CRPA",
+  "name": "Carbapenem resistant Pseudomonas aeruginosa",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Carbapenem_resistant_Pseudomonas_aeruginosa.v3.20240202.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Carbapenem_resistant_Pseudomonas_aeruginosa.v3.20240202.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CRPA-R2",
+      "description": "Carbapenem-resistant bacterial infection (SNOMED diagnosis or active problem) with Pseudomonas aeruginosa identification by culture or nucleic acid",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1672",
+                  "name": "Carbapenem Resistant Bacterial Infection (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1672",
+                  "name": "Carbapenem Resistant Bacterial Infection (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1677",
+                          "name": "Tests for Pseudomonas aeruginosa by Culture and Identification Method"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1679",
+                              "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "any": [
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1041",
+                              "name": "Organisms (Tests by Culture and Identification)"
+                            }
+                          },
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1040",
+                              "name": "Organisms (Tests by Unspecified Method)"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1679",
+                          "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1678",
+                          "name": "Tests for Pseudomonas aeruginosa Nucleic Acid"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1679",
+                              "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.994",
+                          "name": "Organisms (Tests for Nucleic Acid)"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1679",
+                          "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRPA-R4",
+      "description": "Carbapenemase-producing carbapenem-resistant bacterial infection (SNOMED diagnosis or active problem) with Pseudomonas aeruginosa identification by culture or nucleic acid",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2255",
+                  "name": "Carbapenem Resistant Bacterial Infection [Carbapenemase Producing] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2255",
+                  "name": "Carbapenem Resistant Bacterial Infection [Carbapenemase Producing] (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1677",
+                          "name": "Tests for Pseudomonas aeruginosa by Culture and Identification Method"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1679",
+                              "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "any": [
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1041",
+                              "name": "Organisms (Tests by Culture and Identification)"
+                            }
+                          },
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1040",
+                              "name": "Organisms (Tests by Unspecified Method)"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1679",
+                          "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1678",
+                          "name": "Tests for Pseudomonas aeruginosa Nucleic Acid"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1679",
+                              "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.994",
+                          "name": "Organisms (Tests for Nucleic Acid)"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1679",
+                          "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRPA-R5",
+      "description": "Detection of carbapenem-resistant Pseudomonas aeruginosa organism in a laboratory result",
+      "logic": {
+        "predicate": "labResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1680",
+          "name": "Pseudomonas aeruginosa [Carbapenem Resistant] (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "CRPA-R6",
+      "description": "Pseudomonas aeruginosa culture identification with qualitative carbapenem resistance (numeric MIC alternatives not modeled)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1677",
+                      "name": "Tests for Pseudomonas aeruginosa by Culture and Identification Method"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1679",
+                          "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1041",
+                          "name": "Organisms (Tests by Culture and Identification)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1040",
+                          "name": "Organisms (Tests by Unspecified Method)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1679",
+                      "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1217",
+                      "name": "Tests for carbapenem susceptibility [Meropenem, imipenem, and doripenem]"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1145",
+                          "name": "Resistant Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Resistant Interpretation of an Observation",
+                          "codes": [
+                            "R"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1218",
+                      "name": "Tests for carbapenem susceptibility [Ertapenem]"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1145",
+                          "name": "Resistant Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Resistant Interpretation of an Observation",
+                          "codes": [
+                            "R"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRPA-R7",
+      "description": "Detection of carbapenemase-producing Pseudomonas aeruginosa organism in a laboratory result",
+      "logic": {
+        "predicate": "labResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1681",
+          "name": "Pseudomonas aeruginosa [Carbapenemase Producing] (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "CRPA-R8",
+      "description": "Pseudomonas aeruginosa culture identification with phenotypic carbapenemase production or a known resistance mechanism",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1677",
+                      "name": "Tests for Pseudomonas aeruginosa by Culture and Identification Method"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1679",
+                          "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1041",
+                          "name": "Organisms (Tests by Culture and Identification)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1040",
+                          "name": "Organisms (Tests by Unspecified Method)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1679",
+                      "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1215",
+                      "name": "Tests for carbapenemase production"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1882",
+                  "name": "Carbapenemase production (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1216",
+                      "name": "Tests for carbapenemase resistance mechanism"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1214",
+                  "name": "Carbapenemase resistance mechanism (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRPA-R9",
+      "description": "Pseudomonas aeruginosa nucleic-acid detection with a known carbapenemase resistance mechanism",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1678",
+                      "name": "Tests for Pseudomonas aeruginosa Nucleic Acid"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1679",
+                          "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.994",
+                      "name": "Organisms (Tests for Nucleic Acid)"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1679",
+                      "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1216",
+                      "name": "Tests for carbapenemase resistance mechanism"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1214",
+                  "name": "Carbapenemase resistance mechanism (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRPA-R10",
+      "description": "Optional logic: Pseudomonas aeruginosa culture identification with qualitative resistance to imipenem, meropenem, or doripenem (numeric MIC alternative not modeled)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1677",
+                      "name": "Tests for Pseudomonas aeruginosa by Culture and Identification Method"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1679",
+                          "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1041",
+                          "name": "Organisms (Tests by Culture and Identification)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1040",
+                          "name": "Organisms (Tests by Unspecified Method)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1679",
+                      "name": "Pseudomonas aeruginosa (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1217",
+                  "name": "Tests for carbapenem susceptibility [Meropenem, imipenem, and doripenem]"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1145",
+                      "name": "Resistant Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Resistant Interpretation of an Observation",
+                      "codes": [
+                        "R"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "CRPA (Disorders) (SNOMED and ICD10CM)",
+      "reason": "not implemented - no codes available for either value set per source docx Table 3; source rule 1 is explicitly inoperable and is omitted"
+    },
+    {
+      "valueSet": "CRPA [Carbapenemase Producing] (Disorders) (SNOMED and ICD10CM)",
+      "reason": "not implemented - no codes available for either value set per source docx Table 3; source rule 3 is explicitly inoperable and is omitted"
+    },
+    {
+      "valueSet": "Carbapenem Resistant Bacterial Infection (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; the unavailable ICD-10-CM diagnosis and problem branches are omitted from source rule 2"
+    },
+    {
+      "valueSet": "Carbapenem Resistant Bacterial Infection [Carbapenemase Producing] (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; the unavailable ICD-10-CM diagnosis and problem branches are omitted from source rule 4"
+    },
+    {
+      "valueSet": "Numeric minimum inhibitory concentration comparisons for carbapenem susceptibility",
+      "reason": "SEM_V1 has no numeric laboratory result value/unit comparison predicate; MIC >=4 ug/mL and ertapenem MIC >=2 ug/mL alternatives in CRPA-R6 and the MIC >=8 ug/mL alternative in CRPA-R10 are omitted"
+    }
+  ]
+}

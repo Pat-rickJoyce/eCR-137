@@ -1,0 +1,184 @@
+{
+  "mnemonic": "VHF_V1",
+  "conditionId": "VHF",
+  "name": "Viral Hemorrhagic Fever",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Viral_Hemorrhagic_Fever.v7.20260227.docx",
+    "rckmsVersion": "v7",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Viral_Hemorrhagic_Fever.v7.20260227.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2026-01-05)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "VHF-R1",
+      "description": "Viral Hemorrhagic Fever diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.264", "name": "Viral Hemorrhagic Fever (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.265", "name": "Viral Hemorrhagic Fever (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.264", "name": "Viral Hemorrhagic Fever (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.265", "name": "Viral Hemorrhagic Fever (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VHF-R2",
+      "description": "Suspected Viral Hemorrhagic Fever diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1446", "name": "Viral Hemorrhagic Fever [Suspected] (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1446", "name": "Viral Hemorrhagic Fever [Suspected] (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VHF-R4",
+      "description": "Lab test ordered for Viral Hemorrhagic Fever virus nucleic acid detection",
+      "logic": {
+        "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.581", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus Nucleic Acid)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.966", "name": "Viral Hemorrhagic Fever (Test Panels for Viral Hemorrhagic Fever Virus Nucleic Acid)" } }
+        ]
+      }
+    },
+    {
+      "id": "VHF-R5",
+      "description": "Lab test ordered for Viral Hemorrhagic Fever virus antigen detection",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.582",
+          "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus Antigen)"
+        }
+      }
+    },
+    {
+      "id": "VHF-R6",
+      "description": "Lab test ordered for Viral Hemorrhagic Fever virus IgM, IgG, or unspecified antibody detection",
+      "logic": {
+        "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.585", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus IgM Antibody)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.584", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus IgG Antibody)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1151", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus Antibody)" } }
+        ]
+      }
+    },
+    {
+      "id": "VHF-R8",
+      "description": "Optional logic: identification of a Viral Hemorrhagic Fever virus by a generic culture or organism test with a same-observation VHF-virus result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.586", "resultName": "Viral Hemorrhagic Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.586", "resultName": "Viral Hemorrhagic Fever (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "VHF-R9",
+      "description": "Optional logic: detection of Viral Hemorrhagic Fever virus nucleic acid by specific or generic testing",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.581", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.581", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.586", "resultName": "Viral Hemorrhagic Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.581", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.586", "resultName": "Viral Hemorrhagic Fever (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "VHF-R10",
+      "description": "Optional logic: detection of Viral Hemorrhagic Fever virus antigen by any method",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.582", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.582", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.586", "resultName": "Viral Hemorrhagic Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.582", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "VHF-R11",
+      "description": "Optional logic: detection of Viral Hemorrhagic Fever virus IgM, IgG, or unspecified antibody (coded or abnormal results; numeric > 0 not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.585", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.585", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.586", "resultName": "Viral Hemorrhagic Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.585", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.584", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus IgG Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.584", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus IgG Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.586", "resultName": "Viral Hemorrhagic Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.584", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus IgG Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1151", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1151", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.586", "resultName": "Viral Hemorrhagic Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1151", "name": "Viral Hemorrhagic Fever (Tests for Viral Hemorrhagic Fever Virus Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Viral Hemorrhagic Fever [Suspected] (Disorders) (ICD10CM)",
+      "reason": "the source marks this suspected-diagnosis/problem value set not implemented with no codes; VHF-R2 retains the implemented SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Rule 3 Viral Hemorrhagic Fever culture-test orders",
+      "reason": "the source marks both the organism-specific culture-test and culture-panel value sets not implemented with no codes, so the wholly inoperable rule is omitted"
+    },
+    {
+      "valueSet": "Rules 4-6 laboratory order status",
+      "reason": "SEM_V1 laboratory evidence does not distinguish an order from a completed observation; coded test and panel OIDs are modeled with labTestInValueSet"
+    },
+    {
+      "valueSet": "Rules 5-6 code-less test panels",
+      "reason": "the source marks the Viral Hemorrhagic Fever antigen and antibody panel value sets not implemented with no LOINC codes; their coded individual-test alternatives remain modeled"
+    },
+    {
+      "valueSet": "Rule 7 clinical findings plus epidemiologic exposure",
+      "reason": "all six required epidemiologic exposure criteria are explicitly not implemented, and SEM_V1 has no epidemiologic exposure evidence; the wholly inoperable rule is omitted (SEM_V1 also cannot evaluate its numeric body-temperature threshold)"
+    },
+    {
+      "valueSet": "Rule 8 organism-specific Viral Hemorrhagic Fever culture test",
+      "reason": "the source marks the required organism-specific culture-test value set not implemented with no LOINC codes; VHF-R8 retains both implemented generic-test alternatives with same-observation VHF-virus results"
+    },
+    {
+      "valueSet": "Rule 11 numeric antibody result > 0",
+      "reason": "SEM_V1 has no numeric laboratory result value or comparison predicate; the numeric alternative is omitted"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate Viral Hemorrhagic Fever evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

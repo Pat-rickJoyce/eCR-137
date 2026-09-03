@@ -1,0 +1,93 @@
+{
+  "mnemonic": "SEBP_V1",
+  "conditionId": "SEBP",
+  "name": "Staphylococcal Enterotoxin B Poisoning",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Staphylococcal_Enterotoxin_B_Poisoning.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Staphylococcal_Enterotoxin_B_Poisoning.v2.20240202.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2025-05-21)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SEBP-R1",
+      "description": "Staphylococcal food poisoning diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1750", "name": "Staphylococcal Poisoning [Food] (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1751", "name": "Staphylococcal Poisoning [Food] (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1750", "name": "Staphylococcal Poisoning [Food] (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1751", "name": "Staphylococcal Poisoning [Food] (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEBP-R4",
+      "description": "Staphylococcus aureus enterotoxin B detected in a clinical specimen with a qualifying result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1752", "name": "Staphylococcal Enterotoxin B Poisoning (Tests for Staph aureus Enterotoxin B)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1752", "name": "Staphylococcal Enterotoxin B Poisoning (Tests for Staph aureus Enterotoxin B)", "resultOid": "2.16.840.1.113762.1.4.1146.1754", "resultName": "Staphylococcus aureus Enterotoxin B (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1752", "name": "Staphylococcal Enterotoxin B Poisoning (Tests for Staph aureus Enterotoxin B)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SEBP-R5",
+      "description": "Optional logic: Staphylococcus aureus enterotoxin B nucleic acid detected in a clinical specimen",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1753", "name": "Staphylococcal Enterotoxin B Poisoning (Tests for Staph aureus Enterotoxin B Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1753", "name": "Staphylococcal Enterotoxin B Poisoning (Tests for Staph aureus Enterotoxin B Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1754", "resultName": "Staphylococcus aureus Enterotoxin B (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1753", "name": "Staphylococcal Enterotoxin B Poisoning (Tests for Staph aureus Enterotoxin B Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1754", "resultName": "Staphylococcus aureus Enterotoxin B (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2 Staphylococcal Enterotoxin B pulmonary poisoning disorders",
+      "reason": "the authoritative source marks both SNOMED and ICD-10-CM value sets not implemented with no codes; the wholly inoperable rule is omitted"
+    },
+    {
+      "valueSet": "Rule 3 enterotoxin B detection constrained to stool or vomitus",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate, and the source's stool-or-vomitus-specific test-name value set has no codes; Rule 3 is omitted while the broader independently sufficient clinical-specimen Rule 4 remains modeled"
+    },
+    {
+      "valueSet": "Stool and vomitus specimen types represented by HL7 table 0487",
+      "reason": "the authoritative source marks both HL7 specimen-type value sets not implemented because table 0487 is unavailable in VSAC"
+    },
+    {
+      "valueSet": "Lab-reporting reporter type",
+      "reason": "the authoritative specification marks this reporter type unavailable in RCKMS; the same toxin-detection criteria remain represented for provider/facility reporting"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "SEM_V1 does not carry death-certificate cause or contributing-condition evidence"
+    }
+  ]
+}

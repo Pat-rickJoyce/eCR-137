@@ -1,0 +1,151 @@
+{
+  "mnemonic": "LEP_V1",
+  "conditionId": "LEP",
+  "name": "Leptospirosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Leptospirosis.v6.20260626.docx",
+    "rckmsVersion": "v6",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Leptospirosis.v6.20260626.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2026-03-24)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "LEP-R1",
+      "description": "Leptospirosis as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.271", "name": "Leptospirosis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.273", "name": "Leptospirosis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.271", "name": "Leptospirosis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.273", "name": "Leptospirosis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "LEP-R2",
+      "description": "Identification of Leptospira by culture, including preliminary results, through a specific or generic test with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.469", "name": "Leptospirosis (Tests for Leptospira by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.469", "name": "Leptospirosis (Tests for Leptospira by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.473", "resultName": "Leptospirosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.469", "name": "Leptospirosis (Tests for Leptospira by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.473", "resultName": "Leptospirosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.473", "resultName": "Leptospirosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LEP-R3",
+      "description": "Detection of Leptospira nucleic acid by a specific or generic test with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.468", "name": "Leptospirosis (Tests for Leptospira Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.468", "name": "Leptospirosis (Tests for Leptospira Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.473", "resultName": "Leptospirosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.468", "name": "Leptospirosis (Tests for Leptospira Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.473", "resultName": "Leptospirosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LEP-R4",
+      "description": "Detection of Leptospira antigen with a coded positive, organism, or abnormal-interpretation result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.470", "name": "Leptospirosis (Tests for Leptospira Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.470", "name": "Leptospirosis (Tests for Leptospira Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.473", "resultName": "Leptospirosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.470", "name": "Leptospirosis (Tests for Leptospira Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "LEP-R5",
+      "description": "Microscopic observation of Leptospira through a specific or generic test with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2426", "name": "Leptospira species (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2426", "name": "Leptospira species (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.473", "resultName": "Leptospirosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2426", "name": "Leptospira species (Tests by Microscopic Observation)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.900", "name": "Organisms (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.473", "resultName": "Leptospirosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.473", "resultName": "Leptospirosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LEP-R6",
+      "description": "Detection of positive Leptospira antibody by microscopic agglutination with a coded positive, organism, or abnormal-interpretation result on the same observation (numeric titer greater than zero not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2427", "name": "Leptospirosis (Tests for Leptospira Antibody by Agglutination)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2427", "name": "Leptospirosis (Tests for Leptospira Antibody by Agglutination)", "resultOid": "2.16.840.1.113762.1.4.1146.473", "resultName": "Leptospirosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2427", "name": "Leptospirosis (Tests for Leptospira Antibody by Agglutination)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "LEP-R7",
+      "description": "Detection of Leptospira antibody by indirect immunofluorescence with a coded positive, organism, or abnormal-interpretation result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2428", "name": "Leptospirosis (Tests for Leptospira Antibody by Indirect Immunofluorescence)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2428", "name": "Leptospirosis (Tests for Leptospira Antibody by Indirect Immunofluorescence)", "resultOid": "2.16.840.1.113762.1.4.1146.473", "resultName": "Leptospirosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2428", "name": "Leptospirosis (Tests for Leptospira Antibody by Indirect Immunofluorescence)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "LEP-R8",
+      "description": "Detection of Leptospira IgM antibody with a coded positive, organism, or abnormal-interpretation result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.307", "name": "Leptospirosis (Tests for Leptospira IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.307", "name": "Leptospirosis (Tests for Leptospira IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.473", "resultName": "Leptospirosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.307", "name": "Leptospirosis (Tests for Leptospira IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "LEP-R10",
+      "description": "Optional logic: detection of Leptospira antibody with a coded positive, organism, or abnormal-interpretation result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.472", "name": "Leptospirosis (Tests for Leptospira Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.472", "name": "Leptospirosis (Tests for Leptospira Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.473", "resultName": "Leptospirosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.472", "name": "Leptospirosis (Tests for Leptospira Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Numeric Leptospira antibody titer > 0",
+      "reason": "SEM_V1 has no numeric laboratory-result comparison; the numeric alternative in LEP-R6 is omitted while coded-result and abnormal-interpretation alternatives remain modeled"
+    },
+    {
+      "valueSet": "Clinical observations plus epidemiologic link to Leptospirosis",
+      "reason": "source rule 9 is explicitly inoperable because contact and outbreak-risk criteria are unavailable; SEM_V1 also cannot evaluate its body-temperature threshold, so the entire rule is omitted rather than allowing clinical evidence to trigger alone"
+    }
+  ]
+}

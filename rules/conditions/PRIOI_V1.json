@@ -1,0 +1,140 @@
+{
+  "mnemonic": "PRIOI_V1",
+  "conditionId": "PRIOI",
+  "name": "Pesticide Related Illness or Injury",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Pesticide_Related_Illness_or_Injury.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Pesticide_Related_Illness_or_Injury.v2.20240628.docx on 2026-07-21 (authoritative RCKMS Content Release 16; latest revision 2026-05-19)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "PRIOI-R1",
+      "description": "Pesticide-related illness diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.3285",
+                      "name": "Pesticide Related Illness (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.322",
+                      "name": "Pesticide Related Illness (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.3285",
+                      "name": "Pesticide Related Illness (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.322",
+                      "name": "Pesticide Related Illness (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PRIOI-R2",
+      "description": "Lab test ordered for pesticide detection",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.416",
+              "name": "Pesticide Related Illness (Tests for Pesticides)"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.821",
+              "name": "Pesticide Related Illness (Test Panels for Pesticides)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PRIOI-R3",
+      "description": "Lab test ordered for cholinesterase detection or measurement",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1126",
+              "name": "Pesticide Related Illness (Tests for Cholinesterase)"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1127",
+              "name": "Pesticide Related Illness (Test Panels for Cholinesterase)"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rules 2-3: laboratory test orders",
+      "reason": "SEM_V1 lab evidence does not distinguish orders from completed observations; all four authoritative coded test-name and panel alternatives are modeled with labTestInValueSet"
+    },
+    {
+      "valueSet": "Workers-compensation claims-data reporting",
+      "reason": "the authoritative snapshot marks the claims-data reporter type not implemented in RCKMS; SEM_V1 has no claims-source evidence, so it cannot distinguish claims reporting from the provider/facility diagnosis path"
+    },
+    {
+      "valueSet": "Vital-records pesticide-related illness reporting",
+      "reason": "the authoritative snapshot identifies this reporter type as not implemented in RCKMS, and SEM_V1 has no death-certificate cause/contributing-condition evidence"
+    }
+  ]
+}

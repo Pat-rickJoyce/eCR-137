@@ -2,6 +2,23 @@
  * Embedded Rules Data
  * Generated from CSVs.
  */
+
+/**
+ * Provenance for this generated rule set (ADR-006).
+ * NOTE: retro-stamped 2026-07-17 from repository history; the generator
+ * (eCR137ArchReview dev/reportability-engine pipeline) must emit this
+ * header on future regenerations.
+ */
+export const RULES_PROVENANCE = {
+    ruleSetId: "ecr137-legacy-rules",
+    version: "2026-02-03",
+    source: "RCKMS condition specs (TrainingMaterials docx) via parse_specs/parse_rule_text pipeline",
+    rctcRelease: "2025-03-18",
+    generator: "dev/reportability-engine/convert_rules_to_js.py (eCR137ArchReview)",
+    coverage: "partial — see docs/architecture/rules-process-proposal.md",
+    stampedAt: "2026-07-17"
+};
+
 export const RULES_DATA = {
   "conditions": [
     {
@@ -44010,7 +44027,7 @@ export const RULES_DATA = {
       "criteria_group": "G0",
       "criteria_sequence": "2",
       "criteria_type": "diagnosis",
-      "value_set_oid": "2.16.840.1.113762.1.4.1146.342",
+      "value_set_oid": "2.16.840.1.113762.1.4.1146.80",
       "value_set_name": "Campylobacteriosis (Disorders) (ICD10CM)",
       "code_system": "ICD10CM",
       "ecelerate_field": ".de-diagnosis-code",
@@ -44036,7 +44053,7 @@ export const RULES_DATA = {
       "criteria_group": "G0",
       "criteria_sequence": "4",
       "criteria_type": "problem",
-      "value_set_oid": "2.16.840.1.113762.1.4.1146.342",
+      "value_set_oid": "2.16.840.1.113762.1.4.1146.80",
       "value_set_name": "Campylobacteriosis (Disorders) (ICD10CM)",
       "code_system": "ICD10CM",
       "ecelerate_field": ".pe-problem-code",

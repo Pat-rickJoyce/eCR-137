@@ -1,0 +1,2332 @@
+{
+  "mnemonic": "CRE_V1",
+  "conditionId": "CRE",
+  "name": "Carbapenem resistant Enterobacterales",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Carbapenem_resistant_Enterobacterales.v5.20260626.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Carbapenem_resistant_Enterobacterales.v5.20260626.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CRE-R1",
+      "description": "Carbapenem-resistant Enterobacterales infection (SNOMED diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2463",
+                  "name": "Carbapenem Resistant Enterobacterales (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2463",
+                  "name": "Carbapenem Resistant Enterobacterales (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRE-R2",
+      "description": "Carbapenem-resistant bacterial infection (SNOMED diagnosis or active problem) with Enterobacterales identification by culture or nucleic acid",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1672",
+                  "name": "Carbapenem Resistant Bacterial Infection (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1672",
+                  "name": "Carbapenem Resistant Bacterial Infection (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2465",
+                          "name": "CRE (Tests for Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] by Culture and Identification Method)"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2470",
+                              "name": "Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "any": [
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1041",
+                              "name": "Organisms (Tests by Culture and Identification)"
+                            }
+                          },
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1040",
+                              "name": "Organisms (Tests by Unspecified Method)"
+                            }
+                          },
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2468",
+                              "name": "CRE (Combination Tests that include Enterobacterales by Culture and Identification)"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2470",
+                          "name": "Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2466",
+                          "name": "CRE (Tests for Proteus spp., Providencia spp., and Morganella spp. by Culture and Identification Method)"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2471",
+                              "name": "Proteus spp., Providencia spp., and Morganella spp. (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "any": [
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1041",
+                              "name": "Organisms (Tests by Culture and Identification)"
+                            }
+                          },
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1040",
+                              "name": "Organisms (Tests by Unspecified Method)"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2471",
+                          "name": "Proteus spp., Providencia spp., and Morganella spp. (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2467",
+                          "name": "CRE (Tests for Enterobacterales species Nucleic Acid)"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2470",
+                              "name": "Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2471",
+                              "name": "Proteus spp., Providencia spp., and Morganella spp. (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.994",
+                          "name": "Organisms (Tests for Nucleic Acid)"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2470",
+                              "name": "Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2471",
+                              "name": "Proteus spp., Providencia spp., and Morganella spp. (Organism or Substance in Lab Results)"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRE-R3",
+      "description": "Detection of an Enterobacterales organism with carbapenem resistance",
+      "logic": {
+        "predicate": "labResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.2473",
+          "name": "Enterobacterales species [Carbapenem Resistant] (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "CRE-R4",
+      "description": "Non-Proteus/Providencia/Morganella Enterobacterales culture identification with qualitative carbapenem resistance (numeric MIC alternatives not modeled)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2465",
+                      "name": "CRE (Tests for Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] by Culture and Identification Method)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2470",
+                          "name": "Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1041",
+                          "name": "Organisms (Tests by Culture and Identification)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1040",
+                          "name": "Organisms (Tests by Unspecified Method)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2468",
+                          "name": "CRE (Combination Tests that include Enterobacterales by Culture and Identification)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2470",
+                      "name": "Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1217",
+                      "name": "Tests for Carbapenem Susceptibility [Meropenem, Imipenem, and Doripenem]"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1145",
+                          "name": "Resistant Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Resistant Interpretation of an Observation",
+                          "codes": [
+                            "R"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1218",
+                      "name": "Tests for Carbapenem Susceptibility [Ertapenem]"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1145",
+                          "name": "Resistant Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Resistant Interpretation of an Observation",
+                          "codes": [
+                            "R"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRE-R5",
+      "description": "Proteus, Providencia, or Morganella culture identification with qualitative carbapenem resistance (numeric MIC alternatives not modeled)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2466",
+                      "name": "CRE (Tests for Proteus spp., Providencia spp., and Morganella spp. by Culture and Identification Method)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2471",
+                          "name": "Proteus spp., Providencia spp., and Morganella spp. (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1041",
+                          "name": "Organisms (Tests by Culture and Identification)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1040",
+                          "name": "Organisms (Tests by Unspecified Method)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2471",
+                      "name": "Proteus spp., Providencia spp., and Morganella spp. (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2469",
+                      "name": "Tests for Carbapenem Susceptibility [Meropenem and Doripenem]"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1145",
+                          "name": "Resistant Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Resistant Interpretation of an Observation",
+                          "codes": [
+                            "R"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1218",
+                      "name": "Tests for Carbapenem Susceptibility [Ertapenem]"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1145",
+                          "name": "Resistant Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Resistant Interpretation of an Observation",
+                          "codes": [
+                            "R"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRE-R6",
+      "description": "Carbapenemase-producing carbapenem-resistant Enterobacterales infection (SNOMED diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2464",
+                  "name": "CP_ Carbapenem Resistant Enterobacterales (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2464",
+                  "name": "CP_ Carbapenem Resistant Enterobacterales (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRE-R8",
+      "description": "Carbapenemase-producing carbapenem-resistant bacterial infection (SNOMED diagnosis or active problem) with Enterobacterales identification by culture or nucleic acid",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2255",
+                  "name": "Carbapenem Resistant Bacterial Infection [Carbapenemase Producing] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2255",
+                  "name": "Carbapenem Resistant Bacterial Infection [Carbapenemase Producing] (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2465",
+                          "name": "CRE (Tests for Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] by Culture and Identification Method)"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2470",
+                              "name": "Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "any": [
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1041",
+                              "name": "Organisms (Tests by Culture and Identification)"
+                            }
+                          },
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1040",
+                              "name": "Organisms (Tests by Unspecified Method)"
+                            }
+                          },
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2468",
+                              "name": "CRE (Combination Tests that include Enterobacterales by Culture and Identification)"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2470",
+                          "name": "Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2466",
+                          "name": "CRE (Tests for Proteus spp., Providencia spp., and Morganella spp. by Culture and Identification Method)"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2471",
+                              "name": "Proteus spp., Providencia spp., and Morganella spp. (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "any": [
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1041",
+                              "name": "Organisms (Tests by Culture and Identification)"
+                            }
+                          },
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1040",
+                              "name": "Organisms (Tests by Unspecified Method)"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2471",
+                          "name": "Proteus spp., Providencia spp., and Morganella spp. (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2467",
+                          "name": "CRE (Tests for Enterobacterales species Nucleic Acid)"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2470",
+                              "name": "Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2471",
+                              "name": "Proteus spp., Providencia spp., and Morganella spp. (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.994",
+                          "name": "Organisms (Tests for Nucleic Acid)"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2470",
+                              "name": "Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2471",
+                              "name": "Proteus spp., Providencia spp., and Morganella spp. (Organism or Substance in Lab Results)"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRE-R9",
+      "description": "Detection of an Enterobacterales organism with carbapenemase production",
+      "logic": {
+        "predicate": "labResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.2474",
+          "name": "Enterobacterales species [Carbapenemase Producing] (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "CRE-R10",
+      "description": "Non-Proteus/Providencia/Morganella Enterobacterales culture identification with phenotypic carbapenemase production or a known resistance mechanism",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2465",
+                      "name": "CRE (Tests for Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] by Culture and Identification Method)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2470",
+                          "name": "Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1041",
+                          "name": "Organisms (Tests by Culture and Identification)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1040",
+                          "name": "Organisms (Tests by Unspecified Method)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2468",
+                          "name": "CRE (Combination Tests that include Enterobacterales by Culture and Identification)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2470",
+                      "name": "Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1215",
+                      "name": "Tests for carbapenemase production"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1882",
+                  "name": "Carbapenemase production (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1216",
+                      "name": "Tests for carbapenemase resistance mechanism"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1214",
+                  "name": "Carbapenemase resistance mechanism (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRE-R11",
+      "description": "Proteus, Providencia, or Morganella culture identification with phenotypic carbapenemase production or a known resistance mechanism",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2466",
+                      "name": "CRE (Tests for Proteus spp., Providencia spp., and Morganella spp. by Culture and Identification Method)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2471",
+                          "name": "Proteus spp., Providencia spp., and Morganella spp. (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1041",
+                          "name": "Organisms (Tests by Culture and Identification)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1040",
+                          "name": "Organisms (Tests by Unspecified Method)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2471",
+                      "name": "Proteus spp., Providencia spp., and Morganella spp. (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1215",
+                      "name": "Tests for carbapenemase production"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1882",
+                  "name": "Carbapenemase production (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1216",
+                      "name": "Tests for carbapenemase resistance mechanism"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1214",
+                  "name": "Carbapenemase resistance mechanism (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRE-R12",
+      "description": "Enterobacterales nucleic-acid detection with a known carbapenemase resistance mechanism",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2467",
+                      "name": "CRE (Tests for Enterobacterales species Nucleic Acid)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2470",
+                          "name": "Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2471",
+                          "name": "Proteus spp., Providencia spp., and Morganella spp. (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.994",
+                      "name": "Organisms (Tests for Nucleic Acid)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2470",
+                          "name": "Enterobacterales species [excluding Proteus spp., Providencia spp., and Morganella spp.] (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2471",
+                          "name": "Proteus spp., Providencia spp., and Morganella spp. (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1216",
+                      "name": "Tests for carbapenemase resistance mechanism"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1214",
+                  "name": "Carbapenemase resistance mechanism (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRE-R13",
+      "description": "Optional logic: carbapenem-resistant bacterial infection (SNOMED diagnosis or active problem) with Enterobacter, E. coli, or Klebsiella identification",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1672",
+                  "name": "Carbapenem Resistant Bacterial Infection (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1672",
+                  "name": "Carbapenem Resistant Bacterial Infection (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1219",
+                          "name": "Tests for Enterobacter spp., E. coli, or Klebsiella spp. by Culture and Identification Method"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.3284",
+                              "name": "Enterobacter spp., E. coli, or Klebsiella spp. (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "any": [
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1041",
+                              "name": "Organisms (Tests by Culture and Identification)"
+                            }
+                          },
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1040",
+                              "name": "Organisms (Tests by Unspecified Method)"
+                            }
+                          },
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2468",
+                              "name": "CRE (Combination Tests that include Enterobacterales by Culture and Identification)"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.3284",
+                          "name": "Enterobacter spp., E. coli, or Klebsiella spp. (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1880",
+                          "name": "Tests for Enterobacter spp., E. coli, or Klebsiella spp. Nucleic Acid"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.3284",
+                              "name": "Enterobacter spp., E. coli, or Klebsiella spp. (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.994",
+                          "name": "Organisms (Tests for Nucleic Acid)"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.3284",
+                          "name": "Enterobacter spp., E. coli, or Klebsiella spp. (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRE-R14",
+      "description": "Optional logic: Enterobacter, E. coli, or Klebsiella culture identification with qualitative carbapenem resistance (numeric MIC alternatives not modeled)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1219",
+                      "name": "Tests for Enterobacter spp., E. coli, or Klebsiella spp. by Culture and Identification Method"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.3284",
+                          "name": "Enterobacter spp., E. coli, or Klebsiella spp. (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1041",
+                          "name": "Organisms (Tests by Culture and Identification)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1040",
+                          "name": "Organisms (Tests by Unspecified Method)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2468",
+                          "name": "CRE (Combination Tests that include Enterobacterales by Culture and Identification)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.3284",
+                      "name": "Enterobacter spp., E. coli, or Klebsiella spp. (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1217",
+                      "name": "Tests for Carbapenem Susceptibility [Meropenem, Imipenem, and Doripenem]"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1145",
+                          "name": "Resistant Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Resistant Interpretation of an Observation",
+                          "codes": [
+                            "R"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1218",
+                      "name": "Tests for Carbapenem Susceptibility [Ertapenem]"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1145",
+                          "name": "Resistant Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Resistant Interpretation of an Observation",
+                          "codes": [
+                            "R"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRE-R15",
+      "description": "Optional logic: detection of an Enterobacter, E. coli, or Klebsiella organism with carbapenem resistance",
+      "logic": {
+        "predicate": "labResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1208",
+          "name": "Enterobacter spp., E. coli, or Klebsiella spp. [Carbapenem Resistant] (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "CRE-R17",
+      "description": "Optional logic: carbapenemase-producing carbapenem-resistant bacterial infection (SNOMED diagnosis or active problem) with Enterobacter, E. coli, or Klebsiella identification",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2255",
+                  "name": "Carbapenem Resistant Bacterial Infection [Carbapenemase Producing] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2255",
+                  "name": "Carbapenem Resistant Bacterial Infection [Carbapenemase Producing] (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1219",
+                          "name": "Tests for Enterobacter spp., E. coli, or Klebsiella spp. by Culture and Identification Method"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.3284",
+                              "name": "Enterobacter spp., E. coli, or Klebsiella spp. (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "any": [
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1041",
+                              "name": "Organisms (Tests by Culture and Identification)"
+                            }
+                          },
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1040",
+                              "name": "Organisms (Tests by Unspecified Method)"
+                            }
+                          },
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.2468",
+                              "name": "CRE (Combination Tests that include Enterobacterales by Culture and Identification)"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.3284",
+                          "name": "Enterobacter spp., E. coli, or Klebsiella spp. (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1880",
+                          "name": "Tests for Enterobacter spp., E. coli, or Klebsiella spp. Nucleic Acid"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.3284",
+                              "name": "Enterobacter spp., E. coli, or Klebsiella spp. (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.994",
+                          "name": "Organisms (Tests for Nucleic Acid)"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.3284",
+                          "name": "Enterobacter spp., E. coli, or Klebsiella spp. (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRE-R18",
+      "description": "Optional logic: Enterobacter, E. coli, or Klebsiella culture identification with phenotypic carbapenemase production or a known resistance mechanism",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1219",
+                      "name": "Tests for Enterobacter spp., E. coli, or Klebsiella spp. by Culture and Identification Method"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.3284",
+                          "name": "Enterobacter spp., E. coli, or Klebsiella spp. (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1041",
+                          "name": "Organisms (Tests by Culture and Identification)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1040",
+                          "name": "Organisms (Tests by Unspecified Method)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2468",
+                          "name": "CRE (Combination Tests that include Enterobacterales by Culture and Identification)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.3284",
+                      "name": "Enterobacter spp., E. coli, or Klebsiella spp. (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1215",
+                      "name": "Tests for carbapenemase production"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1882",
+                  "name": "Carbapenemase production (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1216",
+                      "name": "Tests for carbapenemase resistance mechanism"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1214",
+                  "name": "Carbapenemase resistance mechanism (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRE-R19",
+      "description": "Optional logic: Enterobacter, E. coli, or Klebsiella nucleic-acid detection with a known carbapenemase resistance mechanism",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1880",
+                      "name": "Tests for Enterobacter spp., E. coli, or Klebsiella spp. Nucleic Acid"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.3284",
+                          "name": "Enterobacter spp., E. coli, or Klebsiella spp. (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.994",
+                      "name": "Organisms (Tests for Nucleic Acid)"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.3284",
+                      "name": "Enterobacter spp., E. coli, or Klebsiella spp. (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1216",
+                      "name": "Tests for carbapenemase resistance mechanism"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1214",
+                  "name": "Carbapenemase resistance mechanism (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRE-R20",
+      "description": "Optional logic: detection of an Enterobacter, E. coli, or Klebsiella organism with carbapenemase production",
+      "logic": {
+        "predicate": "labResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1209",
+          "name": "Enterobacter spp., E. coli, or Klebsiella spp. [Carbapenemase Producing] (Organism or Substance in Lab Results)"
+        }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Carbapenem Resistant Enterobacterales (Disorders) (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; the unavailable ICD-10-CM diagnosis and problem branches are omitted from source rule 1"
+    },
+    {
+      "valueSet": "CP_Carbapenem Resistant Enterobacterales (Disorders) (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; the unavailable ICD-10-CM diagnosis and problem branches are omitted from source rule 6"
+    },
+    {
+      "valueSet": "Carbapenem Resistant Bacterial Infection (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; the unavailable ICD-10-CM diagnosis and problem branches are omitted from source rules 2 and 13"
+    },
+    {
+      "valueSet": "Carbapenem Resistant Bacterial Infection [Carbapenemase Producing] (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; the unavailable ICD-10-CM diagnosis and problem branches are omitted from source rules 8 and 17"
+    },
+    {
+      "valueSet": "Carbapenemase resistance mechanism (Disorders) (SNOMED and ICD10CM)",
+      "reason": "not implemented - no codes available for either value set per source docx Table 3; source rules 7 and 16 are explicitly inoperable and are omitted"
+    },
+    {
+      "valueSet": "Numeric minimum inhibitory concentration comparisons for carbapenem susceptibility",
+      "reason": "SEM_V1 has no numeric laboratory result value/unit comparison predicate; MIC alternatives in CRE-R4, CRE-R5, and CRE-R14 are omitted"
+    }
+  ]
+}

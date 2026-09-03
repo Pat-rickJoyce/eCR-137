@@ -1,0 +1,54 @@
+{
+  "mnemonic": "HEIN_V1",
+  "conditionId": "HEIN",
+  "name": "Head Injury",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Head_Injury.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Head_Injury.v2.20240202.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest source revision 2026-02-10)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "HEIN-R1",
+      "description": "Head injury diagnosis or active problem (timeboxed); source rules 1 and 2 divide this reportable population into alive and deceased subsets, but both subsets report",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1739", "name": "Head Injury (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1740", "name": "Head Injury (Disorders) (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1739", "name": "Head Injury (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1740", "name": "Head Injury (Disorders) (ICD10CM)", "status": "active" } }
+        ] },
+        { "predicate": "withinTimebox", "params": {}, "gate": true }
+      ] }
+    },
+    {
+      "id": "HEIN-R3",
+      "description": "Traumatic brain injury diagnosis or active problem (timeboxed); source rules 3 and 4 divide this reportable population into alive and deceased subsets, but both subsets report",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1741", "name": "Brain Injury [Traumatic] (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1742", "name": "Brain Injury [Traumatic] (Disorders) (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1741", "name": "Brain Injury [Traumatic] (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1742", "name": "Brain Injury [Traumatic] (Disorders) (ICD10CM)", "status": "active" } }
+        ] },
+        { "predicate": "withinTimebox", "params": {}, "gate": true }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Patient deceased status and discharge disposition (Not Expired 2.16.840.1.113762.1.4.1146.1107 / Expired 2.16.840.1.113762.1.4.1146.1108)",
+      "reason": "SEM_V1 carries neither patient-deceased status nor encounter discharge disposition. Source rules 1–2 and 3–4 are therefore collapsed into their exact condition-level unions because both alive and deceased subsets report; fatal-versus-nonfatal rule attribution is unavailable"
+    },
+    {
+      "valueSet": "Condition-specific RCTC trigger codes",
+      "reason": "The authoritative source states that all trigger codes specific to Head Injury were removed from RCTC in March 2026; an eICR triggered for another condition may still be evaluated for Head Injury using these rules"
+    }
+  ]
+}

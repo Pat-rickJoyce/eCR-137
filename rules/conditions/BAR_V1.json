@@ -1,0 +1,432 @@
+{
+  "mnemonic": "BAR_V1",
+  "conditionId": "BAR",
+  "name": "Bartonellosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Bartonellosis.v4.20260227.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Bartonellosis.v4.20260227.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "BAR-R1",
+      "description": "Bartonellosis (diagnosis or active problem, timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2027", "name": "Bartonellosis (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2028", "name": "Bartonellosis (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2027", "name": "Bartonellosis (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2028", "name": "Bartonellosis (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R2",
+      "description": "Bacillary angiomatosis (diagnosis or active problem, timeboxed; SNOMED branch)",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2024", "name": "Bacillary angiomatosis (Disorders) (SNOMED)" } },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2024", "name": "Bacillary angiomatosis (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R3",
+      "description": "Identification of Bartonella species by culture and identification method",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2050", "name": "Bartonellosis (Tests for Bartonella spp. by Culture and Identification Method)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2029", "name": "Bartonellosis (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+          ] },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2029", "name": "Bartonellosis (Organism or Substance in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R4",
+      "description": "Detection of Bartonella species nucleic acid by any method",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2047", "name": "Bartonellosis (Tests for Bartonella spp. Nucleic Acid)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2029", "name": "Bartonellosis (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] },
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2029", "name": "Bartonellosis (Organism or Substance in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R5",
+      "description": "Detection of Bartonella species IgM antibody by any method",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2048", "name": "Bartonellosis (Tests for Bartonella spp. IgM Antibody in a clinical specimen by any method)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2029", "name": "Bartonellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R6",
+      "description": "Detection of Bartonella species IgG or total antibody by any method",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2051", "name": "Bartonellosis (Tests for Bartonella spp. IgG or Total Antibody in a clinical specimen by any method)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2029", "name": "Bartonellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R7",
+      "description": "Microscopic observation of Bartonella species by any method",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2049", "name": "Bartonella spp. (Tests by Microscopic Observation)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2029", "name": "Bartonellosis (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.900", "name": "Organisms (Tests by Microscopic Observation)" } },
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+          ] },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2029", "name": "Bartonellosis (Organism or Substance in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R8",
+      "description": "Optional logic: Bartonella henselae infection (diagnosis or active problem, timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2030", "name": "Bartonella henselae infection (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2033", "name": "Bartonella henselae infection (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2030", "name": "Bartonella henselae infection (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2033", "name": "Bartonella henselae infection (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R9",
+      "description": "Optional logic: Bartonella quintana infection (diagnosis or active problem, timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2031", "name": "Bartonella quintana infection (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2034", "name": "Bartonella quintana infection (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2031", "name": "Bartonella quintana infection (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2034", "name": "Bartonella quintana infection (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R10",
+      "description": "Optional logic: Bartonella bacilliformis infection (diagnosis or active problem, timeboxed; SNOMED branch)",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2032", "name": "Bartonella bacilliformis infection (Disorders) (SNOMED)" } },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2032", "name": "Bartonella bacilliformis infection (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R11",
+      "description": "Optional logic: identification of Bartonella henselae by general culture test and species-specific result",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+        ] },
+        { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2036", "name": "Bartonella henselae (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "BAR-R12",
+      "description": "Optional logic: detection of Bartonella henselae nucleic acid by any method",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2042", "name": "Bartonella henselae infection (Tests for Bartonella henselae Nucleic Acid)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2036", "name": "Bartonella henselae (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] },
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2036", "name": "Bartonella henselae (Organism or Substance in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R13",
+      "description": "Optional logic: detection of Bartonella henselae IgM antibody by any method",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2043", "name": "Bartonella henselae infection (Tests for Bartonella henselae IgM Antibody in a clinical specimen by any method)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2036", "name": "Bartonella henselae (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R14",
+      "description": "Optional logic: detection of Bartonella henselae IgG or total antibody by any method",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2044", "name": "Bartonella henselae infection (Tests for Bartonella henselae IgG or Total Antibody in a clinical specimen by any method)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2036", "name": "Bartonella henselae (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R15",
+      "description": "Optional logic: microscopic observation of Bartonella henselae by general microscopy test and species-specific result",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.900", "name": "Organisms (Tests by Microscopic Observation)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+        ] },
+        { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2036", "name": "Bartonella henselae (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "BAR-R16",
+      "description": "Optional logic: identification of Bartonella quintana by general culture test and species-specific result",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+        ] },
+        { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2037", "name": "Bartonella quintana (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "BAR-R17",
+      "description": "Optional logic: detection of Bartonella quintana nucleic acid by any method",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2039", "name": "Bartonella quintana infection (Tests for Bartonella quintana Nucleic Acid)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2037", "name": "Bartonella quintana (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] },
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2037", "name": "Bartonella quintana (Organism or Substance in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R18",
+      "description": "Optional logic: detection of Bartonella quintana IgM antibody by any method",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2040", "name": "Bartonella quintana infection (Tests for Bartonella quintana IgM Antibody in a clinical specimen by any method)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2037", "name": "Bartonella quintana (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R19",
+      "description": "Optional logic: detection of Bartonella quintana IgG or total antibody by any method",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2041", "name": "Bartonella quintana infection (Tests for Bartonella quintana IgG or Total Antibody in a clinical specimen by any method)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2037", "name": "Bartonella quintana (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R20",
+      "description": "Optional logic: microscopic observation of Bartonella quintana by general microscopy test and species-specific result",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.900", "name": "Organisms (Tests by Microscopic Observation)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+        ] },
+        { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2037", "name": "Bartonella quintana (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "BAR-R21",
+      "description": "Optional logic: identification of Bartonella bacilliformis by general culture test and species-specific result",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+        ] },
+        { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2038", "name": "Bartonella bacilliformis (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "BAR-R22",
+      "description": "Optional logic: detection of Bartonella bacilliformis nucleic acid by any method",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2535", "name": "Bartonella bacilliformis infection (Tests for Bartonella bacilliformis Nucleic Acid)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2038", "name": "Bartonella bacilliformis (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] },
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2038", "name": "Bartonella bacilliformis (Organism or Substance in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R23",
+      "description": "Optional logic: detection of Bartonella bacilliformis IgM antibody by any method",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2045", "name": "Bartonella bacilliformis infection (Tests for Bartonella bacilliformis IgM Antibody in a clinical specimen by any method)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2038", "name": "Bartonella bacilliformis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R24",
+      "description": "Optional logic: detection of Bartonella bacilliformis IgG or total antibody by any method",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2046", "name": "Bartonella bacilliformis infection (Tests for Bartonella bacilliformis IgG or Total Antibody in a clinical specimen by any method)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2038", "name": "Bartonella bacilliformis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAR-R25",
+      "description": "Optional logic: microscopic observation of Bartonella bacilliformis by general microscopy test and species-specific result",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.900", "name": "Organisms (Tests by Microscopic Observation)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+        ] },
+        { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2038", "name": "Bartonella bacilliformis (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "BAR-R26",
+      "description": "Optional clinical triad: coded fever plus lymphadenopathy plus cat bite or scratch",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2020", "name": "Lymphadenopathy [Acute] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2021", "name": "Lymphadenopathy [Acute] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2020", "name": "Lymphadenopathy [Acute] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2021", "name": "Lymphadenopathy [Acute] (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1616", "name": "Lymphadenopathy [Unspecified Cause] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2022", "name": "Lymphadenopathy [Unspecified Cause] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1616", "name": "Lymphadenopathy [Unspecified Cause] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2022", "name": "Lymphadenopathy [Unspecified Cause] (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2025", "name": "Animal Bite or Scratch [Cat] (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2026", "name": "Animal Bite or Scratch [Cat] (Disorders) (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2025", "name": "Animal Bite or Scratch [Cat] (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2026", "name": "Animal Bite or Scratch [Cat] (Disorders) (ICD10CM)", "status": "active" } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Bacillary angiomatosis (Disorders) (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; BAR-R2 retains the coded SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Bartonella bacilliformis infection (Disorders) (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; BAR-R10 retains the coded SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Species-specific Bartonella culture test names",
+      "reason": "Bartonella henselae, B. quintana, and B. bacilliformis culture test-name value sets have no codes; BAR-R11, BAR-R16, and BAR-R21 retain the source alternatives using general culture or unspecified-method tests plus species-specific result values"
+    },
+    {
+      "valueSet": "Species-specific Bartonella microscopic-observation test names",
+      "reason": "Bartonella henselae, B. quintana, and B. bacilliformis microscopy test-name value sets have no codes; BAR-R15, BAR-R20, and BAR-R25 retain the source alternatives using general microscopy or unspecified-method tests plus species-specific result values"
+    },
+    {
+      "valueSet": "Numeric fever temperature threshold",
+      "reason": "SEM_V1 has no vital-sign numeric comparison; BAR-R26 models the coded fever diagnosis and active-problem alternatives but omits temperature >= 38 degC or >= 100.4 degF"
+    }
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "mnemonic": "HIOA_V1",
+  "conditionId": "HIOA",
+  "name": "HIV Infection or AIDS",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "HIV_Infection_or_AIDS.v6.20250703.docx",
+    "rckmsVersion": "v6",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs HIV_Infection_or_AIDS.v6.20250703.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2025-06-04)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "HIOA-R1",
+      "description": "HIV infection or AIDS diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.460", "name": "HIV Infection or AIDS (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.461", "name": "HIV Infection or AIDS (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.460", "name": "HIV Infection or AIDS (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.461", "name": "HIV Infection or AIDS (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HIOA-R2",
+      "description": "Identification of HIV by culture or isolate-identification method",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.726", "name": "HIV Infection (Tests for HIV by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.726", "name": "HIV Infection (Tests for HIV by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.356", "resultName": "HIV Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.726", "name": "HIV Infection (Tests for HIV by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.356", "resultName": "HIV Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.356", "resultName": "HIV Infection (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "HIOA-R3",
+      "description": "Detection of HIV nucleic acid by qualitative, viral-load, or generic organism testing",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.728", "name": "HIV Infection (Tests for HIV Nucleic Acid [Qualitative])", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.728", "name": "HIV Infection (Tests for HIV Nucleic Acid [Qualitative])", "resultOid": "2.16.840.1.113762.1.4.1146.356", "resultName": "HIV Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.728", "name": "HIV Infection (Tests for HIV Nucleic Acid [Qualitative])", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.729", "name": "HIV Infection (Tests for HIV Nucleic Acid [Viral Load])", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.729", "name": "HIV Infection (Tests for HIV Nucleic Acid [Viral Load])", "resultOid": "2.16.840.1.113762.1.4.1146.356", "resultName": "HIV Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.729", "name": "HIV Infection (Tests for HIV Nucleic Acid [Viral Load])", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.356", "resultName": "HIV Infection (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "HIOA-R4",
+      "description": "Detection of HIV antigen",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.368", "name": "HIV Infection (Tests for HIV Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.368", "name": "HIV Infection (Tests for HIV Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.356", "resultName": "HIV Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.368", "name": "HIV Infection (Tests for HIV Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HIOA-R5",
+      "description": "Detection of HIV antibody",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.730", "name": "HIV Infection (Tests for HIV Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.730", "name": "HIV Infection (Tests for HIV Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.356", "resultName": "HIV Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.730", "name": "HIV Infection (Tests for HIV Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HIOA-R6",
+      "description": "Detection of HIV antigen or antibody by combination test",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.731", "name": "HIV Infection (Combination Tests for HIV Antigen and Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.731", "name": "HIV Infection (Combination Tests for HIV Antigen and Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.356", "resultName": "HIV Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.731", "name": "HIV Infection (Combination Tests for HIV Antigen and Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HIOA-R7",
+      "description": "All results of HIV viral-load tests",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.729", "name": "HIV Infection (Tests for HIV Nucleic Acid [Viral Load])" } }
+    },
+    {
+      "id": "HIOA-R9",
+      "description": "Optional reporting of all results of qualitative HIV nucleic-acid tests",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.728", "name": "HIV Infection (Tests for HIV Nucleic Acid [Qualitative])" } }
+    },
+    {
+      "id": "HIOA-R10",
+      "description": "Optional NRTI prescribed or administered for HIV infection",
+      "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1594", "name": "HIV Infection (ARV Nucleoside Reverse Transcriptase Inhibitors [NRTIs]) (RXNORM)" } }
+    },
+    {
+      "id": "HIOA-R11",
+      "description": "Optional NNRTI prescribed or administered for HIV infection",
+      "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1595", "name": "HIV Infection (ARV Non-nucleoside Reverse Transcriptase Inhibitors [NNRTIs]) (RXNORM)" } }
+    },
+    {
+      "id": "HIOA-R12",
+      "description": "Optional protease inhibitor prescribed or administered for HIV infection",
+      "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1598", "name": "HIV Infection (ARV Protease Inhibitors [PIs]) (RXNORM)" } }
+    },
+    {
+      "id": "HIOA-R13",
+      "description": "Optional integrase strand transfer inhibitor prescribed or administered for HIV infection",
+      "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1600", "name": "HIV Infection (ARV Integrase Strand Transfer Inhibitors [INSTIs]) (RXNORM)" } }
+    },
+    {
+      "id": "HIOA-R14",
+      "description": "Optional CCR5 antagonist prescribed or administered for HIV infection",
+      "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1599", "name": "HIV Infection (ARV CCR5 Antagonists) (RXNORM)" } }
+    },
+    {
+      "id": "HIOA-R15",
+      "description": "Optional fusion inhibitor prescribed or administered for HIV infection",
+      "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1596", "name": "HIV Infection (ARV Fusion Inhibitors) (RXNORM)" } }
+    },
+    {
+      "id": "HIOA-R16",
+      "description": "Optional attachment inhibitor prescribed or administered for HIV infection",
+      "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1603", "name": "HIV Infection (ARV Attachment Inhibitors) (RXNORM)" } }
+    },
+    {
+      "id": "HIOA-R17",
+      "description": "Optional postattachment inhibitor prescribed or administered for HIV infection",
+      "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1602", "name": "HIV Infection (ARV Postattachment Inhibitors) (RXNORM)" } }
+    },
+    {
+      "id": "HIOA-R18",
+      "description": "Optional ARV booster prescribed or administered for HIV infection",
+      "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1601", "name": "HIV Infection (ARV Boosters [CYP3A4 Inhibitor]) (RXNORM)" } }
+    },
+    {
+      "id": "HIOA-R19",
+      "description": "Optional ARV combination treatment prescribed or administered for HIV infection",
+      "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1597", "name": "HIV Infection (ARV Combination Treatment for HIV) (RXNORM)" } }
+    },
+    {
+      "id": "HIOA-R20",
+      "description": "Optional HIV viral-load or qualitative nucleic-acid test in a patient younger than 3 years",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.729", "name": "HIV Infection (Tests for HIV Nucleic Acid [Viral Load])" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.728", "name": "HIV Infection (Tests for HIV Nucleic Acid [Qualitative])" } }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 3, "unit": "years" }, "gate": true }
+      ] }
+    },
+    {
+      "id": "HIOA-R21",
+      "description": "Optional reporting of all HIV culture or isolate-identification test results",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.726", "name": "HIV Infection (Tests for HIV by Culture and Identification Method)" } }
+    },
+    {
+      "id": "HIOA-R22",
+      "description": "Optional reporting of all qualitative or viral-load HIV nucleic-acid test results",
+      "logic": { "any": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.728", "name": "HIV Infection (Tests for HIV Nucleic Acid [Qualitative])" } },
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.729", "name": "HIV Infection (Tests for HIV Nucleic Acid [Viral Load])" } }
+      ] }
+    },
+    {
+      "id": "HIOA-R23",
+      "description": "Optional reporting of all HIV antiretroviral drug-susceptibility test results",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2656", "name": "HIV Infection (Tests for HIV Antiretroviral Drug Susceptibility)" } }
+    },
+    {
+      "id": "HIOA-R24",
+      "description": "Optional indeterminate HIV antigen result",
+      "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.368", "name": "HIV Infection (Tests for HIV Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.1035", "resultName": "Indeterminate or Equivocal Lab Result Value" } }
+    },
+    {
+      "id": "HIOA-R25",
+      "description": "Optional indeterminate HIV antibody result",
+      "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.730", "name": "HIV Infection (Tests for HIV Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1035", "resultName": "Indeterminate or Equivocal Lab Result Value" } }
+    },
+    {
+      "id": "HIOA-R26",
+      "description": "Optional indeterminate combination HIV antigen/antibody result",
+      "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.731", "name": "HIV Infection (Combination Tests for HIV Antigen and Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1035", "resultName": "Indeterminate or Equivocal Lab Result Value" } }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "AZT administration status in source rule 8",
+      "reason": "SEM_V1 records medication identity but not whether it was prescribed versus administered. Source rule 8 requires administered AZT in a patient younger than 8 days; the rule is omitted to avoid reporting prescribed-only AZT"
+    }
+  ]
+}

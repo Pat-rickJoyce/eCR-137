@@ -1,0 +1,116 @@
+{
+  "mnemonic": "CHO_V1",
+  "conditionId": "CHO",
+  "name": "Cholera",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Cholera.v5.20240628.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Cholera.v5.20240628.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CHO-R1",
+      "description": "Cholera diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.163", "name": "Cholera (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.164", "name": "Cholera (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.163", "name": "Cholera (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.164", "name": "Cholera (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "CHO-R2",
+      "description": "Suspected cholera SNOMED diagnosis or active problem (timeboxed; ICD-10-CM alternative has no codes)",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1444", "name": "Cholera [Suspected] (Disorders) (SNOMED)" } },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1444", "name": "Cholera [Suspected] (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "CHO-R3",
+      "description": "Identification of toxigenic Vibrio cholerae O1 or O139 by culture with a qualifying result",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.25", "name": "Cholera (Tests for Vibrio cholerae O1 or O139 by Culture and Identification Method)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.370", "name": "Cholera (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.387", "name": "Vibriosis (Tests for Vibrionaceae species [except Toxigenic Vibrio cholerae O1 and O139] by Culture and Identification Method)" } },
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+          ] },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.370", "name": "Cholera (Organism or Substance in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "CHO-R4",
+      "description": "Detection of Vibrio cholerae O1 or O139 toxin nucleic acid with a qualifying result",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.367", "name": "Cholera (Tests for Vibrio cholerae O1 or O139 Toxin Nucleic Acid)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.370", "name": "Cholera (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] },
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.370", "name": "Cholera (Organism or Substance in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "CHO-R6",
+      "description": "Optional logic: culture test ordered for toxigenic Vibrio cholerae O1 or O139 (panel alternative has no codes)",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.25", "name": "Cholera (Tests for Vibrio cholerae O1 or O139 by Culture and Identification Method)" } }
+    },
+    {
+      "id": "CHO-R7",
+      "description": "Optional logic: toxin nucleic-acid test ordered for Vibrio cholerae O1 or O139 (panel alternative has no codes)",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.367", "name": "Cholera (Tests for Vibrio cholerae O1 or O139 Toxin Nucleic Acid)" } }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Cholera [Suspected] (Disorders) (ICD10CM)",
+      "reason": "not implemented - no ICD-10-CM codes available per source docx Table 3; the coded SNOMED diagnosis and active-problem branches remain modeled in CHO-R2"
+    },
+    {
+      "valueSet": "Cholera (Tests for Vibrio cholerae O1 or O139 Antibody)",
+      "reason": "not implemented - no LOINC codes available per source docx Table 3; source rule 5 is explicitly inoperable and is omitted entirely"
+    },
+    {
+      "valueSet": "Cholera culture and toxin nucleic-acid test panels",
+      "reason": "both optional panel value sets have no LOINC codes; their branches in source rules 6 and 7 are omitted while the coded single-test branches remain modeled"
+    }
+  ]
+}

@@ -1,0 +1,273 @@
+{
+  "mnemonic": "WRA_V1",
+  "conditionId": "WRA",
+  "name": "Work-related Asthma",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Work_related_Asthma.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Work_related_Asthma.v2.20240628.docx on 2026-07-29 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "WRA-R1",
+      "description": "Occupational asthma (diagnosis or active problem, timeboxed) in a patient age 16 years or older",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1388",
+                      "name": "Occupational Asthma (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1388",
+                      "name": "Occupational Asthma (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "predicate": "ageComparison",
+            "params": {
+              "op": ">=",
+              "value": 16,
+              "unit": "years"
+            },
+            "gate": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "WRA-R2",
+      "description": "Asthma or respiratory condition due to inhalation, plus occupational exposure to a potential asthma-inducing risk factor, in a patient age 16 years or older",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1389",
+                  "name": "Asthma (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1390",
+                  "name": "Asthma (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1389",
+                  "name": "Asthma (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1390",
+                  "name": "Asthma (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1391",
+                  "name": "Respiratory Condition, due to inhalation of chemicals, gases, fumes or vapors (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1392",
+                  "name": "Respiratory Condition, due to inhalation of chemicals, gases, fumes or vapors (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1391",
+                  "name": "Respiratory Condition, due to inhalation of chemicals, gases, fumes or vapors (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1392",
+                  "name": "Respiratory Condition, due to inhalation of chemicals, gases, fumes or vapors (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1393",
+                  "name": "WRA (Occupational Exposure to Potential Asthma Inducing Risk Factor) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1394",
+                  "name": "WRA (Occupational Exposure to Potential Asthma Inducing Risk Factor) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1393",
+                  "name": "WRA (Occupational Exposure to Potential Asthma Inducing Risk Factor) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1394",
+                  "name": "WRA (Occupational Exposure to Potential Asthma Inducing Risk Factor) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "ageComparison",
+            "params": {
+              "op": ">=",
+              "value": 16,
+              "unit": "years"
+            },
+            "gate": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "WRA-R4",
+      "description": "Asthma plus detection of potential asthma-inducing occupational allergen antibody in a patient age 16 years or older",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1389",
+                  "name": "Asthma (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1390",
+                  "name": "Asthma (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1389",
+                  "name": "Asthma (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1390",
+                  "name": "Asthma (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "ageComparison",
+            "params": {
+              "op": ">=",
+              "value": 16,
+              "unit": "years"
+            },
+            "gate": true
+          },
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1395",
+                  "name": "WRA (Tests for Asthma Inducing Occupational Allergen Antibody)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1395",
+                  "name": "WRA (Tests for Asthma Inducing Occupational Allergen Antibody)",
+                  "codes": ["A", "AA", "HH", "LL", "H", "L"]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Occupational Asthma (Disorders) (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; WRA-R1 retains the executable SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Occupation and industry with exposure to asthma-inducing substances",
+      "reason": "source rule 3 requires four value sets whose code systems are unavailable in VSAC; the required occupation/industry criterion is inoperable, so the rule is omitted"
+    },
+    {
+      "valueSet": "Asthma diagnosis within the last 2 years",
+      "reason": "source snapshot states the two-year restriction is not currently implementable and directs implementation as asthma diagnosis or active problem; WRA-R2 and WRA-R4 follow that operational logic"
+    }
+  ]
+}

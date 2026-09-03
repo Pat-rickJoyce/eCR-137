@@ -1,0 +1,134 @@
+{
+  "mnemonic": "SIL_V1",
+  "conditionId": "SIL",
+  "name": "Silicosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Silicosis.v4.20240628.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Silicosis.v4.20240628.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2025-05-19)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SIL-R1",
+      "description": "Silicosis or pneumoconiosis due to silica diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.365", "name": "Silicosis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.366", "name": "Silicosis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.365", "name": "Silicosis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.366", "name": "Silicosis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SIL-R2",
+      "description": "Histopathology test by H&E or PAS stain with a silicosis-coded result on the same observation",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.803",
+              "name": "Tests by Microscopic Observation in Tissue by H&E or PAS Stain",
+              "resultOid": "2.16.840.1.113762.1.4.1146.365",
+              "resultName": "Silicosis (Disorders) (SNOMED)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.803",
+              "name": "Tests by Microscopic Observation in Tissue by H&E or PAS Stain",
+              "resultOid": "2.16.840.1.113762.1.4.1146.366",
+              "resultName": "Silicosis (Disorders) (ICD10CM)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "SIL-R4",
+      "description": "Optional logic: unspecified pneumoconiosis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.823", "name": "Pneumoconiosis (Unspecified) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.822", "name": "Pneumoconiosis (Unspecified) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.823", "name": "Pneumoconiosis (Unspecified) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.822", "name": "Pneumoconiosis (Unspecified) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "SIL-R2 silica finding in lung tissue",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate, so the H&E/PAS-test plus Lung Tissue specimen plus Silica finding alternative is omitted; the same-observation silicosis-coded result alternatives remain modeled"
+    },
+    {
+      "valueSet": "SIL-R3 chest imaging consistent with silicosis",
+      "reason": "the authoritative source marks the imaging result findings not implementable because EHR findings and impressions are narrative rather than coded; the numbered rule is omitted"
+    },
+    {
+      "valueSet": "SIL-R5 occupational exposure plus sarcoidosis or granulomatous lung disease",
+      "reason": "the four industry/occupation value sets are local to RCKMS and unavailable in VSAC, and SEM_V1 has no industry or occupation evidence; the required exposure criterion cannot be modeled, so the numbered rule is omitted"
+    },
+    {
+      "valueSet": "SIL-R6 occupational exposure plus granulomatous histopathology",
+      "reason": "the required industry/occupation evidence is unavailable, SEM_V1 cannot enforce the required lung-tissue specimen, and the alternative granulomatous-lung-disease result value sets have no codes; the numbered rule is omitted"
+    },
+    {
+      "valueSet": "SIL-R7 occupational exposure plus qualifying chest imaging",
+      "reason": "the required industry/occupation evidence is unavailable and the source marks the coded imaging findings not implementable; the numbered rule is omitted"
+    },
+    {
+      "valueSet": "SIL-R8 classifiable parenchymal abnormalities interpreted by a certified B-reader",
+      "reason": "the source marks both narrative imaging interpretation and B-reader certification not implementable; SEM_V1 has neither evidence type, so the numbered rule is omitted"
+    },
+    {
+      "valueSet": "Laboratory, workers-compensation, and vital-record reporter types",
+      "reason": "the source snapshot marks these reporter types unavailable in RCKMS; provider/facility rules with equivalent clinical or laboratory evidence remain modeled, while SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

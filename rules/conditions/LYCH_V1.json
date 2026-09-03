@@ -1,0 +1,91 @@
+{
+  "mnemonic": "LYCH_V1",
+  "conditionId": "LYCH",
+  "name": "Lymphocytic Choriomeningitis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Lymphocytic_Choriomeningitis.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Lymphocytic_Choriomeningitis.v2.20240202.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2025-06-04)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "LYCH-R1",
+      "description": "Lymphocytic choriomeningitis as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1999", "name": "Lymphocytic Choriomeningitis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2000", "name": "Lymphocytic Choriomeningitis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1999", "name": "Lymphocytic Choriomeningitis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2000", "name": "Lymphocytic Choriomeningitis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "LYCH-R2",
+      "description": "Identification of lymphocytic choriomeningitis virus by a generic culture or unspecified-method test with an LCMV organism result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.2001", "resultName": "Lymphocytic Choriomeningitis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.2001", "resultName": "Lymphocytic Choriomeningitis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LYCH-R3",
+      "description": "Detection of LCMV nucleic acid in CSF or blood using a specimen-specific test name and a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2003", "name": "Lymphocytic Choriomeningitis (Tests for LCMV Nucleic Acid in CSF or Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2003", "name": "Lymphocytic Choriomeningitis (Tests for LCMV Nucleic Acid in CSF or Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.2001", "resultName": "Lymphocytic Choriomeningitis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2003", "name": "Lymphocytic Choriomeningitis (Tests for LCMV Nucleic Acid in CSF or Blood)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1821", "name": "Organisms (Tests for Nucleic Acid in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.2001", "resultName": "Lymphocytic Choriomeningitis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LYCH-R5",
+      "description": "Detection of LCMV antibody in CSF or serum using a specimen-specific test name and a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2005", "name": "Lymphocytic Choriomeningitis (Tests for LCMV Antibody in CSF or Serum)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2005", "name": "Lymphocytic Choriomeningitis (Tests for LCMV Antibody in CSF or Serum)", "resultOid": "2.16.840.1.113762.1.4.1146.2001", "resultName": "Lymphocytic Choriomeningitis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2005", "name": "Lymphocytic Choriomeningitis (Tests for LCMV Antibody in CSF or Serum)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "LCMV culture, tissue-antigen, and generic CSF nucleic-acid test names",
+      "reason": "the authoritative source reports no LOINC codes for the LCMV-specific culture test, both antigen test value sets, and the generic CSF nucleic-acid test; LYCH-R2 retains coded generic culture alternatives, while source rule 4 is omitted entirely because every test-name branch is unavailable"
+    },
+    {
+      "valueSet": "CSF, blood, serum, and tissue specimen constraints",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate, and the source HL7 specimen value sets are unavailable; unrestricted LCMV nucleic-acid, generic nucleic-acid, and antibody test branches requiring separate specimen evidence are omitted from LYCH-R3 and LYCH-R5 while specimen-specific test-name alternatives remain modeled"
+    }
+  ]
+}

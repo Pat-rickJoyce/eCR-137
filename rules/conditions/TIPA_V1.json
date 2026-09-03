@@ -1,0 +1,52 @@
+{
+  "mnemonic": "TIPA_V1",
+  "conditionId": "TIPA",
+  "name": "Tick Paralysis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Tick_Paralysis.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Tick_Paralysis.v2.20240628.docx on 2026-07-29 (authoritative RCKMS Content Release 20240628; latest revision 2025-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "TIPA-R1",
+      "description": "Tick Paralysis SNOMED diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2023", "name": "Tick Paralysis (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2023", "name": "Tick Paralysis (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 1 Tick Paralysis ICD-10-CM branches",
+      "reason": "the authoritative source marks the Tick Paralysis ICD-10-CM value set not implemented because no codes are available; the supported SNOMED diagnosis and active-problem branches remain implemented"
+    },
+    {
+      "valueSet": "Rule 2 clinical findings plus attached tick or recent tick bite",
+      "reason": "the authoritative source marks the entire rule inoperable because the required epidemiologic criterion cannot be implemented; SEM_V1 has no attached-tick or recent-tick-bite evidence"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "mnemonic": "TAE_V1",
+  "conditionId": "TAE",
+  "name": "Taeniasis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Taeniasis.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Taeniasis.v2.20240202.docx on 2026-07-29 (authoritative RCKMS Content Release 20240202; latest revision 2025-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "TAE-R1",
+      "description": "Taeniasis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1864", "name": "Taeniasis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1865", "name": "Taeniasis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1864", "name": "Taeniasis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1865", "name": "Taeniasis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TAE-R2",
+      "description": "Stool-specific microscopy test with a Taeniasis organism result",
+      "logic": {
+        "predicate": "labTestWithResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1869",
+          "name": "Tests by Microscopic Observation in Stool",
+          "resultOid": "2.16.840.1.113762.1.4.1146.1866",
+          "resultName": "Taeniasis (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "TAE-R3",
+      "description": "Qualifying Taenia species antigen result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1867", "name": "Taeniasis (Tests for Taenia species Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1867", "name": "Taeniasis (Tests for Taenia species Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.1866", "resultName": "Taeniasis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1867", "name": "Taeniasis (Tests for Taenia species Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "TAE-R4",
+      "description": "Qualifying coded or abnormal Taenia species antibody result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1868", "name": "Taeniasis (Tests for Taenia species Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1868", "name": "Taeniasis (Tests for Taenia species Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1866", "resultName": "Taeniasis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1868", "name": "Taeniasis (Tests for Taenia species Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2 remaining microscopy branches",
+      "reason": "the Taenia-specific microscopy value sets have no codes, and SEM_V1 has no stool-specimen predicate for the general microscopy and unspecified-method branches; the source's stool-specific generic-test branch remains implemented"
+    },
+    {
+      "valueSet": "Rule 4 numeric antibody result greater than zero",
+      "reason": "SEM_V1 has no numeric laboratory threshold predicate; the source's coded-positive, organism-result, and abnormal-interpretation branches remain implemented"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

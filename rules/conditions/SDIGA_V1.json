@@ -1,0 +1,120 @@
+{
+  "mnemonic": "SDIGA_V1",
+  "conditionId": "SDIGA",
+  "name": "Streptococcal disease invasive Group A",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Streptococcal_disease_invasive_Group_A.v5.20260227.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Streptococcal_disease_invasive_Group_A.v5.20260227.docx on 2026-07-29 (authoritative RCKMS Content Release 17; latest revision 2026-01-07)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SDIGA-R1",
+      "description": "Invasive Group A streptococcal disease diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1571", "name": "Invasive Group A Streptococcus (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1572", "name": "Invasive Group A Streptococcus (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1571", "name": "Invasive Group A Streptococcus (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1572", "name": "Invasive Group A Streptococcus (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SDIGA-R2",
+      "description": "Group A Streptococcus identified by culture from a normally sterile site using a specimen-specific test-name branch",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2299", "name": "Group A Streptococcus (Tests for Group A Strep in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2299", "name": "Group A Streptococcus (Tests for Group A Strep in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1575", "resultName": "Group A Streptococcus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2299", "name": "Group A Streptococcus (Tests for Group A Strep in Specimen from Normally Sterile Site by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1461", "name": "Organisms (Tests in Specimen from Normally Sterile Site by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1575", "resultName": "Group A Streptococcus (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SDIGA-R3",
+      "description": "Optional logic: necrotizing fasciitis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2369", "name": "Necrotizing Fasciitis (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2370", "name": "Necrotizing Fasciitis (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2369", "name": "Necrotizing Fasciitis (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2370", "name": "Necrotizing Fasciitis (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SDIGA-R4",
+      "description": "Optional logic: Group A Streptococcus nucleic acid detected in a normally sterile site using a specimen-specific test-name branch",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3082", "name": "Group A Streptococcus (Tests for Group A Strep Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3082", "name": "Group A Streptococcus (Tests for Group A Strep Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.1575", "resultName": "Group A Streptococcus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.3082", "name": "Group A Streptococcus (Tests for Group A Strep Nucleic Acid in Specimen from Normally Sterile Site)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1085", "name": "Organisms (Tests for Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.1575", "resultName": "Group A Streptococcus (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rules 2 and 4 general laboratory tests constrained by a separate normally sterile-site specimen value",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate; general culture and nucleic-acid test branches are omitted while independently sufficient specimen-specific test-name alternatives remain modeled"
+    },
+    {
+      "valueSet": "Specimen from a Normally Sterile Site (Specimen Type) (HL7)",
+      "reason": "the authoritative source marks HL7 table 0487 specimen type not implemented because it is unavailable in VSAC"
+    },
+    {
+      "valueSet": "Lab-reporting reporter type",
+      "reason": "the authoritative specification marks this reporter type unavailable in RCKMS; the same culture criterion remains represented for provider/facility reporting in SDIGA-R2"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "SEM_V1 does not carry death-certificate cause or contributing-condition evidence"
+    }
+  ]
+}

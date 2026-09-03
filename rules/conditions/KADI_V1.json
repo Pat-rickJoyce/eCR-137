@@ -1,0 +1,131 @@
+{
+  "mnemonic": "KADI_V1",
+  "conditionId": "KADI",
+  "name": "Kawasaki Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Kawasaki_Disease.v3.20260227.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Kawasaki_Disease.v3.20260227.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2025-11-04)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "KADI-R1",
+      "description": "Kawasaki disease as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1658", "name": "Kawasaki disease (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1659", "name": "Kawasaki disease (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1658", "name": "Kawasaki disease (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1659", "name": "Kawasaki disease (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "KADI-R2",
+      "description": "Fever as a diagnosis or active problem together with at least four of five grouped Kawasaki findings: rash, cervical lymphadenopathy, conjunctival injection, oral mucosal changes, and peripheral extremity changes (fever duration and numeric temperature alternative not modeled)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)", "status": "active" } }
+            ]
+          },
+          {
+            "atLeast": {
+              "n": 4,
+              "of": [
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.668", "name": "Rash (SNOMED)" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.669", "name": "Rash (ICD10CM)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.668", "name": "Rash (SNOMED)", "status": "active" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.669", "name": "Rash (ICD10CM)", "status": "active" } }
+                  ]
+                },
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1661", "name": "Cervical lymphadenopathy [Unspecified Cause] (SNOMED)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1661", "name": "Cervical lymphadenopathy [Unspecified Cause] (SNOMED)", "status": "active" } }
+                  ]
+                },
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1662", "name": "Conjunctival injection (SNOMED)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1662", "name": "Conjunctival injection (SNOMED)", "status": "active" } }
+                  ]
+                },
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1665", "name": "Erythema of lips or oropharynx (SNOMED)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1665", "name": "Erythema of lips or oropharynx (SNOMED)", "status": "active" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1660", "name": "Strawberry tongue (SNOMED)" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1668", "name": "Strawberry tongue (ICD10CM)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1660", "name": "Strawberry tongue (SNOMED)", "status": "active" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1668", "name": "Strawberry tongue (ICD10CM)", "status": "active" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1663", "name": "Drying of lips (SNOMED)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1663", "name": "Drying of lips (SNOMED)", "status": "active" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1664", "name": "Fissuring of lips (SNOMED)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1664", "name": "Fissuring of lips (SNOMED)", "status": "active" } }
+                  ]
+                },
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1667", "name": "Edema of hands or feet (SNOMED)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1667", "name": "Edema of hands or feet (SNOMED)", "status": "active" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1666", "name": "Erythema of hands or feet (SNOMED)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1666", "name": "Erythema of hands or feet (SNOMED)", "status": "active" } }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Fever duration of five or more days",
+      "reason": "the authoritative source explicitly implements the criterion as fever only because RCKMS cannot evaluate duration; SEM_V1 likewise has no longitudinal symptom-duration predicate"
+    },
+    {
+      "valueSet": "Body Temperature (Vital Sign) at least 38.0 C or 100.4 F",
+      "reason": "SEM_V1 has no vital-sign quantity or unit-comparison predicate; KADI-R2 retains the source's coded fever diagnosis and active-problem alternatives"
+    },
+    {
+      "valueSet": "Uncoded ICD10CM Kawasaki clinical findings",
+      "reason": "the authoritative source reports no ICD10CM codes for cervical lymphadenopathy, conjunctival injection, erythema of lips or oropharynx, drying or fissuring of lips, edema of hands or feet, and erythema of hands or feet; KADI-R2 retains each coded SNOMED alternative"
+    },
+    {
+      "valueSet": "Periungual desquamation (SNOMED and ICD10CM)",
+      "reason": "the authoritative source reports no codes available in either code system; the peripheral-extremity category in KADI-R2 retains its coded edema and erythema alternatives"
+    }
+  ]
+}

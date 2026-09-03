@@ -1,0 +1,235 @@
+{
+  "mnemonic": "CSVD_V1",
+  "conditionId": "CSVD",
+  "name": "California Serogroup Virus Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "California_Serogroup_Virus_Disease.v4.20240202.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs California_Serogroup_Virus_Disease.v4.20240202.docx on 2026-07-18 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "CSVD-R1",
+      "description": "California serogroup virus disease or infection, unspecified (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1980", "name": "California Serogroup Virus Disease [Unspecified] (Disorders) (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1981", "name": "California Serogroup Virus Disease [Unspecified] (Disorders) (ICD10CM)" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "any": [
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1980", "name": "California Serogroup Virus Disease [Unspecified] (Disorders) (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1981", "name": "California Serogroup Virus Disease [Unspecified] (Disorders) (ICD10CM)", "status": "active" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CSVD-R2",
+      "description": "Identification of unspecified California serogroup virus by culture, including preliminary results (generic-test branch)",
+      "logic": {
+        "all": [
+          { "any": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.526", "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)" } },
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)" } },
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+          ] },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1982", "name": "California Serogroup Virus Disease [Unspecified] (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "CSVD-R3",
+      "description": "Detection of unspecified California serogroup virus nucleic acid by any method",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1983", "name": "California Serogroup Virus Disease [Unspecified] (Tests for California Serogroup Virus Nucleic Acid)" } },
+              { "any": [
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1982", "name": "California Serogroup Virus Disease [Unspecified] (Organism or Substance in Lab Results)" } },
+                { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+              ] }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1982", "name": "California Serogroup Virus Disease [Unspecified] (Organism or Substance in Lab Results)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CSVD-R5",
+      "description": "Detection of unspecified California serogroup virus IgM antibody (coded/abnormal alternatives; numeric > 0 not modeled)",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1984", "name": "California Serogroup Virus Disease [Unspecified] (Tests for California Serogroup Virus IgM Antibody)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1982", "name": "California Serogroup Virus Disease [Unspecified] (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "CSVD-R7",
+      "description": "Optional logic: California serogroup virus disease or infection (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1163", "name": "California Serogroup Virus Diseases (Disorders) (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1162", "name": "California Serogroup Virus Diseases (Disorders) (ICD10CM)" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "any": [
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1163", "name": "California Serogroup Virus Diseases (Disorders) (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1162", "name": "California Serogroup Virus Diseases (Disorders) (ICD10CM)", "status": "active" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CSVD-R8",
+      "description": "Optional logic: detection of unspecified California serogroup virus antibody (coded/abnormal alternatives; numeric > 0 not modeled)",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1985", "name": "California Serogroup Virus Disease [Unspecified] (Tests for California Serogroup Virus Antibody)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1982", "name": "California Serogroup Virus Disease [Unspecified] (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "CSVD-R9",
+      "description": "Optional logic: identification of California serogroup virus by culture, including preliminary results (generic-test branch)",
+      "logic": {
+        "all": [
+          { "any": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.526", "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)" } },
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)" } },
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+          ] },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1194", "name": "California Serogroup Virus Diseases (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "CSVD-R10",
+      "description": "Optional logic: detection of California serogroup virus nucleic acid by any method",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1172", "name": "California Serogroup Virus Diseases (Tests for California Serogroup Virus Nucleic Acid)" } },
+              { "any": [
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1194", "name": "California Serogroup Virus Diseases (Organism or Substance in Lab Results)" } },
+                { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+              ] }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1194", "name": "California Serogroup Virus Diseases (Organism or Substance in Lab Results)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CSVD-R12",
+      "description": "Optional logic: detection of California serogroup virus IgM antibody (coded/abnormal alternatives; numeric > 0 not modeled)",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1179", "name": "California Serogroup Virus Diseases (Tests for California Serogroup Virus IgM Antibody)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1194", "name": "California Serogroup Virus Diseases (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "CSVD-R14",
+      "description": "Optional logic: detection of qualitative or quantitative California serogroup virus antibody (coded/abnormal alternatives; numeric > 0 not modeled)",
+      "logic": {
+        "all": [
+          { "any": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1189", "name": "California Serogroup Virus Diseases (Tests for California Serogroup Virus Antibody [Qualitative])" } },
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1184", "name": "California Serogroup Virus Diseases (Tests for California Serogroup Virus Antibody [Quantitative])" } }
+          ] },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1194", "name": "California Serogroup Virus Diseases (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "California Serogroup Virus Disease [Unspecified] (Tests for California Serogroup Virus by Culture and Identification Method)",
+      "reason": "not implemented - no codes available per source docx Table 3; CSVD-R2 retains the generic culture-test plus unspecified-organism-result branch"
+    },
+    {
+      "valueSet": "California Serogroup Virus Disease [Unspecified] (Tests for California Serogroup Virus Antigen)",
+      "reason": "not implemented - no codes available per source docx Table 3; source rule 4 is inoperable and omitted"
+    },
+    {
+      "valueSet": "Paired unspecified California serogroup virus antibody comparison",
+      "reason": "source rule 6 is explicitly not operational and SEM_V1 cannot compare paired specimens, collection intervals, four-fold titer rises, or seroconversion; the rule is omitted"
+    },
+    {
+      "valueSet": "California Serogroup Virus Disease (Tests for California Serogroup Virus by Culture and Identification Method)",
+      "reason": "not implemented - no codes available per source docx Table 3; CSVD-R9 retains the generic culture-test plus broad organism-result branch"
+    },
+    {
+      "valueSet": "California Serogroup Virus Diseases (Tests for California Serogroup Virus Antigen)",
+      "reason": "not implemented - no codes available per source docx Table 3; source rule 11 is inoperable and omitted"
+    },
+    {
+      "valueSet": "Paired California serogroup virus antibody comparison",
+      "reason": "source rule 13 is explicitly not operational and SEM_V1 cannot compare paired specimens, collection intervals, four-fold titer rises, or IgG/total-antibody seroconversion; the rule is omitted"
+    },
+    {
+      "valueSet": "Numeric laboratory result > 0",
+      "reason": "SEM_V1 has no numeric laboratory result comparison; numeric alternatives in CSVD-R5, CSVD-R8, CSVD-R12, and CSVD-R14 are omitted"
+    }
+  ]
+}

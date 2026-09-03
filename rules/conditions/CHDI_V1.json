@@ -1,0 +1,121 @@
+{
+  "mnemonic": "CHDI_V1",
+  "conditionId": "CHDI",
+  "name": "Chagas Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Chagas_Disease.v4.20250228.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2025-02-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Chagas_Disease.v4.20250228.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CHDI-R1",
+      "description": "Chagas disease diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1651", "name": "Chagas Disease (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1652", "name": "Chagas Disease (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1651", "name": "Chagas Disease (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1652", "name": "Chagas Disease (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "CHDI-R2",
+      "description": "Detection of Trypanosoma cruzi nucleic acid in a clinical specimen with a qualifying result",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1653", "name": "Chagas Disease (Tests for Trypanosoma cruzi Nucleic Acid)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1655", "name": "Chagas Disease [Trypanosoma cruzi] (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] },
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1655", "name": "Chagas Disease [Trypanosoma cruzi] (Organism or Substance in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "CHDI-R3",
+      "description": "Detection of Trypanosoma cruzi IgG antibody in a clinical specimen with a qualifying result",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1756", "name": "Chagas Disease (Tests for Trypanosoma cruzi IgG Antibody)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1655", "name": "Chagas Disease [Trypanosoma cruzi] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "CHDI-R4",
+      "description": "Microscopic observation of Trypanosoma cruzi through a generic microscopy or unspecified-method test",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.900", "name": "Organisms (Tests by Microscopic Observation)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+        ] },
+        { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1655", "name": "Chagas Disease [Trypanosoma cruzi] (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "CHDI-R5",
+      "description": "Detection or observation of Trypanosoma cruzi in a donor specimen with a qualifying result",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2382", "name": "Chagas Disease (Tests for Trypanosoma cruzi in specimen from donor)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1655", "name": "Chagas Disease [Trypanosoma cruzi] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "CHDI-R6",
+      "description": "Optional logic: detection of Trypanosoma cruzi IgM antibody in a clinical specimen with a qualifying result",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1757", "name": "Chagas Disease (Tests for Trypanosoma cruzi IgM Antibody)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1655", "name": "Chagas Disease [Trypanosoma cruzi] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "CHDI-R7",
+      "description": "Optional logic: detection of Trypanosoma cruzi antibody in a clinical specimen with a qualifying result",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1654", "name": "Chagas Disease (Tests for Trypanosoma cruzi Antibody)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1655", "name": "Chagas Disease [Trypanosoma cruzi] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Chagas Disease [Trypanosoma cruzi] (Tests by Microscopic Observation)",
+      "reason": "not implemented - no codes available per source docx Table 3; the organism-specific branch of source rule 4 is omitted, while the generic microscopy and unspecified-method branches remain modeled"
+    }
+  ]
+}

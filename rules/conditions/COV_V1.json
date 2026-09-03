@@ -1,0 +1,264 @@
+{
+  "mnemonic": "COV_V1",
+  "conditionId": "COV",
+  "name": "COVID-19",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "COVID19.v16.20260227.docx",
+    "rckmsVersion": "v16",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs COVID19.v16.20260227.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "COV-R1",
+      "description": "Detection of SARS-CoV-2 nucleic acid in a clinical or post-mortem specimen by any method",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1142", "name": "COVID_19 (Tests for SARS_CoV_2 Nucleic Acid)" } },
+              {
+                "any": [
+                  { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                  { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1143", "name": "COVID_19 (Organism or Substance in Lab Results)" } },
+                  { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+                  { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2161", "name": "COVID_19 (Combination Tests that include SARS_CoV_2 Nucleic Acid)" } }
+                ]
+              },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1143", "name": "COVID_19 (Organism or Substance in Lab Results)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "COV-R2",
+      "description": "Detection of SARS-CoV-2 genomic sequences by any method",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1409", "name": "COVID_19 (Tests for SARS_CoV_2 Genomic Sequence)" } },
+          {
+            "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1143", "name": "COVID_19 (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "COV-R3",
+      "description": "Detection of SARS-CoV-2 antigen in a clinical or post-mortem specimen by any method",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1158", "name": "COVID_19 (Tests for SARS_CoV_2 Antigen)" } },
+          {
+            "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1143", "name": "COVID_19 (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "COV-R4",
+      "description": "COVID-19 diagnosis or active problem, timeboxed",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1124", "name": "COVID_19 (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1123", "name": "COVID_19 (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1124", "name": "COVID_19 (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1123", "name": "COVID_19 (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "COV-R5",
+      "description": "Post-acute or chronic COVID-19 syndrome diagnosis or active problem, timeboxed",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1331", "name": "Post acute or Chronic COVID_19 Syndrome (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1764", "name": "Post acute or Chronic COVID_19 Syndrome (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1331", "name": "Post acute or Chronic COVID_19 Syndrome (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1764", "name": "Post acute or Chronic COVID_19 Syndrome (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "COV-R6",
+      "description": "Detection of SARS-CoV-2 organism or substance in a clinical specimen",
+      "logic": { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1143", "name": "COVID_19 (Organism or Substance in Lab Results)" } }
+    },
+    {
+      "id": "COV-R7",
+      "description": "COVID-19 diagnosis or active problem, timeboxed, and hospitalization during the encounter",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1124", "name": "COVID_19 (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1123", "name": "COVID_19 (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1124", "name": "COVID_19 (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1123", "name": "COVID_19 (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1323", "name": "Hospitalized [Inpatient] (EncounterTypeCode)" } },
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1320", "name": "Hospitalized [Inpatient] (ActEncounterCode)" } },
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1335", "name": "Hospitalized [Inpatient] (SNOMED)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "COV-R8",
+      "description": "Qualifying SARS-CoV-2 laboratory evidence and hospitalization during the encounter",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "any": [
+                  {
+                    "all": [
+                      { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1142", "name": "COVID_19 (Tests for SARS_CoV_2 Nucleic Acid)" } },
+                      {
+                        "any": [
+                          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1143", "name": "COVID_19 (Organism or Substance in Lab Results)" } },
+                          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "any": [
+                          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+                          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2161", "name": "COVID_19 (Combination Tests that include SARS_CoV_2 Nucleic Acid)" } }
+                        ]
+                      },
+                      { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1143", "name": "COVID_19 (Organism or Substance in Lab Results)" } }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1409", "name": "COVID_19 (Tests for SARS_CoV_2 Genomic Sequence)" } },
+                  {
+                    "any": [
+                      { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                      { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1143", "name": "COVID_19 (Organism or Substance in Lab Results)" } },
+                      { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1158", "name": "COVID_19 (Tests for SARS_CoV_2 Antigen)" } },
+                  {
+                    "any": [
+                      { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                      { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1143", "name": "COVID_19 (Organism or Substance in Lab Results)" } },
+                      { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+                    ]
+                  }
+                ]
+              },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1143", "name": "COVID_19 (Organism or Substance in Lab Results)" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1323", "name": "Hospitalized [Inpatient] (EncounterTypeCode)" } },
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1320", "name": "Hospitalized [Inpatient] (ActEncounterCode)" } },
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1335", "name": "Hospitalized [Inpatient] (SNOMED)" } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Patient is deceased or Discharge Disposition [Expired]",
+      "reason": "SEM_V1 carries neither patient-deceased status nor encounter discharge disposition; optional source rule 9 (COVID-19 plus deceased plus age at least 18 years) is omitted"
+    }
+  ]
+}

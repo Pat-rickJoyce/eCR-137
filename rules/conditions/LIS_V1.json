@@ -1,0 +1,134 @@
+{
+  "mnemonic": "LIS_V1",
+  "conditionId": "LIS",
+  "name": "Listeriosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Listeriosis.v7.20260626.docx",
+    "rckmsVersion": "v7",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Listeriosis.v7.20260626.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2026-07-14)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "LIS-R1",
+      "description": "Listeriosis as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.217", "name": "Listeriosis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.218", "name": "Listeriosis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.217", "name": "Listeriosis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.218", "name": "Listeriosis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "LIS-R2",
+      "description": "Identification of Listeria monocytogenes by culture, including isolate identification, with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.742", "name": "Listeriosis (Tests for Listeria monocytogenes by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.742", "name": "Listeriosis (Tests for Listeria monocytogenes by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.382", "resultName": "Listeriosis [Listeria monocytogenes] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.742", "name": "Listeriosis (Tests for Listeria monocytogenes by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.385", "name": "Listeriosis (Tests for Listeria species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.382", "resultName": "Listeriosis [Listeria monocytogenes] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.382", "resultName": "Listeriosis [Listeria monocytogenes] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.382", "resultName": "Listeriosis [Listeria monocytogenes] (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LIS-R3",
+      "description": "Identification of Listeria species by culture from a normally sterile site using a sterile-site-specific test name and a qualifying same-observation result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1028", "name": "Listeriosis (Tests for Listeria species in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1028", "name": "Listeriosis (Tests for Listeria species in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1029", "resultName": "Listeriosis [Listeria species] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1028", "name": "Listeriosis (Tests for Listeria species in Specimen from Normally Sterile Site by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1461", "name": "Organisms (Tests in Specimen from Normally Sterile Site by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1029", "resultName": "Listeriosis [Listeria species] (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LIS-R4",
+      "description": "Detection of Listeria monocytogenes nucleic acid from a normally sterile site using a sterile-site-specific test name and a qualifying same-observation result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1106", "name": "Listeriosis (Tests for Listeria monocytogenes Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1106", "name": "Listeriosis (Tests for Listeria monocytogenes Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.382", "resultName": "Listeriosis [Listeria monocytogenes] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1106", "name": "Listeriosis (Tests for Listeria monocytogenes Nucleic Acid in Specimen from Normally Sterile Site)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1085", "name": "Organisms (Tests for Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.382", "resultName": "Listeriosis [Listeria monocytogenes] (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LIS-R8",
+      "description": "Optional logic: identification of Listeria monocytogenes by culture from a normally sterile site using a sterile-site-specific test name and qualifying same-observation result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.743", "name": "Listeriosis (Tests for Listeria monocytogenes in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.743", "name": "Listeriosis (Tests for Listeria monocytogenes in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.382", "resultName": "Listeriosis [Listeria monocytogenes] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.743", "name": "Listeriosis (Tests for Listeria monocytogenes in Specimen from Normally Sterile Site by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1028", "name": "Listeriosis (Tests for Listeria species in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.382", "resultName": "Listeriosis [Listeria monocytogenes] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1461", "name": "Organisms (Tests in Specimen from Normally Sterile Site by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.382", "resultName": "Listeriosis [Listeria monocytogenes] (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LIS-R9",
+      "description": "Optional logic: identification of Listeria species in a clinical specimen by culture with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.385", "name": "Listeriosis (Tests for Listeria species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.385", "name": "Listeriosis (Tests for Listeria species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1029", "resultName": "Listeriosis [Listeria species] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.385", "name": "Listeriosis (Tests for Listeria species by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1029", "resultName": "Listeriosis [Listeria species] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1029", "resultName": "Listeriosis [Listeria species] (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LIS-R10",
+      "description": "Optional logic: detection of Listeria monocytogenes nucleic acid in a clinical specimen with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.384", "name": "Listeriosis (Tests for Listeria monocytogenes Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.384", "name": "Listeriosis (Tests for Listeria monocytogenes Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.382", "resultName": "Listeriosis [Listeria monocytogenes] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.384", "name": "Listeriosis (Tests for Listeria monocytogenes Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.382", "resultName": "Listeriosis [Listeria monocytogenes] (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Normally sterile-site specimen constraints",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate, and the source HL7 sterile-site specimen value set is unavailable; generic and unrestricted test-name branches requiring a separate sterile-site specimen criterion are omitted from LIS-R3, LIS-R4, and LIS-R8 while sterile-site-specific test-name alternatives remain modeled"
+    },
+    {
+      "valueSet": "Maternal and neonatal epidemiologic linkage",
+      "reason": "the source explicitly marks rules 5 through 7 inoperable because maternal-neonatal linkage and related specimen timing cannot be evaluated; SEM_V1 has no cross-patient epidemiologic-link predicate, so these rules are omitted entirely rather than allowing age or compatible neonatal illness to report alone"
+    }
+  ]
+}

@@ -1,0 +1,1950 @@
+{
+  "mnemonic": "NAS_V1",
+  "conditionId": "NAS",
+  "name": "Neonatal Abstinence Syndrome",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Neonatal_Abstinence_Syndrome.v2.20250228.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2025-02-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "eCR137ArchReview dev/nas_final_audit.md + NAS_Fidelity_Blueprint.md"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "NAS-R1",
+      "description": "Diagnostic evidence: [NAS dx/active problem OR suspected NAS OR chief complaint OR in-utero exposure] AND hospitalized AND age < 28 days",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2259",
+                  "name": "Neonatal Abstinence Syndrome (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2260",
+                  "name": "Neonatal Abstinence Syndrome (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2259",
+                  "name": "Neonatal Abstinence Syndrome (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2260",
+                  "name": "Neonatal Abstinence Syndrome (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Neonatal Abstinence Syndrome [Suspected] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Neonatal Abstinence Syndrome [Suspected] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "chiefComplaintMatches",
+                "params": {
+                  "text": "Neonatal Abstinence Syndrome"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "In Utero Exposure to Opioids, Benzodiazepines, or Barbiturates (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2288",
+                  "name": "In Utero Exposure to Opioids, Benzodiazepines, or Barbiturates (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "In Utero Exposure to Opioids, Benzodiazepines, or Barbiturates (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2288",
+                  "name": "In Utero Exposure to Opioids, Benzodiazepines, or Barbiturates (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "any": [
+              {
+                "predicate": "encounterType",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1323",
+                  "name": "Hospitalized [Inpatient] (EncounterTypeCode)"
+                }
+              },
+              {
+                "predicate": "encounterType",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1320",
+                  "name": "Hospitalized [Inpatient] (ActEncounterCode)"
+                }
+              },
+              {
+                "predicate": "encounterType",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1335",
+                  "name": "Hospitalized [Inpatient] (SNOMED)"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 28,
+              "unit": "days"
+            }
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "NAS-R2",
+      "description": "Lab detection: hospitalized AND age < 28 days AND detection of opioids/benzodiazepines/barbiturates",
+      "logic": {
+        "all": [
+          {
+            "gate": true,
+            "any": [
+              {
+                "predicate": "encounterType",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1323",
+                  "name": "Hospitalized [Inpatient] (EncounterTypeCode)"
+                }
+              },
+              {
+                "predicate": "encounterType",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1320",
+                  "name": "Hospitalized [Inpatient] (ActEncounterCode)"
+                }
+              },
+              {
+                "predicate": "encounterType",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1335",
+                  "name": "Hospitalized [Inpatient] (SNOMED)"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 28,
+              "unit": "days"
+            }
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2293",
+                      "name": "Opioids, Benzodiazepines, or Barbiturates (Tests by Any Method)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2295",
+                          "name": "Opioids, Benzodiazepines, or Barbiturates (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.806",
+                      "name": "Drugs [Unspecified] (Tests by Screen or Unspecified Method)"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2295",
+                      "name": "Opioids, Benzodiazepines, or Barbiturates (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "NAS-R3",
+      "description": "Maternal history: hospitalized AND age < 28 days AND maternal delivery record opioid/benzo/barbiturate information",
+      "logic": {
+        "all": [
+          {
+            "gate": true,
+            "any": [
+              {
+                "predicate": "encounterType",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1323",
+                  "name": "Hospitalized [Inpatient] (EncounterTypeCode)"
+                }
+              },
+              {
+                "predicate": "encounterType",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1320",
+                  "name": "Hospitalized [Inpatient] (ActEncounterCode)"
+                }
+              },
+              {
+                "predicate": "encounterType",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1335",
+                  "name": "Hospitalized [Inpatient] (SNOMED)"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 28,
+              "unit": "days"
+            }
+          },
+          {
+            "predicate": "epidemiologicalFact",
+            "params": {
+              "fact": "maternal-delivery-record-opioid-benzo-barbiturate-use"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "NAS-R4",
+      "description": "Clinical sign cluster + in-utero exposure: hospitalized AND age < 28 days AND >= 2 clinical signs AND in-utero exposure dx/problem",
+      "logic": {
+        "all": [
+          {
+            "gate": true,
+            "any": [
+              {
+                "predicate": "encounterType",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1323",
+                  "name": "Hospitalized [Inpatient] (EncounterTypeCode)"
+                }
+              },
+              {
+                "predicate": "encounterType",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1320",
+                  "name": "Hospitalized [Inpatient] (ActEncounterCode)"
+                }
+              },
+              {
+                "predicate": "encounterType",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1335",
+                  "name": "Hospitalized [Inpatient] (SNOMED)"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 28,
+              "unit": "days"
+            }
+          },
+          {
+            "atLeast": {
+              "n": 2,
+              "of": [
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2261",
+                        "name": "High Pitched Cry (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "High Pitched Cry (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2261",
+                        "name": "High Pitched Cry (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "High Pitched Cry (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2262",
+                        "name": "Inability to Console (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2263",
+                        "name": "Inability to Console (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2262",
+                        "name": "Inability to Console (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2263",
+                        "name": "Inability to Console (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2264",
+                        "name": "Hypertonia (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2265",
+                        "name": "Hypertonia (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2264",
+                        "name": "Hypertonia (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2265",
+                        "name": "Hypertonia (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2266",
+                        "name": "Tremors (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2267",
+                        "name": "Tremors (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2266",
+                        "name": "Tremors (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2267",
+                        "name": "Tremors (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2268",
+                        "name": "Myoclonus (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2269",
+                        "name": "Myoclonus (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2268",
+                        "name": "Myoclonus (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2269",
+                        "name": "Myoclonus (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Hyperactive Moro Reflex (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Hyperactive Moro Reflex (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Hyperactive Moro Reflex (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Hyperactive Moro Reflex (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2270",
+                        "name": "Poor Sleep (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2271",
+                        "name": "Poor Sleep (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2270",
+                        "name": "Poor Sleep (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2271",
+                        "name": "Poor Sleep (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2272",
+                        "name": "Alterations in Feeding (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2273",
+                        "name": "Alterations in Feeding (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2272",
+                        "name": "Alterations in Feeding (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2273",
+                        "name": "Alterations in Feeding (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1295",
+                        "name": "Seizure [Unspecified Cause] (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1299",
+                        "name": "Seizure [Unspecified Cause] (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1295",
+                        "name": "Seizure [Unspecified Cause] (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1299",
+                        "name": "Seizure [Unspecified Cause] (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2274",
+                        "name": "Excoriation (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2275",
+                        "name": "Excoriation (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2274",
+                        "name": "Excoriation (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2275",
+                        "name": "Excoriation (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Excessive Sucking (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Excessive Sucking (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Excessive Sucking (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Excessive Sucking (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2276",
+                        "name": "Sneezing (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2277",
+                        "name": "Sneezing (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2276",
+                        "name": "Sneezing (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2277",
+                        "name": "Sneezing (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2278",
+                        "name": "Nasal Congestion (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2279",
+                        "name": "Nasal Congestion (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2278",
+                        "name": "Nasal Congestion (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2279",
+                        "name": "Nasal Congestion (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2280",
+                        "name": "Yawning (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Yawning (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2280",
+                        "name": "Yawning (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Yawning (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.670",
+                        "name": "Fever (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.671",
+                        "name": "Fever (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.670",
+                        "name": "Fever (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.671",
+                        "name": "Fever (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2281",
+                        "name": "Cutaneous Mottling (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Cutaneous Mottling (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2281",
+                        "name": "Cutaneous Mottling (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Cutaneous Mottling (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2282",
+                        "name": "Sweating (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2283",
+                        "name": "Sweating (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2282",
+                        "name": "Sweating (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2283",
+                        "name": "Sweating (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2284",
+                        "name": "Feeding Intolerance (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2285",
+                        "name": "Feeding Intolerance (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2284",
+                        "name": "Feeding Intolerance (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2285",
+                        "name": "Feeding Intolerance (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.353",
+                        "name": "Diarrhea (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.56",
+                        "name": "Diarrhea (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.353",
+                        "name": "Diarrhea (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.56",
+                        "name": "Diarrhea (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.904",
+                        "name": "Tachypnea (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.236",
+                        "name": "Tachypnea (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.904",
+                        "name": "Tachypnea (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.236",
+                        "name": "Tachypnea (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2286",
+                        "name": "Respiratory Distress or Nasal Flaring (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2287",
+                        "name": "Respiratory Distress or Nasal Flaring (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2286",
+                        "name": "Respiratory Distress or Nasal Flaring (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2287",
+                        "name": "Respiratory Distress or Nasal Flaring (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2289",
+                  "name": "In Utero Substance Exposure (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2290",
+                  "name": "In Utero Substance Exposure (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2289",
+                  "name": "In Utero Substance Exposure (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2290",
+                  "name": "In Utero Substance Exposure (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "NAS-R5",
+      "description": "Clinical sign cluster + substance detection: hospitalized AND age < 28 days AND >= 2 clinical signs AND opioid/benzo/barbiturate detection",
+      "logic": {
+        "all": [
+          {
+            "gate": true,
+            "any": [
+              {
+                "predicate": "encounterType",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1323",
+                  "name": "Hospitalized [Inpatient] (EncounterTypeCode)"
+                }
+              },
+              {
+                "predicate": "encounterType",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1320",
+                  "name": "Hospitalized [Inpatient] (ActEncounterCode)"
+                }
+              },
+              {
+                "predicate": "encounterType",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1335",
+                  "name": "Hospitalized [Inpatient] (SNOMED)"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 28,
+              "unit": "days"
+            }
+          },
+          {
+            "atLeast": {
+              "n": 2,
+              "of": [
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2261",
+                        "name": "High Pitched Cry (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "High Pitched Cry (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2261",
+                        "name": "High Pitched Cry (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "High Pitched Cry (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2262",
+                        "name": "Inability to Console (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2263",
+                        "name": "Inability to Console (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2262",
+                        "name": "Inability to Console (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2263",
+                        "name": "Inability to Console (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2264",
+                        "name": "Hypertonia (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2265",
+                        "name": "Hypertonia (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2264",
+                        "name": "Hypertonia (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2265",
+                        "name": "Hypertonia (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2266",
+                        "name": "Tremors (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2267",
+                        "name": "Tremors (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2266",
+                        "name": "Tremors (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2267",
+                        "name": "Tremors (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2268",
+                        "name": "Myoclonus (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2269",
+                        "name": "Myoclonus (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2268",
+                        "name": "Myoclonus (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2269",
+                        "name": "Myoclonus (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Hyperactive Moro Reflex (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Hyperactive Moro Reflex (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Hyperactive Moro Reflex (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Hyperactive Moro Reflex (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2270",
+                        "name": "Poor Sleep (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2271",
+                        "name": "Poor Sleep (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2270",
+                        "name": "Poor Sleep (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2271",
+                        "name": "Poor Sleep (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2272",
+                        "name": "Alterations in Feeding (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2273",
+                        "name": "Alterations in Feeding (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2272",
+                        "name": "Alterations in Feeding (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2273",
+                        "name": "Alterations in Feeding (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1295",
+                        "name": "Seizure [Unspecified Cause] (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1299",
+                        "name": "Seizure [Unspecified Cause] (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1295",
+                        "name": "Seizure [Unspecified Cause] (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1299",
+                        "name": "Seizure [Unspecified Cause] (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2274",
+                        "name": "Excoriation (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2275",
+                        "name": "Excoriation (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2274",
+                        "name": "Excoriation (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2275",
+                        "name": "Excoriation (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Excessive Sucking (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Excessive Sucking (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Excessive Sucking (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Excessive Sucking (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2276",
+                        "name": "Sneezing (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2277",
+                        "name": "Sneezing (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2276",
+                        "name": "Sneezing (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2277",
+                        "name": "Sneezing (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2278",
+                        "name": "Nasal Congestion (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2279",
+                        "name": "Nasal Congestion (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2278",
+                        "name": "Nasal Congestion (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2279",
+                        "name": "Nasal Congestion (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2280",
+                        "name": "Yawning (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Yawning (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2280",
+                        "name": "Yawning (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Yawning (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.670",
+                        "name": "Fever (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.671",
+                        "name": "Fever (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.670",
+                        "name": "Fever (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.671",
+                        "name": "Fever (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2281",
+                        "name": "Cutaneous Mottling (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Cutaneous Mottling (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2281",
+                        "name": "Cutaneous Mottling (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": null,
+                        "name": "Cutaneous Mottling (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2282",
+                        "name": "Sweating (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2283",
+                        "name": "Sweating (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2282",
+                        "name": "Sweating (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2283",
+                        "name": "Sweating (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2284",
+                        "name": "Feeding Intolerance (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2285",
+                        "name": "Feeding Intolerance (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2284",
+                        "name": "Feeding Intolerance (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2285",
+                        "name": "Feeding Intolerance (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.353",
+                        "name": "Diarrhea (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.56",
+                        "name": "Diarrhea (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.353",
+                        "name": "Diarrhea (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.56",
+                        "name": "Diarrhea (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.904",
+                        "name": "Tachypnea (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.236",
+                        "name": "Tachypnea (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.904",
+                        "name": "Tachypnea (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.236",
+                        "name": "Tachypnea (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2286",
+                        "name": "Respiratory Distress or Nasal Flaring (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2287",
+                        "name": "Respiratory Distress or Nasal Flaring (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2286",
+                        "name": "Respiratory Distress or Nasal Flaring (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.2287",
+                        "name": "Respiratory Distress or Nasal Flaring (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2293",
+                      "name": "Opioids, Benzodiazepines, or Barbiturates (Tests by Any Method)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2295",
+                          "name": "Opioids, Benzodiazepines, or Barbiturates (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.806",
+                      "name": "Drugs [Unspecified] (Tests by Screen or Unspecified Method)"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2295",
+                      "name": "Opioids, Benzodiazepines, or Barbiturates (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Neonatal Abstinence Syndrome [Suspected] (Disorders) (SNOMED/ICD10CM)",
+      "reason": "no codes in RCTC 2025-03-18 release per source docx Table 3"
+    },
+    {
+      "valueSet": "In Utero Exposure to Opioids, Benzodiazepines, or Barbiturates (SNOMED)",
+      "reason": "no codes per source docx Table 3 (ICD10CM 2288 implemented)"
+    },
+    {
+      "valueSet": "Chief complaint of NAS",
+      "reason": "chief complaint criteria not implemented in evidence model"
+    },
+    {
+      "valueSet": "Maternal delivery record opioid/benzo/barbiturate information",
+      "reason": "epidemiological criteria not implemented in evidence model"
+    },
+    {
+      "valueSet": "Timebox windows (encounter/problem effective dates)",
+      "reason": "evidence model carries no event dates yet"
+    },
+    {
+      "valueSet": "High Pitched Cry / Yawning / Cutaneous Mottling (ICD10CM); Hyperactive Moro Reflex, Excessive Sucking (both systems)",
+      "reason": "no codes per source docx Table 3"
+    },
+    {
+      "valueSet": "Respiratory Rate (Vital Sign) > 60 breaths/min branch of Tachypnea cluster",
+      "reason": "vital-sign quantity criteria not implemented in evidence model (SEM_V1)"
+    }
+  ]
+}

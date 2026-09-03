@@ -1,0 +1,266 @@
+{
+  "mnemonic": "SAI_V1",
+  "conditionId": "SAI",
+  "name": "Staphylococcus aureus Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Staphylococcus_aureus_Infection.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Staphylococcus_aureus_Infection.v2.20240628.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2025-05-21)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SAI-R1",
+      "description": "Staphylococcus aureus infection diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1449", "name": "Staphylococcus aureus infection (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1450", "name": "Staphylococcus aureus infection (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1449", "name": "Staphylococcus aureus infection (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1450", "name": "Staphylococcus aureus infection (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SAI-R2",
+      "description": "Methicillin-resistant Staphylococcus aureus diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1447", "name": "MRSA (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1448", "name": "MRSA (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1447", "name": "MRSA (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1448", "name": "MRSA (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SAI-R3",
+      "description": "Hospitalization, qualifying Staphylococcus aureus culture evidence, and coded oxacillin, cefoxitin, or methicillin resistance evidence",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1323", "name": "Hospitalized [Inpatient] (EncounterTypeCode)" } },
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1320", "name": "Hospitalized [Inpatient] (ActEncounterCode)" } },
+              { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1335", "name": "Hospitalized [Inpatient] (SNOMED)" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1138", "name": "Staphylococcus Aureus (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1138", "name": "Staphylococcus Aureus (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1156", "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1138", "name": "Staphylococcus Aureus (Tests by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1156", "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1156", "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1457", "name": "Tests for Oxacillin Susceptibility [OrdQn MIC]", "resultOid": "2.16.840.1.113762.1.4.1146.1145", "resultName": "Resistant Lab Result Value" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1457", "name": "Tests for Oxacillin Susceptibility [OrdQn MIC]", "codes": ["R"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1458", "name": "Tests for Cefoxitin Susceptibility [OrdQn]", "resultOid": "2.16.840.1.113762.1.4.1146.1145", "resultName": "Resistant Lab Result Value" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1458", "name": "Tests for Cefoxitin Susceptibility [OrdQn]", "codes": ["R"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1456", "name": "Tests for Methicillin Susceptibility [OrdQn MIC]", "resultOid": "2.16.840.1.113762.1.4.1146.1145", "resultName": "Resistant Lab Result Value" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1456", "name": "Tests for Methicillin Susceptibility [OrdQn MIC]", "codes": ["R"] } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SAI-R4",
+      "description": "Qualifying Staphylococcus aureus culture evidence and coded oxacillin, cefoxitin, or methicillin resistance evidence",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1138", "name": "Staphylococcus Aureus (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1138", "name": "Staphylococcus Aureus (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1156", "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1138", "name": "Staphylococcus Aureus (Tests by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1156", "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1156", "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1457", "name": "Tests for Oxacillin Susceptibility [OrdQn MIC]", "resultOid": "2.16.840.1.113762.1.4.1146.1145", "resultName": "Resistant Lab Result Value" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1457", "name": "Tests for Oxacillin Susceptibility [OrdQn MIC]", "codes": ["R"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1458", "name": "Tests for Cefoxitin Susceptibility [OrdQn]", "resultOid": "2.16.840.1.113762.1.4.1146.1145", "resultName": "Resistant Lab Result Value" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1458", "name": "Tests for Cefoxitin Susceptibility [OrdQn]", "codes": ["R"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1456", "name": "Tests for Methicillin Susceptibility [OrdQn MIC]", "resultOid": "2.16.840.1.113762.1.4.1146.1145", "resultName": "Resistant Lab Result Value" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1456", "name": "Tests for Methicillin Susceptibility [OrdQn MIC]", "codes": ["R"] } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SAI-R5",
+      "description": "Optional logic: Staphylococcus aureus identified by culture with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1138", "name": "Staphylococcus Aureus (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1138", "name": "Staphylococcus Aureus (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1156", "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1138", "name": "Staphylococcus Aureus (Tests by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1156", "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1156", "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SAI-R6",
+      "description": "Optional logic: methicillin-resistant Staphylococcus aureus identified by culture with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1452", "name": "MRSA (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1452", "name": "MRSA (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1451", "resultName": "MRSA (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1452", "name": "MRSA (Tests by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1451", "resultName": "MRSA (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1451", "resultName": "MRSA (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SAI-R7",
+      "description": "Optional logic: Staphylococcus aureus nucleic acid detected with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1454", "name": "Staphylococcus aureus (Tests for Staph aureus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1454", "name": "Staphylococcus aureus (Tests for Staph aureus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1156", "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1454", "name": "Staphylococcus aureus (Tests for Staph aureus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1156", "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SAI-R9",
+      "description": "Optional logic: methicillin-resistance gene detected with a positive result or abnormal interpretation on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1453", "name": "MRSA (Tests for Methicillin Resistance Gene)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1453", "name": "MRSA (Tests for Methicillin Resistance Gene)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SAI-R10",
+      "description": "Optional logic: Staphylococcus aureus identified by a blood-specific organism culture test",
+      "logic": {
+        "predicate": "labTestWithResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1459",
+          "name": "Organisms (Tests in Blood by Culture and Identification)",
+          "resultOid": "2.16.840.1.113762.1.4.1146.1156",
+          "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "SAI-R11",
+      "description": "Optional logic: Staphylococcus aureus nucleic acid detected by a blood-specific test with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1462", "name": "Staphylococcus aureus (Tests for Staph aureus Nucleic Acid in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1462", "name": "Staphylococcus aureus (Tests for Staph aureus Nucleic Acid in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.1156", "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1462", "name": "Staphylococcus aureus (Tests for Staph aureus Nucleic Acid in Blood)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SAI-R13",
+      "description": "Optional logic: Staphylococcus aureus identified by an organism culture test specific to a normally sterile site",
+      "logic": {
+        "predicate": "labTestWithResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1461",
+          "name": "Organisms (Tests in Specimen from Normally Sterile Site by Culture and Identification)",
+          "resultOid": "2.16.840.1.113762.1.4.1146.1156",
+          "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "SAI-R14",
+      "description": "Optional logic: Staphylococcus aureus nucleic acid detected by a test specific to a normally sterile site with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1455", "name": "Staphylococcus aureus (Tests for Staph aureus Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1455", "name": "Staphylococcus aureus (Tests for Staph aureus Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.1156", "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1455", "name": "Staphylococcus aureus (Tests for Staph aureus Nucleic Acid in Specimen from Normally Sterile Site)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1085", "name": "Organisms (Tests for Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.1156", "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rules 3 and 4: quantitative oxacillin and cefoxitin resistance thresholds",
+      "reason": "SEM_V1 has no numeric laboratory-result or unit predicate; coded Resistant Lab Result Value and resistant interpretation alternatives remain modeled"
+    },
+    {
+      "valueSet": "Rules 8, 12, and 15: Staphylococcus aureus antigen tests",
+      "reason": "the authoritative source marks the clinical-specimen, blood, and normally-sterile-site antigen test value sets not implemented with no codes; the wholly inoperable SAI-R8, SAI-R12, and SAI-R15 rules are omitted"
+    },
+    {
+      "valueSet": "Rule 9: MRSA Resistance Gene (Organism or Substance in Lab Results)",
+      "reason": "not implemented - no codes are available in the authoritative source; the unavailable result-value-only alternative is omitted"
+    },
+    {
+      "valueSet": "Rules 10, 11, 13, and 14: specimen-qualified generic laboratory branches",
+      "reason": "SEM_V1 has no specimen-type predicate, and the source marks the HL7 specimen value sets unavailable; location-specific coded test alternatives remain modeled"
+    },
+    {
+      "valueSet": "Rules 10 and 13: Staphylococcus aureus culture tests specific to blood or a normally sterile site",
+      "reason": "not implemented - no codes are available in the authoritative source; coded general-organism blood and normally-sterile-site culture alternatives remain modeled"
+    },
+    {
+      "valueSet": "Rule 11: Organisms (Tests for Nucleic Acid in Blood)",
+      "reason": "not implemented - no codes are available in the authoritative source; the Staphylococcus aureus blood-specific nucleic-acid test alternatives remain modeled"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-record reporter types",
+      "reason": "the authoritative snapshot marks these reporter types not implemented in RCKMS; SEM_V1 does not carry reporter-source or death-certificate cause/contributing-condition evidence"
+    }
+  ]
+}

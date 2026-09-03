@@ -1,0 +1,59 @@
+{
+  "mnemonic": "MERS_V1",
+  "conditionId": "MERS",
+  "name": "Middle East Respiratory Syndrome",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Middle_East_Respiratory_Syndrome.v6.20260227.docx",
+    "rckmsVersion": "v6",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Middle_East_Respiratory_Syndrome.v6.20260227.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2025-12-30)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "MERS-R1",
+      "description": "Middle East respiratory syndrome diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.876", "name": "MERS (Disorders) (SNOMED)" } },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.876", "name": "MERS (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "MERS-R2",
+      "description": "MERS-CoV nucleic acid detected in a clinical specimen on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.878", "name": "MERS (Tests for MERS_CoV Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.878", "name": "MERS (Tests for MERS_CoV Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.845", "resultName": "MERS (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.878", "name": "MERS (Tests for MERS_CoV Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.845", "resultName": "MERS (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "MERS-R3",
+      "description": "MERS-CoV antibody detected in a clinical specimen on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2585", "name": "MERS (Tests for MERS_CoV Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2585", "name": "MERS (Tests for MERS_CoV Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.845", "resultName": "MERS (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2585", "name": "MERS (Tests for MERS_CoV Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    }
+  ],
+  "gaps": [
+    { "valueSet": "MERS (Disorders) (ICD10CM)", "reason": "the authoritative source lists no ICD10CM codes, so that diagnosis/problem alternative in source rule 1 is omitted" },
+    { "valueSet": "Numeric MERS-CoV antibody result greater than zero", "reason": "SEM_V1 has no unit-aware numeric laboratory comparison predicate; source rule 3 retains its coded-positive, organism-result, and abnormal-interpretation alternatives" },
+    { "valueSet": "MERS epidemiologic links", "reason": "SEM_V1 cannot represent confirmed-case contact, contact with a symptomatic traveler, severe-respiratory-illness cluster membership, recent travel, or recent healthcare-facility exposure; at least one epidemiologic fact is required by every source rule 4-8, so those rules are omitted entirely" },
+    { "valueSet": "Body Temperature greater than 38 C or 100.4 F", "reason": "SEM_V1 has no unit-aware numeric vital-sign comparison predicate; this is one fever alternative within omitted source rule 5" },
+    { "valueSet": "Chest imaging with interpretation consistent with pneumonia", "reason": "the authoritative source marks the imaging finding unavailable because impressions are narrative rather than coded, and SEM_V1 has no imaging evidence; source rule 8 is omitted entirely" },
+    { "valueSet": "Vital-records and lab reporter types", "reason": "the authoritative source marks these reporter types unavailable in RCKMS; they are not modeled as condition-pack rules" }
+  ]
+}

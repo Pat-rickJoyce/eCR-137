@@ -1,0 +1,321 @@
+{
+  "mnemonic": "TUB_V1",
+  "conditionId": "TUB",
+  "name": "Tuberculosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Tuberculosis.v7.20260626.docx",
+    "rckmsVersion": "v7",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Tuberculosis.v7.20260626.docx on 2026-07-29 (authoritative RCKMS Content Release 20260626; latest revision 2026-05-14)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "TUB-R1",
+      "description": "Tuberculosis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.422", "name": "Tuberculosis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.451", "name": "Tuberculosis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.422", "name": "Tuberculosis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.451", "name": "Tuberculosis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TUB-R2",
+      "description": "Identification of Mycobacterium tuberculosis complex by culture and identification",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.840", "name": "Tuberculosis (Tests for Mycobacterium tuberculosis by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.840", "name": "Tuberculosis (Tests for Mycobacterium tuberculosis by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.606", "resultName": "Tuberculosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.840", "name": "Tuberculosis (Tests for Mycobacterium tuberculosis by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.606", "resultName": "Tuberculosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.606", "resultName": "Tuberculosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1002", "name": "Tuberculosis (Tests for Mycobacterium species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.606", "resultName": "Tuberculosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TUB-R3",
+      "description": "Detection of Mycobacterium tuberculosis complex nucleic acid",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.600", "name": "Tuberculosis (Tests for Mycobacterium tuberculosis Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.600", "name": "Tuberculosis (Tests for Mycobacterium tuberculosis Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.606", "resultName": "Tuberculosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.600", "name": "Tuberculosis (Tests for Mycobacterium tuberculosis Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.606", "resultName": "Tuberculosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TUB-R4",
+      "description": "Microscopic observation of acid-fast bacilli",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.605", "name": "Organisms (Tests by Microscopic Observation by Acid Fast Stain)", "resultOid": "2.16.840.1.113762.1.4.1146.839", "resultName": "Acid Fast Bacilli (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.605", "name": "Organisms (Tests by Microscopic Observation by Acid Fast Stain)", "resultOid": "2.16.840.1.113762.1.4.1146.606", "resultName": "Tuberculosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TUB-R5",
+      "description": "Qualifying tissue microscopy using tissue-specific test names",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.892", "name": "Organisms (Tests by Microscopic Observation in Tissue by Acid Fast Stain)", "resultOid": "2.16.840.1.113762.1.4.1146.839", "resultName": "Acid Fast Bacilli (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.892", "name": "Organisms (Tests by Microscopic Observation in Tissue by Acid Fast Stain)", "resultOid": "2.16.840.1.113762.1.4.1146.606", "resultName": "Tuberculosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.842", "name": "Tests by Microscopic Observation in Tissue", "resultOid": "2.16.840.1.113762.1.4.1146.838", "resultName": "Caseating Granuloma (Finding by Microscopic Observation in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.842", "name": "Tests by Microscopic Observation in Tissue", "resultOid": "2.16.840.1.113762.1.4.1146.839", "resultName": "Acid Fast Bacilli (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.842", "name": "Tests by Microscopic Observation in Tissue", "resultOid": "2.16.840.1.113762.1.4.1146.606", "resultName": "Tuberculosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TUB-R6",
+      "description": "Positive tuberculin skin test or qualifying IGRA result in a patient younger than six years",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.602", "name": "Tuberculosis (Mammalian Tuberculin Skin Test)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.602", "name": "Tuberculosis (Mammalian Tuberculin Skin Test)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)", "resultOid": "2.16.840.1.113762.1.4.1146.606", "resultName": "Tuberculosis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 6, "unit": "years" }, "gate": true }
+        ]
+      }
+    },
+    {
+      "id": "TUB-R7",
+      "description": "Positive tuberculin skin test in a patient younger than 18 years",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.602", "name": "Tuberculosis (Mammalian Tuberculin Skin Test)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.602", "name": "Tuberculosis (Mammalian Tuberculin Skin Test)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 18, "unit": "years" }, "gate": true }
+        ]
+      }
+    },
+    {
+      "id": "TUB-R8",
+      "description": "Initiation of treatment with at least two distinct first-line anti-tuberculosis medications",
+      "logic": {
+        "atLeast": {
+          "n": 2,
+          "of": [
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2363", "name": "Tuberculosis (Isoniazid [INH]) (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2364", "name": "Tuberculosis (Pyrazinamide [PZA]) (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2362", "name": "Tuberculosis (Ethambutol) (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2366", "name": "Tuberculosis (Rifampin) (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2365", "name": "Tuberculosis (Rifabutin) (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2367", "name": "Tuberculosis (Rifapentine) (RXNORM)" } }
+          ]
+        }
+      }
+    },
+    {
+      "id": "TUB-R9",
+      "description": "Initiation of treatment with a first-line combination anti-tuberculosis medication",
+      "logic": { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.843", "name": "Tuberculosis (First Line Drugs for Treatment [Combinations]) (RXNORM)" } }
+    },
+    {
+      "id": "TUB-R10",
+      "description": "One first-line and one second-line anti-tuberculosis medication",
+      "logic": {
+        "all": [
+          { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.321", "name": "Tuberculosis (First Line Drugs for Treatment) (RXNORM)" } },
+          { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.844", "name": "Tuberculosis (Second Line Drugs for Treatment) (RXNORM)" } }
+        ]
+      }
+    },
+    {
+      "id": "TUB-R11",
+      "description": "Suspected tuberculosis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2145", "name": "Tuberculosis [Suspected] (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2145", "name": "Tuberculosis [Suspected] (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TUB-R12",
+      "description": "Positive tuberculin skin test",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.602", "name": "Tuberculosis (Mammalian Tuberculin Skin Test)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.602", "name": "Tuberculosis (Mammalian Tuberculin Skin Test)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "TUB-R13",
+      "description": "Qualifying interferon gamma release assay result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)", "resultOid": "2.16.840.1.113762.1.4.1146.606", "resultName": "Tuberculosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "TUB-R14",
+      "description": "Any recorded result observation for a tuberculosis-specific culture and identification test",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.840", "name": "Tuberculosis (Tests for Mycobacterium tuberculosis by Culture and Identification Method)" } }
+    },
+    {
+      "id": "TUB-R15",
+      "description": "Any recorded result observation for a tuberculosis-specific nucleic-acid test",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.600", "name": "Tuberculosis (Tests for Mycobacterium tuberculosis Nucleic Acid)" } }
+    },
+    {
+      "id": "TUB-R16",
+      "description": "Any recorded result observation for an acid-fast-stain microscopy test",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.605", "name": "Organisms (Tests by Microscopic Observation by Acid Fast Stain)" } }
+    },
+    {
+      "id": "TUB-R17",
+      "description": "Any recorded result observation for an interferon gamma release assay",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)" } }
+    },
+    {
+      "id": "TUB-R18",
+      "description": "Order or recorded observation for an organism-specific tuberculosis culture test or panel",
+      "logic": {
+        "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.840", "name": "Tuberculosis (Tests for Mycobacterium tuberculosis by Culture and Identification Method)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1002", "name": "Tuberculosis (Tests for Mycobacterium species by Culture and Identification Method)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1795", "name": "Tuberculosis (Test Panels for Mycobacterium tuberculosis by Culture and Identification Method)" } }
+        ]
+      }
+    },
+    {
+      "id": "TUB-R19",
+      "description": "Order or recorded observation for a tuberculosis-specific nucleic-acid test",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.600", "name": "Tuberculosis (Tests for Mycobacterium tuberculosis Nucleic Acid)" } }
+    },
+    {
+      "id": "TUB-R22",
+      "description": "Positive tuberculin skin test or qualifying IGRA result in a patient younger than five years",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.602", "name": "Tuberculosis (Mammalian Tuberculin Skin Test)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.602", "name": "Tuberculosis (Mammalian Tuberculin Skin Test)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)", "resultOid": "2.16.840.1.113762.1.4.1146.606", "resultName": "Tuberculosis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 5, "unit": "years" }, "gate": true }
+        ]
+      }
+    },
+    {
+      "id": "TUB-R23",
+      "description": "All three second-line anti-tuberculosis medications: linezolid, pretomanid, and bedaquiline",
+      "logic": {
+        "all": [
+          { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2142", "name": "Linezolid (RXNORM)" } },
+          { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2143", "name": "Tuberculosis (Pretomanid) (RXNORM)" } },
+          { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2144", "name": "Tuberculosis (Bedaquiline) (RXNORM)" } }
+        ]
+      }
+    },
+    {
+      "id": "TUB-R24",
+      "description": "At least two distinct second-line anti-tuberculosis medications",
+      "logic": {
+        "atLeast": {
+          "n": 2,
+          "of": [
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2661", "name": "Ethionamide (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2662", "name": "Moxifloxacin (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2663", "name": "Amikacin (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2664", "name": "Cycloserine (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2665", "name": "Kanamycin (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2666", "name": "Para-Amino Salicylic Acid [PAS] (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2667", "name": "Capreomycin (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2668", "name": "Streptomycin (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2669", "name": "Levofloxacin (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2142", "name": "Linezolid (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2143", "name": "Tuberculosis (Pretomanid) (RXNORM)" } },
+            { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2144", "name": "Tuberculosis (Bedaquiline) (RXNORM)" } }
+          ]
+        }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 5 specimen-dependent and caseating-granuloma test branches",
+      "reason": "SEM_V1 has no laboratory specimen-type predicate, and the source marks both caseating-granuloma test-name value sets not implemented with no codes; TUB-R5 retains the tissue-specific test-name alternatives that do not require specimen matching"
+    },
+    {
+      "valueSet": "Rule 11 suspected Tuberculosis ICD10CM",
+      "reason": "the source marks the ICD10CM value set not implemented with no codes; TUB-R11 retains the authoritative SNOMED diagnosis and active-problem alternatives"
+    },
+    {
+      "valueSet": "Rule 19 tuberculosis nucleic-acid test panel",
+      "reason": "the source marks the panel value set not implemented with no codes; TUB-R19 retains the individual-test alternative"
+    },
+    {
+      "valueSet": "Rules 20 and 21 imaging result and reason-for-study evidence",
+      "reason": "the source marks both rules inoperable because imaging interpretations and reasons are narrative text; SEM_V1 has no imaging-result or imaging-order-reason evidence, so both rules are omitted"
+    },
+    {
+      "valueSet": "Rules 14-19 completed-result versus test-order semantics",
+      "reason": "SEM_V1 represents laboratory test-name evidence but does not distinguish a completed result observation from an order; the curated rules preserve the source test-name sets and document this limitation"
+    },
+    {
+      "valueSet": "Rules 8-10, 23, and 24 treatment-initiation semantics",
+      "reason": "SEM_V1 medication evidence does not distinguish initiation or administration from other recorded medication evidence; the curated rules preserve the source medication value sets and cardinality"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

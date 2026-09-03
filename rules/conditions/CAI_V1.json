@@ -1,0 +1,92 @@
+{
+  "mnemonic": "CAI_V1",
+  "conditionId": "CAI",
+  "name": "Candida auris infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Candida_auris_infection.v4.20240202.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Candida_auris_infection.v4.20240202.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CAI-R1",
+      "description": "Candida auris infection diagnosis or active problem (timeboxed)",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1579", "name": "Candida auris Infection (Disorders) (SNOMED)" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1579", "name": "Candida auris Infection (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "CAI-R2",
+      "description": "Identification of Candida auris by culture or isolate identification",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1044", "name": "Candida auris Infection (Tests for Candida auris by Culture and Identification Method)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1043", "name": "Candida auris Infection (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2244", "name": "Candida species (Tests by Culture and Identification Method)" } },
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+            ] },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1043", "name": "Candida auris Infection (Organism or Substance in Lab Results)" } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "CAI-R3",
+      "description": "Detection of Candida auris nucleic acid in a clinical specimen by any method",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1045", "name": "Candida auris Infection (Tests for Candida auris Nucleic Acid)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1043", "name": "Candida auris Infection (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] },
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1043", "name": "Candida auris Infection (Organism or Substance in Lab Results)" } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "CAI-R4",
+      "description": "Detection of Candida auris organism or substance in a clinical specimen",
+      "logic": {
+        "predicate": "labResultInValueSet",
+        "params": { "oid": "2.16.840.1.113762.1.4.1146.1043", "name": "Candida auris Infection (Organism or Substance in Lab Results)" }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Candida auris Infection (Disorders) (ICD10CM)",
+      "reason": "the authoritative source says no codes are available; CAI-R1 retains the available SNOMED branch"
+    }
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "mnemonic": "VAE_V1",
+  "conditionId": "VAE",
+  "name": "Vaccine Adverse Event",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Vaccine_Adverse_Event.v3.20260626.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Vaccine_Adverse_Event.v3.20260626.docx on 2026-07-29 (authoritative RCKMS Content Release 20260626; latest revision 2026-05-05)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "VAE-R1",
+      "description": "Vaccine adverse event diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1605", "name": "Vaccine Adverse Event (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1604", "name": "Vaccine Adverse Event (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1605", "name": "Vaccine Adverse Event (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1604", "name": "Vaccine Adverse Event (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VAE-R2",
+      "description": "Vaccine medication evidence plus anaphylaxis, vasovagal syncope, or encephalitis clinical evidence (source requires administration within 7 days before the encounter)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1629", "name": "Vaccine (CVX)" } },
+              { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1630", "name": "Vaccine (RXNORM)" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1621", "name": "Anaphylaxis [Unspecified Cause] (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1620", "name": "Anaphylaxis [Unspecified Cause] (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1621", "name": "Anaphylaxis [Unspecified Cause] (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1620", "name": "Anaphylaxis [Unspecified Cause] (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1628", "name": "Vasovagal Syncope [Unspecified Cause] (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1628", "name": "Vasovagal Syncope [Unspecified Cause] (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1033", "name": "Encephalitis [Unspecified Cause] (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1032", "name": "Encephalitis [Unspecified Cause] (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1033", "name": "Encephalitis [Unspecified Cause] (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1032", "name": "Encephalitis [Unspecified Cause] (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2653", "name": "Encephalitis [Viral] [Unspecified Cause] (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2654", "name": "Encephalitis [Viral] [Unspecified Cause] (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2653", "name": "Encephalitis [Viral] [Unspecified Cause] (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2654", "name": "Encephalitis [Viral] [Unspecified Cause] (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1254", "name": "Encephalitis [Bacterial] [Unspecified Cause] (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3282", "name": "Encephalitis [Bacterial] [Unspecified Cause] (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1254", "name": "Encephalitis [Bacterial] [Unspecified Cause] (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3282", "name": "Encephalitis [Bacterial] [Unspecified Cause] (Disorders) (ICD10CM)", "status": "active" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VAE-R3",
+      "description": "Vaccine medication evidence plus brachial neuritis, thrombocytopenic purpura, or intussusception clinical evidence (source requires administration within 28 days before the encounter)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1629", "name": "Vaccine (CVX)" } },
+              { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1630", "name": "Vaccine (RXNORM)" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1622", "name": "Brachial Neuritis [Unspecified Cause] (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1622", "name": "Brachial Neuritis [Unspecified Cause] (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1626", "name": "Thrombocytopenic Purpura [Unspecified Cause] (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1627", "name": "Thrombocytopenic Purpura [Unspecified Cause] (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1626", "name": "Thrombocytopenic Purpura [Unspecified Cause] (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1627", "name": "Thrombocytopenic Purpura [Unspecified Cause] (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1624", "name": "Intussusception [Unspecified Cause] (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1625", "name": "Intussusception [Unspecified Cause] (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1624", "name": "Intussusception [Unspecified Cause] (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1625", "name": "Intussusception [Unspecified Cause] (ICD10CM)", "status": "active" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VAE-R4",
+      "description": "Vaccine medication evidence plus chronic arthritis or Guillain-Barre syndrome clinical evidence (source requires administration within 42 days before the encounter)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1629", "name": "Vaccine (CVX)" } },
+              { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1630", "name": "Vaccine (RXNORM)" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1623", "name": "Chronic Arthritis [Unspecified Cause] (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1623", "name": "Chronic Arthritis [Unspecified Cause] (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.666", "name": "Guillain Barre syndrome (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.667", "name": "Guillain Barre syndrome (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.666", "name": "Guillain Barre syndrome (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.667", "name": "Guillain Barre syndrome (Disorders) (ICD10CM)", "status": "active" } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rules 2-4 vaccine administration status and encounter-relative timing",
+      "reason": "SEM_V1 medication evidence identifies the CVX or RXNORM vaccine value set but cannot distinguish ordered or prescribed from administered status, and it has no medication-event dates with which to enforce the source's 7-, 28-, and 42-day windows before the clinical encounter"
+    },
+    {
+      "valueSet": "Rule 2 shoulder injury related to vaccine administration",
+      "reason": "the source marks both SNOMED and ICD10CM value sets not implemented with no codes, so this clinical-finding branch is omitted"
+    },
+    {
+      "valueSet": "Rule 2 vasovagal syncope ICD10CM",
+      "reason": "the source marks the ICD10CM value set not implemented with no codes; VAE-R2 retains the implemented SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Rule 3 brachial neuritis ICD10CM",
+      "reason": "the source marks the ICD10CM value set not implemented with no codes; VAE-R3 retains the implemented SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Rule 4 chronic arthritis ICD10CM",
+      "reason": "the source marks the ICD10CM value set not implemented with no codes; VAE-R4 retains the implemented SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate vaccine-adverse-event evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

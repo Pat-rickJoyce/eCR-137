@@ -1,0 +1,170 @@
+{
+  "mnemonic": "MEA_V1",
+  "conditionId": "MEA",
+  "name": "Measles",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Measles.v6.20260227.docx",
+    "rckmsVersion": "v6",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Measles.v6.20260227.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2025-12-19)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "MEA-R1",
+      "description": "Measles as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.127", "name": "Measles (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.126", "name": "Measles (Disorders) (ICD10CM)" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "any": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.127", "name": "Measles (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.126", "name": "Measles (Disorders) (ICD10CM)", "status": "active" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "MEA-R2",
+      "description": "Suspected measles as a SNOMED diagnosis or active problem (timeboxed; ICD-10-CM source branch has no codes)",
+      "logic": { "any": [
+        { "all": [ { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1436", "name": "Measles [Suspected] (Disorders) (SNOMED)" } }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1436", "name": "Measles [Suspected] (Disorders) (SNOMED)", "status": "active" } }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "MEA-R3",
+      "description": "Rash as a diagnosis or active problem plus an ordered measles IgM antibody test or panel",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.668", "name": "Rash (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.669", "name": "Rash (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.668", "name": "Rash (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.669", "name": "Rash (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.299", "name": "Measles (Tests for measles virus IgM Antibody)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.369", "name": "Measles (Test Panels for measles virus IgM Antibody)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "MEA-R4",
+      "description": "Rash as a diagnosis or active problem plus coded exposure to measles or increased measles-exposure risk",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.668", "name": "Rash (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.669", "name": "Rash (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.668", "name": "Rash (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.669", "name": "Rash (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2341", "name": "Exposure to Measles (SNOMED)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2341", "name": "Exposure to Measles (SNOMED)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2342", "name": "Increased Risk for Exposure to Measles (SNOMED)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2342", "name": "Increased Risk for Exposure to Measles (SNOMED)", "status": "active" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "MEA-R5",
+      "description": "Identification of measles virus by culture with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.296", "name": "Measles (Tests for measles virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.296", "name": "Measles (Tests for measles virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.292", "resultName": "Measles (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.296", "name": "Measles (Tests for measles virus by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.292", "resultName": "Measles (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.292", "resultName": "Measles (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "MEA-R6",
+      "description": "Detection of measles-virus nucleic acid with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.297", "name": "Measles (Tests for measles virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.297", "name": "Measles (Tests for measles virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.292", "resultName": "Measles (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.297", "name": "Measles (Tests for measles virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.292", "resultName": "Measles (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "MEA-R7",
+      "description": "Detection of measles-virus IgM antibody with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.299", "name": "Measles (Tests for measles virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.299", "name": "Measles (Tests for measles virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.292", "resultName": "Measles (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.299", "name": "Measles (Tests for measles virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    { "id": "MEA-R8", "description": "Ordered measles-virus culture and identification test (culture-panel source branch has no codes)", "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.296", "name": "Measles (Tests for measles virus by Culture and Identification Method)" } } },
+    {
+      "id": "MEA-R9",
+      "description": "Ordered measles-virus nucleic-acid test or test panel",
+      "logic": { "any": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.297", "name": "Measles (Tests for measles virus Nucleic Acid)" } },
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.759", "name": "Measles (Test Panels for measles virus Nucleic Acid)" } }
+      ] }
+    },
+    { "id": "MEA-R10", "description": "Ordered measles-virus antigen test (antigen-panel source branch has no codes)", "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.298", "name": "Measles (Tests for measles virus Antigen)" } } },
+    {
+      "id": "MEA-R11",
+      "description": "Optional logic: Koplik spots as a SNOMED diagnosis or active problem (timeboxed; ICD-10-CM source branch has no codes)",
+      "logic": { "any": [
+        { "all": [ { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.51", "name": "Measles (Koplik Spots) (Disorders) (SNOMED)" } }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.51", "name": "Measles (Koplik Spots) (Disorders) (SNOMED)", "status": "active" } }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "MEA-R12",
+      "description": "Optional logic: detection of measles-virus antigen with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.298", "name": "Measles (Tests for measles virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.298", "name": "Measles (Tests for measles virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.292", "resultName": "Measles (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.298", "name": "Measles (Tests for measles virus Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "MEA-R13",
+      "description": "Optional logic: fever as a diagnosis or active problem plus an ordered measles IgM antibody test or panel",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.299", "name": "Measles (Tests for measles virus IgM Antibody)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.369", "name": "Measles (Test Panels for measles virus IgM Antibody)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "MEA-R14",
+      "description": "Optional logic: fever as a diagnosis or active problem plus coded exposure to measles or increased measles-exposure risk",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2341", "name": "Exposure to Measles (SNOMED)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2341", "name": "Exposure to Measles (SNOMED)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2342", "name": "Increased Risk for Exposure to Measles (SNOMED)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2342", "name": "Increased Risk for Exposure to Measles (SNOMED)", "status": "active" } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    { "valueSet": "Uncoded suspected-measles, Koplik-spot, laboratory-panel, and epidemiologic branches", "reason": "the authoritative source reports no codes for suspected-measles ICD-10-CM, Koplik-spots ICD-10-CM, measles culture and antigen panels, exposure and increased-risk ICD-10-CM, or four free-text epidemiologic criteria; the corresponding rules retain their coded alternatives" },
+    { "valueSet": "Four-fold measles IgG rise and ratio threshold", "reason": "source rules 3 and 13 include paired-specimen timing and quantitative IgG comparison logic that is explicitly not implemented in RCKMS and cannot be represented by SEM_V1; both rules retain the coded IgM test-order branches" },
+    { "valueSet": "Measured fever threshold", "reason": "SEM_V1 cannot compare body-temperature values against 38 degC or 100.4 degF, so source rules 13 and 14 retain the coded fever diagnosis and active-problem branches but omit the vital-sign branch" }
+  ]
+}

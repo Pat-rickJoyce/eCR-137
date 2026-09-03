@@ -1,0 +1,72 @@
+{
+  "mnemonic": "GAL_V1",
+  "conditionId": "GAL",
+  "name": "Galactosemia",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Galactosemia.v1.20250228.docx",
+    "rckmsVersion": "v1",
+    "rckmsDate": "2025-02-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Galactosemia.v1.20250228.docx on 2026-07-18 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "GAL-R1",
+      "description": "Galactosemia diagnosis or active problem (timeboxed) in a patient younger than one year",
+      "logic": { "all": [
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2506", "name": "Galactosemia (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2507", "name": "Galactosemia (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2506", "name": "Galactosemia (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2507", "name": "Galactosemia (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+      ] }
+    },
+    {
+      "id": "GAL-R2",
+      "description": "Low interpretation of a blood-specific GALT, GALK, or GALE quantitative test in a patient younger than one year (numeric threshold and generic-test/specimen alternatives not modeled)",
+      "logic": { "all": [
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true },
+        { "any": [
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2508", "name": "Galactosemia (Tests for Galactose_1_Phosphate Uridyltransferase [Quantitative] in Blood)", "codes": ["L", "LL"] } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2509", "name": "Galactosemia (Tests for Galactokinase (GALK) [Quantitative] in Blood)", "codes": ["L", "LL"] } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2510", "name": "Galactosemia (Tests for UDP_galactose 4' epimerase (GALE) [Quantitative] in Blood)", "codes": ["L", "LL"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "GAL-R3",
+      "description": "Abnormal GALT gene allele 1 and allele 2 tests in a patient younger than one year",
+      "logic": { "all": [
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2514", "name": "Galactosemia (Tests for GALT gene allele 1)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2515", "name": "Galactosemia (Tests for GALT gene allele 2)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "GALT <24.5, GALK <0.7, and GALE <3.5 quantitative result thresholds (with or without nmol/h/mg Hb units)",
+      "reason": "SEM_V1 does not preserve numeric laboratory result values or units and has no numeric comparison predicate, so the quantitative alternatives in source rule 2 are omitted"
+    },
+    {
+      "valueSet": "Generic GALT, GALK, and GALE quantitative tests constrained to Blood specimen type",
+      "reason": "SEM_V1 has no specimen-type predicate, and the source says the HL7 Blood specimen value set is unavailable; GAL-R2 retains the blood-specific test-name alternatives and omits generic-test-plus-specimen branches"
+    }
+  ]
+}

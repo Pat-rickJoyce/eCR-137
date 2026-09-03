@@ -1,0 +1,127 @@
+{
+  "mnemonic": "IPD_V1",
+  "conditionId": "IPD",
+  "name": "Invasive Pneumococcal Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Invasive_Pneumococcal_Disease.v5.20260227.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Invasive_Pneumococcal_Disease.v5.20260227.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2025-11-12)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "IPD-R1",
+      "description": "Identification of Streptococcus pneumoniae in a normally sterile-site specimen by culture, using sterile-site-specific test-name branches",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.771", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.771", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.771", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae in Specimen from Normally Sterile Site by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1461", "name": "Organisms (Tests in Specimen from Normally Sterile Site by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "IPD-R2",
+      "description": "Detection of Streptococcus pneumoniae nucleic acid in a normally sterile-site specimen, using sterile-site-specific test-name branches",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.770", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.770", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.770", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Nucleic Acid in Specimen from Normally Sterile Site)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1085", "name": "Organisms (Tests for Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "IPD-R3",
+      "description": "Detection of Streptococcus pneumoniae antigen in a normally sterile-site specimen, using the sterile-site-specific test-name branch",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.769", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Antigen in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.769", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Antigen in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.769", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Antigen in Specimen from Normally Sterile Site)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "IPD-R4",
+      "description": "Optional logic: invasive pneumococcal disease diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.136", "name": "Invasive Pneumococcal Disease (Disorders) (SNOMED)" } },
+        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.137", "name": "Invasive Pneumococcal Disease (Disorders) (ICD10CM)" } },
+        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.136", "name": "Invasive Pneumococcal Disease (Disorders) (SNOMED)", "status": "active" } },
+        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.137", "name": "Invasive Pneumococcal Disease (Disorders) (ICD10CM)", "status": "active" } }
+      ] }
+    },
+    {
+      "id": "IPD-R5",
+      "description": "Optional identification of Streptococcus pneumoniae in a clinical specimen by culture, including isolate-identification results",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.693", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.693", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.693", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "IPD-R6",
+      "description": "Optional detection of Streptococcus pneumoniae nucleic acid in a clinical specimen by any method",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.308", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.308", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.308", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3071", "name": "Invasive Pneumococcal Disease (Combination Tests that include Streptococcus pneumoniae Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "IPD-R7",
+      "description": "Optional detection of Streptococcus pneumoniae antigen in a clinical specimen by any method",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.309", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.309", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.309", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "IPD-R8",
+      "description": "Optional invasive pneumococcal disease diagnosis or active problem in a patient younger than five years (timeboxed when configured in RCKMS)",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.136", "name": "Invasive Pneumococcal Disease (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.137", "name": "Invasive Pneumococcal Disease (Disorders) (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.136", "name": "Invasive Pneumococcal Disease (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.137", "name": "Invasive Pneumococcal Disease (Disorders) (ICD10CM)", "status": "active" } }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 5, "unit": "years" }, "gate": true }
+      ] }
+    },
+    {
+      "id": "IPD-R9",
+      "description": "Optional normally sterile-site culture, nucleic-acid, or antigen evidence in a patient younger than five years, using sterile-site-specific test-name branches",
+      "logic": { "all": [
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 5, "unit": "years" }, "gate": true },
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.771", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.771", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.771", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae in Specimen from Normally Sterile Site by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1461", "name": "Organisms (Tests in Specimen from Normally Sterile Site by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.770", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.770", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.770", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Nucleic Acid in Specimen from Normally Sterile Site)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1085", "name": "Organisms (Tests for Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.769", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Antigen in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.769", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Antigen in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.306", "resultName": "Invasive Pneumococcal Disease (Organism or Substance for Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.769", "name": "Invasive Pneumococcal Disease (Tests for Streptococcus pneumoniae Antigen in Specimen from Normally Sterile Site)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Normally sterile-site specimen-type constraints",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate, and the source HL7 Specimen from a Normally Sterile Site value set is not implemented. General test-name alternatives that require SNOMED or HL7 sterile-site specimen linkage are omitted from IPD-R1 through IPD-R3 and IPD-R9; coded sterile-site-specific test-name alternatives remain modeled"
+    }
+  ]
+}

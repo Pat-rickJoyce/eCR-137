@@ -1,0 +1,313 @@
+{
+  "mnemonic": "FALU_V1",
+  "conditionId": "FALU",
+  "name": "Farmers Lung",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Farmers_Lung.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Farmers_Lung.v2.20240202.docx on 2026-07-18 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "FALU-R1",
+      "description": "Farmer's Lung (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1765",
+                      "name": "Farmers Lung (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1766",
+                      "name": "Farmers Lung (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1765",
+                      "name": "Farmers Lung (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1766",
+                      "name": "Farmers Lung (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "FALU-R2",
+      "description": "Optional logic: hypersensitivity pneumonitis plus antibodies associated with Farmer's Lung",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1767",
+                  "name": "Hypersensitivity Pneumonitis (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1768",
+                  "name": "Hypersensitivity Pneumonitis (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1767",
+                  "name": "Hypersensitivity Pneumonitis (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1768",
+                  "name": "Hypersensitivity Pneumonitis (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1769",
+                      "name": "Farmers Lung (Tests for Aspergillus fumigatus, Saccharopolyspora rectivirgula, or Thermoactinomyces vulgaris Antibody)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1772",
+                          "name": "Farmers Lung (Aspergillus fumigatus, Saccharopolyspora rectivirgula, or Thermoactinomyces vulgaris Antibody in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1770",
+                      "name": "Tests for Aspergillus Species Antibody"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1772",
+                      "name": "Farmers Lung (Aspergillus fumigatus, Saccharopolyspora rectivirgula, or Thermoactinomyces vulgaris Antibody in Lab Results)"
+                    }
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1771",
+                      "name": "Tests for Thermoactinomyces Species Antibody"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1772",
+                      "name": "Farmers Lung (Aspergillus fumigatus, Saccharopolyspora rectivirgula, or Thermoactinomyces vulgaris Antibody in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "FALU-R3",
+      "description": "Optional logic: hypersensitivity pneumonitis plus prior moldy hay/crop exposure (epidemiologic criterion not implementable)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1767",
+                  "name": "Hypersensitivity Pneumonitis (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1768",
+                  "name": "Hypersensitivity Pneumonitis (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1767",
+                  "name": "Hypersensitivity Pneumonitis (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1768",
+                  "name": "Hypersensitivity Pneumonitis (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "epidemiologicalFact",
+            "params": {
+              "fact": "history of exposure to, or work with, moldy hay or crops before illness onset"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "FALU-R4",
+      "description": "Optional logic: dyspnea plus moldy hay/crop exposure during the 12 hours before illness onset (epidemiologic criterion not implementable)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.867",
+                  "name": "Dyspnea (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.868",
+                  "name": "Dyspnea (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.867",
+                  "name": "Dyspnea (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.868",
+                  "name": "Dyspnea (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "epidemiologicalFact",
+            "params": {
+              "fact": "exposure to moldy hay or crops during the 12 hours before illness onset"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "History of exposure to, or work with, moldy hay or crops before illness onset",
+      "reason": "source rule 3 is explicitly inoperable; SEM_V1 has no epidemiological exposure-history evidence, so FALU-R3 remains indeterminate and cannot trigger"
+    },
+    {
+      "valueSet": "Exposure to moldy hay or crops during the 12 hours before illness onset",
+      "reason": "source rule 4 is explicitly inoperable; SEM_V1 has no epidemiological exposure/timing evidence, so FALU-R4 remains indeterminate and cannot trigger"
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "mnemonic": "PADI_V1",
+  "conditionId": "PADI",
+  "name": "Parkinsons Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Parkinsons_Disease.v4.20240628.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Parkinsons_Disease.v4.20240628.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2025-06-18)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "PADI-R1",
+      "description": "Parkinson's disease diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1048", "name": "Parkinsons Disease (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1047", "name": "Parkinsons Disease (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1048", "name": "Parkinsons Disease (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1047", "name": "Parkinsons Disease (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PADI-R2",
+      "description": "Secondary Parkinsonism diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1050", "name": "Parkinsonism [Secondary] (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1049", "name": "Parkinsonism [Secondary] (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1050", "name": "Parkinsonism [Secondary] (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1049", "name": "Parkinsonism [Secondary] (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PADI-R3",
+      "description": "Multiple system atrophy diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1054", "name": "Multiple System Atrophy (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1051", "name": "Multiple System Atrophy (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1054", "name": "Multiple System Atrophy (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1051", "name": "Multiple System Atrophy (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PADI-R4",
+      "description": "Carbidopa-levodopa medication ordered or administered",
+      "logic": {
+        "predicate": "medicationInValueSet",
+        "params": { "oid": "2.16.840.1.113762.1.4.1146.1053", "name": "Carbidopa Levodopa Combination (RXNORM)" }
+      }
+    },
+    {
+      "id": "PADI-R5",
+      "description": "Levodopa medication ordered or administered",
+      "logic": {
+        "predicate": "medicationInValueSet",
+        "params": { "oid": "2.16.840.1.113762.1.4.1146.1052", "name": "Levodopa (RXNORM)" }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Vital-records reporting and death-certificate Parkinson's disease criterion",
+      "reason": "the authoritative source marks the vital-records reporter type unavailable and not implemented in RCKMS; reporter routing and death-certificate evidence are not represented in SEM_V1"
+    }
+  ]
+}

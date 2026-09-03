@@ -1,0 +1,113 @@
+{
+  "mnemonic": "BMD_V1",
+  "conditionId": "BMD",
+  "name": "Balamuthia mandrillaris Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Balamuthia_mandrillaris_Disease.v6.20250703.docx",
+    "rckmsVersion": "v6",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Balamuthia_mandrillaris_Disease.v6.20250703.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "BMD-R2",
+      "description": "Encephalitis, meningoencephalitis, or granulomatous amebic encephalitis combined with qualifying Balamuthia laboratory evidence",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.766", "name": "Encephalitis (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.285", "name": "Encephalitis (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.766", "name": "Encephalitis (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.285", "name": "Encephalitis (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1097", "name": "Meningoencephalitis [Unspecified Cause] (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1105", "name": "Meningoencephalitis [Unspecified Cause] (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1097", "name": "Meningoencephalitis [Unspecified Cause] (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1105", "name": "Meningoencephalitis [Unspecified Cause] (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1264", "name": "Granulomatous Amebic Encephalitis (Disorders) (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1264", "name": "Granulomatous Amebic Encephalitis (Disorders) (SNOMED)", "status": "active" } }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  { "any": [
+                    { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+                    { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+                  ] },
+                  { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1272", "name": "Balamuthia mandrillaris disease (Organism or Substance in Lab Results)" } }
+                ]
+              },
+              {
+                "any": [
+                  { "all": [
+                    { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1273", "name": "Balamuthia mandrillaris disease (Tests for Balamuthia mandrillaris Nucleic Acid)" } },
+                    { "any": [
+                      { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                      { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1272", "name": "Balamuthia mandrillaris disease (Organism or Substance in Lab Results)" } },
+                      { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+                    ] }
+                  ] },
+                  { "all": [
+                    { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+                    { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1272", "name": "Balamuthia mandrillaris disease (Organism or Substance in Lab Results)" } }
+                  ] }
+                ]
+              },
+              {
+                "any": [
+                  { "all": [
+                    { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1421", "name": "Balamuthia mandrillaris disease (Tests for Balamuthia mandrillaris Antigen)" } },
+                    { "any": [
+                      { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                      { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1272", "name": "Balamuthia mandrillaris disease (Organism or Substance in Lab Results)" } },
+                      { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+                    ] }
+                  ] },
+                  { "all": [
+                    { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.891", "name": "Organisms (Tests by Microscopic Observation by Immunofluorescence)" } },
+                    { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1272", "name": "Balamuthia mandrillaris disease (Organism or Substance in Lab Results)" } }
+                  ] }
+                ]
+              },
+              {
+                "all": [
+                  { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2181", "name": "Organisms (Tests by Microscopic Observation in Cerebrospinal Fluid)" } },
+                  { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1272", "name": "Balamuthia mandrillaris disease (Organism or Substance in Lab Results)" } }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Balamuthia mandrillaris disease (Disorders) (SNOMED and ICD10CM)",
+      "reason": "the authoritative source says no codes are available for either value set; source rule 1 is explicitly inoperable and is omitted"
+    },
+    {
+      "valueSet": "Granulomatous Amebic Encephalitis (Disorders) (ICD10CM)",
+      "reason": "the authoritative source says no codes are available; BMD-R2 retains the SNOMED diagnosis and active-problem alternatives"
+    },
+    {
+      "valueSet": "Balamuthia mandrillaris disease (Tests for Balamuthia mandrillaris by Culture and Identification Method)",
+      "reason": "the authoritative source says no codes are available; BMD-R2 retains the generic culture-test plus Balamuthia organism-result alternative"
+    },
+    {
+      "valueSet": "CSF specimen constraints for motile-ameba and generic microscopy tests",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate; specimen-dependent wet-mount and generic microscopy branches are omitted while the CSF-specific microscopy test-name alternative remains modeled"
+    },
+    {
+      "valueSet": "Ameba [Motile] (Tests by Microscopic Observation in CSF using Wet Mount)",
+      "reason": "the authoritative source says no codes are available; the branch is omitted"
+    }
+  ]
+}

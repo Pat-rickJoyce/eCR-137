@@ -1,0 +1,162 @@
+{
+  "mnemonic": "EHR_V1",
+  "conditionId": "EHR",
+  "name": "Ehrlichiosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Ehrlichiosis.v4.20240202.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Ehrlichiosis.v4.20240202.docx on 2026-07-18 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "EHR-R1",
+      "description": "Ehrlichiosis (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.224", "name": "Ehrlichiosis (Disorders) (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.221", "name": "Ehrlichiosis (Disorders) (ICD10CM)" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "any": [
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.224", "name": "Ehrlichiosis (Disorders) (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.221", "name": "Ehrlichiosis (Disorders) (ICD10CM)", "status": "active" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EHR-R2",
+      "description": "Identification of Ehrlichia species by culture and identification method",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.483", "name": "Ehrlichiosis (Tests for Ehrlichia species by Culture and Identification Method)" } },
+              { "any": [
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.494", "name": "Ehrlichiosis (Organism or Substance in Lab Results)" } },
+                { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+              ] }
+            ]
+          },
+          {
+            "all": [
+              { "any": [
+                { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+                { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+              ] },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.494", "name": "Ehrlichiosis (Organism or Substance in Lab Results)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EHR-R3",
+      "description": "Detection of Ehrlichia species nucleic acid by any method",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.486", "name": "Ehrlichiosis (Tests for Ehrlichia species Nucleic Acid)" } },
+              { "any": [
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.494", "name": "Ehrlichiosis (Organism or Substance in Lab Results)" } },
+                { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+              ] }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.494", "name": "Ehrlichiosis (Organism or Substance in Lab Results)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EHR-R4",
+      "description": "Microscopic observation of Ehrlichia species antigen in tissue by immunohistochemical staining (tissue-specific test branch)",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.487", "name": "Ehrlichiosis (Tests for Ehrlichia species Antigen in Tissue by Immunohistochemical Stain)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.494", "name": "Ehrlichiosis (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "EHR-R5",
+      "description": "Microscopic observation of Ehrlichia species or morulae in blood (blood-specific test branch)",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.884", "name": "Tests by Microscopic Observation in Blood" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.494", "name": "Ehrlichiosis (Organism or Substance in Lab Results)" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.882", "name": "Morulae in Leukocytes (Finding by Microscopic Observation in Lab Results)" } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "EHR-R7",
+      "description": "Optional logic: elevated Ehrlichia species IgG antibody by any method (coded/abnormal alternatives; numeric > 0 not modeled)",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2211", "name": "Ehrlichiosis (Tests for Ehrlichia species IgG Antibody)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.494", "name": "Ehrlichiosis (Organism or Substance in Lab Results)" } }
+          ] }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Ehrlichiosis (Tests for Ehrlichia species Antigen by Immunohistochemical Stain in Unspecific Specimen)",
+      "reason": "not implemented - no codes available per source docx Table 3; the alternative also requires unsupported tissue specimen constraints"
+    },
+    {
+      "valueSet": "Tissue specimen constraints",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate; the unspecified-specimen IHC branch is omitted while the tissue-specific test branch remains modeled"
+    },
+    {
+      "valueSet": "Morulae (Tests by Microscopic Observation in Blood)",
+      "reason": "not implemented - no codes available per source docx Table 3"
+    },
+    {
+      "valueSet": "Blood specimen constraints",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate; general Ehrlichia/organism microscopy branches are omitted while the blood-specific test branch remains modeled"
+    },
+    {
+      "valueSet": "Ehrlichia IgG titer >= 1:128",
+      "reason": "source states titer evaluation is not operational and SEM_V1 has no titer comparison; source rule 6 is omitted entirely"
+    },
+    {
+      "valueSet": "Numeric IgG result > 0",
+      "reason": "SEM_V1 has no numeric laboratory result comparison; numeric alternative in EHR-R7 is omitted"
+    }
+  ]
+}

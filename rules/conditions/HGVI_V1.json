@@ -1,0 +1,48 @@
+{
+  "mnemonic": "HGVI_V1",
+  "conditionId": "HGVI",
+  "name": "Hepatitis G Virus Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Hepatitis_G_Virus_Infection.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Hepatitis_G_Virus_Infection.v2.20240202.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2025-06-03)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "HGVI-R1",
+      "description": "Hepatitis G diagnosis or active problem (timeboxed); the source ICD-10-CM alternative has no codes",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1682", "name": "Hepatitis G (Disorders) (SNOMED)" } },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1682", "name": "Hepatitis G (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HGVI-R2",
+      "description": "Detection of hepatitis G virus nucleic acid",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1686", "name": "Hepatitis G (Tests for hepatitis G virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1686", "name": "Hepatitis G (Tests for hepatitis G virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1685", "resultName": "Hepatitis G (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1686", "name": "Hepatitis G (Tests for hepatitis G virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1685", "resultName": "Hepatitis G (Organism or Substance in Lab Results)" } }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Hepatitis G (Disorders) (ICD10CM)",
+      "reason": "not implemented - no codes available per the authoritative source; HGVI-R1 retains the coded SNOMED diagnosis and active-problem branches"
+    }
+  ]
+}

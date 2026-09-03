@@ -1,0 +1,63 @@
+{
+  "mnemonic": "PHE_V1",
+  "conditionId": "PHE",
+  "name": "Phenylketonuria",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Phenylketonuria.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Phenylketonuria.v2.20240628.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2025-05-29)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "PHE-R1",
+      "description": "Phenylketonuria diagnosis or active problem in a patient younger than one year, timeboxed when configured",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2140", "name": "Phenylketonuria (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2141", "name": "Phenylketonuria (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2140", "name": "Phenylketonuria (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2141", "name": "Phenylketonuria (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "User-defined age threshold",
+      "reason": "PHE-R1 encodes the authoritative source default of age younger than one year; SEM_V1 packs do not carry the RCKMS authoring-time override for a custom age threshold"
+    },
+    {
+      "valueSet": "Vital-records reporting and death-certificate Phenylketonuria criterion",
+      "reason": "the authoritative source marks the vital-records reporter type unavailable and not implemented in RCKMS; reporter routing and death-certificate evidence are not represented in SEM_V1"
+    }
+  ]
+}

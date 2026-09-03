@@ -1,0 +1,165 @@
+{
+  "mnemonic": "BRU_V1",
+  "conditionId": "BRU",
+  "name": "Brucellosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Brucellosis.v7.20260227.docx",
+    "rckmsVersion": "v7",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Brucellosis.v7.20260227.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "BRU-R1",
+      "description": "Timeboxed brucellosis diagnosis or active problem",
+      "logic": {
+        "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.185", "name": "Brucellosis (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.184", "name": "Brucellosis (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.185", "name": "Brucellosis (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.184", "name": "Brucellosis (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BRU-R2",
+      "description": "Timeboxed suspected-brucellosis diagnosis or active problem",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1434", "name": "Brucellosis [Suspected] (Disorders) (SNOMED)" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1434", "name": "Brucellosis [Suspected] (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BRU-R3",
+      "description": "Identification of Brucella species in a clinical specimen by culture, including preliminary isolate-identification results",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.513", "name": "Brucellosis (Tests for Brucella species by Culture and Identification Method)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.516", "name": "Brucellosis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+            ] },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.516", "name": "Brucellosis (Organism or Substance in Lab Results)" } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BRU-R6",
+      "description": "Partially implemented detection of Brucella species IgG antibody by ELISA using coded or abnormal results (onset timing and numeric result not modeled)",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2413", "name": "Brucellosis (Tests for Brucella species IgG Antibody by ELISA)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.516", "name": "Brucellosis (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BRU-R8",
+      "description": "Optional detection of Brucella species nucleic acid in a clinical specimen",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.512", "name": "Brucellosis (Tests for Brucella species Nucleic Acid)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.516", "name": "Brucellosis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] },
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.516", "name": "Brucellosis (Organism or Substance in Lab Results)" } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BRU-R9",
+      "description": "Optional order for organism-specific Brucella culture and identification testing",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": { "oid": "2.16.840.1.113762.1.4.1146.513", "name": "Brucellosis Culture Test Order" }
+      }
+    },
+    {
+      "id": "BRU-R10",
+      "description": "Optional order for quantitative Brucella species antibody testing or panel",
+      "logic": {
+        "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.515", "name": "Brucellosis Quantitative Antibody Test Order" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.920", "name": "Brucellosis Quantitative Antibody Panel Order" } }
+        ]
+      }
+    },
+    {
+      "id": "BRU-R11",
+      "description": "Partially implemented optional order for Brucella species IgG antibody testing by ELISA (onset timing not modeled)",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": { "oid": "2.16.840.1.113762.1.4.1146.2413", "name": "Brucellosis IgG Antibody by ELISA Test Order" }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Brucellosis [Suspected] (Disorders) (ICD10CM)",
+      "reason": "the authoritative source says no codes are available; BRU-R2 retains the available SNOMED diagnosis and active-problem alternatives"
+    },
+    {
+      "valueSet": "Four-fold or greater Brucella IgG/total-antibody titer increase between paired specimens collected 14-180 days apart",
+      "reason": "the source marks rule 4 inoperable; SEM_V1 cannot compare paired specimens, collection intervals, or results across eICRs, so the rule is omitted"
+    },
+    {
+      "valueSet": "Brucella total-antibody titer at least 1:160",
+      "reason": "the source marks rule 5 inoperable because eICR titer formatting cannot be evaluated; SEM_V1 has no numeric or titer-result comparison predicate, so the rule is omitted"
+    },
+    {
+      "valueSet": "Brucella IgG ELISA collected at least two weeks after symptom onset and numeric result greater than 1.09",
+      "reason": "SEM_V1 has no symptom-onset-relative timing or numeric laboratory comparison predicate; BRU-R6 and BRU-R11 retain the source's explicitly partial implementation without timeframe, and BRU-R6 retains coded/abnormal result alternatives"
+    },
+    {
+      "valueSet": "Fever plus at least two compatible clinical finding groups plus a qualifying Brucella epidemiologic exposure",
+      "reason": "the source marks rule 7 inoperable because epidemiologic criteria cannot be implemented; the entire rule is omitted to prevent clinical findings alone from overtriggering"
+    },
+    {
+      "valueSet": "Brucellosis culture test panel and Brucellosis IgG ELISA test panel",
+      "reason": "the authoritative source says no codes are available for either panel; BRU-R9 and BRU-R11 retain the implementable individual-test order alternatives"
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "mnemonic": "MISIA_V1",
+  "conditionId": "MISIA",
+  "name": "Multisystem Inflammatory Syndrome in Adults",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Multisystem_Inflammatory_Syndrome_in_Adults.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Multisystem_Inflammatory_Syndrome_in_Adults.v2.20240628.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2025-06-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "MISIA-R1",
+      "description": "Multisystem inflammatory syndrome diagnosis or active problem (timeboxed when configured in RCKMS) in a patient age 21 years or older",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1695",
+                          "name": "Multisystem Inflammatory Syndrome (Disorders) (SNOMED)"
+                        }
+                      },
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1696",
+                          "name": "Multisystem Inflammatory Syndrome (Disorders) (ICD10CM)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1695",
+                          "name": "Multisystem Inflammatory Syndrome (Disorders) (SNOMED)",
+                          "status": "active"
+                        }
+                      },
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1696",
+                          "name": "Multisystem Inflammatory Syndrome (Disorders) (ICD10CM)",
+                          "status": "active"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "predicate": "ageComparison",
+            "params": {
+              "op": ">=",
+              "value": 21,
+              "unit": "years"
+            },
+            "gate": true
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Vital-records reporter type",
+      "reason": "the authoritative source marks this reporter type unavailable in RCKMS; the death-certificate criterion is not modeled as a condition-pack rule"
+    }
+  ]
+}

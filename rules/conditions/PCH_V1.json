@@ -1,0 +1,57 @@
+{
+  "mnemonic": "PCH_V1",
+  "conditionId": "PCH",
+  "name": "Primary Congenital Hypothyroidism",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Primary_Congenital_Hypothyroidism.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Primary_Congenital_Hypothyroidism.v2.20240628.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2025-05-28)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "PCH-R1",
+      "description": "Primary congenital hypothyroidism diagnosis or active problem in a patient younger than one year, timeboxed when configured",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2153", "name": "Primary Congenital Hypothyroidism (Disorders) (SNOMED)" } },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2153", "name": "Primary Congenital Hypothyroidism (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Primary Congenital Hypothyroidism (Disorders) (ICD10CM)",
+      "reason": "the authoritative source marks the ICD-10-CM diagnosis and active-problem branches unimplemented because no codes are available; PCH-R1 retains the coded SNOMED branches"
+    },
+    {
+      "valueSet": "Source rule 2: Congenital Hypothyroidism [Unspecified] plus quantitative TSH > 40 mIU/L",
+      "reason": "SEM_V1 has no numeric laboratory result value/unit comparison predicate; the rule is omitted entirely rather than weakening the required TSH threshold to test presence"
+    },
+    {
+      "valueSet": "Vital-records reporting and death-certificate primary congenital hypothyroidism criterion",
+      "reason": "the authoritative source marks the vital-records reporter type unavailable and not implemented in RCKMS; reporter routing and death-certificate evidence are not represented in SEM_V1"
+    }
+  ]
+}

@@ -1,0 +1,933 @@
+{
+  "mnemonic": "CRS_V1",
+  "conditionId": "CRS",
+  "name": "Congenital Rubella Syndrome",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Congenital_Rubella_Syndrome.v6.20260227.docx",
+    "rckmsVersion": "v6",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Congenital_Rubella_Syndrome.v6.20260227.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CRS-R1",
+      "description": "Congenital rubella syndrome (diagnosis or active problem, timeboxed) in a patient younger than 12 months",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.783",
+                          "name": "Congenital Rubella Syndrome (Disorders) (SNOMED)"
+                        }
+                      },
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.315",
+                          "name": "Congenital Rubella Syndrome (Disorders) (ICD10CM)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.783",
+                          "name": "Congenital Rubella Syndrome (Disorders) (SNOMED)",
+                          "status": "active"
+                        }
+                      },
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.315",
+                          "name": "Congenital Rubella Syndrome (Disorders) (ICD10CM)",
+                          "status": "active"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 12,
+              "unit": "months"
+            },
+            "gate": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRS-R2",
+      "description": "Suspected congenital rubella syndrome (SNOMED diagnosis or active problem, timeboxed) in a patient younger than 12 months",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2146",
+                          "name": "Congenital Rubella Syndrome [Suspected] (Disorders) (SNOMED)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2146",
+                          "name": "Congenital Rubella Syndrome [Suspected] (Disorders) (SNOMED)",
+                          "status": "active"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 12,
+              "unit": "months"
+            },
+            "gate": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRS-R3",
+      "description": "Suspected rubella (SNOMED diagnosis or active problem, timeboxed) in a patient younger than 12 months",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1440",
+                          "name": "Rubella [Suspected] (Disorders) (SNOMED)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1440",
+                          "name": "Rubella [Suspected] (Disorders) (SNOMED)",
+                          "status": "active"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 12,
+              "unit": "months"
+            },
+            "gate": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRS-R4",
+      "description": "Maternal history of rubella during pregnancy (SNOMED diagnosis or active problem, timeboxed) in a patient younger than 12 months",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.784",
+                          "name": "Rubella (Maternal Rubella during Pregnancy) (Disorders) (SNOMED)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.784",
+                          "name": "Rubella (Maternal Rubella during Pregnancy) (Disorders) (SNOMED)",
+                          "status": "active"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 12,
+              "unit": "months"
+            },
+            "gate": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRS-R5",
+      "description": "At least two distinct compatible clinical observations in a patient younger than 12 months",
+      "logic": {
+        "all": [
+          {
+            "atLeast": {
+              "n": 2,
+              "of": [
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1091",
+                        "name": "Cataracts [Nonspecific]/Congenital glaucoma [Unspecified Cause] (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1098",
+                        "name": "Cataracts [Nonspecific]/Congenital glaucoma [Unspecified Cause] (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1091",
+                        "name": "Cataracts [Nonspecific]/Congenital glaucoma [Unspecified Cause] (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1098",
+                        "name": "Cataracts [Nonspecific]/Congenital glaucoma [Unspecified Cause] (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1092",
+                        "name": "Congenital heart disease (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1099",
+                        "name": "Congenital heart disease (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1092",
+                        "name": "Congenital heart disease (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1099",
+                        "name": "Congenital heart disease (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1093",
+                        "name": "Hearing impairment (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1100",
+                        "name": "Hearing impairment (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1093",
+                        "name": "Hearing impairment (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1100",
+                        "name": "Hearing impairment (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.789",
+                        "name": "Purpura (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.756",
+                        "name": "Purpura (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.789",
+                        "name": "Purpura (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.756",
+                        "name": "Purpura (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1102",
+                        "name": "Hepatosplenomegaly (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1103",
+                        "name": "Hepatosplenomegaly (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1102",
+                        "name": "Hepatosplenomegaly (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1103",
+                        "name": "Hepatosplenomegaly (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.650",
+                        "name": "Jaundice (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.651",
+                        "name": "Jaundice (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.650",
+                        "name": "Jaundice (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.651",
+                        "name": "Jaundice (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1095",
+                        "name": "Microcephaly (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1101",
+                        "name": "Microcephaly (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1095",
+                        "name": "Microcephaly (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1101",
+                        "name": "Microcephaly (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1096",
+                        "name": "Developmental delay (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1104",
+                        "name": "Developmental delay (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1096",
+                        "name": "Developmental delay (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1104",
+                        "name": "Developmental delay (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1097",
+                        "name": "Meningoencephalitis [Unspecified Cause] (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1105",
+                        "name": "Meningoencephalitis [Unspecified Cause] (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1097",
+                        "name": "Meningoencephalitis [Unspecified Cause] (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1105",
+                        "name": "Meningoencephalitis [Unspecified Cause] (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 12,
+              "unit": "months"
+            },
+            "gate": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRS-R6",
+      "description": "Rubella laboratory result or test order in a patient younger than 12 months (paired IgG comparisons not modeled)",
+      "logic": {
+        "all": [
+          {
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 12,
+              "unit": "months"
+            },
+            "gate": true
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.313",
+                      "name": "Rubella (Tests for rubella virus by Culture and Identification Method)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.312",
+                          "name": "Rubella (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1041",
+                          "name": "Organisms (Tests by Culture and Identification)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1040",
+                          "name": "Organisms (Tests by Unspecified Method)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.312",
+                      "name": "Rubella (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.314",
+                      "name": "Rubella (Tests for rubella virus Nucleic Acid)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.312",
+                          "name": "Rubella (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.994",
+                      "name": "Organisms (Tests for Nucleic Acid)"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.312",
+                      "name": "Rubella (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.316",
+                      "name": "Rubella (Tests for rubella virus IgM Antibody)"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.312",
+                          "name": "Rubella (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.313",
+                  "name": "Rubella (Tests for rubella virus by Culture and Identification Method)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.314",
+                  "name": "Rubella (Tests for rubella virus Nucleic Acid)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.817",
+                  "name": "Rubella (Test Panels for rubella virus Nucleic Acid)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.316",
+                  "name": "Rubella (Tests for rubella virus IgM Antibody)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.782",
+                  "name": "Rubella (Test Panels for rubella virus IgM IgG Antibody)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRS-R7",
+      "description": "Optional logic: congenital rubella syndrome (diagnosis or active problem, timeboxed) without an age restriction",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.783",
+                      "name": "Congenital Rubella Syndrome (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.315",
+                      "name": "Congenital Rubella Syndrome (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.783",
+                      "name": "Congenital Rubella Syndrome (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.315",
+                      "name": "Congenital Rubella Syndrome (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Congenital Rubella Syndrome [Suspected] (Disorders) (ICD10CM)",
+      "reason": "not implemented - no ICD-10-CM codes available per source docx Table 3; the unavailable diagnosis and problem branches are omitted from CRS-R2"
+    },
+    {
+      "valueSet": "Rubella [Suspected] (Disorders) (ICD10CM)",
+      "reason": "not implemented - no ICD-10-CM codes available per source docx Table 3; the unavailable diagnosis and problem branches are omitted from CRS-R3"
+    },
+    {
+      "valueSet": "Rubella (Maternal Rubella during Pregnancy) (Disorders) (ICD10CM)",
+      "reason": "not implemented - no ICD-10-CM codes available per source docx Table 3; the unavailable diagnosis and problem branches are omitted from CRS-R4"
+    },
+    {
+      "valueSet": "Pigmentary retinopathy and radiolucent bone disease (SNOMED and ICD10CM)",
+      "reason": "not implemented - no codes available for these four value sets per source docx Table 3; those unavailable observation alternatives are omitted from CRS-R5"
+    },
+    {
+      "valueSet": "Paired Rubella virus IgG titer increase and seroconversion",
+      "reason": "source states these paired-specimen comparisons are not operational and SEM_V1 has no paired-result timing, titer-fold-change, or seroconversion predicate; those alternatives are omitted from CRS-R6"
+    },
+    {
+      "valueSet": "Rubella (Test Panels for Rubella virus by Culture and Identification Method)",
+      "reason": "not implemented - no LOINC codes available per source docx Table 3; the unavailable culture-panel order alternative is omitted from CRS-R6"
+    }
+  ]
+}

@@ -1,0 +1,214 @@
+{
+  "mnemonic": "NMIE_V1",
+  "conditionId": "NMIE",
+  "name": "Nontuberculous Mycobacteria Infection Extrapulmonary",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Nontuberculous_Mycobacteria_Infection_Extrapulmonary.v7.20250703.docx",
+    "rckmsVersion": "v7",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Nontuberculous_Mycobacteria_Infection_Extrapulmonary.v7.20250703.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2026-05-19)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "NMIE-R1",
+      "description": "Extrapulmonary nontuberculous mycobacteria infection diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.3286",
+                      "name": "Mycobacteria_Infection_NonTB_ExPulm (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1303",
+                      "name": "Mycobacteria_Infection_NonTB_ExPulm (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.3286",
+                      "name": "Mycobacteria_Infection_NonTB_ExPulm (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1303",
+                      "name": "Mycobacteria_Infection_NonTB_ExPulm (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "NMIE-R2",
+      "description": "Identification of qualifying Mycobacterium species in an extrapulmonary specimen by culture, using specimen-specific tests and a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1304",
+              "name": "Mycobacteria_Infection_NonTB_ExPulm (Tests for Mycobacterium species in Extrapulmonary Specimen by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1304",
+              "name": "Mycobacteria_Infection_NonTB_ExPulm (Tests for Mycobacterium species in Extrapulmonary Specimen by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.3288",
+              "resultName": "Mycobacteria_Infection_NonTB_ExPulm (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1304",
+              "name": "Mycobacteria_Infection_NonTB_ExPulm (Tests for Mycobacterium species in Extrapulmonary Specimen by Culture and Identification Method)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2245",
+              "name": "Organisms (Tests in Extrapulmonary Specimen by Culture and Identification)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.3288",
+              "resultName": "Mycobacteria_Infection_NonTB_ExPulm (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "NMIE-R3",
+      "description": "Detection of qualifying Mycobacterium species nucleic acid in an extrapulmonary specimen, using specimen-specific tests and a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1305",
+              "name": "Mycobacteria_Infection_NonTB_ExPulm (Tests for Mycobacterium species Nucleic Acid in Extrapulmonary Specimen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1305",
+              "name": "Mycobacteria_Infection_NonTB_ExPulm (Tests for Mycobacterium species Nucleic Acid in Extrapulmonary Specimen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.3288",
+              "resultName": "Mycobacteria_Infection_NonTB_ExPulm (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1305",
+              "name": "Mycobacteria_Infection_NonTB_ExPulm (Tests for Mycobacterium species Nucleic Acid in Extrapulmonary Specimen)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2246",
+              "name": "Organisms (Tests for Nucleic Acid in Extrapulmonary Specimen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.3288",
+              "resultName": "Mycobacteria_Infection_NonTB_ExPulm (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "NMIE-R4",
+      "description": "Optional reporting of all result values for qualifying Mycobacterium species culture testing in an extrapulmonary specimen",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1304",
+          "name": "Mycobacteria_Infection_NonTB_ExPulm (Tests for Mycobacterium species in Extrapulmonary Specimen by Culture and Identification Method)"
+        }
+      }
+    },
+    {
+      "id": "NMIE-R5",
+      "description": "Optional reporting of all result values for qualifying Mycobacterium species nucleic-acid testing in an extrapulmonary specimen",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1305",
+          "name": "Mycobacteria_Infection_NonTB_ExPulm (Tests for Mycobacterium species Nucleic Acid in Extrapulmonary Specimen)"
+        }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Extrapulmonary specimen-type constraints on generic culture and nucleic-acid tests",
+      "reason": "SEM_V1 has no laboratory specimen-type evidence or predicate, and the source HL7 specimen value set has no codes; generic Mycobacterium and organism-test branches requiring separate extrapulmonary specimen linkage are omitted from NMIE-R2 through NMIE-R5 while extrapulmonary-specimen-specific test-name branches remain modeled"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-records reporter types",
+      "reason": "the authoritative source marks these reporter types unavailable in RCKMS; reporter-type routing and the death-certificate criterion are not represented in the condition pack"
+    }
+  ]
+}

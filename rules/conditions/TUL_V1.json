@@ -1,0 +1,168 @@
+{
+  "mnemonic": "TUL_V1",
+  "conditionId": "TUL",
+  "name": "Tularemia",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Tularemia.v5.20260227.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Tularemia.v5.20260227.docx on 2026-07-29 (authoritative RCKMS Content Release 20260227; latest revision 2025-10-14)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "TUL-R1",
+      "description": "Tularemia diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.251", "name": "Tularemia (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.252", "name": "Tularemia (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.251", "name": "Tularemia (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.252", "name": "Tularemia (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TUL-R3",
+      "description": "Identification of Francisella tularensis by culture, cell-wall analysis, or a generic organism test with a condition-specific result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.594", "name": "Tularemia (Tests for Francisella tularensis by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.594", "name": "Tularemia (Tests for Francisella tularensis by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.599", "resultName": "Tularemia (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.594", "name": "Tularemia (Tests for Francisella tularensis by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.899", "name": "Tularemia (Tests for Francisella tularensis by Cell Wall Analysis)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.899", "name": "Tularemia (Tests for Francisella tularensis by Cell Wall Analysis)", "resultOid": "2.16.840.1.113762.1.4.1146.599", "resultName": "Tularemia (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.899", "name": "Tularemia (Tests for Francisella tularensis by Cell Wall Analysis)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.599", "resultName": "Tularemia (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.599", "resultName": "Tularemia (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TUL-R4",
+      "description": "Detection of Francisella tularensis nucleic acid",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.595", "name": "Tularemia (Tests for Francisella tularensis Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.595", "name": "Tularemia (Tests for Francisella tularensis Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.599", "resultName": "Tularemia (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.595", "name": "Tularemia (Tests for Francisella tularensis Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.599", "resultName": "Tularemia (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TUL-R5",
+      "description": "Detection of Francisella tularensis antigen",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.596", "name": "Tularemia (Tests for Francisella tularensis Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.596", "name": "Tularemia (Tests for Francisella tularensis Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.599", "resultName": "Tularemia (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.596", "name": "Tularemia (Tests for Francisella tularensis Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "TUL-R6",
+      "description": "Detection of Francisella tularensis antibody by coded result or abnormal interpretation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.598", "name": "Tularemia (Tests for Francisella tularensis Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.598", "name": "Tularemia (Tests for Francisella tularensis Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.599", "resultName": "Tularemia (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.598", "name": "Tularemia (Tests for Francisella tularensis Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "TUL-R9",
+      "description": "Order or recorded observation for a Francisella tularensis culture or cell-wall-analysis test",
+      "logic": {
+        "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.594", "name": "Tularemia (Tests for Francisella tularensis by Culture and Identification Method)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.899", "name": "Tularemia (Tests for Francisella tularensis by Cell Wall Analysis)" } }
+        ]
+      }
+    },
+    {
+      "id": "TUL-R10",
+      "description": "Order or recorded observation for a Francisella tularensis nucleic-acid test",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.595", "name": "Tularemia (Tests for Francisella tularensis Nucleic Acid)" } }
+    },
+    {
+      "id": "TUL-R11",
+      "description": "Order or recorded observation for a Francisella tularensis antigen test",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.596", "name": "Tularemia (Tests for Francisella tularensis Antigen)" } }
+    },
+    {
+      "id": "TUL-R12",
+      "description": "Order or recorded observation for a Francisella tularensis antibody test or panel",
+      "logic": {
+        "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.598", "name": "Tularemia (Tests for Francisella tularensis Antibody)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1195", "name": "Tularemia (Test Panels for Francisella tularensis Antibody)" } }
+        ]
+      }
+    },
+    {
+      "id": "TUL-R13",
+      "description": "Francisella tularensis exposure diagnosis or active problem",
+      "logic": {
+        "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3048", "name": "Tularemia (Francisella tularensis exposure) (SNOMED)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3048", "name": "Tularemia (Francisella tularensis exposure) (SNOMED)", "status": "active" } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2 suspected Tularemia diagnosis or active problem",
+      "reason": "the source marks both SNOMED and ICD10CM value sets not implemented with no codes, so the wholly inoperable rule is omitted"
+    },
+    {
+      "valueSet": "Rule 6 antibody result greater than 15",
+      "reason": "SEM_V1 has no numeric laboratory-result threshold predicate; TUL-R6 retains the coded positive, condition-specific organism, and abnormal-interpretation alternatives"
+    },
+    {
+      "valueSet": "Rules 7 and 8 animal-contact and laboratory-isolate-contact evidence",
+      "reason": "the source marks both epidemiologic criteria not implemented, and SEM_V1 has no epidemiologic-contact evidence, so both rules are omitted"
+    },
+    {
+      "valueSet": "Rules 9-12 laboratory order semantics",
+      "reason": "SEM_V1 represents laboratory test-name evidence but does not distinguish an order from a completed result observation; the curated rules preserve the source order test-name sets and document this limitation"
+    },
+    {
+      "valueSet": "Rules 9-11 unavailable laboratory panel branches",
+      "reason": "the source marks the culture, nucleic-acid, and antigen panel value sets not implemented with no codes; the curated rules retain all implemented individual-test branches"
+    },
+    {
+      "valueSet": "Rule 13 ICD10CM and social-history exposure branches",
+      "reason": "the source marks the ICD10CM exposure and LOINC social-history-type value sets not implemented with no codes, and SEM_V1 has no social-history evidence; TUL-R13 retains the implemented SNOMED diagnosis and active-problem alternatives"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

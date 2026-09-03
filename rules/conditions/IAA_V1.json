@@ -1,0 +1,47 @@
+{
+  "mnemonic": "IAA_V1",
+  "conditionId": "IAA",
+  "name": "Interrupted Aortic Arch",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Interrupted_Aortic_Arch.v1.20240628.docx",
+    "rckmsVersion": "v1",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Interrupted_Aortic_Arch.v1.20240628.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2025-06-14)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "IAA-R1",
+      "description": "Interrupted aortic arch diagnosis or active problem (timeboxed) in a patient younger than one year",
+      "logic": { "all": [
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2311", "name": "Interrupted Aortic Arch (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2312", "name": "Interrupted Aortic Arch (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2311", "name": "Interrupted Aortic Arch (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2312", "name": "Interrupted Aortic Arch (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Fetal Interrupted Aortic Arch (Disorders) (SNOMED and ICD10CM)",
+      "reason": "the source provides no codes for either value set and marks rule 2 inoperable; IAA-R2 is omitted"
+    }
+  ]
+}

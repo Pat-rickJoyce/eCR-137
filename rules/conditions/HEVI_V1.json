@@ -1,0 +1,67 @@
+{
+  "mnemonic": "HEVI_V1",
+  "conditionId": "HEVI",
+  "name": "Hepatitis E Virus Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "complete",
+  "source": {
+    "document": "Hepatitis_E_Virus_Infection.v3.20240202.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Hepatitis_E_Virus_Infection.v3.20240202.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2025-06-03)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "HEVI-R1",
+      "description": "Hepatitis E diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1356", "name": "Hepatitis E (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1357", "name": "Hepatitis E (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1356", "name": "Hepatitis E (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1357", "name": "Hepatitis E (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HEVI-R2",
+      "description": "Detection of hepatitis E virus nucleic acid",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1361", "name": "Hepatitis E (Tests for hepatitis E virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1361", "name": "Hepatitis E (Tests for hepatitis E virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1358", "resultName": "Hepatitis E (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1361", "name": "Hepatitis E (Tests for hepatitis E virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1358", "resultName": "Hepatitis E (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "HEVI-R3",
+      "description": "Detection of hepatitis E virus IgM antibody",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1359", "name": "Hepatitis E (Tests for hepatitis E virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1359", "name": "Hepatitis E (Tests for hepatitis E virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1358", "resultName": "Hepatitis E (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1359", "name": "Hepatitis E (Tests for hepatitis E virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HEVI-R4",
+      "description": "Optional detection of hepatitis E virus antibody",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1360", "name": "Hepatitis E (Tests for hepatitis E virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1360", "name": "Hepatitis E (Tests for hepatitis E virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1358", "resultName": "Hepatitis E (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1360", "name": "Hepatitis E (Tests for hepatitis E virus Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    }
+  ],
+  "gaps": []
+}
