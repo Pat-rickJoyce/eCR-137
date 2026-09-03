@@ -1,0 +1,186 @@
+{
+  "mnemonic": "YEFE_V1",
+  "conditionId": "YEFE",
+  "name": "Yellow fever",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Yellow_fever.v5.20240628.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Yellow_fever.v5.20240628.docx on 2026-07-29 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "YEFE-R1",
+      "description": "Yellow fever virus infection diagnosis or active problem (timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.172", "name": "Yellow Fever (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.173", "name": "Yellow Fever (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.172", "name": "Yellow Fever (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.173", "name": "Yellow Fever (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "YEFE-R2",
+      "description": "Suspected yellow fever virus infection diagnosis or active problem (timeboxed; ICD-10-CM alternative has no codes)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1443", "name": "Yellow Fever [Suspected] (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1443", "name": "Yellow Fever [Suspected] (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "YEFE-R3",
+      "description": "Identification of yellow fever virus by a generic culture or organism test with a same-observation Yellow fever result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.526", "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.559", "resultName": "Yellow Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.559", "resultName": "Yellow Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.559", "resultName": "Yellow Fever (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "YEFE-R4",
+      "description": "Detection of yellow fever virus nucleic acid with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.555", "name": "Yellow Fever (Tests for yellow fever virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.555", "name": "Yellow Fever (Tests for yellow fever virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.559", "resultName": "Yellow Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.555", "name": "Yellow Fever (Tests for yellow fever virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.559", "resultName": "Yellow Fever (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "YEFE-R7",
+      "description": "Yellow fever virus IgM evidence plus yellow fever virus-specific neutralizing-antibody evidence (numeric-result alternatives and code-less qualitative neutralizing test not modeled)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.556", "name": "Yellow Fever (Tests for yellow fever virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.556", "name": "Yellow Fever (Tests for yellow fever virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.559", "resultName": "Yellow Fever (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.556", "name": "Yellow Fever (Tests for yellow fever virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1132", "name": "Yellow Fever (Tests for yellow fever virus Neutralizing Antibody [Quantitative])", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1132", "name": "Yellow Fever (Tests for yellow fever virus Neutralizing Antibody [Quantitative])", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "YEFE-R8",
+      "description": "Optional logic: detection of yellow fever virus IgM antibody with a coded or abnormal result (numeric > 0 not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.556", "name": "Yellow Fever (Tests for yellow fever virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.556", "name": "Yellow Fever (Tests for yellow fever virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.559", "resultName": "Yellow Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.556", "name": "Yellow Fever (Tests for yellow fever virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "YEFE-R9",
+      "description": "Optional logic: detection of qualitative or quantitative yellow fever virus antibody with a coded or abnormal result (numeric > 0 not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.558", "name": "Yellow Fever (Tests for yellow fever virus Antibody [Qualitative])", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.558", "name": "Yellow Fever (Tests for yellow fever virus Antibody [Qualitative])", "resultOid": "2.16.840.1.113762.1.4.1146.559", "resultName": "Yellow Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.558", "name": "Yellow Fever (Tests for yellow fever virus Antibody [Qualitative])", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.557", "name": "Yellow Fever (Tests for yellow fever virus Antibody [Quantitative])", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.557", "name": "Yellow Fever (Tests for yellow fever virus Antibody [Quantitative])", "resultOid": "2.16.840.1.113762.1.4.1146.559", "resultName": "Yellow Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.557", "name": "Yellow Fever (Tests for yellow fever virus Antibody [Quantitative])", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "YEFE-R11",
+      "description": "Lab test ordered for detection of yellow fever virus nucleic acid (code-less panel alternative not modeled)",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.555",
+          "name": "Yellow Fever (Tests for yellow fever virus Nucleic Acid)"
+        }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "YEFE-R2 suspected Yellow fever ICD-10-CM disorders",
+      "reason": "the authoritative source marks the ICD-10-CM value set not implemented with no codes; the SNOMED diagnosis and active-problem alternatives remain modeled"
+    },
+    {
+      "valueSet": "YEFE-R3 organism-specific Yellow fever culture test",
+      "reason": "the authoritative source marks the condition-specific culture-test value set not implemented with no LOINC codes; generic culture and organism-test alternatives with a Yellow fever-specific result remain modeled"
+    },
+    {
+      "valueSet": "YEFE-R5 Yellow fever virus antigen test",
+      "reason": "the authoritative source marks the antigen test-name value set not implemented with no LOINC codes; the wholly inoperable numbered rule is omitted"
+    },
+    {
+      "valueSet": "YEFE-R6 paired acute and convalescent antibody comparisons",
+      "reason": "the authoritative source says the four-fold rise and negative-to-positive seroconversion logic is not operational; SEM_V1 cannot compare paired specimens, collection intervals, titers, or seroconversion, so the numbered rule is omitted"
+    },
+    {
+      "valueSet": "YEFE-R7 qualitative neutralizing-antibody test",
+      "reason": "the authoritative source marks the qualitative neutralizing-antibody value set not implemented with no LOINC codes; the quantitative neutralizing-antibody branch remains modeled"
+    },
+    {
+      "valueSet": "Numeric yellow fever antibody results > 0",
+      "reason": "SEM_V1 has no numeric laboratory result value comparison predicate; numeric alternatives in YEFE-R7, YEFE-R8, and YEFE-R9 are omitted"
+    },
+    {
+      "valueSet": "YEFE-R10 Yellow fever culture-test and culture-panel orders",
+      "reason": "the authoritative source marks both value sets not implemented with no LOINC codes; the wholly inoperable numbered rule is omitted"
+    },
+    {
+      "valueSet": "YEFE-R11 Yellow fever nucleic-acid test-panel orders",
+      "reason": "the authoritative source marks the test-panel value set not implemented with no LOINC codes; the coded individual-test alternative remains modeled, although SEM_V1 does not distinguish an ordered test from a completed laboratory observation"
+    },
+    {
+      "valueSet": "YEFE-R12 Yellow fever antigen-test and antigen-panel orders",
+      "reason": "the authoritative source marks both value sets not implemented with no LOINC codes; the wholly inoperable numbered rule is omitted"
+    }
+  ]
+}

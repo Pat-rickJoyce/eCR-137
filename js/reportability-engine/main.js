@@ -3,6 +3,10 @@ import { ReportabilityEvaluator } from './evaluator.js';
 import { FormScraper } from './form-scraper.js';
 import { UIController } from './ui-controller.js';
 import { getOidsForCode } from './code-oid-lookup.js';
+import { RULE_PACKS } from './packs-data.js';
+import { evaluatePack } from './v2/pack-evaluator.js';
+import { toSessionEvidence, normalizeAge, EVIDENCE_MODEL } from './v2/evidence-adapter.js';
+import { mergeV2IntoLegacyResult } from './v2/legacy-bridge.js';
 
 class ReportabilityEngineApp {
     constructor() {
@@ -11,6 +15,13 @@ class ReportabilityEngineApp {
         this.ui = new UIController();
         this.evaluator = null;
         this.conditions = null;
+        // Evaluator v2 (curated rule packs) is the default engine as of the
+        // 243-pack curation pass. The legacy engine still runs underneath to
+        // cover the conditions that have no pack yet (CSVDO, SSI); the bridge
+        // replaces every packed condition in its result.
+        // Escape hatch: append ?engine=legacy to the URL to bypass v2 entirely.
+        this.useV2 = typeof window === 'undefined' ||
+            new URLSearchParams(window.location.search).get('engine') !== 'legacy';
     }
 
     async init() {
@@ -41,7 +52,7 @@ class ReportabilityEngineApp {
 
         // Attach to known static inputs
         const staticInputs = document.querySelectorAll(
-            '#patientBirthDate, #patientGender, #patientState, #pregnancyStatus'
+            '#patientBirthDate, #patientGender, #patientState, #patientDeathIndicator, #encounterDisposition, #pregnancyStatus'
         );
         staticInputs.forEach(input => {
             input.addEventListener('change', runEval);
@@ -90,7 +101,16 @@ class ReportabilityEngineApp {
             // Enrich diagnosis/problem codes with their OIDs from RCTC lookup
             this.enrichDataWithOids(data);
 
-            const result = this.evaluator.evaluate(data);
+            let result = this.evaluator.evaluate(data);
+
+            if (this.useV2 && RULE_PACKS.length > 0) {
+                const evidence = normalizeAge(toSessionEvidence(data));
+                const packResults = RULE_PACKS.map(pack =>
+                    evaluatePack(pack, evidence, { evidenceModel: EVIDENCE_MODEL }));
+                result = mergeV2IntoLegacyResult(result, packResults);
+                console.log("Evaluator v2 pack results:", packResults);
+            }
+
             this.ui.updateUI(result);
             console.log("Evaluation Result:", result);
         } catch (e) {

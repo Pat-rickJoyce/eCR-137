@@ -1,0 +1,113 @@
+{
+  "mnemonic": "SHVD_V1",
+  "conditionId": "SHVD",
+  "name": "Snowshoe hare virus disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Snowshoe_hare_virus_disease.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Snowshoe_hare_virus_disease.v2.20240202.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2025-05-19)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SHVD-R1",
+      "description": "Snowshoe hare virus disease or infection as a diagnosis or active problem, timeboxed when configured (ICD-10-CM alternative has no codes)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1950", "name": "Snowshoe hare Virus Diseases (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1950", "name": "Snowshoe hare Virus Diseases (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SHVD-R2",
+      "description": "Snowshoe hare virus identified by culture, including preliminary results, through a generic culture or unspecified-method test with a Snowshoe hare virus result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.526", "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1961", "resultName": "Snowshoe hare Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1961", "resultName": "Snowshoe hare Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1961", "resultName": "Snowshoe hare Virus Diseases (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SHVD-R4",
+      "description": "Snowshoe hare virus nucleic acid detected by a specific or generic test with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1953", "name": "Snowshoe hare Virus Diseases (Tests for Snowshoe hare Virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1953", "name": "Snowshoe hare Virus Diseases (Tests for Snowshoe hare Virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1961", "resultName": "Snowshoe hare Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1953", "name": "Snowshoe hare Virus Diseases (Tests for Snowshoe hare Virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1961", "resultName": "Snowshoe hare Virus Diseases (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SHVD-R5",
+      "description": "Snowshoe hare virus IgM antibody detected with a coded positive, organism, or abnormal-interpretation result on the same observation (numeric result greater than zero not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1955", "name": "Snowshoe hare Virus Diseases (Tests for Snowshoe hare Virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1955", "name": "Snowshoe hare Virus Diseases (Tests for Snowshoe hare Virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1961", "resultName": "Snowshoe hare Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1955", "name": "Snowshoe hare Virus Diseases (Tests for Snowshoe hare Virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SHVD-R7",
+      "description": "Optional logic: Snowshoe hare virus antibody detected with a coded positive, organism, or abnormal-interpretation result on the same observation (numeric result greater than zero not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1957", "name": "Snowshoe hare Virus Diseases (Tests for Snowshoe hare Virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1957", "name": "Snowshoe hare Virus Diseases (Tests for Snowshoe hare Virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1961", "resultName": "Snowshoe hare Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1957", "name": "Snowshoe hare Virus Diseases (Tests for Snowshoe hare Virus Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Snowshoe hare Virus Diseases (Disorders) (ICD10CM)",
+      "reason": "the authoritative source reports no codes available; SHVD-R1 retains the coded SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Snowshoe hare Virus Diseases (Tests for Snowshoe hare Virus by Culture and Identification Method)",
+      "reason": "the authoritative source reports no codes available; SHVD-R2 retains the generic culture and unspecified-method test branches that require a Snowshoe hare virus result"
+    },
+    {
+      "valueSet": "SHVD-R3 Snowshoe hare Virus Diseases (Tests for Snowshoe hare Virus Antigen)",
+      "reason": "the authoritative source reports no codes available and marks source rule 3 inoperable; the entire numbered rule is omitted"
+    },
+    {
+      "valueSet": "SHVD-R6 paired Snowshoe hare virus antibody comparison",
+      "reason": "source rule 6 is explicitly not operational; SEM_V1 cannot compare paired specimens, collection intervals, four-fold titer rises, or seroconversion, so the rule is omitted"
+    },
+    {
+      "valueSet": "Numeric laboratory result > 0",
+      "reason": "SEM_V1 has no numeric laboratory-result comparison; the numeric alternatives in SHVD-R5 and SHVD-R7 are omitted while coded-result and abnormal-interpretation alternatives remain modeled"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence for Snowshoe hare virus disease or infection, but the reporter type is unavailable in RCKMS and SEM_V1 has no death-certificate evidence"
+    },
+    {
+      "valueSet": "Laboratory reporter type",
+      "reason": "the source snapshot identifies laboratory reporting for the implemented culture, nucleic-acid, and antibody criteria, but that reporter type is unavailable in RCKMS; the corresponding provider/facility rules remain modeled"
+    }
+  ]
+}

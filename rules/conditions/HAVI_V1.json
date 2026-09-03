@@ -1,0 +1,76 @@
+{
+  "mnemonic": "HAVI_V1",
+  "conditionId": "HAVI",
+  "name": "Hepatitis A Virus Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Hepatitis_A_Virus_Infection.v8.20260227.docx",
+    "rckmsVersion": "v8",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Hepatitis_A_Virus_Infection.v8.20260227.docx on 2026-07-18 (authoritative RCKMS Content Repository)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "HAVI-R1",
+      "description": "Hepatitis A diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.95", "name": "Hepatitis A (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.94", "name": "Hepatitis A (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.95", "name": "Hepatitis A (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.94", "name": "Hepatitis A (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HAVI-R2",
+      "description": "Detection of hepatitis A virus IgM antibody by a hepatitis A-specific test",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.349", "name": "Hepatitis A (Tests for hepatitis A virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.349", "name": "Hepatitis A (Tests for hepatitis A virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.348", "resultName": "Hepatitis A (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.349", "name": "Hepatitis A (Tests for hepatitis A virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HAVI-R3",
+      "description": "Detection of hepatitis A virus nucleic acid by a hepatitis A-specific or general organism nucleic-acid test",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.347", "name": "Hepatitis A (Tests for hepatitis A virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.347", "name": "Hepatitis A (Tests for hepatitis A virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.348", "resultName": "Hepatitis A (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.347", "name": "Hepatitis A (Tests for hepatitis A virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.348", "resultName": "Hepatitis A (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "HAVI-R7",
+      "description": "All results of hepatitis A virus IgM-antibody tests",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.349", "name": "Hepatitis A (Tests for hepatitis A virus IgM Antibody)" } }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rules 4 and 5 acute-onset qualifier on jaundice diagnoses or active problems",
+      "reason": "SEM_V1 diagnoses and problems do not carry qualifier value-set OIDs, so the required Acute Onset [Qualifier Value] relationship cannot be evaluated; both rules are omitted rather than treating the qualifier as an unrelated diagnosis"
+    },
+    {
+      "valueSet": "Rules 4 and 6 contact with a laboratory-confirmed hepatitis A case 15-50 days before symptom onset",
+      "reason": "the authoritative source marks both rules inoperable because the epidemiologic contact criterion has no codes; SEM_V1 also carries neither contact history nor onset-relative timing, so both rules are omitted rather than allowing jaundice or nonspecific symptoms alone to report"
+    },
+    {
+      "valueSet": "Rule 6 fever temperature threshold",
+      "reason": "SEM_V1 has no vital-sign numeric comparison for temperature at least 38.9 degC or 102.0 degF; the entire rule is already omitted because its required epidemiologic criterion is unavailable"
+    }
+  ]
+}

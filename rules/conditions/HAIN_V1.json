@@ -1,0 +1,225 @@
+{
+  "mnemonic": "HAIN_V1",
+  "conditionId": "HAIN",
+  "name": "Hantavirus Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Hantavirus_Infection.v6.20240628.docx",
+    "rckmsVersion": "v6",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Hantavirus_Infection.v6.20240628.docx on 2026-07-18 (authoritative RCKMS Content Repository)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "HAIN-R1",
+      "description": "Hantavirus infection or Hantavirus-caused disease diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.404", "name": "Hantavirus Infection and Diseases (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.405", "name": "Hantavirus Infection and Diseases (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.404", "name": "Hantavirus Infection and Diseases (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.405", "name": "Hantavirus Infection and Diseases (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HAIN-R2",
+      "description": "Detection of Hantavirus nucleic acid by a Hantavirus-specific test or a general organism nucleic-acid test with a Hantavirus result",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.597", "name": "Hantavirus Infection (Tests for Hantavirus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.597", "name": "Hantavirus Infection (Tests for Hantavirus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.905", "resultName": "Hantavirus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.597", "name": "Hantavirus Infection (Tests for Hantavirus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.905", "resultName": "Hantavirus Infection (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "HAIN-R3",
+      "description": "Detection of Hantavirus antigen by a Hantavirus-specific antigen test",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.883", "name": "Hantavirus Infection (Tests for Hantavirus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.883", "name": "Hantavirus Infection (Tests for Hantavirus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.905", "resultName": "Hantavirus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.883", "name": "Hantavirus Infection (Tests for Hantavirus Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HAIN-R4",
+      "description": "Detection of Hantavirus IgM, IgG, or total antibody by a Hantavirus-specific antibody test",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.889", "name": "Hantavirus Infection (Tests for Hantavirus IgM IgG Total Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.889", "name": "Hantavirus Infection (Tests for Hantavirus IgM IgG Total Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.905", "resultName": "Hantavirus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.889", "name": "Hantavirus Infection (Tests for Hantavirus IgM IgG Total Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HAIN-R7",
+      "description": "Order for a Hantavirus nucleic-acid test",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.597", "name": "Hantavirus Infection (Tests for Hantavirus Nucleic Acid)" } }
+    },
+    {
+      "id": "HAIN-R8",
+      "description": "Order for a Hantavirus antigen test",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.883", "name": "Hantavirus Infection (Tests for Hantavirus Antigen)" } }
+    },
+    {
+      "id": "HAIN-R9",
+      "description": "Order for a Hantavirus IgM, IgG, or total-antibody test or panel",
+      "logic": { "any": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.889", "name": "Hantavirus Infection (Tests for Hantavirus IgM IgG Total Antibody)" } },
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2166", "name": "Hantavirus Infection (Test Panels for Hantavirus IgM IgG Total Antibody)" } }
+      ] }
+    },
+    {
+      "id": "HAIN-R10",
+      "description": "Fever, acute respiratory illness, pulmonary edema or ARDS, and thrombocytopenia",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.709", "name": "Cough [Non Productive] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.90", "name": "Cough (ICD10CM)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.867", "name": "Dyspnea (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.868", "name": "Dyspnea (ICD10CM)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.904", "name": "Tachypnea [Finding] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.236", "name": "Tachypnea (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.709", "name": "Cough [Non Productive] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.90", "name": "Cough (ICD10CM)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.867", "name": "Dyspnea (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.868", "name": "Dyspnea (ICD10CM)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.904", "name": "Tachypnea [Finding] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.236", "name": "Tachypnea (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.108", "name": "Acute Pulmonary Edema [Unspecified Cause] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.951", "name": "Acute Pulmonary Edema [Unspecified Cause] (ICD10CM)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.903", "name": "Pulmonary Edema [Noncardiogenic] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.879", "name": "Acute Respiratory Distress Syndrome (ARDS) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.880", "name": "Acute Respiratory Distress Syndrome (ARDS) (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.108", "name": "Acute Pulmonary Edema [Unspecified Cause] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.951", "name": "Acute Pulmonary Edema [Unspecified Cause] (ICD10CM)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.903", "name": "Pulmonary Edema [Noncardiogenic] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.879", "name": "Acute Respiratory Distress Syndrome (ARDS) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.880", "name": "Acute Respiratory Distress Syndrome (ARDS) (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.952", "name": "Thrombocytopenia [Unspecified Cause] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.927", "name": "Thrombocytopenia [Unspecified Cause] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.952", "name": "Thrombocytopenia [Unspecified Cause] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.927", "name": "Thrombocytopenia [Unspecified Cause] (ICD10CM)", "status": "active" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "HAIN-R11",
+      "description": "Fever, acute respiratory illness, pulmonary edema or ARDS, and a low platelet-test interpretation",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.709", "name": "Cough [Non Productive] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.90", "name": "Cough (ICD10CM)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.867", "name": "Dyspnea (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.868", "name": "Dyspnea (ICD10CM)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.904", "name": "Tachypnea [Finding] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.236", "name": "Tachypnea (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.709", "name": "Cough [Non Productive] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.90", "name": "Cough (ICD10CM)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.867", "name": "Dyspnea (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.868", "name": "Dyspnea (ICD10CM)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.904", "name": "Tachypnea [Finding] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.236", "name": "Tachypnea (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.108", "name": "Acute Pulmonary Edema [Unspecified Cause] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.951", "name": "Acute Pulmonary Edema [Unspecified Cause] (ICD10CM)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.903", "name": "Pulmonary Edema [Noncardiogenic] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.879", "name": "Acute Respiratory Distress Syndrome (ARDS) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.880", "name": "Acute Respiratory Distress Syndrome (ARDS) (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.108", "name": "Acute Pulmonary Edema [Unspecified Cause] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.951", "name": "Acute Pulmonary Edema [Unspecified Cause] (ICD10CM)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.903", "name": "Pulmonary Edema [Noncardiogenic] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.879", "name": "Acute Respiratory Distress Syndrome (ARDS) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.880", "name": "Acute Respiratory Distress Syndrome (ARDS) (ICD10CM)", "status": "active" } }
+        ] },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1150", "name": "Thrombocytopenia (Tests for Platelets [#/volume] in Blood)", "codes": ["L", "LL"] } }
+      ] }
+    },
+    {
+      "id": "HAIN-R14",
+      "description": "Fever, acute renal failure, and thrombocytopenia",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.901", "name": "Acute Renal Failure [Unspecified Cause] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.902", "name": "Acute Renal Failure [Unspecified Cause] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.901", "name": "Acute Renal Failure [Unspecified Cause] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.902", "name": "Acute Renal Failure [Unspecified Cause] (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.952", "name": "Thrombocytopenia [Unspecified Cause] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.927", "name": "Thrombocytopenia [Unspecified Cause] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.952", "name": "Thrombocytopenia [Unspecified Cause] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.927", "name": "Thrombocytopenia [Unspecified Cause] (ICD10CM)", "status": "active" } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 4 antibody lab result value greater than zero",
+      "reason": "SEM_V1 has no numeric laboratory-result comparison; HAIN-R4 retains the source's coded positive, Hantavirus-result, and abnormal-interpretation alternatives"
+    },
+    {
+      "valueSet": "Rule 5 patient deceased or Discharge Disposition [Expired]",
+      "reason": "SEM_V1 carries neither deceased status nor discharge disposition, so the required mortality criterion cannot be enforced and the rule is omitted rather than allowing respiratory illness plus pulmonary edema alone to report"
+    },
+    {
+      "valueSet": "Rule 6 suspected Hantavirus infection diagnoses and problems",
+      "reason": "both the SNOMED and ICD10CM suspected-disease value sets are marked not implemented with no codes in Table 3, so the source's inoperable rule is omitted"
+    },
+    {
+      "valueSet": "Rules 7 and 8 Hantavirus nucleic-acid and antigen test panels",
+      "reason": "both panel value sets are marked not implemented with no codes; HAIN-R7 and HAIN-R8 retain the coded individual-test alternatives"
+    },
+    {
+      "valueSet": "Rules 10, 11, and 14 fever temperature threshold",
+      "reason": "SEM_V1 has no vital-sign numeric comparison; the rules retain the coded fever diagnosis and active-problem alternatives but omit body temperature greater than 38.3 degC or 101 degF"
+    },
+    {
+      "valueSet": "Rules 10 and 14 acute thrombocytopenia with unspecified cause",
+      "reason": "the acute SNOMED and ICD10CM value sets are marked not implemented with no codes; the rules retain the coded thrombocytopenia-with-unspecified-cause alternatives"
+    },
+    {
+      "valueSet": "Rule 11 platelet count below 150,000 platelets/uL",
+      "reason": "SEM_V1 has no numeric laboratory-result comparison; HAIN-R11 retains the same-observation low-interpretation alternative for the platelet-count test"
+    },
+    {
+      "valueSet": "Rules 12 and 13 chest imaging interpretation of noncardiogenic pulmonary edema",
+      "reason": "the authoritative source marks both rules inoperable because imaging results are narrative text rather than coded; SEM_V1 has no imaging-result evidence or predicate, so both rules are omitted"
+    }
+  ]
+}

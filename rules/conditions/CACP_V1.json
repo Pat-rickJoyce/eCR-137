@@ -1,0 +1,130 @@
+{
+  "mnemonic": "CACP_V1",
+  "conditionId": "CACP",
+  "name": "Cyanobacteria and Cyanotoxin Poisoning",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Cyanobacteria_and_Cyanotoxin_Poisoning.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Cyanobacteria_and_Cyanotoxin_Poisoning.v2.20240202.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CACP-R1",
+      "description": "Cyanobacteria or cyanotoxin poisoning diagnosis or active problem (timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2096", "name": "Cyanobacteria and Cyanotoxin Poisoning (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2096", "name": "Cyanobacteria and Cyanotoxin Poisoning (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CACP-R2",
+      "description": "At least one qualifying clinical observation plus exposure or suspected exposure to harmful algae or algae toxins",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.668", "name": "Rash (Disorders) (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.668", "name": "Rash (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.669", "name": "Rash (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.669", "name": "Rash (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.681", "name": "Abdominal Pain (Disorders) (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.681", "name": "Abdominal Pain (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.680", "name": "Abdominal Pain (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.680", "name": "Abdominal Pain (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.647", "name": "Vomiting (Disorders) (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.647", "name": "Vomiting (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.648", "name": "Vomiting (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.648", "name": "Vomiting (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.353", "name": "Diarrhea (Disorders) (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.353", "name": "Diarrhea (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.56", "name": "Diarrhea (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.56", "name": "Diarrhea (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.91", "name": "Cough (Disorders) (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.91", "name": "Cough (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.90", "name": "Cough (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.90", "name": "Cough (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.794", "name": "Sore Throat (Disorders) (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.794", "name": "Sore Throat (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.760", "name": "Sore Throat (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.760", "name": "Sore Throat (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2098", "name": "Rhinitis (Disorders) (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2098", "name": "Rhinitis (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2100", "name": "Rhinitis (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2100", "name": "Rhinitis (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1389", "name": "Asthma (Disorders) (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1389", "name": "Asthma (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1390", "name": "Asthma (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1390", "name": "Asthma (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2101", "name": "Pleuritis (Disorders) (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2101", "name": "Pleuritis (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2102", "name": "Pleuritis (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2102", "name": "Pleuritis (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1314", "name": "Wheezing (Disorders) (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1314", "name": "Wheezing (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1315", "name": "Wheezing (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1315", "name": "Wheezing (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.867", "name": "Dyspnea (Disorders) (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.867", "name": "Dyspnea (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.868", "name": "Dyspnea (Disorders) (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.868", "name": "Dyspnea (Disorders) (ICD10CM)", "status": "active" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2297", "name": "Exposure or Suspected Exposure to Harmful Algae or Algae Toxins (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2297", "name": "Exposure or Suspected Exposure to Harmful Algae or Algae Toxins (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2298", "name": "Exposure or Suspected Exposure to Harmful Algae or Algae Toxins (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2298", "name": "Exposure or Suspected Exposure to Harmful Algae or Algae Toxins (ICD10CM)", "status": "active" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CACP-R3",
+      "description": "Elevated serum gamma-glutamyl transferase plus exposure or suspected exposure to harmful algae or algae toxins",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2103", "name": "Gamma Glutamyl Transferase Test in Serum (Tests) (LOINC)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Interpretation of an Observation (High)", "codes": ["H", "HH"] } },
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2297", "name": "Exposure or Suspected Exposure to Harmful Algae or Algae Toxins (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2297", "name": "Exposure or Suspected Exposure to Harmful Algae or Algae Toxins (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2298", "name": "Exposure or Suspected Exposure to Harmful Algae or Algae Toxins (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2298", "name": "Exposure or Suspected Exposure to Harmful Algae or Algae Toxins (ICD10CM)", "status": "active" } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Cyanobacteria and Cyanotoxin Poisoning (Disorders) (ICD10CM)",
+      "reason": "the authoritative source says no codes are available; CACP-R1 retains the available SNOMED branch"
+    },
+    {
+      "valueSet": "Generic Gamma Glutamyl Transferase Test plus Serum specimen alternative",
+      "reason": "the authoritative generic test value set has no codes and SEM_V1 has no specimen-type predicate; CACP-R3 retains the serum-specific GGT test branch"
+    }
+  ]
+}

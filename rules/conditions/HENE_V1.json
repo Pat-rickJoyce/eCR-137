@@ -1,0 +1,66 @@
+{
+  "mnemonic": "HENE_V1",
+  "conditionId": "HENE",
+  "name": "Herpes Neonatal",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Herpes_Neonatal.v4.20250703.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Herpes_Neonatal.v4.20250703.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2025-05-12)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "HENE-R1",
+      "description": "Neonatal herpes diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1883", "name": "Neonatal herpes (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1884", "name": "Neonatal herpes (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1883", "name": "Neonatal herpes (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1884", "name": "Neonatal herpes (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HENE-R2",
+      "description": "Patient age 60 days or younger with HSV identified by culture or HSV nucleic acid detected in CSF",
+      "logic": { "all": [
+        { "predicate": "ageComparison", "params": { "op": "<=", "value": 60, "unit": "days" }, "gate": true },
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1780", "name": "Herpes (Tests for Herpes simplex virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1780", "name": "Herpes (Tests for Herpes simplex virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1783", "resultName": "Herpes (Herpes simplex virus in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1780", "name": "Herpes (Tests for Herpes simplex virus by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1783", "resultName": "Herpes (Herpes simplex virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Test by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1783", "resultName": "Herpes (Herpes simplex virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2675", "name": "Herpes (Combination Tests that include Herpes simplex virus by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1783", "resultName": "Herpes (Herpes simplex virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1887", "name": "Neonatal herpes (Tests for Herpes simplex virus Nucleic Acid in CSF)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1887", "name": "Neonatal herpes (Tests for Herpes simplex virus Nucleic Acid in CSF)", "resultOid": "2.16.840.1.113762.1.4.1146.1783", "resultName": "Herpes (Herpes simplex virus in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1887", "name": "Neonatal herpes (Tests for Herpes simplex virus Nucleic Acid in CSF)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Cerebrospinal Fluid specimen-type constraints",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate. Source alternatives using general HSV nucleic-acid tests (OID 2.16.840.1.113762.1.4.1146.1781) or general organism nucleic-acid tests (OID 2.16.840.1.113762.1.4.1146.994) require CSF and are omitted; the CSF-specific HSV test value set (OID 2.16.840.1.113762.1.4.1146.1887) is modeled"
+    },
+    {
+      "valueSet": "Organisms (Tests for Nucleic Acid in Cerebrospinal Fluid)",
+      "reason": "not implemented - no codes available per the authoritative source; this alternative is omitted"
+    }
+  ]
+}

@@ -252,8 +252,12 @@ export class UIController {
             card.style.cssText = 'background:#f8fafc; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid #e2e8f0;';
 
             const condTitle = document.createElement('div');
-            condTitle.textContent = c.conditionName;
-            condTitle.style.cssText = 'font-weight:bold; font-size:1rem; color:#1e293b; margin-bottom:8px;';
+            condTitle.style.cssText = 'font-weight:bold; font-size:1rem; color:#1e293b; margin-bottom:8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;';
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = c.conditionName;
+            condTitle.appendChild(nameSpan);
+
+            // Coverage badge removed - focus on reportability verdict instead
             card.appendChild(condTitle);
 
             // Matched Rules with criteria details
@@ -283,14 +287,20 @@ export class UIController {
                         }
                     }
 
+
                     ruleDiv.innerHTML = ruleContent;
                     card.appendChild(ruleDiv);
                 });
             } else {
-                // For partial matches, show what's missing
+                // For partial matches, show what's missing (from v2 when available)
                 const partialDiv = document.createElement('div');
                 partialDiv.style.cssText = 'margin-top:4px; font-size:0.8rem; color:#64748b;';
-                partialDiv.textContent = 'Some criteria met but not all required for full reportability.';
+                if (c.unmet && c.unmet.length) {
+                    partialDiv.innerHTML = 'Missing for full reportability: ' +
+                        c.unmet.slice(0, 5).map(u => `<span style="color:#475569;">${this.escapeHtml(u)}</span>`).join(', ');
+                } else {
+                    partialDiv.textContent = 'Some criteria met but not all required for full reportability.';
+                }
                 card.appendChild(partialDiv);
             }
 

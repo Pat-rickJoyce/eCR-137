@@ -1,0 +1,1006 @@
+{
+  "mnemonic": "CRAB_V1",
+  "conditionId": "CRAB",
+  "name": "Carbapenem resistant Acinetobacter baumannii",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Carbapenem_resistant_Acinetobacter_baumannii.v3.20240202.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Carbapenem_resistant_Acinetobacter_baumannii.v3.20240202.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CRAB-R1",
+      "description": "CRAB (SNOMED diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1670",
+                  "name": "CRAB (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1670",
+                  "name": "CRAB (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRAB-R2",
+      "description": "Carbapenem-resistant bacterial infection (SNOMED diagnosis or active problem) with Acinetobacter baumannii identification by culture or nucleic acid",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1672",
+                  "name": "Carbapenem Resistant Bacterial Infection (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1672",
+                  "name": "Carbapenem Resistant Bacterial Infection (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1675",
+                          "name": "Tests for Acinetobacter baumannii by Culture and Identification Method"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1671",
+                              "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "any": [
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1041",
+                              "name": "Organisms (Tests by Culture and Identification)"
+                            }
+                          },
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1040",
+                              "name": "Organisms (Tests by Unspecified Method)"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1671",
+                          "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1676",
+                          "name": "Tests for Acinetobacter baumannii Nucleic Acid"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1671",
+                              "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.994",
+                          "name": "Organisms (Tests for Nucleic Acid)"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1671",
+                          "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRAB-R4",
+      "description": "Carbapenemase-producing carbapenem-resistant bacterial infection (SNOMED diagnosis or active problem) with Acinetobacter baumannii identification by culture or nucleic acid",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2255",
+                  "name": "Carbapenem Resistant Bacterial Infection [Carbapenemase Producing] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2255",
+                  "name": "Carbapenem Resistant Bacterial Infection [Carbapenemase Producing] (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1675",
+                          "name": "Tests for Acinetobacter baumannii by Culture and Identification Method"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1671",
+                              "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "any": [
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1041",
+                              "name": "Organisms (Tests by Culture and Identification)"
+                            }
+                          },
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1040",
+                              "name": "Organisms (Tests by Unspecified Method)"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1671",
+                          "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1676",
+                          "name": "Tests for Acinetobacter baumannii Nucleic Acid"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1671",
+                              "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.994",
+                          "name": "Organisms (Tests for Nucleic Acid)"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1671",
+                          "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRAB-R5",
+      "description": "Detection of carbapenem-resistant Acinetobacter baumannii organism in a laboratory result",
+      "logic": {
+        "predicate": "labResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1673",
+          "name": "Acinetobacter baumannii [Carbapenem Resistant] (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "CRAB-R6",
+      "description": "Acinetobacter baumannii identification by culture with qualitative carbapenem resistance (numeric MIC alternatives not modeled)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1675",
+                      "name": "Tests for Acinetobacter baumannii by Culture and Identification Method"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1671",
+                          "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1041",
+                          "name": "Organisms (Tests by Culture and Identification)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1040",
+                          "name": "Organisms (Tests by Unspecified Method)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1671",
+                      "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1217",
+                      "name": "Tests for carbapenem susceptibility [Meropenem, imipenem, and doripenem]"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1145",
+                          "name": "Resistant Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Resistant Interpretation of an Observation",
+                          "codes": [
+                            "R"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1218",
+                      "name": "Tests for carbapenem susceptibility [Ertapenem]"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1145",
+                          "name": "Resistant Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Resistant Interpretation of an Observation",
+                          "codes": [
+                            "R"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRAB-R7",
+      "description": "Detection of carbapenemase-producing Acinetobacter baumannii organism in a laboratory result",
+      "logic": {
+        "predicate": "labResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1674",
+          "name": "Acinetobacter baumannii [Carbapenemase Producing] (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "CRAB-R8",
+      "description": "Acinetobacter baumannii identification by culture with phenotypic carbapenemase production or a known carbapenemase resistance mechanism",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1675",
+                      "name": "Tests for Acinetobacter baumannii by Culture and Identification Method"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1671",
+                          "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1041",
+                          "name": "Organisms (Tests by Culture and Identification)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1040",
+                          "name": "Organisms (Tests by Unspecified Method)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1671",
+                      "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1215",
+                      "name": "Tests for carbapenemase production"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1882",
+                  "name": "Carbapenemase production (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1216",
+                      "name": "Tests for carbapenemase resistance mechanism"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1214",
+                  "name": "Carbapenemase resistance mechanism (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRAB-R9",
+      "description": "Acinetobacter baumannii nucleic-acid detection with a known carbapenemase resistance mechanism",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1676",
+                      "name": "Tests for Acinetobacter baumannii Nucleic Acid"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1671",
+                          "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.994",
+                      "name": "Organisms (Tests for Nucleic Acid)"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1671",
+                      "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1216",
+                      "name": "Tests for carbapenemase resistance mechanism"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1214",
+                  "name": "Carbapenemase resistance mechanism (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CRAB-R10",
+      "description": "Optional logic: Acinetobacter baumannii identification by culture with qualitative resistance to imipenem, meropenem, or doripenem (numeric MIC alternative not modeled)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1675",
+                      "name": "Tests for Acinetobacter baumannii by Culture and Identification Method"
+                    }
+                  },
+                  {
+                    "any": [
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.272",
+                          "name": "Present or Positive Lab Result Value"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1671",
+                          "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                        }
+                      },
+                      {
+                        "predicate": "labInterpretationIn",
+                        "params": {
+                          "name": "Abnormal Interpretation of an Observation",
+                          "codes": [
+                            "A",
+                            "AA",
+                            "HH",
+                            "LL",
+                            "H",
+                            "L"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1041",
+                          "name": "Organisms (Tests by Culture and Identification)"
+                        }
+                      },
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1040",
+                          "name": "Organisms (Tests by Unspecified Method)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1671",
+                      "name": "Acinetobacter baumannii (Organism or Substance in Lab Results)"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1217",
+                  "name": "Tests for carbapenem susceptibility [Meropenem, imipenem, and doripenem]"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1145",
+                      "name": "Resistant Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Resistant Interpretation of an Observation",
+                      "codes": [
+                        "R"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "CRAB (Disorders) (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; the unavailable ICD-10-CM diagnosis and problem branches are omitted from source rule 1"
+    },
+    {
+      "valueSet": "Carbapenem Resistant Bacterial Infection (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; the unavailable ICD-10-CM diagnosis and problem branches are omitted from source rule 2"
+    },
+    {
+      "valueSet": "CRAB [Carbapenemase Producing] (Disorders) (SNOMED and ICD10CM)",
+      "reason": "not implemented - no codes available for either value set per source docx Table 3; source rule 3 is explicitly inoperable and is omitted"
+    },
+    {
+      "valueSet": "Carbapenem Resistant Bacterial Infection [Carbapenemase Producing] (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; the unavailable ICD-10-CM diagnosis and problem branches are omitted from source rule 4"
+    },
+    {
+      "valueSet": "Numeric minimum inhibitory concentration comparisons for carbapenem susceptibility",
+      "reason": "SEM_V1 has no numeric laboratory result value/unit comparison predicate; MIC >=4 ug/mL and ertapenem MIC >=2 ug/mL alternatives in CRAB-R6 and the MIC >=8 ug/mL alternative in CRAB-R10 are omitted"
+    }
+  ]
+}

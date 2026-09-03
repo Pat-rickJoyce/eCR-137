@@ -1,0 +1,119 @@
+{
+  "mnemonic": "TLI_V1",
+  "conditionId": "TLI",
+  "name": "Tuberculosis, Latent Infection (LTBI)",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Tuberculosis_Latent_Infection.v5.20260227.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Tuberculosis_Latent_Infection.v5.20260227.docx on 2026-07-29 (authoritative RCKMS Content Release 20260227; latest revision 2025-12-10)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "TLI-R1",
+      "description": "Latent tuberculosis infection diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1269", "name": "Tuberculosis [Latent Infection] (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1258", "name": "Tuberculosis [Latent Infection] (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1269", "name": "Tuberculosis [Latent Infection] (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1258", "name": "Tuberculosis [Latent Infection] (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TLI-R2",
+      "description": "Positive or abnormal tuberculosis tuberculin skin test",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.602", "name": "Tuberculosis (Mammalian Tuberculin Skin Test)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.602", "name": "Tuberculosis (Mammalian Tuberculin Skin Test)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "TLI-R3",
+      "description": "Qualifying Mycobacterium tuberculosis interferon gamma release assay result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)", "resultOid": "2.16.840.1.113762.1.4.1146.606", "resultName": "Tuberculosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)", "codes": ["A", "AA", "H", "HH"] } }
+        ]
+      }
+    },
+    {
+      "id": "TLI-R4",
+      "description": "Positive or abnormal tuberculosis tuberculin skin test in a patient younger than 18 years",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.602", "name": "Tuberculosis (Mammalian Tuberculin Skin Test)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.602", "name": "Tuberculosis (Mammalian Tuberculin Skin Test)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 18, "unit": "years" }, "gate": true }
+        ]
+      }
+    },
+    {
+      "id": "TLI-R5",
+      "description": "Qualifying tuberculin skin test or interferon gamma release assay in a patient younger than five years",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.602", "name": "Tuberculosis (Mammalian Tuberculin Skin Test)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.602", "name": "Tuberculosis (Mammalian Tuberculin Skin Test)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)", "resultOid": "2.16.840.1.113762.1.4.1146.606", "resultName": "Tuberculosis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.841", "name": "Tuberculosis (Interferon Gamma Release Assays)", "codes": ["A", "AA", "H", "HH"] } }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 5, "unit": "years" }, "gate": true }
+        ]
+      }
+    },
+    {
+      "id": "TLI-R6",
+      "description": "All results of interferon gamma release assays",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.841",
+          "name": "Tuberculosis (Interferon Gamma Release Assays)"
+        }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 6 completed IGRA results versus laboratory orders",
+      "reason": "SEM_V1 laboratory evidence cannot distinguish a completed observation from an order; the source all-results rule is represented by IGRA test value-set membership"
+    }
+  ]
+}

@@ -1,0 +1,265 @@
+{
+  "mnemonic": "TYFE_V1",
+  "conditionId": "TYFE",
+  "name": "Typhus Fever",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Typhus_Fever.v4.20260227.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Typhus_Fever.v4.20260227.docx on 2026-07-29 (authoritative RCKMS Content Release 20260227; latest revision 2026-02-10)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "TYFE-R1",
+      "description": "Flea-borne Typhus diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3042", "name": "Flea borne Typhus (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3044", "name": "Flea borne Typhus (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3042", "name": "Flea borne Typhus (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3044", "name": "Flea borne Typhus (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TYFE-R2",
+      "description": "Identification of Rickettsia typhi by a generic culture or organism test with a flea-borne-Typhus result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.539", "name": "Rickettsioses (Tests for Rickettsia species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.3045", "resultName": "Flea borne Typhus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.3045", "resultName": "Flea borne Typhus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.3045", "resultName": "Flea borne Typhus (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TYFE-R3",
+      "description": "Detection of Rickettsia typhi nucleic acid by a generic Rickettsia or organism nucleic-acid test with a flea-borne-Typhus result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.535", "name": "Rickettsioses (Tests for Rickettsia species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.3045", "resultName": "Flea borne Typhus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.3045", "resultName": "Flea borne Typhus (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TYFE-R6",
+      "description": "Typhus Fever diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1637", "name": "Typhus Fever (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1640", "name": "Typhus Fever (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1637", "name": "Typhus Fever (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1640", "name": "Typhus Fever (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TYFE-R7",
+      "description": "Detection of Rickettsia typhi IgG antibody",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3046", "name": "Typhus Fever (Tests for Rickettsia typhi IgG Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3046", "name": "Typhus Fever (Tests for Rickettsia typhi IgG Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.3045", "resultName": "Flea borne Typhus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.3046", "name": "Typhus Fever (Tests for Rickettsia typhi IgG Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "TYFE-R8",
+      "description": "Identification of Rickettsia Typhus group by a generic culture or organism test with a Typhus-Fever-group result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.539", "name": "Rickettsioses (Tests for Rickettsia species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1638", "resultName": "Typhus Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1638", "resultName": "Typhus Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1638", "resultName": "Typhus Fever (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TYFE-R9",
+      "description": "Detection of Rickettsia Typhus group nucleic acid",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1639", "name": "Typhus Fever (Tests for Rickettsia Typhus Group Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1639", "name": "Typhus Fever (Tests for Rickettsia Typhus Group Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1638", "resultName": "Typhus Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1639", "name": "Typhus Fever (Tests for Rickettsia Typhus Group Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.535", "name": "Rickettsioses (Tests for Rickettsia species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1638", "resultName": "Typhus Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1638", "resultName": "Typhus Fever (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "TYFE-R10",
+      "description": "Detection of Rickettsia Typhus group IgG antibody",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1641", "name": "Typhus Fever (Tests for Rickettsia Typhus Group IgG Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1641", "name": "Typhus Fever (Tests for Rickettsia Typhus Group IgG Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1638", "resultName": "Typhus Fever (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1641", "name": "Typhus Fever (Tests for Rickettsia Typhus Group IgG Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "TYFE-R14",
+      "description": "Fever diagnosis or active problem, at least two qualifying clinical findings, and a qualifying Rickettsia Typhus group IgM antibody result",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)", "status": "active" } }
+            ]
+          },
+          {
+            "atLeast": {
+              "n": 2,
+              "of": [
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.809", "name": "Headache (SNOMED)" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.808", "name": "Headache (ICD10CM)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.809", "name": "Headache (SNOMED)", "status": "active" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.808", "name": "Headache (ICD10CM)", "status": "active" } }
+                  ]
+                },
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.688", "name": "Myalgia (SNOMED)" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.687", "name": "Myalgia (ICD10CM)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.688", "name": "Myalgia (SNOMED)", "status": "active" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.687", "name": "Myalgia (ICD10CM)", "status": "active" } }
+                  ]
+                },
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.668", "name": "Rash (SNOMED)" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.669", "name": "Rash (ICD10CM)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.668", "name": "Rash (SNOMED)", "status": "active" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.669", "name": "Rash (ICD10CM)", "status": "active" } }
+                  ]
+                },
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.864", "name": "Nausea (SNOMED)" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.863", "name": "Nausea (ICD10CM)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.864", "name": "Nausea (SNOMED)", "status": "active" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.863", "name": "Nausea (ICD10CM)", "status": "active" } }
+                  ]
+                },
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.647", "name": "Vomiting (SNOMED)" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.648", "name": "Vomiting (ICD10CM)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.647", "name": "Vomiting (SNOMED)", "status": "active" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.648", "name": "Vomiting (ICD10CM)", "status": "active" } }
+                  ]
+                },
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.952", "name": "Thrombocytopenia [Unspecified Cause] (SNOMED)" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.927", "name": "Thrombocytopenia [Unspecified Cause] (ICD10CM)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.952", "name": "Thrombocytopenia [Unspecified Cause] (SNOMED)", "status": "active" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.927", "name": "Thrombocytopenia [Unspecified Cause] (ICD10CM)", "status": "active" } }
+                  ]
+                },
+                {
+                  "any": [
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1785", "name": "Elevated liver enzyme (SNOMED)" } },
+                    { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1786", "name": "Elevated liver enzyme (ICD10CM)" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1785", "name": "Elevated liver enzyme (SNOMED)", "status": "active" } },
+                    { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1786", "name": "Elevated liver enzyme (ICD10CM)", "status": "active" } }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1642", "name": "Typhus Fever (Tests for Rickettsia Typhus Group IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1642", "name": "Typhus Fever (Tests for Rickettsia Typhus Group IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1638", "resultName": "Typhus Fever (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1642", "name": "Typhus Fever (Tests for Rickettsia Typhus Group IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rules 2 and 8 organism-specific culture tests",
+      "reason": "the source marks both condition-specific culture-test value sets not implemented with no LOINC codes; the curated rules retain all implemented generic-test alternatives with same-observation condition-specific results"
+    },
+    {
+      "valueSet": "Rule 3 organism-specific Rickettsia typhi nucleic-acid test",
+      "reason": "the source marks the condition-specific test-name value set not implemented with no LOINC codes; TYFE-R3 retains both implemented generic nucleic-acid alternatives"
+    },
+    {
+      "valueSet": "Rule 4 Rickettsia typhi IgG titer at least 1:128",
+      "reason": "the source marks quantitative-titer evaluation not implemented, and SEM_V1 has no numeric or ratio laboratory-result threshold predicate, so the wholly inoperable rule is omitted"
+    },
+    {
+      "valueSet": "Rule 5 Rickettsia Typhus group antigen by immune staining",
+      "reason": "the source marks the required test-name value set not implemented with no LOINC codes, so the wholly inoperable rule is omitted"
+    },
+    {
+      "valueSet": "Rule 11 paired acute and convalescent antibody evidence",
+      "reason": "the source marks four-fold-rise logic not implemented; SEM_V1 cannot pair serial observations or compare titers across collection intervals, so the wholly inoperable rule is omitted"
+    },
+    {
+      "valueSet": "Rules 12 and 13 quantitative IgG and IgM titer thresholds",
+      "reason": "the source marks threshold evaluation not implemented, and SEM_V1 has no numeric or ratio laboratory-result threshold predicate, so both wholly inoperable rules are omitted"
+    },
+    {
+      "valueSet": "Rule 14 measured body-temperature branch",
+      "reason": "SEM_V1 has no vital-sign numeric-threshold predicate; TYFE-R14 retains the authoritative fever diagnosis and active-problem alternatives, two-of-seven clinical-finding cardinality, and same-observation IgM result"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "mnemonic": "ZVD_V1",
+  "conditionId": "ZVD",
+  "name": "Zika Virus Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Zika_Virus_Disease.v12.20260227.docx",
+    "rckmsVersion": "v12",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Zika_Virus_Disease.v12.20260227.docx on 2026-07-29 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "ZVD-R1",
+      "description": "Zika virus disease diagnosis or active problem (timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.590", "name": "Zika Virus Disease (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.592", "name": "Zika Virus Disease (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.590", "name": "Zika Virus Disease (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.592", "name": "Zika Virus Disease (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ZVD-R2",
+      "description": "Identification of Zika virus by a generic culture or organism test with a same-observation Zika virus result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.591", "resultName": "Zika Virus Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.591", "resultName": "Zika Virus Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.526", "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.591", "resultName": "Zika Virus Disease (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "ZVD-R3",
+      "description": "Detection of Zika virus nucleic acid with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.588", "name": "Zika Virus Disease (Tests for Zika virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.588", "name": "Zika Virus Disease (Tests for Zika virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.591", "resultName": "Zika Virus Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.588", "name": "Zika Virus Disease (Tests for Zika virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.591", "resultName": "Zika Virus Disease (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "ZVD-R5",
+      "description": "Detection of Zika virus IgM antibody on a blood-or-CSF-specific test with a qualifying result (general-test-plus-specimen alternatives not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2243", "name": "Zika Virus Disease (Tests for Zika virus IgM Antibody in Blood or CSF)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2243", "name": "Zika Virus Disease (Tests for Zika virus IgM Antibody in Blood or CSF)", "resultOid": "2.16.840.1.113762.1.4.1146.591", "resultName": "Zika Virus Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2243", "name": "Zika Virus Disease (Tests for Zika virus IgM Antibody in Blood or CSF)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "ZVD-R8",
+      "description": "Lab test ordered for detection of Zika virus nucleic acid",
+      "logic": {
+        "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.588", "name": "Zika Virus Disease (Tests for Zika virus Nucleic Acid)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.613", "name": "Zika Virus Disease (Test Panels for Zika virus Nucleic Acid)" } }
+        ]
+      }
+    },
+    {
+      "id": "ZVD-R10",
+      "description": "Lab test ordered for detection of Zika virus IgM antibody",
+      "logic": {
+        "any": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.589", "name": "Zika Virus Disease (Tests for Zika virus IgM Antibody)" } },
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1111", "name": "Zika Virus Disease (Test Panels for Zika virus IgM Antibody)" } }
+        ]
+      }
+    },
+    {
+      "id": "ZVD-R11",
+      "description": "Qualifying Zika culture, nucleic-acid, or blood/CSF IgM evidence in a patient younger than 1 year (antigen and general-IgM-plus-specimen alternatives not modeled)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.591", "resultName": "Zika Virus Disease (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.591", "resultName": "Zika Virus Disease (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.526", "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.591", "resultName": "Zika Virus Disease (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.588", "name": "Zika Virus Disease (Tests for Zika virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.588", "name": "Zika Virus Disease (Tests for Zika virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.591", "resultName": "Zika Virus Disease (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.588", "name": "Zika Virus Disease (Tests for Zika virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.591", "resultName": "Zika Virus Disease (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2243", "name": "Zika Virus Disease (Tests for Zika virus IgM Antibody in Blood or CSF)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2243", "name": "Zika Virus Disease (Tests for Zika virus IgM Antibody in Blood or CSF)", "resultOid": "2.16.840.1.113762.1.4.1146.591", "resultName": "Zika Virus Disease (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2243", "name": "Zika Virus Disease (Tests for Zika virus IgM Antibody in Blood or CSF)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+        ]
+      }
+    },
+    {
+      "id": "ZVD-R17",
+      "description": "All results of tests for detection of Zika virus nucleic acid",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.588",
+          "name": "Zika Virus Disease (Tests for Zika virus Nucleic Acid)"
+        }
+      }
+    },
+    {
+      "id": "ZVD-R19",
+      "description": "All results of tests for detection of Zika virus IgM antibody in blood or cerebrospinal fluid",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.2243",
+          "name": "Zika Virus Disease (Tests for Zika virus IgM Antibody in Blood or CSF)"
+        }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "ZVD-R2 organism-specific Zika culture test",
+      "reason": "the authoritative source marks the condition-specific culture-test value set not implemented with no codes; generic culture and organism-test alternatives with a Zika-specific result remain modeled"
+    },
+    {
+      "valueSet": "ZVD-R4 Zika virus antigen test",
+      "reason": "the authoritative source marks the antigen test-name value set not implemented with no codes; the wholly inoperable numbered rule is omitted"
+    },
+    {
+      "valueSet": "Blood and cerebrospinal-fluid specimen constraints for general Zika IgM tests",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate; general-IgM-test branches requiring Blood (SNOMED OID 2.16.840.1.113762.1.4.1146.1348) or CSF (SNOMED OID 2.16.840.1.113762.1.4.1146.1349) are omitted from ZVD-R5 and ZVD-R11, while the blood-or-CSF-specific test-name branch remains modeled"
+    },
+    {
+      "valueSet": "Blood and cerebrospinal-fluid specimen types (HL7)",
+      "reason": "not implemented - HL7 table 0487 is unavailable in VSAC per the authoritative source"
+    },
+    {
+      "valueSet": "ZVD-R6 suspected Zika virus disease (SNOMED and ICD10CM)",
+      "reason": "the authoritative source marks both suspected-disease value sets not implemented with no codes; the wholly inoperable numbered rule is omitted"
+    },
+    {
+      "valueSet": "ZVD-R7 organism-specific culture-test and culture-panel orders",
+      "reason": "the authoritative source marks both value sets not implemented with no codes; the wholly inoperable numbered rule is omitted"
+    },
+    {
+      "valueSet": "ZVD-R9 Zika antigen-test and antigen-panel orders",
+      "reason": "the authoritative source marks both value sets not implemented with no codes; the wholly inoperable numbered rule is omitted"
+    },
+    {
+      "valueSet": "ZVD-R8 and ZVD-R10 laboratory test orders",
+      "reason": "SEM_V1 does not distinguish an ordered test from a completed laboratory observation; coded individual-test and panel alternatives are represented with lab-test evidence"
+    },
+    {
+      "valueSet": "ZVD-R12 through ZVD-R15 epidemiologic exposure criteria",
+      "reason": "the authoritative source marks all four clinical-plus-epidemiologic rules inoperable because epidemiologic criteria cannot be implemented; SEM_V1 has no epidemiologic-exposure evidence, so the numbered rules are omitted (ZVD-R12 also contains an unsupported numeric temperature threshold)"
+    },
+    {
+      "valueSet": "ZVD-R16 all culture results and ZVD-R18 all antigen results",
+      "reason": "the authoritative source marks the required organism-specific culture-panel and antigen-test value sets not implemented with no codes; both wholly inoperable numbered rules are omitted"
+    }
+  ]
+}

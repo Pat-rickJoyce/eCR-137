@@ -1,0 +1,126 @@
+{
+  "mnemonic": "BAB_V1",
+  "conditionId": "BAB",
+  "name": "Babesiosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Babesiosis.v5.20250228.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2025-02-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Babesiosis.v5.20250228.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "BAB-R1",
+      "description": "Babesiosis (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.256", "name": "Babesiosis (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.257", "name": "Babesiosis (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.256", "name": "Babesiosis (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.257", "name": "Babesiosis (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BAB-R2",
+      "description": "Microscopic observation of intraerythrocytic Babesia organisms using blood-specific test-name branches",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.476", "name": "Babesia species (Tests by Microscopic Observation in Blood)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.477", "name": "Babesiosis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] },
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.896", "name": "Tests by Microscopic Observation in Blood Smear" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.477", "name": "Babesiosis (Organism or Substance in Lab Results)" } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BAB-R3",
+      "description": "Detection of Babesia species nucleic acid in a clinical specimen by any method",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.474", "name": "Babesiosis (Tests for Babesia species Nucleic Acid)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.477", "name": "Babesiosis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] },
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.477", "name": "Babesiosis (Organism or Substance in Lab Results)" } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BAB-R8",
+      "description": "Optional logic: detection of Babesia species IgG or total antibody in a clinical specimen by any method",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2412", "name": "Babesiosis (Tests for Babesia species IgG or Total Antibody)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.477", "name": "Babesiosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "BAB-R9",
+      "description": "Optional logic: stain-specific microscopic observation of intraerythrocytic Babesia organisms using blood-specific test-name branches",
+      "logic": {
+        "any": [
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2301", "name": "Babesia species (Tests by Microscopic Observation in Blood by Giemsa, Wright, or Wright-Giemsa Stain)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.477", "name": "Babesiosis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] },
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2303", "name": "Organisms (Tests by Microscopic Observation in Blood by Giemsa, Wright, or Wright-Giemsa Stain)" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.477", "name": "Babesiosis (Organism or Substance in Lab Results)" } }
+          ] }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Blood specimen constraints for Babesiosis microscopy",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate and the source HL7 Blood value set has no codes; general-specimen test branches in source rules 2 and 9 are omitted while their blood-specific test-name alternatives remain modeled"
+    },
+    {
+      "valueSet": "Babesia antibody titer thresholds",
+      "reason": "source rules 4-6 are explicitly not implemented because titer results cannot be evaluated; SEM_V1 also has no titer comparison for B. microti or B. divergens >= 1:256 or B. duncani >= 1:512, so the rules are omitted"
+    },
+    {
+      "valueSet": "Transfusion- or transplant-associated Babesiosis epidemiologic link",
+      "reason": "source rule 7 is explicitly not implemented and SEM_V1 has no epidemiologic-link evidence or predicate, so the rule is omitted"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "mnemonic": "SIAAS_V1",
+  "conditionId": "SIAAS",
+  "name": "Small Intestinal Atresia and Stenosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Small_Intestinal_Atresia_and_Stenosis.v1.20250703.docx",
+    "rckmsVersion": "v1",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Small_Intestinal_Atresia_and_Stenosis.v1.20250703.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2025-04-18)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SIAAS-R1",
+      "description": "Small intestinal atresia and stenosis diagnosis or active problem, timeboxed when configured, in a patient younger than the default age threshold of one year",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2633", "name": "Small Intestinal Atresia and Stenosis (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2632", "name": "Small Intestinal Atresia and Stenosis (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2633", "name": "Small Intestinal Atresia and Stenosis (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2632", "name": "Small Intestinal Atresia and Stenosis (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "SIAAS-R2 fetal small intestinal atresia and stenosis disorders",
+      "reason": "the authoritative source marks both the SNOMED and ICD-10-CM fetal value sets not implemented with no codes; the wholly inoperable numbered rule is omitted"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies birth-certificate congenital-anomaly and death-certificate evidence, but the reporter type is unavailable in RCKMS and SEM_V1 has no birth- or death-certificate evidence"
+    }
+  ]
+}

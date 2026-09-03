@@ -1,0 +1,991 @@
+{
+  "mnemonic": "MUM_V1",
+  "conditionId": "MUM",
+  "name": "Mumps",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Mumps.v5.20260626.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Mumps.v5.20260626.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2026-04-07)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "MUM-R1",
+      "description": "Mumps diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.115",
+                      "name": "Mumps (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.117",
+                      "name": "Mumps (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.115",
+                      "name": "Mumps (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.117",
+                      "name": "Mumps (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "MUM-R2",
+      "description": "Identification of Mumps virus in a clinical specimen by culture, including isolate-identification tests and preliminary results",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.266",
+              "name": "Mumps (Tests for mumps virus by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.266",
+              "name": "Mumps (Tests for mumps virus by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.269",
+              "resultName": "Mumps (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.266",
+              "name": "Mumps (Tests for mumps virus by Culture and Identification Method)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1041",
+              "name": "Organisms (Tests by Culture and Identification)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.269",
+              "resultName": "Mumps (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1040",
+              "name": "Organisms (Tests by Unspecified Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.269",
+              "resultName": "Mumps (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "MUM-R3",
+      "description": "Detection of Mumps virus nucleic acid in a clinical specimen by any method",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.262",
+              "name": "Mumps (Tests for mumps virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.262",
+              "name": "Mumps (Tests for mumps virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.269",
+              "resultName": "Mumps (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.262",
+              "name": "Mumps (Tests for mumps virus Nucleic Acid)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.269",
+              "resultName": "Mumps (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "MUM-R4",
+      "description": "Detection of Mumps virus IgM antibody in a clinical specimen by any method",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.268",
+              "name": "Mumps (Tests for mumps virus IgM Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.268",
+              "name": "Mumps (Tests for mumps virus IgM Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.269",
+              "resultName": "Mumps (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.268",
+              "name": "Mumps (Tests for mumps virus IgM Antibody)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "MUM-R6",
+      "description": "At least one specified clinical finding, diagnosis, or active problem plus an order for Mumps culture or nucleic-acid testing",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.763",
+                  "name": "Parotitis [Unspecified Cause] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.763",
+                  "name": "Parotitis [Unspecified Cause] (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1084",
+                  "name": "Salivary Gland Swelling [Unspecified Cause] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1084",
+                  "name": "Salivary Gland Swelling [Unspecified Cause] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.765",
+                  "name": "Aseptic Meningitis (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.765",
+                  "name": "Aseptic Meningitis (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.657",
+                  "name": "Aseptic Meningitis (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.657",
+                  "name": "Aseptic Meningitis (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1033",
+                  "name": "Encephalitis [Unspecified Cause] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1033",
+                  "name": "Encephalitis [Unspecified Cause] (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1032",
+                  "name": "Encephalitis [Unspecified Cause] (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1032",
+                  "name": "Encephalitis [Unspecified Cause] (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2653",
+                  "name": "Encephalitis [Viral] [Unspecified Cause] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2653",
+                  "name": "Encephalitis [Viral] [Unspecified Cause] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2654",
+                  "name": "Encephalitis [Viral] [Unspecified Cause] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2654",
+                  "name": "Encephalitis [Viral] [Unspecified Cause] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.679",
+                  "name": "Hearing Loss (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.679",
+                  "name": "Hearing Loss (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.767",
+                  "name": "Hearing Loss (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.767",
+                  "name": "Hearing Loss (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.768",
+                  "name": "Orchitis (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.768",
+                  "name": "Orchitis (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.774",
+                  "name": "Orchitis (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.774",
+                  "name": "Orchitis (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.776",
+                  "name": "Oophoritis (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.776",
+                  "name": "Oophoritis (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.775",
+                  "name": "Oophoritis (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.775",
+                  "name": "Oophoritis (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.777",
+                  "name": "Mastitis (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.777",
+                  "name": "Mastitis (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.778",
+                  "name": "Mastitis (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.778",
+                  "name": "Mastitis (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.779",
+                  "name": "Pancreatitis (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.779",
+                  "name": "Pancreatitis (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.780",
+                  "name": "Pancreatitis (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.780",
+                  "name": "Pancreatitis (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.266",
+                  "name": "Mumps (Tests for mumps virus by Culture and Identification Method)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.262",
+                  "name": "Mumps (Tests for mumps virus Nucleic Acid)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.761",
+                  "name": "Mumps (Test Panels for mumps virus Nucleic Acid)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "MUM-R7",
+      "description": "Suspected Mumps SNOMED diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2164",
+                      "name": "Mumps [Suspected] (Disorders) (SNOMED)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2164",
+                      "name": "Mumps [Suspected] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "MUM-R8",
+      "description": "Detection of Mumps virus antigen in a clinical specimen by any method",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.267",
+              "name": "Mumps (Tests for mumps virus Antigen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.267",
+              "name": "Mumps (Tests for mumps virus Antigen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.269",
+              "resultName": "Mumps (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.267",
+              "name": "Mumps (Tests for mumps virus Antigen)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "MUM-R9",
+      "description": "Order for organism-specific culture and identification of Mumps virus",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.266",
+          "name": "Mumps (Tests for mumps virus by Culture and Identification Method)"
+        }
+      }
+    },
+    {
+      "id": "MUM-R10",
+      "description": "Order for detection of Mumps virus nucleic acid, including test panels",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.262",
+              "name": "Mumps (Tests for mumps virus Nucleic Acid)"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.761",
+              "name": "Mumps (Test Panels for mumps virus Nucleic Acid)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "MUM-R11",
+      "description": "Order for Mumps virus IgM or IgG antibody testing plus at least one specified clinical finding, diagnosis, or active problem",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.268",
+                  "name": "Mumps (Tests for mumps virus IgM Antibody)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.764",
+                  "name": "Mumps (Tests for mumps virus IgG Antibody)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.762",
+                  "name": "Mumps (Test Panels for mumps virus IgM IgG Antibody)"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.763",
+                  "name": "Parotitis [Unspecified Cause] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.763",
+                  "name": "Parotitis [Unspecified Cause] (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1084",
+                  "name": "Salivary Gland Swelling [Unspecified Cause] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1084",
+                  "name": "Salivary Gland Swelling [Unspecified Cause] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.765",
+                  "name": "Aseptic Meningitis (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.765",
+                  "name": "Aseptic Meningitis (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.657",
+                  "name": "Aseptic Meningitis (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.657",
+                  "name": "Aseptic Meningitis (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1033",
+                  "name": "Encephalitis [Unspecified Cause] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1033",
+                  "name": "Encephalitis [Unspecified Cause] (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1032",
+                  "name": "Encephalitis [Unspecified Cause] (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1032",
+                  "name": "Encephalitis [Unspecified Cause] (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2653",
+                  "name": "Encephalitis [Viral] [Unspecified Cause] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2653",
+                  "name": "Encephalitis [Viral] [Unspecified Cause] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2654",
+                  "name": "Encephalitis [Viral] [Unspecified Cause] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2654",
+                  "name": "Encephalitis [Viral] [Unspecified Cause] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.679",
+                  "name": "Hearing Loss (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.679",
+                  "name": "Hearing Loss (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.767",
+                  "name": "Hearing Loss (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.767",
+                  "name": "Hearing Loss (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.768",
+                  "name": "Orchitis (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.768",
+                  "name": "Orchitis (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.774",
+                  "name": "Orchitis (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.774",
+                  "name": "Orchitis (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.776",
+                  "name": "Oophoritis (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.776",
+                  "name": "Oophoritis (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.775",
+                  "name": "Oophoritis (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.775",
+                  "name": "Oophoritis (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.777",
+                  "name": "Mastitis (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.777",
+                  "name": "Mastitis (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.778",
+                  "name": "Mastitis (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.778",
+                  "name": "Mastitis (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.779",
+                  "name": "Pancreatitis (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.779",
+                  "name": "Pancreatitis (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.780",
+                  "name": "Pancreatitis (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.780",
+                  "name": "Pancreatitis (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Mumps [Suspected] (Disorders) (ICD10CM)",
+      "reason": "the authoritative source provides no ICD10CM codes; MUM-R7 retains the available SNOMED diagnosis and active-problem paths"
+    },
+    {
+      "valueSet": "Parotitis and salivary-gland swelling (ICD10CM)",
+      "reason": "the authoritative source provides no ICD10CM codes for these clinical alternatives; MUM-R6 and MUM-R11 retain the coded SNOMED paths and all other coded clinical alternatives"
+    },
+    {
+      "valueSet": "Mumps culture test panel",
+      "reason": "the authoritative source provides no LOINC codes for the culture panel; MUM-R6 and MUM-R9 retain the organism-specific culture-test path"
+    },
+    {
+      "valueSet": "Fourfold Mumps IgG titer rise between paired specimens",
+      "reason": "source rule 5 is explicitly not operational and requires paired acute/convalescent comparison plus an unavailable ratio test code; the rule is omitted"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-records reporter types",
+      "reason": "the authoritative source marks these reporter types unavailable in RCKMS; reporter-type routing and the death-certificate criterion are not modeled as condition-pack rules"
+    }
+  ]
+}

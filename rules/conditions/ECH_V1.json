@@ -1,0 +1,143 @@
+{
+  "mnemonic": "ECH_V1",
+  "conditionId": "ECH",
+  "name": "Echinococcosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Echinococcosis.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Echinococcosis.v2.20240202.docx on 2026-07-18 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "ECH-R1",
+      "description": "Echinococcosis (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2052", "name": "Echinococcosis (Disorders) (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2053", "name": "Echinococcosis (Disorders) (ICD10CM)" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "any": [
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2052", "name": "Echinococcosis (Disorders) (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2053", "name": "Echinococcosis (Disorders) (ICD10CM)", "status": "active" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ECH-R2",
+      "description": "Detection of Echinococcus species antibody (coded/abnormal alternatives; numeric > 0 not modeled)",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2058", "name": "Echinococcosis (Tests for Echinococcus species Antibody)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2060", "name": "Echinococcosis (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "ECH-R3",
+      "description": "Microscopic observation of Echinococcus species, including hydatid cyst",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2059", "name": "Echinococcus species (Tests by Microscopic Observation)" } },
+              { "any": [
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2060", "name": "Echinococcosis (Organism or Substance in Lab Results)" } },
+                { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+              ] }
+            ]
+          },
+          {
+            "all": [
+              { "any": [
+                { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.900", "name": "Organisms (Tests by Microscopic Observation)" } },
+                { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+              ] },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2060", "name": "Echinococcosis (Organism or Substance in Lab Results)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ECH-R4",
+      "description": "Optional logic: Cystic Echinococcosis (Hydatid Disease) (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2054", "name": "Cystic Echinococcosis (Disorders) (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2055", "name": "Cystic Echinococcosis (Disorders) (ICD10CM)" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "any": [
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2054", "name": "Cystic Echinococcosis (Disorders) (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2055", "name": "Cystic Echinococcosis (Disorders) (ICD10CM)", "status": "active" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ECH-R5",
+      "description": "Optional logic: Alveolar Echinococcosis (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2056", "name": "Alveolar Echinococcosis (Disorders) (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2057", "name": "Alveolar Echinococcosis (Disorders) (ICD10CM)" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "any": [
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2056", "name": "Alveolar Echinococcosis (Disorders) (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2057", "name": "Alveolar Echinococcosis (Disorders) (ICD10CM)", "status": "active" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Numeric Echinococcus antibody result > 0",
+      "reason": "SEM_V1 has no numeric laboratory result comparison; the numeric alternative in ECH-R2 is omitted"
+    }
+  ]
+}

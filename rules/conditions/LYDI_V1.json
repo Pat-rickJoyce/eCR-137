@@ -1,0 +1,156 @@
+{
+  "mnemonic": "LYDI_V1",
+  "conditionId": "LYDI",
+  "name": "Lyme Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Lyme_Disease.v5.20260626.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Lyme_Disease.v5.20260626.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2026-04-21)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "LYDI-R1",
+      "description": "Lyme disease as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.226", "name": "Lyme Disease (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.227", "name": "Lyme Disease (Disorders) (ICD10CM)" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "any": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.226", "name": "Lyme Disease (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.227", "name": "Lyme Disease (Disorders) (ICD10CM)", "status": "active" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "LYDI-R2",
+      "description": "Erythema migrans rash as a SNOMED diagnosis or active problem (timeboxed; ICD-10-CM source branch has no codes)",
+      "logic": { "any": [
+        { "all": [ { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.234", "name": "Lyme Disease (Erythema Migrans) (Disorders) (SNOMED)" } }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.234", "name": "Lyme Disease (Erythema Migrans) (Disorders) (SNOMED)", "status": "active" } }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "LYDI-R3",
+      "description": "Identification of Borrelia burgdorferi or B. mayonii by culture with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.529", "name": "Lyme Disease (Tests for Borrelia burgdorferi/mayonii by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.529", "name": "Lyme Disease (Tests for Borrelia burgdorferi/mayonii by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.850", "resultName": "Lyme Disease (Borrelia burgdorferi/mayonii in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.529", "name": "Lyme Disease (Tests for Borrelia burgdorferi/mayonii by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1128", "name": "Borrelia species (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.850", "resultName": "Lyme Disease (Borrelia burgdorferi/mayonii in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.850", "resultName": "Lyme Disease (Borrelia burgdorferi/mayonii in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.850", "resultName": "Lyme Disease (Borrelia burgdorferi/mayonii in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "LYDI-R4",
+      "description": "Detection of Borrelia burgdorferi nucleic acid with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3273", "name": "Lyme Disease (Tests for Borrelia burgdorferi Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3273", "name": "Lyme Disease (Tests for Borrelia burgdorferi Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.3277", "resultName": "Lyme Disease (Borrelia burgdorferi in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.3273", "name": "Lyme Disease (Tests for Borrelia burgdorferi Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.530", "name": "Borrelia species (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.3277", "resultName": "Lyme Disease (Borrelia burgdorferi in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.3277", "resultName": "Lyme Disease (Borrelia burgdorferi in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "LYDI-R5",
+      "description": "Detection of Borrelia mayonii nucleic acid with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3274", "name": "Lyme Disease (Tests for Borrelia mayonii Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3274", "name": "Lyme Disease (Tests for Borrelia mayonii Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.3278", "resultName": "Lyme Disease (Borrelia mayonii in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.3274", "name": "Lyme Disease (Tests for Borrelia mayonii Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.530", "name": "Borrelia species (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.3278", "resultName": "Lyme Disease (Borrelia mayonii in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.3278", "resultName": "Lyme Disease (Borrelia mayonii in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "LYDI-R7",
+      "description": "Detection of Borrelia burgdorferi antibody by immunoassay with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.532", "name": "Lyme Disease (Tests for Borrelia burgdorferi Antibody by Immunoassay)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.532", "name": "Lyme Disease (Tests for Borrelia burgdorferi Antibody by Immunoassay)", "resultOid": "2.16.840.1.113762.1.4.1146.850", "resultName": "Lyme Disease (Borrelia burgdorferi/mayonii in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.532", "name": "Lyme Disease (Tests for Borrelia burgdorferi Antibody by Immunoassay)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3275", "name": "Borrelia Species (Tests for Antibody by Immunoassay)", "resultOid": "2.16.840.1.113762.1.4.1146.850", "resultName": "Lyme Disease (Borrelia burgdorferi/mayonii in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "LYDI-R8",
+      "description": "Detection of Borrelia burgdorferi IgM or IgG antibody by immunoblot or line blot with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.531", "name": "Lyme Disease (Tests for Borrelia burgdorferi IgM IgG Antibody by Immunoblot)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.531", "name": "Lyme Disease (Tests for Borrelia burgdorferi IgM IgG Antibody by Immunoblot)", "resultOid": "2.16.840.1.113762.1.4.1146.850", "resultName": "Lyme Disease (Borrelia burgdorferi/mayonii in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.531", "name": "Lyme Disease (Tests for Borrelia burgdorferi IgM IgG Antibody by Immunoblot)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3276", "name": "Lyme Disease (Tests for Borrelia burgdorferi IgM IgG Antibody by Line Blot)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3276", "name": "Lyme Disease (Tests for Borrelia burgdorferi IgM IgG Antibody by Line Blot)", "resultOid": "2.16.840.1.113762.1.4.1146.850", "resultName": "Lyme Disease (Borrelia burgdorferi/mayonii in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.3276", "name": "Lyme Disease (Tests for Borrelia burgdorferi IgM IgG Antibody by Line Blot)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "LYDI-R9",
+      "description": "Optional logic: identification of Borrelia afzelii or B. garinii by a generic culture test with an organism result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1128", "name": "Borrelia species (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.851", "resultName": "Lyme Disease (Borrelia afzelii/garinii in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.851", "resultName": "Lyme Disease (Borrelia afzelii/garinii in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.851", "resultName": "Lyme Disease (Borrelia afzelii/garinii in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "LYDI-R10",
+      "description": "Optional logic: detection of Borrelia afzelii or B. garinii nucleic acid with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.855", "name": "Lyme Disease (Tests for Borrelia afzelii/garinii Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.855", "name": "Lyme Disease (Tests for Borrelia afzelii/garinii Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.851", "resultName": "Lyme Disease (Borrelia afzelii/garinii in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.855", "name": "Lyme Disease (Tests for Borrelia afzelii/garinii Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.530", "name": "Borrelia species (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.851", "resultName": "Lyme Disease (Borrelia afzelii/garinii in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.851", "resultName": "Lyme Disease (Borrelia afzelii/garinii in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "LYDI-R11",
+      "description": "Optional logic: detection of Borrelia afzelii or B. garinii antibody by immunoassay with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1131", "name": "Lyme Disease (Tests for Borrelia afzelii/garinii Antibody by Immunoassay)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1131", "name": "Lyme Disease (Tests for Borrelia afzelii/garinii Antibody by Immunoassay)", "resultOid": "2.16.840.1.113762.1.4.1146.851", "resultName": "Lyme Disease (Borrelia afzelii/garinii in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1131", "name": "Lyme Disease (Tests for Borrelia afzelii/garinii Antibody by Immunoassay)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3275", "name": "Borrelia Species (Tests for Antibody by Immunoassay)", "resultOid": "2.16.840.1.113762.1.4.1146.851", "resultName": "Lyme Disease (Borrelia afzelii/garinii in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "LYDI-R12",
+      "description": "Optional logic: detection of Borrelia afzelii or B. garinii IgM or IgG antibody by immunoblot or line blot with a qualifying result on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.857", "name": "Lyme Disease (Tests for Borrelia afzelii/garinii IgM IgG Antibody by Immunoblot)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.857", "name": "Lyme Disease (Tests for Borrelia afzelii/garinii IgM IgG Antibody by Immunoblot)", "resultOid": "2.16.840.1.113762.1.4.1146.851", "resultName": "Lyme Disease (Borrelia afzelii/garinii in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.857", "name": "Lyme Disease (Tests for Borrelia afzelii/garinii IgM IgG Antibody by Immunoblot)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.856", "name": "Lyme Disease (Tests for Borrelia afzelii/garinii IgM IgG Antibody by Line Blot)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.856", "name": "Lyme Disease (Tests for Borrelia afzelii/garinii IgM IgG Antibody by Line Blot)", "resultOid": "2.16.840.1.113762.1.4.1146.851", "resultName": "Lyme Disease (Borrelia afzelii/garinii in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.856", "name": "Lyme Disease (Tests for Borrelia afzelii/garinii IgM IgG Antibody by Line Blot)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    { "id": "LYDI-R13", "description": "Optional logic: indeterminate or equivocal Borrelia burgdorferi/mayonii culture result", "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.529", "name": "Lyme Disease (Tests for Borrelia burgdorferi/mayonii by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1035", "resultName": "Indeterminate or Equivocal Lab Result Value" } } },
+    { "id": "LYDI-R14", "description": "Optional logic: indeterminate or equivocal Borrelia burgdorferi/mayonii nucleic-acid result", "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.854", "name": "Lyme Disease (Tests for Borrelia burgdorferi/mayonii Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1035", "resultName": "Indeterminate or Equivocal Lab Result Value" } } },
+    { "id": "LYDI-R16", "description": "Optional logic: indeterminate or equivocal Borrelia burgdorferi antibody immunoassay result", "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.532", "name": "Lyme Disease (Tests for Borrelia burgdorferi Antibody by Immunoassay)", "resultOid": "2.16.840.1.113762.1.4.1146.1035", "resultName": "Indeterminate or Equivocal Lab Result Value" } } },
+    { "id": "LYDI-R17", "description": "Optional logic: indeterminate or equivocal Borrelia burgdorferi immunoblot or line-blot result", "logic": { "any": [
+      { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.531", "name": "Lyme Disease (Tests for Borrelia burgdorferi IgM IgG Antibody by Immunoblot)", "resultOid": "2.16.840.1.113762.1.4.1146.1035", "resultName": "Indeterminate or Equivocal Lab Result Value" } },
+      { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3276", "name": "Lyme Disease (Tests for Borrelia burgdorferi IgM IgG Antibody by Line Blot)", "resultOid": "2.16.840.1.113762.1.4.1146.1035", "resultName": "Indeterminate or Equivocal Lab Result Value" } }
+    ] } },
+    { "id": "LYDI-R18", "description": "Optional logic: all results for Borrelia burgdorferi/mayonii culture tests", "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.529", "name": "Lyme Disease (Tests for Borrelia burgdorferi/mayonii by Culture and Identification Method)" } } },
+    { "id": "LYDI-R19", "description": "Optional logic: all results for Borrelia burgdorferi/mayonii nucleic-acid tests", "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.854", "name": "Lyme Disease (Tests for Borrelia burgdorferi/mayonii Nucleic Acid)" } } },
+    { "id": "LYDI-R20", "description": "Optional logic: all results for Borrelia burgdorferi antibody immunoassays", "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.532", "name": "Lyme Disease (Tests for Borrelia burgdorferi Antibody by Immunoassay)" } } },
+    { "id": "LYDI-R21", "description": "Optional logic: all results for Borrelia burgdorferi immunoblot or line-blot tests", "logic": { "any": [
+      { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.531", "name": "Lyme Disease (Tests for Borrelia burgdorferi IgM IgG Antibody by Immunoblot)" } },
+      { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3276", "name": "Lyme Disease (Tests for Borrelia burgdorferi IgM IgG Antibody by Line Blot)" } }
+    ] } }
+  ],
+  "gaps": [
+    { "valueSet": "Erythema migrans ICD-10-CM and Borrelia afzelii/garinii culture test names", "reason": "the authoritative source reports no codes for the erythema migrans ICD-10-CM value set or the organism-specific B. afzelii/garinii culture test value set; LYDI-R2 retains the SNOMED diagnosis/active-problem branches and LYDI-R9 retains the coded generic culture alternatives" },
+    { "valueSet": "Borrelia burgdorferi antigen in tissue by immunohistochemical stain", "reason": "the authoritative test-name value set has no codes, so source rules 6 (qualifying antigen result) and 15 (indeterminate antigen result) are omitted entirely rather than allowing result evidence without a matching test" }
+  ]
+}

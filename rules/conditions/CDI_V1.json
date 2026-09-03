@@ -1,0 +1,185 @@
+{
+  "mnemonic": "CDI_V1",
+  "conditionId": "CDI",
+  "name": "Clostridioides difficile infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Clostridioides_difficile_infection.v3.20250703.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Clostridioides_difficile_infection.v3.20250703.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CDI-R1",
+      "description": "Clostridioides difficile infection diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1487", "name": "Clostridioides difficile infection (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1488", "name": "Clostridioides difficile infection (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1487", "name": "Clostridioides difficile infection (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1488", "name": "Clostridioides difficile infection (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "CDI-R3",
+      "description": "Detection of C. difficile toxin in stool by cell culture cytotoxicity neutralization with a qualifying result",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1498", "name": "C. diff infection (Tests for C diff Toxin in Stool by Cell Culture Cytotoxicity Neutralization Method)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1490", "name": "C. diff infection [Toxin] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "CDI-R4",
+      "description": "Detection of C. difficile toxin nucleic acid in stool with a qualifying result",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1492", "name": "C. diff infection (Tests for C diff Toxin Nucleic Acid in Stool)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1490", "name": "C. diff infection [Toxin] (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] },
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1500", "name": "Organisms (Tests for Nucleic Acid in Stool)" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1490", "name": "C. diff infection [Toxin] (Organism or Substance in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "CDI-R5",
+      "description": "Detection of C. difficile toxin in stool by EIA with a qualifying result",
+      "logic": { "all": [
+        { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1494", "name": "C. diff infection (Tests for C diff Toxin in Stool by EIA)" } },
+        { "any": [
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1490", "name": "C. diff infection [Toxin] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "CDI-R6",
+      "description": "Detection of C. difficile GDH antigen and toxin by EIA in stool, each with a qualifying result",
+      "logic": { "all": [
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1499", "name": "C. diff infection (Tests for C diff antigen [glutamate dehydrogenase] in Stool)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1490", "name": "C. diff infection [Toxin] (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] },
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1494", "name": "C. diff infection (Tests for C diff Toxin in Stool by EIA)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1490", "name": "C. diff infection [Toxin] (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] }
+      ] }
+    },
+    {
+      "id": "CDI-R7",
+      "description": "Detection of C. difficile GDH antigen, toxin by EIA, and toxin nucleic acid in stool, each with a qualifying result",
+      "logic": { "all": [
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1499", "name": "C. diff infection (Tests for C diff antigen [glutamate dehydrogenase] in Stool)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1490", "name": "C. diff infection [Toxin] (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] },
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1494", "name": "C. diff infection (Tests for C diff Toxin in Stool by EIA)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1490", "name": "C. diff infection [Toxin] (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] },
+        { "any": [
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1492", "name": "C. diff infection (Tests for C diff Toxin Nucleic Acid in Stool)" } },
+            { "any": [
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1490", "name": "C. diff infection [Toxin] (Organism or Substance in Lab Results)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ] }
+          ] },
+          { "all": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1500", "name": "Organisms (Tests for Nucleic Acid in Stool)" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1490", "name": "C. diff infection [Toxin] (Organism or Substance in Lab Results)" } }
+          ] }
+        ] }
+      ] }
+    },
+    {
+      "id": "CDI-R8",
+      "description": "Optional logic: identification of C. difficile in stool by culture with a qualifying result",
+      "logic": { "any": [
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1496", "name": "C. diff infection (Tests for C diff in Stool by Culture and Identification Method)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1489", "name": "C. diff infection (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ] },
+        { "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2257", "name": "Organisms (Tests in Stool by Culture and Identification Method)" } },
+          { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1489", "name": "C. diff infection (Organism or Substance in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "CDI-R9",
+      "description": "Optional logic: all C. difficile toxin antibody test results",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2655", "name": "C. diff infection (Tests for C diff Toxin Antibody)" } }
+    },
+    {
+      "id": "CDI-R10",
+      "description": "Optional logic: all organism-specific C. difficile stool culture results",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1496", "name": "C. diff infection (Tests for C diff in Stool by Culture and Identification Method)" } }
+    },
+    {
+      "id": "CDI-R11",
+      "description": "Optional logic: all organism-specific C. difficile toxin nucleic acid test results in stool",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1492", "name": "C. diff infection (Tests for C diff Toxin Nucleic Acid in Stool)" } }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "C. diff infection (Tests for C diff Toxin in Isolate by Cell Culture Cytotoxicity Neutralization Method) — no codes",
+      "reason": "authoritative source rule 2 requires stool culture AND toxin detection in the isolate; the required isolate-toxin test value set has no codes, so the entire conjunctive toxigenic-culture rule is omitted"
+    },
+    {
+      "valueSet": "C. diff toxin by cell culture cytotoxicity and GDH antigen general test alternatives — no codes",
+      "reason": "the general test value sets used in source rules 3, 6, and 7 have no codes; coded stool-specific test branches are retained"
+    },
+    {
+      "valueSet": "General C. difficile toxin, culture, EIA, and nucleic-acid tests constrained to stool specimens",
+      "reason": "SEM_V1 has no specimen-type predicate, so general-test-plus-stool-specimen alternatives in source rules 3–8, 10, and 11 are omitted; coded stool-specific test branches are retained"
+    }
+  ]
+}

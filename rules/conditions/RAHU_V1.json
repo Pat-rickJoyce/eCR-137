@@ -1,0 +1,427 @@
+{
+  "mnemonic": "RAHU_V1",
+  "conditionId": "RAHU",
+  "name": "Rabies Human",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Rabies_Human.v6.20260626.docx",
+    "rckmsVersion": "v6",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Rabies_Human.v6.20260626.docx on 2026-07-21 (authoritative RCKMS Content Release 16; latest revision 2026-04-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "RAHU-R1",
+      "description": "Rabies diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.190",
+                      "name": "Rabies (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.198",
+                      "name": "Rabies (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.190",
+                      "name": "Rabies (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.198",
+                      "name": "Rabies (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "RAHU-R2",
+      "description": "Suspected rabies diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1439",
+                      "name": "Rabies [Suspected] (Disorders) (SNOMED)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1439",
+                      "name": "Rabies [Suspected] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "RAHU-R3",
+      "description": "Lyssavirus identified by culture, including identification tests performed on an isolate",
+      "logic": {
+        "any": [
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.946",
+                  "name": "Rabies (Tests for rabies virus by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.946",
+                  "name": "Rabies (Tests for rabies virus by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.945",
+                  "resultName": "Rabies (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.946",
+                  "name": "Rabies (Tests for rabies virus by Culture and Identification Method)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1041",
+              "name": "Organisms (Tests by Culture and Identification)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.945",
+              "resultName": "Rabies (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1040",
+              "name": "Organisms (Tests by Unspecified Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.945",
+              "resultName": "Rabies (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "RAHU-R4",
+      "description": "Lyssavirus nucleic acid detected by RT-PCR",
+      "logic": {
+        "any": [
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.874",
+                  "name": "Rabies (Tests for rabies virus Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.874",
+                  "name": "Rabies (Tests for rabies virus Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.945",
+                  "resultName": "Rabies (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.874",
+                  "name": "Rabies (Tests for rabies virus Nucleic Acid)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.945",
+              "resultName": "Rabies (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "RAHU-R5",
+      "description": "Lyssavirus antigen detected by direct fluorescent antibody testing",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.552",
+              "name": "Rabies (Tests for rabies virus Antigen by Immunofluorescence)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.552",
+              "name": "Rabies (Tests for rabies virus Antigen by Immunofluorescence)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.945",
+              "resultName": "Rabies (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.552",
+              "name": "Rabies (Tests for rabies virus Antigen by Immunofluorescence)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "RAHU-R6",
+      "description": "Lyssavirus antibody detected in cerebrospinal fluid",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.949",
+              "name": "Rabies (Tests for rabies virus Antibody in CSF)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.949",
+              "name": "Rabies (Tests for rabies virus Antibody in CSF)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.945",
+              "resultName": "Rabies (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.949",
+              "name": "Rabies (Tests for rabies virus Antibody in CSF)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "RAHU-R8",
+      "description": "Lab test ordered for Lyssavirus culture and identification",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.946",
+          "name": "Rabies (Tests for rabies virus by Culture and Identification Method)"
+        }
+      }
+    },
+    {
+      "id": "RAHU-R9",
+      "description": "Lab test ordered for Lyssavirus nucleic-acid detection",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.874",
+          "name": "Rabies (Tests for rabies virus Nucleic Acid)"
+        }
+      }
+    },
+    {
+      "id": "RAHU-R10",
+      "description": "Lab test ordered for Lyssavirus antigen detection by immunofluorescence",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.552",
+          "name": "Rabies (Tests for rabies virus Antigen by Immunofluorescence)"
+        }
+      }
+    },
+    {
+      "id": "RAHU-R12",
+      "description": "Rabies exposure diagnosis or active problem",
+      "logic": {
+        "any": [
+          {
+            "predicate": "diagnosisInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.3269",
+              "name": "Exposure to Rabies (SNOMED)"
+            }
+          },
+          {
+            "predicate": "diagnosisInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.3270",
+              "name": "Exposure to Rabies (ICD10CM)"
+            }
+          },
+          {
+            "predicate": "problemInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.3269",
+              "name": "Exposure to Rabies (SNOMED)",
+              "status": "active"
+            }
+          },
+          {
+            "predicate": "problemInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.3270",
+              "name": "Exposure to Rabies (ICD10CM)",
+              "status": "active"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2: Rabies [Suspected] (Disorders) (ICD10CM)",
+      "reason": "the authoritative Table 3 value set is not implemented and has no ICD-10-CM codes, so its diagnosis and problem branches are omitted"
+    },
+    {
+      "valueSet": "Rule 6: generic rabies-antibody test plus cerebrospinal-fluid specimen type",
+      "reason": "SEM_V1 has no specimen-type predicate and the HL7 CSF value set is not implemented; the coded CSF-specific test-name alternative is modeled, while the generic-antibody-plus-specimen branch is omitted"
+    },
+    {
+      "valueSet": "Rule 7: rabies immune globulin administered AND rabies vaccine administered",
+      "reason": "SEM_V1 has medication evidence but no immunization predicate, so the conjunction cannot be represented safely and Rule 7 is omitted"
+    },
+    {
+      "valueSet": "Rules 8-10: laboratory test orders and code-less test-panel value sets",
+      "reason": "SEM_V1 lab evidence does not distinguish orders from completed observations, so coded order-name alternatives use labTestInValueSet; all three authoritative panel value sets have no codes and their branches are omitted"
+    },
+    {
+      "valueSet": "Rule 11: serum Lyssavirus antibody AND no history of rabies vaccination",
+      "reason": "the authoritative source marks the entire rule inoperable because no-history-of-vaccination cannot be implemented; SEM_V1 also lacks specimen-type and negative immunization-history predicates, so Rule 11 is omitted"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-record reporter types",
+      "reason": "the authoritative snapshot marks these reporter types not implemented in RCKMS; SEM_V1 does not carry reporter-source or death-certificate cause/contributing-condition evidence"
+    }
+  ]
+}

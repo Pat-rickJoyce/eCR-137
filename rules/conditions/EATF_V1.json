@@ -1,0 +1,131 @@
+{
+  "mnemonic": "EATF_V1",
+  "conditionId": "EATF",
+  "name": "Esophageal Atresia/Tracheoesophageal Fistula",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Esophageal_Atresia_Tracheoesophageal_Fistula.v1.20250703.docx",
+    "rckmsVersion": "v1",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs live RCKMS Release 16 docx (2026-07-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "EATF-R1",
+      "description": "Esophageal Atresia/Tracheoesophageal Fistula diagnosis or active problem, age < 1 year (timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2552",
+                  "name": "Esophageal Atresia/Tracheoesophageal Fistula (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2553",
+                  "name": "Esophageal Atresia/Tracheoesophageal Fistula (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2552",
+                  "name": "Esophageal Atresia/Tracheoesophageal Fistula (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2553",
+                  "name": "Esophageal Atresia/Tracheoesophageal Fistula (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 1,
+              "unit": "years"
+            }
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "EATF-R2",
+      "description": "Fetal Esophageal Atresia/Tracheoesophageal Fistula diagnosis or active problem (no codes available - not implemented)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Fetal Esophageal Atresia/Tracheoesophageal Fistula (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Fetal Esophageal Atresia/Tracheoesophageal Fistula (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Fetal Esophageal Atresia/Tracheoesophageal Fistula (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Fetal Esophageal Atresia/Tracheoesophageal Fistula (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Fetal Esophageal Atresia/Tracheoesophageal Fistula",
+      "reason": "no codes available; R2 skips"
+    },
+    {
+      "valueSet": "Timebox windows",
+      "reason": "platform-unimplemented; does not reduce coverage"
+    }
+  ]
+}

@@ -1,0 +1,587 @@
+{
+  "mnemonic": "RHFE_V1",
+  "conditionId": "RHFE",
+  "name": "Rheumatic Fever",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Rheumatic_Fever.v5.20260227.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Rheumatic_Fever.v5.20260227.docx on 2026-07-21 (authoritative RCKMS Content Release 16; latest revision 2025-11-04)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "RHFE-R1",
+      "description": "Rheumatic fever diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1826",
+                      "name": "Rheumatic Fever (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1825",
+                      "name": "Rheumatic Fever (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1826",
+                      "name": "Rheumatic Fever (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1825",
+                      "name": "Rheumatic Fever (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "RHFE-R2",
+      "description": "At least two distinct major rheumatic-fever clinical observations",
+      "logic": {
+        "atLeast": {
+          "n": 2,
+          "of": [
+            {
+              "any": [
+                {
+                  "predicate": "diagnosisInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1827",
+                    "name": "Carditis [Unspecified Cause] (SNOMED)"
+                  }
+                },
+                {
+                  "predicate": "problemInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1827",
+                    "name": "Carditis [Unspecified Cause] (SNOMED)",
+                    "status": "active"
+                  }
+                },
+                {
+                  "predicate": "diagnosisInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1828",
+                    "name": "Carditis [Unspecified Cause] (ICD10CM)"
+                  }
+                },
+                {
+                  "predicate": "problemInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1828",
+                    "name": "Carditis [Unspecified Cause] (ICD10CM)",
+                    "status": "active"
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "predicate": "diagnosisInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1829",
+                    "name": "Polyarthritis [Unspecified Cause] (SNOMED)"
+                  }
+                },
+                {
+                  "predicate": "problemInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1829",
+                    "name": "Polyarthritis [Unspecified Cause] (SNOMED)",
+                    "status": "active"
+                  }
+                },
+                {
+                  "predicate": "diagnosisInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1830",
+                    "name": "Polyarthritis [Unspecified Cause] (ICD10CM)"
+                  }
+                },
+                {
+                  "predicate": "problemInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1830",
+                    "name": "Polyarthritis [Unspecified Cause] (ICD10CM)",
+                    "status": "active"
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "predicate": "diagnosisInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1831",
+                    "name": "Chorea [Unspecified Cause] (SNOMED)"
+                  }
+                },
+                {
+                  "predicate": "problemInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1831",
+                    "name": "Chorea [Unspecified Cause] (SNOMED)",
+                    "status": "active"
+                  }
+                },
+                {
+                  "predicate": "diagnosisInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1832",
+                    "name": "Chorea [Unspecified Cause] (ICD10CM)"
+                  }
+                },
+                {
+                  "predicate": "problemInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1832",
+                    "name": "Chorea [Unspecified Cause] (ICD10CM)",
+                    "status": "active"
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "predicate": "diagnosisInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1833",
+                    "name": "Erythema marginatum (SNOMED)"
+                  }
+                },
+                {
+                  "predicate": "problemInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1833",
+                    "name": "Erythema marginatum (SNOMED)",
+                    "status": "active"
+                  }
+                },
+                {
+                  "predicate": "diagnosisInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1834",
+                    "name": "Erythema marginatum (ICD10CM)"
+                  }
+                },
+                {
+                  "predicate": "problemInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1834",
+                    "name": "Erythema marginatum (ICD10CM)",
+                    "status": "active"
+                  }
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "predicate": "diagnosisInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1835",
+                    "name": "Rheumatoid nodules (SNOMED)"
+                  }
+                },
+                {
+                  "predicate": "problemInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1835",
+                    "name": "Rheumatoid nodules (SNOMED)",
+                    "status": "active"
+                  }
+                },
+                {
+                  "predicate": "diagnosisInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1836",
+                    "name": "Rheumatoid nodules (ICD10CM)"
+                  }
+                },
+                {
+                  "predicate": "problemInValueSet",
+                  "params": {
+                    "oid": "2.16.840.1.113762.1.4.1146.1836",
+                    "name": "Rheumatoid nodules (ICD10CM)",
+                    "status": "active"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "RHFE-R3",
+      "description": "At least one major rheumatic-fever clinical observation and at least two distinct minor clinical-observation groups",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1827",
+                      "name": "Carditis [Unspecified Cause] (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1827",
+                      "name": "Carditis [Unspecified Cause] (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1828",
+                      "name": "Carditis [Unspecified Cause] (ICD10CM)"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1828",
+                      "name": "Carditis [Unspecified Cause] (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1829",
+                      "name": "Polyarthritis [Unspecified Cause] (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1829",
+                      "name": "Polyarthritis [Unspecified Cause] (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1830",
+                      "name": "Polyarthritis [Unspecified Cause] (ICD10CM)"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1830",
+                      "name": "Polyarthritis [Unspecified Cause] (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1831",
+                      "name": "Chorea [Unspecified Cause] (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1831",
+                      "name": "Chorea [Unspecified Cause] (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1832",
+                      "name": "Chorea [Unspecified Cause] (ICD10CM)"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1832",
+                      "name": "Chorea [Unspecified Cause] (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1833",
+                      "name": "Erythema marginatum (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1833",
+                      "name": "Erythema marginatum (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1834",
+                      "name": "Erythema marginatum (ICD10CM)"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1834",
+                      "name": "Erythema marginatum (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1835",
+                      "name": "Rheumatoid nodules (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1835",
+                      "name": "Rheumatoid nodules (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1836",
+                      "name": "Rheumatoid nodules (ICD10CM)"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1836",
+                      "name": "Rheumatoid nodules (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "atLeast": {
+              "n": 2,
+              "of": [
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.670",
+                        "name": "Fever (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.670",
+                        "name": "Fever (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.671",
+                        "name": "Fever (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.671",
+                        "name": "Fever (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1837",
+                        "name": "Elevated erythrocyte sedimentation rate (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1837",
+                        "name": "Elevated erythrocyte sedimentation rate (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1838",
+                        "name": "Elevated erythrocyte sedimentation rate (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1838",
+                        "name": "Elevated erythrocyte sedimentation rate (ICD10CM)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1839",
+                        "name": "Positive C_reactive protein (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1839",
+                        "name": "Positive C_reactive protein (SNOMED)",
+                        "status": "active"
+                      }
+                    },
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1840",
+                        "name": "Positive C_reactive protein (ICD10CM)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1840",
+                        "name": "Positive C_reactive protein (ICD10CM)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "diagnosisInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1841",
+                        "name": "Prolonged PR interval (SNOMED)"
+                      }
+                    },
+                    {
+                      "predicate": "problemInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1841",
+                        "name": "Prolonged PR interval (SNOMED)",
+                        "status": "active"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 3: Polyarthralgia [Unspecified Cause] (SNOMED and ICD10CM)",
+      "reason": "both authoritative Table 3 value sets are not implemented and have no codes, so the minor-observation group is omitted"
+    },
+    {
+      "valueSet": "Rule 3: body temperature at least 38.5 C or 101.3 F",
+      "reason": "SEM_V1 has no vital-sign evidence or numeric threshold predicate; coded fever diagnosis/active-problem alternatives are modeled"
+    },
+    {
+      "valueSet": "Rule 3: Prolonged PR interval (ICD10CM)",
+      "reason": "the authoritative Table 3 value set is not implemented and has no codes, so its diagnosis and problem alternatives are omitted while the SNOMED alternative is modeled"
+    },
+    {
+      "valueSet": "Death-certificate reporter type",
+      "reason": "the authoritative snapshot marks vital-record reporting not implemented in RCKMS; SEM_V1 does not carry reporter-source or death-certificate cause/contributing-condition evidence"
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "mnemonic": "HUS_V1",
+  "conditionId": "HUS",
+  "name": "Hemolytic Uremic Syndrome",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Hemolytic_Uremic_Syndrome.v4.20250228.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2025-02-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Hemolytic_Uremic_Syndrome.v4.20250228.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2025-06-03)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "HUS-R1",
+      "description": "Hemolytic uremic syndrome diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.86", "name": "Hemolytic Uremic Syndrome (HUS) (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.88", "name": "Hemolytic Uremic Syndrome (HUS) (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.86", "name": "Hemolytic Uremic Syndrome (HUS) (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.88", "name": "Hemolytic Uremic Syndrome (HUS) (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HUS-R2",
+      "description": "Thrombotic thrombocytopenic purpura diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.87", "name": "Thrombotic Thrombocytopenic Purpura (TTP) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.92", "name": "Thrombotic Thrombocytopenic Purpura (TTP) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.87", "name": "Thrombotic Thrombocytopenic Purpura (TTP) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.92", "name": "Thrombotic Thrombocytopenic Purpura (TTP) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HUS-R3",
+      "description": "Anemia with high serum-creatinine interpretation and microangiopathic changes in a blood smear (specimen-specific executable paths)",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2204", "name": "Anemia [Unspecified Cause] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2205", "name": "Anemia [Unspecified Cause] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2204", "name": "Anemia [Unspecified Cause] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2205", "name": "Anemia [Unspecified Cause] (ICD10CM)", "status": "active" } }
+        ] },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2206", "name": "Creatinine (Tests in Serum by Any Method)", "codes": ["H", "HH"] } },
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2208", "name": "Microangiopathic Changes (Schistocytes, Burr cells, or Helmet cells) (Tests by Microscopic Observation in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2208", "name": "Microangiopathic Changes (Schistocytes, Burr cells, or Helmet cells) (Tests by Microscopic Observation in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.2209", "resultName": "Microangiopathic Changes (Schistocytes, Burr cells, or Helmet cells) (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2208", "name": "Microangiopathic Changes (Schistocytes, Burr cells, or Helmet cells) (Tests by Microscopic Observation in Blood)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.896", "name": "Tests by Microscopic Observation in Blood Smear", "resultOid": "2.16.840.1.113762.1.4.1146.2209", "resultName": "Microangiopathic Changes (Schistocytes, Burr cells, or Helmet cells) (Organism or Substance in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "HUS-R6",
+      "description": "Hematuria or proteinuria with anemia and microangiopathic changes in a blood smear (specimen-specific executable paths)",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.934", "name": "Hematuria [Unspecified Cause] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.933", "name": "Hematuria [Unspecified Cause] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.934", "name": "Hematuria [Unspecified Cause] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.933", "name": "Hematuria [Unspecified Cause] (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.969", "name": "Proteinuria [Unspecified Cause] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.965", "name": "Proteinuria [Unspecified Cause] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.969", "name": "Proteinuria [Unspecified Cause] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.965", "name": "Proteinuria [Unspecified Cause] (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2204", "name": "Anemia [Unspecified Cause] (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2205", "name": "Anemia [Unspecified Cause] (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2204", "name": "Anemia [Unspecified Cause] (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2205", "name": "Anemia [Unspecified Cause] (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2208", "name": "Microangiopathic Changes (Schistocytes, Burr cells, or Helmet cells) (Tests by Microscopic Observation in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2208", "name": "Microangiopathic Changes (Schistocytes, Burr cells, or Helmet cells) (Tests by Microscopic Observation in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.2209", "resultName": "Microangiopathic Changes (Schistocytes, Burr cells, or Helmet cells) (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2208", "name": "Microangiopathic Changes (Schistocytes, Burr cells, or Helmet cells) (Tests by Microscopic Observation in Blood)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.896", "name": "Tests by Microscopic Observation in Blood Smear", "resultOid": "2.16.840.1.113762.1.4.1146.2209", "resultName": "Microangiopathic Changes (Schistocytes, Burr cells, or Helmet cells) (Organism or Substance in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "HUS-R7",
+      "description": "Optional HUS or TTP diagnosis or active problem (timeboxed) in a patient younger than 18 years",
+      "logic": { "all": [
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.86", "name": "Hemolytic Uremic Syndrome (HUS) (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.88", "name": "Hemolytic Uremic Syndrome (HUS) (Disorders) (ICD10CM)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.87", "name": "Thrombotic Thrombocytopenic Purpura (TTP) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.92", "name": "Thrombotic Thrombocytopenic Purpura (TTP) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.86", "name": "Hemolytic Uremic Syndrome (HUS) (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.88", "name": "Hemolytic Uremic Syndrome (HUS) (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.87", "name": "Thrombotic Thrombocytopenic Purpura (TTP) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.92", "name": "Thrombotic Thrombocytopenic Purpura (TTP) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 18, "unit": "years" }, "gate": true }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Age-specific serum-creatinine numeric thresholds",
+      "reason": "SEM_V1 preserves neither numeric laboratory values nor units and has no comparison predicate, so source rules 4 and 5 are omitted rather than weakened to creatinine test-name presence"
+    },
+    {
+      "valueSet": "Blood specimen linkage for generic microscopy tests",
+      "reason": "SEM_V1 does not preserve specimen linkage, and Blood (Specimen Type) (HL7) is unavailable in VSAC; generic-test-plus-blood-specimen alternatives are omitted from HUS-R3 and HUS-R6 while blood-specific test-name alternatives remain modeled"
+    }
+  ]
+}

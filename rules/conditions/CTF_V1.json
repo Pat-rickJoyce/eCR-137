@@ -1,0 +1,249 @@
+{
+  "mnemonic": "CTF_V1",
+  "conditionId": "CTF",
+  "name": "Colorado tick fever",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Colorado_tick_fever.v3.20240202.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs live RCKMS Release 16 docx (2026-07-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CTF-R1",
+      "description": "Colorado tick fever diagnosis or active problem (timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1397",
+                  "name": "Colorado Tick Fever (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1396",
+                  "name": "Colorado Tick Fever (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1397",
+                  "name": "Colorado Tick Fever (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1396",
+                  "name": "Colorado Tick Fever (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTF-R2",
+      "description": "Detection of Colorado tick fever virus nucleic acid",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1811",
+                  "name": "Colorado Tick Fever (Tests for Colorado Tick Fever Virus Nucleic Acid)"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1398",
+                      "name": "Colorado Tick Fever (Organism or Substance in Lab Results)"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": [
+                        "A",
+                        "AA",
+                        "HH",
+                        "LL",
+                        "H",
+                        "L"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.994",
+                  "name": "Organisms (Tests for Nucleic Acid)"
+                }
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1398",
+                  "name": "Colorado Tick Fever (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTF-R3",
+      "description": "Colorado tick fever virus IgM antibody detection",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1401",
+              "name": "Colorado Tick Fever (Tests for Colorado Tick Fever Virus IgM Antibody)"
+            }
+          },
+          {
+            "any": [
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.272",
+                  "name": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1398",
+                  "name": "Colorado Tick Fever (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labInterpretationIn",
+                "params": {
+                  "name": "Abnormal Interpretation of an Observation",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CTF-R4",
+      "description": "Colorado tick fever virus antibody [qualitative or quantitative] detection",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1399",
+                  "name": "Colorado Tick Fever (Tests for Colorado Tick Fever Virus Antibody [Quantitative])"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1400",
+                  "name": "Colorado Tick Fever (Tests for Colorado Tick Fever Virus Antibody [Qualitative])"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.272",
+                  "name": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1398",
+                  "name": "Colorado Tick Fever (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labInterpretationIn",
+                "params": {
+                  "name": "Abnormal Interpretation of an Observation",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Numeric antibody result > 0",
+      "reason": "SEM_V1 lacks numeric lab comparison; coded-positive alternatives functional"
+    },
+    {
+      "valueSet": "Timebox windows",
+      "reason": "platform-unimplemented; does not reduce coverage"
+    }
+  ]
+}

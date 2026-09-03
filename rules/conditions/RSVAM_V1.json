@@ -1,0 +1,451 @@
+{
+  "mnemonic": "RSVAM_V1",
+  "conditionId": "RSVAM",
+  "name": "Respiratory Syncytial Virus Associated Mortality",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Respiratory_Syncytial_Virus_Associated_Mortality.v7.20260626.docx",
+    "rckmsVersion": "v7",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Respiratory_Syncytial_Virus_Associated_Mortality.v7.20260626.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2026-05-13)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "RSVAM-R1",
+      "description": "Death associated with RSV diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3283", "name": "Death Associated with RSV (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3283", "name": "Death Associated with RSV (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "RSVAM-R2",
+      "description": "RSV diagnosis or active problem, timeboxed when configured, and patient deceased or discharged expired",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1309", "name": "RSV (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1310", "name": "RSV (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1309", "name": "RSV (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1310", "name": "RSV (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "patientDeceased", "params": {} },
+              { "predicate": "encounterDischargeDispositionInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1108", "name": "Discharge Disposition [Expired]" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "RSVAM-R3",
+      "description": "One or more coded RSV-associated clinical findings, patient deceased or discharged expired, and qualifying RSV laboratory evidence",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.895", "name": "Rhinorrhea (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.895", "name": "Rhinorrhea (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.894", "name": "Rhinorrhea (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.894", "name": "Rhinorrhea (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.91", "name": "Cough (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.91", "name": "Cough (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.90", "name": "Cough (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.90", "name": "Cough (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.683", "name": "Anorexia (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.683", "name": "Anorexia (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.682", "name": "Anorexia (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.682", "name": "Anorexia (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1314", "name": "Wheezing (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1314", "name": "Wheezing (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1315", "name": "Wheezing (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1315", "name": "Wheezing (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1316", "name": "Bronchiolitis (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1316", "name": "Bronchiolitis (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1317", "name": "Bronchiolitis (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1317", "name": "Bronchiolitis (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.357", "name": "Pneumonia (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.357", "name": "Pneumonia (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.712", "name": "Pneumonia (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.712", "name": "Pneumonia (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.794", "name": "Sore Throat (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.794", "name": "Sore Throat (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.760", "name": "Sore Throat (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.760", "name": "Sore Throat (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.809", "name": "Headache (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.809", "name": "Headache (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.808", "name": "Headache (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.808", "name": "Headache (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1266", "name": "Fatigue (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1266", "name": "Fatigue (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1265", "name": "Fatigue (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1265", "name": "Fatigue (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.879", "name": "Acute Respiratory Distress Syndrome (ARDS) (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.879", "name": "Acute Respiratory Distress Syndrome (ARDS) (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.880", "name": "Acute Respiratory Distress Syndrome (ARDS) (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.880", "name": "Acute Respiratory Distress Syndrome (ARDS) (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.881", "name": "Difficulty Breathing (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.881", "name": "Difficulty Breathing (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.890", "name": "Difficulty Breathing (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.890", "name": "Difficulty Breathing (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.329", "name": "Apnea (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.329", "name": "Apnea (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.330", "name": "Apnea (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.330", "name": "Apnea (ICD10CM)", "status": "active" } }
+              ] }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "patientDeceased", "params": {} },
+              { "predicate": "encounterDischargeDispositionInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1108", "name": "Discharge Disposition [Expired]" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1313", "name": "RSV (Tests for RSV by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1313", "name": "RSV (Tests for RSV by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1308", "resultName": "RSV (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1313", "name": "RSV (Tests for RSV by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1308", "resultName": "RSV (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1308", "resultName": "RSV (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1312", "name": "RSV (Tests for RSV Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1312", "name": "RSV (Tests for RSV Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1308", "resultName": "RSV (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1312", "name": "RSV (Tests for RSV Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1308", "resultName": "RSV (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1311", "name": "RSV (Tests for RSV Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1311", "name": "RSV (Tests for RSV Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.1308", "resultName": "RSV (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1311", "name": "RSV (Tests for RSV Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "RSVAM-R4",
+      "description": "Optional logic: RSV diagnosis or active problem, patient deceased or discharged expired, and age younger than 18 years",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1309", "name": "RSV (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1310", "name": "RSV (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1309", "name": "RSV (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1310", "name": "RSV (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "patientDeceased", "params": {} },
+              { "predicate": "encounterDischargeDispositionInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1108", "name": "Discharge Disposition [Expired]" } }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 18, "unit": "years" } }
+        ]
+      }
+    },
+    {
+      "id": "RSVAM-R5",
+      "description": "Optional logic: one or more coded RSV-associated clinical findings, patient deceased or discharged expired, age younger than 18 years, and qualifying RSV laboratory evidence",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.895", "name": "Rhinorrhea (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.895", "name": "Rhinorrhea (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.894", "name": "Rhinorrhea (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.894", "name": "Rhinorrhea (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.91", "name": "Cough (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.91", "name": "Cough (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.90", "name": "Cough (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.90", "name": "Cough (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.683", "name": "Anorexia (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.683", "name": "Anorexia (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.682", "name": "Anorexia (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.682", "name": "Anorexia (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1314", "name": "Wheezing (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1314", "name": "Wheezing (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1315", "name": "Wheezing (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1315", "name": "Wheezing (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1316", "name": "Bronchiolitis (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1316", "name": "Bronchiolitis (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1317", "name": "Bronchiolitis (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1317", "name": "Bronchiolitis (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.357", "name": "Pneumonia (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.357", "name": "Pneumonia (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.712", "name": "Pneumonia (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.712", "name": "Pneumonia (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.794", "name": "Sore Throat (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.794", "name": "Sore Throat (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.760", "name": "Sore Throat (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.760", "name": "Sore Throat (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.809", "name": "Headache (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.809", "name": "Headache (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.808", "name": "Headache (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.808", "name": "Headache (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1266", "name": "Fatigue (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1266", "name": "Fatigue (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1265", "name": "Fatigue (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1265", "name": "Fatigue (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.879", "name": "Acute Respiratory Distress Syndrome (ARDS) (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.879", "name": "Acute Respiratory Distress Syndrome (ARDS) (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.880", "name": "Acute Respiratory Distress Syndrome (ARDS) (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.880", "name": "Acute Respiratory Distress Syndrome (ARDS) (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.881", "name": "Difficulty Breathing (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.881", "name": "Difficulty Breathing (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.890", "name": "Difficulty Breathing (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.890", "name": "Difficulty Breathing (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.329", "name": "Apnea (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.329", "name": "Apnea (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.330", "name": "Apnea (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.330", "name": "Apnea (ICD10CM)", "status": "active" } }
+              ] }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "patientDeceased", "params": {} },
+              { "predicate": "encounterDischargeDispositionInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1108", "name": "Discharge Disposition [Expired]" } }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 18, "unit": "years" } },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1313", "name": "RSV (Tests for RSV by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1313", "name": "RSV (Tests for RSV by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1308", "resultName": "RSV (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1313", "name": "RSV (Tests for RSV by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1308", "resultName": "RSV (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1308", "resultName": "RSV (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1312", "name": "RSV (Tests for RSV Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1312", "name": "RSV (Tests for RSV Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1308", "resultName": "RSV (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1312", "name": "RSV (Tests for RSV Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1308", "resultName": "RSV (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1311", "name": "RSV (Tests for RSV Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1311", "name": "RSV (Tests for RSV Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.1308", "resultName": "RSV (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1311", "name": "RSV (Tests for RSV Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "RSVAM-R6",
+      "description": "Optional logic: RSV diagnosis or active problem, patient deceased or discharged expired, and age younger than 5 years",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1309", "name": "RSV (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1310", "name": "RSV (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1309", "name": "RSV (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1310", "name": "RSV (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "patientDeceased", "params": {} },
+              { "predicate": "encounterDischargeDispositionInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1108", "name": "Discharge Disposition [Expired]" } }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 5, "unit": "years" } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 1: Death Associated with RSV (ICD10CM)",
+      "reason": "the authoritative value set is not implemented and has no codes, so its diagnosis and problem branches are omitted"
+    },
+    {
+      "valueSet": "Rules 3 and 5: Body Temperature (Vital Sign) at least 38 C or 100.4 F",
+      "reason": "SEM_V1 has no vital-sign measurement or numeric threshold predicate; the coded fever diagnosis and active-problem alternatives remain modeled"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-record reporter types",
+      "reason": "the authoritative snapshot marks these reporter types not implemented in RCKMS; SEM_V1 does not carry reporter-source or death-certificate cause/contributing-condition evidence"
+    }
+  ]
+}

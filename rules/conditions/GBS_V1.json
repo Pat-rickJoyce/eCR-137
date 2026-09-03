@@ -1,0 +1,44 @@
+{
+  "mnemonic": "GBS_V1",
+  "conditionId": "GBS",
+  "name": "Guillain-Barré Syndrome",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Guillain_Barre_Syndrome.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Guillain_Barre_Syndrome.v2.20240628.docx on 2026-07-18 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "GBS-R1",
+      "description": "Guillain-Barré syndrome diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.666", "name": "Guillain Barré syndrome (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.667", "name": "Guillain Barré syndrome (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.666", "name": "Guillain Barré syndrome (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.667", "name": "Guillain Barré syndrome (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2: muscle weakness with CSF total protein > 0.65 g/L and CSF leukocytes < 5 {cells}/uL",
+      "reason": "SEM_V1 does not preserve quantitative laboratory values or units, so the authoritative rule 2 numeric thresholds cannot be evaluated and the rule is omitted rather than weakened to test-name presence"
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "mnemonic": "STR_V1",
+  "conditionId": "STR",
+  "name": "Strongyloidiasis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Strongyloidiasis.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Strongyloidiasis.v2.20240202.docx on 2026-07-29 (authoritative RCKMS Content Release 20240202; latest revision 2025-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "STR-R1",
+      "description": "Strongyloidiasis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1935", "name": "Strongyloidiasis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1936", "name": "Strongyloidiasis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1935", "name": "Strongyloidiasis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1936", "name": "Strongyloidiasis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "STR-R2",
+      "description": "Microscopic observation of Strongyloides larvae or eggs using a stool-specific microscopy test",
+      "logic": {
+        "predicate": "labTestWithResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1940",
+          "name": "Organisms (Tests by Microscopic Observation in Stool)",
+          "resultOid": "2.16.840.1.113762.1.4.1146.1941",
+          "resultName": "Strongyloidiasis (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "STR-R3",
+      "description": "Detection of Strongyloides nucleic acid",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1937", "name": "Strongyloidiasis (Tests for Strongyloides Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1937", "name": "Strongyloidiasis (Tests for Strongyloides Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1941", "resultName": "Strongyloidiasis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1937", "name": "Strongyloidiasis (Tests for Strongyloides Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1941", "resultName": "Strongyloidiasis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "STR-R4",
+      "description": "Detection of Strongyloides stercoralis IgG antibody using a blood-specific test",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1939", "name": "Strongyloidiasis (Tests for Strongyloides stercoralis IgG Antibody in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1939", "name": "Strongyloidiasis (Tests for Strongyloides stercoralis IgG Antibody in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.1942", "resultName": "Strongyloidiasis [Strongyloides stercoralis] (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1939", "name": "Strongyloidiasis (Tests for Strongyloides stercoralis IgG Antibody in Blood)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2 organism-specific microscopy branches",
+      "reason": "the authoritative source marks both Strongyloides-specific microscopy test-name value sets not implemented because no LOINC codes are available, so those branches are omitted"
+    },
+    {
+      "valueSet": "Rule 2 generic microscopy or unspecified-method tests with stool specimen",
+      "reason": "SEM_V1 has no specimen evidence, so the required Stool (Specimen Type) qualifier cannot be evaluated; the stool-specific microscopy test-name branch remains implemented"
+    },
+    {
+      "valueSet": "Rule 4 general Strongyloides IgG test with blood specimen",
+      "reason": "SEM_V1 has no specimen evidence, so the required Blood (Specimen Type) qualifier cannot be evaluated; the blood-specific IgG test-name branch remains implemented"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate evidence, but the reporter type is unavailable in RCKMS and SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

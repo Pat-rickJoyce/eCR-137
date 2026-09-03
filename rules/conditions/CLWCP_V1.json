@@ -1,0 +1,101 @@
+{
+  "mnemonic": "CLWCP_V1",
+  "conditionId": "CLWCP",
+  "name": "Cleft Lip with Cleft Palate",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Cleft_Lip_with_Cleft_Palate.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Cleft_Lip_with_Cleft_Palate.v2.20240628.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CLWCP-R1",
+      "description": "Cleft Lip with Cleft Palate (diagnosis or active problem, timeboxed) in a patient younger than 1 year",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2119",
+                          "name": "Cleft Lip with Cleft Palate (Disorders) (SNOMED)"
+                        }
+                      },
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2120",
+                          "name": "Cleft Lip with Cleft Palate (Disorders) (ICD10CM)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2119",
+                          "name": "Cleft Lip with Cleft Palate (Disorders) (SNOMED)",
+                          "status": "active"
+                        }
+                      },
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2120",
+                          "name": "Cleft Lip with Cleft Palate (Disorders) (ICD10CM)",
+                          "status": "active"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 1,
+              "unit": "years"
+            },
+            "gate": true
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Fetal Cleft Lip with Cleft Palate (Disorders) (SNOMED and ICD10CM)",
+      "reason": "not implemented - no codes available for either fetal value set per source docx Table 3; source rule 2 is explicitly inoperable and is omitted"
+    }
+  ]
+}

@@ -1,0 +1,316 @@
+{
+  "mnemonic": "PVD_V1",
+  "conditionId": "PVD",
+  "name": "Powassan Virus Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Powassan_Virus_Disease.v4.20240628.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Powassan_Virus_Disease.v4.20240628.docx on 2026-07-21 (authoritative RCKMS Content Release 16; latest revision 2025-05-28)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "PVD-R1",
+      "description": "Powassan virus disease or infection diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1166",
+                      "name": "Powassan Virus Disease (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1347",
+                      "name": "Powassan Virus Disease (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1166",
+                      "name": "Powassan Virus Disease (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1347",
+                      "name": "Powassan Virus Disease (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PVD-R2",
+      "description": "Powassan virus identified by culture, including preliminary results",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.526",
+              "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1192",
+              "resultName": "Powassan Virus Disease (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1041",
+              "name": "Organisms (Tests by Culture and Identification)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1192",
+              "resultName": "Powassan Virus Disease (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1040",
+              "name": "Organisms (Tests by Unspecified Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1192",
+              "resultName": "Powassan Virus Disease (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PVD-R3",
+      "description": "Powassan virus nucleic acid detected",
+      "logic": {
+        "any": [
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1170",
+                  "name": "Powassan Virus Disease (Tests for Powassan Virus Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1170",
+                  "name": "Powassan Virus Disease (Tests for Powassan Virus Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1192",
+                  "resultName": "Powassan Virus Disease (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1170",
+                  "name": "Powassan Virus Disease (Tests for Powassan Virus Nucleic Acid)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1192",
+              "resultName": "Powassan Virus Disease (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PVD-R5",
+      "description": "Powassan virus IgM antibody detected",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1177",
+              "name": "Powassan Virus Disease (Tests for Powassan Virus IgM Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1177",
+              "name": "Powassan Virus Disease (Tests for Powassan Virus IgM Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1192",
+              "resultName": "Powassan Virus Disease (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1177",
+              "name": "Powassan Virus Disease (Tests for Powassan Virus IgM Antibody)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PVD-R7",
+      "description": "Powassan virus antibody detected",
+      "logic": {
+        "any": [
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1187",
+                  "name": "Powassan Virus Disease (Tests for Powassan Virus Antibody [Qualitative])",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1187",
+                  "name": "Powassan Virus Disease (Tests for Powassan Virus Antibody [Qualitative])",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1192",
+                  "resultName": "Powassan Virus Disease (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1187",
+                  "name": "Powassan Virus Disease (Tests for Powassan Virus Antibody [Qualitative])",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1182",
+                  "name": "Powassan Virus Disease (Tests for Powassan Virus Antibody [Quantitative])",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1182",
+                  "name": "Powassan Virus Disease (Tests for Powassan Virus Antibody [Quantitative])",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1192",
+                  "resultName": "Powassan Virus Disease (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1182",
+                  "name": "Powassan Virus Disease (Tests for Powassan Virus Antibody [Quantitative])",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2: Powassan Virus Disease (Tests for Powassan Virus by Culture and Identification Method)",
+      "reason": "the organism-specific culture test-name value set has no codes; that branch is omitted while the coded arboviral and generic culture tests paired with a Powassan result remain operational"
+    },
+    {
+      "valueSet": "Rule 4: Powassan Virus Disease (Tests for Powassan Virus Antigen)",
+      "reason": "the authoritative source marks the test-name value set not implemented with no codes, so entirely inoperable Rule 4 is omitted with source numbering preserved"
+    },
+    {
+      "valueSet": "Rules 5 and 7: numeric laboratory result greater than zero",
+      "reason": "SEM_V1 has no numeric laboratory result comparison; the > 0 alternatives are omitted while coded positive, Powassan-organism, and abnormal-interpretation alternatives remain operational"
+    },
+    {
+      "valueSet": "Rule 6: paired Powassan antibody titer rise or seroconversion",
+      "reason": "the authoritative source marks this rule not operational; SEM_V1 cannot compare paired specimens, onset/collection intervals, four-fold changes, or negative-to-positive conversion, so Rule 6 is omitted"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-record reporter types",
+      "reason": "the authoritative snapshot marks these reporter types not implemented in RCKMS; SEM_V1 does not carry reporter-source or death-certificate cause/contributing-condition evidence"
+    }
+  ]
+}

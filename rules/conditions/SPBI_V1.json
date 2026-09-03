@@ -1,0 +1,89 @@
+{
+  "mnemonic": "SPBI_V1",
+  "conditionId": "SPBI",
+  "name": "Spina Bifida",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Spina_Bifida.v3.20250703.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Spina_Bifida.v3.20250703.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2025-05-21)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SPBI-R1",
+      "description": "Spina Bifida diagnosis or active problem, timeboxed when configured, in a patient younger than the default age threshold of one year",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2122", "name": "Spina Bifida (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2123", "name": "Spina Bifida (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2122", "name": "Spina Bifida (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2123", "name": "Spina Bifida (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+        ]
+      }
+    },
+    {
+      "id": "SPBI-R2",
+      "description": "Fetal Spina Bifida diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2121", "name": "Fetal Spina Bifida (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2676", "name": "Fetal Spina Bifida (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2121", "name": "Fetal Spina Bifida (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2676", "name": "Fetal Spina Bifida (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies birth-certificate congenital-anomaly and death-certificate evidence, but the reporter type is unavailable in RCKMS and SEM_V1 has no birth- or death-certificate evidence"
+    }
+  ]
+}

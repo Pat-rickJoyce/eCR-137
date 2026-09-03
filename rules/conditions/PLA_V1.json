@@ -1,0 +1,445 @@
+{
+  "mnemonic": "PLA_V1",
+  "conditionId": "PLA",
+  "name": "Plague",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Plague.v5.20260227.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Plague.v5.20260227.docx on 2026-07-21 (authoritative RCKMS Content Release 16; latest revision 2025-12-19)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "PLA-R1",
+      "description": "Plague diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.192",
+                      "name": "Plague (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.193",
+                      "name": "Plague (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.192",
+                      "name": "Plague (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.193",
+                      "name": "Plague (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PLA-R2",
+      "description": "Suspected plague diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1437",
+                      "name": "Plague [Suspected] (Disorders) (SNOMED)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1437",
+                      "name": "Plague [Suspected] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PLA-R3",
+      "description": "Yersinia pestis identified by culture, including preliminary results",
+      "logic": {
+        "any": [
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.570",
+                  "name": "Plague (Tests for Yersinia pestis by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.570",
+                  "name": "Plague (Tests for Yersinia pestis by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.573",
+                  "resultName": "Plague (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.570",
+                  "name": "Plague (Tests for Yersinia pestis by Culture and Identification Method)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1041",
+              "name": "Organisms (Tests by Culture and Identification)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.573",
+              "resultName": "Plague (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1040",
+              "name": "Organisms (Tests by Unspecified Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.573",
+              "resultName": "Plague (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PLA-R4",
+      "description": "Yersinia pestis nucleic acid detected in a clinical specimen",
+      "logic": {
+        "any": [
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.569",
+                  "name": "Plague (Tests for Yersinia pestis Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.569",
+                  "name": "Plague (Tests for Yersinia pestis Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.573",
+                  "resultName": "Plague (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.569",
+                  "name": "Plague (Tests for Yersinia pestis Nucleic Acid)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.573",
+              "resultName": "Plague (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PLA-R5",
+      "description": "Yersinia pestis antigen, including F1 antigen, detected in a clinical specimen",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.571",
+              "name": "Plague (Tests for Yersinia pestis Antigen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.571",
+              "name": "Plague (Tests for Yersinia pestis Antigen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.573",
+              "resultName": "Plague (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.571",
+              "name": "Plague (Tests for Yersinia pestis Antigen)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PLA-R8",
+      "description": "Lab test ordered for Yersinia pestis culture and identification",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.570",
+          "name": "Plague (Tests for Yersinia pestis by Culture and Identification Method)"
+        }
+      }
+    },
+    {
+      "id": "PLA-R9",
+      "description": "Lab test ordered for Yersinia pestis antigen detection",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.571",
+          "name": "Plague (Tests for Yersinia pestis Antigen)"
+        }
+      }
+    },
+    {
+      "id": "PLA-R10",
+      "description": "Lab test ordered for Yersinia pestis antibody detection",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.572",
+              "name": "Plague (Tests for Yersinia pestis Antibody [Qualitative])"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.960",
+              "name": "Plague (Tests for Yersinia pestis Antibody [Quantitative])"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PLA-R13",
+      "description": "Yersinia pestis F1 antibody detected in a clinical specimen",
+      "logic": {
+        "any": [
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.572",
+                  "name": "Plague (Tests for Yersinia pestis Antibody [Qualitative])",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.572",
+                  "name": "Plague (Tests for Yersinia pestis Antibody [Qualitative])",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.573",
+                  "resultName": "Plague (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.572",
+                  "name": "Plague (Tests for Yersinia pestis Antibody [Qualitative])",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.960",
+                  "name": "Plague (Tests for Yersinia pestis Antibody [Quantitative])",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.960",
+                  "name": "Plague (Tests for Yersinia pestis Antibody [Quantitative])",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.573",
+                  "resultName": "Plague (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.960",
+                  "name": "Plague (Tests for Yersinia pestis Antibody [Quantitative])",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2: Plague [Suspected] (Disorders) (ICD10CM)",
+      "reason": "the authoritative Table 3 row is not implemented and has no codes; the code-less ICD10CM alternatives are omitted while the coded SNOMED alternatives remain operational"
+    },
+    {
+      "valueSet": "Rule 6: four-fold or greater F1 antibody titer rise in paired acute and convalescent specimens",
+      "reason": "the authoritative source marks this rule not implemented; SEM_V1 cannot compare paired specimens, collection intervals, or titer changes, so Rule 6 is omitted"
+    },
+    {
+      "valueSet": "Rule 7: Yersinia pestis F1 antibody titer at least 1:128",
+      "reason": "the authoritative source marks the titer threshold inoperable and its F1 quantitative test value set has no codes; SEM_V1 has no numeric/titer comparison, so Rule 7 is omitted"
+    },
+    {
+      "valueSet": "Rules 8-10: laboratory test orders and code-less Plague test-panel/F1-antibody value sets",
+      "reason": "SEM_V1 lab evidence does not distinguish orders from completed observations, so coded order-name alternatives use labTestInValueSet; Table 3 panel and F1-specific test sets have no codes and their branches are omitted"
+    },
+    {
+      "valueSet": "Rules 11-12: clinical findings plus a plague epidemiologic link",
+      "reason": "the authoritative source marks both logic sets inoperable because contact-with-case, animal-contact, and epizootic-area criteria are not implemented; SEM_V1 has no epidemiologic-link evidence, so the rules are omitted rather than allowing clinical findings alone to report"
+    },
+    {
+      "valueSet": "Rule 13: Plague F1 antibody quantitative and qualitative test names",
+      "reason": "the authoritative Table 3 rows have no codes; the code-less F1-specific branches are omitted while coded general antibody test alternatives remain operational"
+    },
+    {
+      "valueSet": "Vital-records plague reporting",
+      "reason": "the authoritative snapshot identifies this reporter type as not implemented in RCKMS, and SEM_V1 has no death-certificate cause/contributing-condition evidence"
+    }
+  ]
+}

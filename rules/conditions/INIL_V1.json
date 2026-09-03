@@ -1,0 +1,72 @@
+{
+  "mnemonic": "INIL_V1",
+  "conditionId": "INIL",
+  "name": "Influenza-like Illness",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Influenza-like_Illness.v3.20240628.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Influenza-like_Illness.v3.20240628.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2025-06-04)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "INIL-R1",
+      "description": "Influenza-like illness as a diagnosis or active problem using the coded SNOMED value set (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1531", "name": "Influenza like Illness (Disorders) (SNOMED)" } },
+        { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1531", "name": "Influenza like Illness (Disorders) (SNOMED)", "status": "active" } }
+      ] }
+    },
+    {
+      "id": "INIL-R2",
+      "description": "Fever as a diagnosis or active problem together with cough as a diagnosis or active problem (numeric temperature alternative not modeled)",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.91", "name": "Cough (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.90", "name": "Cough (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.91", "name": "Cough (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.90", "name": "Cough (ICD10CM)", "status": "active" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "INIL-R3",
+      "description": "Fever as a diagnosis or active problem together with sore throat as a diagnosis or active problem (numeric temperature alternative not modeled)",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.794", "name": "Sore Throat (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.760", "name": "Sore Throat (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.794", "name": "Sore Throat (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.760", "name": "Sore Throat (ICD10CM)", "status": "active" } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Influenza like Illness (Disorders) (ICD10CM)",
+      "reason": "the authoritative source reports no ICD-10-CM codes available; the ICD-10-CM diagnosis and active-problem alternatives are omitted from INIL-R1 while the coded SNOMED branches remain modeled"
+    },
+    {
+      "valueSet": "Body temperature at least 37.8 degC or 100 degF",
+      "reason": "SEM_V1 has no vital-sign numeric value/unit comparison predicate; INIL-R2 and INIL-R3 retain the source's coded fever diagnosis and active-problem alternatives but omit the quantitative temperature alternative"
+    }
+  ]
+}

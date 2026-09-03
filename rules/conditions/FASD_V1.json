@@ -1,0 +1,108 @@
+{
+  "mnemonic": "FASD_V1",
+  "conditionId": "FASD",
+  "name": "Fetal Alcohol Spectrum Disorders",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Fetal_Alcohol_Spectrum_Disorders.v1.20250703.docx",
+    "rckmsVersion": "v1",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Fetal_Alcohol_Spectrum_Disorders.v1.20250703.docx on 2026-07-18 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "FASD-R1",
+      "description": "Fetal alcohol spectrum disorder diagnosis or active problem (timeboxed) in a patient younger than one year",
+      "logic": { "all": [
+        { "any": [
+          { "all": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2555", "name": "Fetal Alcohol Spectrum Disorders (Disorders) (SNOMED)" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2555", "name": "Fetal Alcohol Spectrum Disorders (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+      ] }
+    },
+    {
+      "id": "FASD-R2",
+      "description": "A qualifying clinical observation plus in utero exposure to alcohol, each as a diagnosis or active problem",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1095", "name": "Microcephaly (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1101", "name": "Microcephaly (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1095", "name": "Microcephaly (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1101", "name": "Microcephaly (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2559", "name": "Attention Difficulty (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2562", "name": "Attention Difficulty (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2559", "name": "Attention Difficulty (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2562", "name": "Attention Difficulty (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2560", "name": "Hyperactive Behavior (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2561", "name": "Hyperactive Behavior (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2560", "name": "Hyperactive Behavior (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2561", "name": "Hyperactive Behavior (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2565", "name": "Poor Coordination (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2566", "name": "Poor Coordination (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2565", "name": "Poor Coordination (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2566", "name": "Poor Coordination (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2568", "name": "Short Stature (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2567", "name": "Short Stature (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2568", "name": "Short Stature (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2567", "name": "Short Stature (ICD10CM)", "status": "active" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2563", "name": "Underweight (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2564", "name": "Underweight (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2563", "name": "Underweight (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2564", "name": "Underweight (ICD10CM)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2556", "name": "In Utero Exposure to Alcohol (SNOMED)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2556", "name": "In Utero Exposure to Alcohol (SNOMED)", "status": "active" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "FASD-R3",
+      "description": "Optional logic: fetal alcohol syndrome diagnosis or active problem (timeboxed) in a patient younger than one year",
+      "logic": { "all": [
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2554", "name": "Fetal Alcohol Syndrome (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2557", "name": "Fetal Alcohol Syndrome (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2554", "name": "Fetal Alcohol Syndrome (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2557", "name": "Fetal Alcohol Syndrome (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Fetal Alcohol Spectrum Disorders (Disorders) (ICD10CM)",
+      "reason": "the authoritative source says no codes are available; FASD-R1 uses the supported SNOMED value set"
+    },
+    {
+      "valueSet": "Smooth Philtrum (SNOMED and ICD10CM)",
+      "reason": "the authoritative source says no codes are available for either value set, so smooth-philtrum alternatives are omitted from FASD-R2"
+    },
+    {
+      "valueSet": "In Utero Exposure to Alcohol (ICD10CM)",
+      "reason": "the authoritative source says no codes are available; FASD-R2 uses the supported SNOMED value set"
+    }
+  ]
+}

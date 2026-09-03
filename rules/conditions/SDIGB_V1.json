@@ -1,0 +1,90 @@
+{
+  "mnemonic": "SDIGB_V1",
+  "conditionId": "SDIGB",
+  "name": "Streptococcal disease invasive Group B",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Streptococcal_disease_invasive_Group_B.v4.20260227.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Streptococcal_disease_invasive_Group_B.v4.20260227.docx on 2026-07-29 (authoritative RCKMS Content Release 17; latest revision 2026-01-07)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SDIGB-R1",
+      "description": "Invasive Group B streptococcal disease diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1573", "name": "Invasive Group B Streptococcus (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1574", "name": "Invasive Group B Streptococcus (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1573", "name": "Invasive Group B Streptococcus (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1574", "name": "Invasive Group B Streptococcus (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SDIGB-R2",
+      "description": "Group B Streptococcus identified by culture from a normally sterile site using a specimen-specific test-name branch",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2619", "name": "Group B Streptococcus (Tests for Group B Strep in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2619", "name": "Group B Streptococcus (Tests for Group B Strep in Specimen from Normally Sterile Site by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1576", "resultName": "Group B Streptococcus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2619", "name": "Group B Streptococcus (Tests for Group B Strep in Specimen from Normally Sterile Site by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1461", "name": "Organisms (Tests in Specimen from Normally Sterile Site by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1576", "resultName": "Group B Streptococcus (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SDIGB-R3",
+      "description": "Optional logic: Group B Streptococcus nucleic acid detected in a normally sterile site using a specimen-specific test-name branch",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3084", "name": "Group B Streptococcus (Tests for Group B Strep Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3084", "name": "Group B Streptococcus (Tests for Group B Strep Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.1576", "resultName": "Group B Streptococcus (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.3084", "name": "Group B Streptococcus (Tests for Group B Strep Nucleic Acid in Specimen from Normally Sterile Site)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1085", "name": "Organisms (Tests for Nucleic Acid in Specimen from Normally Sterile Site)", "resultOid": "2.16.840.1.113762.1.4.1146.1576", "resultName": "Group B Streptococcus (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rules 2 and 3 general or combination laboratory tests constrained by a separate normally sterile-site specimen value",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate; general culture, general nucleic-acid, and Group B combination-test branches are omitted while independently sufficient specimen-specific test-name alternatives remain modeled"
+    },
+    {
+      "valueSet": "Specimen from a Normally Sterile Site (Specimen Type) (HL7)",
+      "reason": "the authoritative source marks HL7 table 0487 specimen type not implemented because it is unavailable in VSAC"
+    },
+    {
+      "valueSet": "Lab-reporting reporter type",
+      "reason": "the authoritative specification marks this reporter type unavailable in RCKMS; the same culture criterion remains represented for provider/facility reporting in SDIGB-R2"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "SEM_V1 does not carry death-certificate cause or contributing-condition evidence"
+    }
+  ]
+}

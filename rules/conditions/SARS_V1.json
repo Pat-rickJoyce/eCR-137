@@ -1,0 +1,163 @@
+{
+  "mnemonic": "SARS_V1",
+  "conditionId": "SARS",
+  "name": "Severe Acute Respiratory Syndrome",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Severe_Acute_Respiratory_Syndrome.v9.20260227.docx",
+    "rckmsVersion": "v9",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Severe_Acute_Respiratory_Syndrome.v9.20260227.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2026-01-05)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SARS-R1",
+      "description": "Severe acute respiratory syndrome diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.853", "name": "SARS (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.458", "name": "SARS (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.853", "name": "SARS (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.458", "name": "SARS (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SARS-R2",
+      "description": "Suspected severe acute respiratory syndrome diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1441", "name": "SARS [Suspected] (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1441", "name": "SARS [Suspected] (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SARS-R3",
+      "description": "SARS-CoV identified by culture with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.846", "name": "SARS (Tests for SARS_CoV by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.846", "name": "SARS (Tests for SARS_CoV by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.875", "resultName": "SARS (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.846", "name": "SARS (Tests for SARS_CoV by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.875", "resultName": "SARS (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.875", "resultName": "SARS (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SARS-R4",
+      "description": "SARS-CoV nucleic acid detected with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.847", "name": "SARS (Tests for SARS_CoV Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.847", "name": "SARS (Tests for SARS_CoV Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.875", "resultName": "SARS (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.847", "name": "SARS (Tests for SARS_CoV Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.875", "resultName": "SARS (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SARS-R5",
+      "description": "SARS-CoV antibody detected with a coded qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.848", "name": "SARS (Tests for SARS_CoV Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.848", "name": "SARS (Tests for SARS_CoV Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.875", "resultName": "SARS (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.848", "name": "SARS (Tests for SARS_CoV Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SARS-R6",
+      "description": "SARS-CoV detected by an unspecified method with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.887", "name": "SARS (Tests for SARS_CoV by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.887", "name": "SARS (Tests for SARS_CoV by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.875", "resultName": "SARS (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.887", "name": "SARS (Tests for SARS_CoV by Unspecified Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SARS-R7",
+      "description": "Laboratory test ordered for SARS-CoV identification by culture",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.846",
+          "name": "SARS (Tests for SARS_CoV by Culture and Identification Method)"
+        }
+      }
+    },
+    {
+      "id": "SARS-R8",
+      "description": "Laboratory test ordered for SARS-CoV nucleic-acid detection",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.847",
+          "name": "SARS (Tests for SARS_CoV Nucleic Acid)"
+        }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "SARS [Suspected] (Disorders) (ICD10CM)",
+      "reason": "not implemented - no ICD-10-CM codes are available in the authoritative source; the SNOMED alternatives in SARS-R2 remain modeled"
+    },
+    {
+      "valueSet": "Rule 5 antibody result value greater than zero",
+      "reason": "SEM_V1 has no numeric laboratory-result predicate; coded positive, organism, and abnormal-interpretation alternatives remain modeled"
+    },
+    {
+      "valueSet": "Rules 7 and 8 laboratory order evidence",
+      "reason": "SEM_V1 does not distinguish ordered tests from completed laboratory observations; coded test-name evidence is modeled with labTestInValueSet"
+    },
+    {
+      "valueSet": "SARS culture and nucleic-acid test panels",
+      "reason": "not implemented - no codes are available in the authoritative source; unavailable panel alternatives in SARS-R7 and SARS-R8 are omitted"
+    },
+    {
+      "valueSet": "Rules 9 through 12 epidemiologic and imaging criteria",
+      "reason": "the authoritative source marks all four clinical logic sets inoperable because epidemiologic criteria are not implemented; rule 12 also requires an uncoded narrative chest-imaging interpretation, so the wholly inoperable rules are omitted"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-record reporter types",
+      "reason": "the authoritative snapshot marks these reporter types not implemented in RCKMS; SEM_V1 does not carry reporter-source or death-certificate cause/contributing-condition evidence"
+    }
+  ]
+}

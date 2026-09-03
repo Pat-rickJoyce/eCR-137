@@ -1,0 +1,126 @@
+{
+  "mnemonic": "CWP_V1",
+  "conditionId": "CWP",
+  "name": "Coal Workers Pneumoconiosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Coal_Workers_Pneumoconiosis.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs live RCKMS Release 16 docx (2026-07-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CWP-R1",
+      "description": "Coal workers' pneumoconiosis diagnosis or active problem (timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1805",
+                  "name": "Coal Workers' Pneumoconiosis (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1806",
+                  "name": "Coal Workers' Pneumoconiosis (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1805",
+                  "name": "Coal Workers' Pneumoconiosis (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1806",
+                  "name": "Coal Workers' Pneumoconiosis (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "CWP-R2",
+      "description": "Unspecified pneumoconiosis diagnosis or active problem (timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.823",
+                  "name": "Pneumoconiosis (Unspecified) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.822",
+                  "name": "Pneumoconiosis (Unspecified) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.823",
+                  "name": "Pneumoconiosis (Unspecified) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.822",
+                  "name": "Pneumoconiosis (Unspecified) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Chest imaging (X-ray/CT) with pneumoconiosis finding",
+      "reason": "imaging evidence + coded imaging findings not modeled in SEM_V1 (source: imaging findings are narrative text, not coded)"
+    },
+    {
+      "valueSet": "Occupational exposure to coal mine dust (industry/occupation code systems)",
+      "reason": "industry/occupation code systems unavailable in VSAC and not modeled; interstitial-fibrosis/ILD-plus-exposure rules cannot be implemented"
+    },
+    {
+      "valueSet": "Timebox windows",
+      "reason": "platform-unimplemented; does not reduce coverage"
+    }
+  ]
+}

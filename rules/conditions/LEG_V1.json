@@ -1,0 +1,115 @@
+{
+  "mnemonic": "LEG_V1",
+  "conditionId": "LEG",
+  "name": "Legionellosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Legionellosis.v3.20240202.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Legionellosis.v3.20240202.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2025-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "LEG-R1",
+      "description": "Legionnaires' disease, legionellosis, extrapulmonary legionellosis, or Pontiac fever as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.279", "name": "Legionellosis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.280", "name": "Legionellosis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.279", "name": "Legionellosis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.280", "name": "Legionellosis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "LEG-R2",
+      "description": "Identification of Legionella species by culture through a specific or generic test with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.447", "name": "Legionellosis (Tests for Legionella species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.447", "name": "Legionellosis (Tests for Legionella species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.463", "resultName": "Legionellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.447", "name": "Legionellosis (Tests for Legionella species by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.463", "resultName": "Legionellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.463", "resultName": "Legionellosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LEG-R3",
+      "description": "Detection of Legionella species nucleic acid by a specific or generic test with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.446", "name": "Legionellosis (Tests for Legionella species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.446", "name": "Legionellosis (Tests for Legionella species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.463", "resultName": "Legionellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.446", "name": "Legionellosis (Tests for Legionella species Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.463", "resultName": "Legionellosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LEG-R4",
+      "description": "Detection of Legionella species antigen with a coded positive, organism, or abnormal-interpretation result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.445", "name": "Legionellosis (Tests for Legionella species Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.445", "name": "Legionellosis (Tests for Legionella species Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.463", "resultName": "Legionellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.445", "name": "Legionellosis (Tests for Legionella species Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "LEG-R5",
+      "description": "Microscopic observation of Legionella species through a generic immunofluorescence or unspecified-method test with a Legionella result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.891", "name": "Organisms (Tests by Microscopic Observation by Immunofluorescence)", "resultOid": "2.16.840.1.113762.1.4.1146.463", "resultName": "Legionellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.463", "resultName": "Legionellosis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LEG-R7",
+      "description": "Optional logic: detection of Legionella species IgM antibody with a coded positive, organism, or abnormal-interpretation result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.449", "name": "Legionellosis (Tests for Legionella species IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.449", "name": "Legionellosis (Tests for Legionella species IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.463", "resultName": "Legionellosis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.449", "name": "Legionellosis (Tests for Legionella species IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Legionella species (Tests by Microscopic Observation by Immunofluorescence)",
+      "reason": "the authoritative source reports no codes available; LEG-R5 retains the generic immunofluorescence and unspecified-method test branches that require a Legionella result"
+    },
+    {
+      "valueSet": "Paired Legionella species antibody comparison",
+      "reason": "source rule 6 is explicitly not operational; SEM_V1 cannot compare paired specimens, collection intervals, or four-fold titer rises, so the rule is omitted"
+    }
+  ]
+}

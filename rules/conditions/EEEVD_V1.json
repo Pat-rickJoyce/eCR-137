@@ -1,0 +1,155 @@
+{
+  "mnemonic": "EEEVD_V1",
+  "conditionId": "EEEVD",
+  "name": "Eastern equine encephalitis virus disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Eastern_equine_encephalitis_virus_disease.v4.20240628.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Eastern_equine_encephalitis_virus_disease.v4.20240628.docx on 2026-07-18 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "EEEVD-R1",
+      "description": "Eastern equine encephalitis virus disease or infection (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1165", "name": "Eastern Equine Encephalitis Virus Disease (Disorders) (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1160", "name": "Eastern Equine Encephalitis Virus Disease (Disorders) (ICD10CM)" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "any": [
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1165", "name": "Eastern Equine Encephalitis Virus Disease (Disorders) (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1160", "name": "Eastern Equine Encephalitis Virus Disease (Disorders) (ICD10CM)", "status": "active" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EEEVD-R2",
+      "description": "Identification of eastern equine encephalitis virus by culture and identification method, including preliminary results",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": null, "name": "Eastern Equine Encephalitis Virus Disease (Tests for Eastern Equine Encephalitis Virus by Culture and Identification Method)" } },
+              { "any": [
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1191", "name": "Eastern Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)" } },
+                { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+              ] }
+            ]
+          },
+          {
+            "all": [
+              { "any": [
+                { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.526", "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)" } },
+                { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+                { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+              ] },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1191", "name": "Eastern Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EEEVD-R3",
+      "description": "Detection of eastern equine encephalitis virus nucleic acid by any method",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1168", "name": "Eastern Equine Encephalitis Virus Disease (Tests for Eastern Equine Encephalitis Virus Nucleic Acid)" } },
+              { "any": [
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1191", "name": "Eastern Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)" } },
+                { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+              ] }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)" } },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1191", "name": "Eastern Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "EEEVD-R4",
+      "description": "Detection of eastern equine encephalitis virus antigen by any method",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1173", "name": "Eastern Equine Encephalitis Virus Disease (Tests for Eastern Equine Encephalitis Virus Antigen)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1191", "name": "Eastern Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "EEEVD-R5",
+      "description": "Detection of eastern equine encephalitis virus IgM antibody (coded/abnormal alternatives; numeric > 0 not modeled)",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1176", "name": "Eastern Equine Encephalitis Virus Disease (Tests for Eastern Equine Encephalitis Virus IgM Antibody)" } },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1191", "name": "Eastern Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "EEEVD-R7",
+      "description": "Optional logic: detection of eastern equine encephalitis virus qualitative or quantitative antibody with a coded/abnormal result (numeric > 0 not modeled)",
+      "logic": {
+        "all": [
+          { "any": [
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1186", "name": "Eastern Equine Encephalitis Virus Disease (Tests for Eastern Equine Encephalitis Virus Antibody [Qualitative])" } },
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1181", "name": "Eastern Equine Encephalitis Virus Disease (Tests for Eastern Equine Encephalitis Virus Antibody [Quantitative])" } }
+          ] },
+          { "any": [
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+            { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1191", "name": "Eastern Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)" } },
+            { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+          ] }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Eastern Equine Encephalitis Virus Disease (Tests for Eastern Equine Encephalitis Virus by Culture and Identification Method)",
+      "reason": "not implemented - no codes available per source docx Table 3; EEEVD-R2 retains the generic culture-test plus organism-result branch"
+    },
+    {
+      "valueSet": "Paired acute/convalescent eastern equine encephalitis virus antibody comparison",
+      "reason": "source rule 6 is explicitly not operational and SEM_V1 cannot compare paired specimens, collection intervals, four-fold titer rises, or seroconversion; the rule is omitted"
+    },
+    {
+      "valueSet": "Numeric laboratory result > 0",
+      "reason": "SEM_V1 has no numeric laboratory result comparison; numeric alternatives in EEEVD-R5 and EEEVD-R7 are omitted"
+    }
+  ]
+}

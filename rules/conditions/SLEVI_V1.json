@@ -1,0 +1,125 @@
+{
+  "mnemonic": "SLEVI_V1",
+  "conditionId": "SLEVI",
+  "name": "St Louis Encephalitis Virus Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "St_Louis_Encephalitis_Virus_Infection.v4.20240202.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs St_Louis_Encephalitis_Virus_Infection.v4.20240202.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2025-05-21)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SLEVI-R1",
+      "description": "St. Louis Encephalitis Virus Infection diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.179", "name": "St. Louis Encephalitis Virus Infection (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.178", "name": "St. Louis Encephalitis Virus Infection (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.179", "name": "St. Louis Encephalitis Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.178", "name": "St. Louis Encephalitis Virus Infection (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SLEVI-R2",
+      "description": "Identification of St. Louis encephalitis virus by a general culture or organism-identification test with a condition-specific result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.526", "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.549", "resultName": "St. Louis Encephalitis Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.549", "resultName": "St. Louis Encephalitis Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.549", "resultName": "St. Louis Encephalitis Virus Infection (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SLEVI-R3",
+      "description": "Detection of St. Louis encephalitis virus nucleic acid with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.544", "name": "St. Louis Encephalitis Virus Infection (Tests for Saint Louis encephalitis virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.544", "name": "St. Louis Encephalitis Virus Infection (Tests for Saint Louis encephalitis virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.549", "resultName": "St. Louis Encephalitis Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.544", "name": "St. Louis Encephalitis Virus Infection (Tests for Saint Louis encephalitis virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.549", "resultName": "St. Louis Encephalitis Virus Infection (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "SLEVI-R4",
+      "description": "Detection of St. Louis encephalitis virus antigen with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.545", "name": "St. Louis Encephalitis Virus Infection (Tests for Saint Louis encephalitis virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.545", "name": "St. Louis Encephalitis Virus Infection (Tests for Saint Louis encephalitis virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.549", "resultName": "St. Louis Encephalitis Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.545", "name": "St. Louis Encephalitis Virus Infection (Tests for Saint Louis encephalitis virus Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SLEVI-R5",
+      "description": "Detection of St. Louis encephalitis virus IgM antibody with a coded or abnormal result on the same observation (numeric greater-than-zero alternative not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.546", "name": "St. Louis Encephalitis Virus Infection (Tests for Saint Louis encephalitis virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.546", "name": "St. Louis Encephalitis Virus Infection (Tests for Saint Louis encephalitis virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.549", "resultName": "St. Louis Encephalitis Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.546", "name": "St. Louis Encephalitis Virus Infection (Tests for Saint Louis encephalitis virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "SLEVI-R7",
+      "description": "Optional detection of St. Louis encephalitis virus quantitative or qualitative antibody with a coded or abnormal result on the same observation (numeric greater-than-zero alternative not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.547", "name": "St. Louis Encephalitis Virus Infection (Tests for Saint Louis encephalitis virus Antibody [Quantitative])", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.547", "name": "St. Louis Encephalitis Virus Infection (Tests for Saint Louis encephalitis virus Antibody [Quantitative])", "resultOid": "2.16.840.1.113762.1.4.1146.549", "resultName": "St. Louis Encephalitis Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.547", "name": "St. Louis Encephalitis Virus Infection (Tests for Saint Louis encephalitis virus Antibody [Quantitative])", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.548", "name": "St. Louis Encephalitis Virus Infection (Tests for Saint Louis encephalitis virus Antibody [Qualitative])", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.548", "name": "St. Louis Encephalitis Virus Infection (Tests for Saint Louis encephalitis virus Antibody [Qualitative])", "resultOid": "2.16.840.1.113762.1.4.1146.549", "resultName": "St. Louis Encephalitis Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.548", "name": "St. Louis Encephalitis Virus Infection (Tests for Saint Louis encephalitis virus Antibody [Qualitative])", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "SLEVI-R2 organism-specific culture and identification test",
+      "reason": "the authoritative source marks the condition-specific culture-test value set not implemented with no codes; the generic culture and organism-test alternatives with a condition-specific result remain modeled"
+    },
+    {
+      "valueSet": "SLEVI-R5 and SLEVI-R7 numeric result greater than zero",
+      "reason": "SEM_V1 has no numeric-result evidence or threshold predicate; coded positive, condition-specific, and abnormal-interpretation alternatives remain modeled"
+    },
+    {
+      "valueSet": "SLEVI-R6 four-fold or greater antibody titer increase between paired acute and convalescent specimens",
+      "reason": "the source explicitly marks the paired-serology criterion not operational; SEM_V1 cannot compare paired titers or enforce the 10-to-180-day collection interval, so the numbered rule is omitted"
+    },
+    {
+      "valueSet": "Laboratory and vital-record reporter types",
+      "reason": "the source marks these reporter types unavailable in RCKMS; equivalent provider/facility laboratory rules remain modeled, while SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

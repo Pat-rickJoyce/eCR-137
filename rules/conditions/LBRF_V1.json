@@ -1,0 +1,107 @@
+{
+  "mnemonic": "LBRF_V1",
+  "conditionId": "LBRF",
+  "name": "Louse Borne Relapsing Fever",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Louse_Borne_Relapsing_Fever.v3.20250228.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2025-02-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Louse_Borne_Relapsing_Fever.v3.20250228.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2025-06-04)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "LBRF-R1",
+      "description": "Louse-borne relapsing fever as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1816", "name": "Louseborne relapsing fever (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1817", "name": "Louseborne relapsing fever (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1816", "name": "Louseborne relapsing fever (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1817", "name": "Louseborne relapsing fever (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "LBRF-R2",
+      "description": "Detection of Borrelia recurrentis nucleic acid using a blood-specific test with a coded positive, organism, or abnormal-interpretation result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2459", "name": "Louseborne relapsing fever (Tests for Borrelia recurrentis Nucleic Acid in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2459", "name": "Louseborne relapsing fever (Tests for Borrelia recurrentis Nucleic Acid in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.1822", "resultName": "Louseborne relapsing fever [Borrelia recurrentis] (Borrelia recurrentis in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2459", "name": "Louseborne relapsing fever (Tests for Borrelia recurrentis Nucleic Acid in Blood)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1821", "name": "Organisms (Tests for Nucleic Acid in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.1822", "resultName": "Louseborne relapsing fever [Borrelia recurrentis] (Borrelia recurrentis in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LBRF-R3",
+      "description": "Optional logic: microscopic observation of Borrelia species using a blood-specific test with a coded positive, organism, or abnormal-interpretation result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2461", "name": "Borrelia species (Tests by Microscopic Observation in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2461", "name": "Borrelia species (Tests by Microscopic Observation in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.1823", "resultName": "Borrelia species (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2461", "name": "Borrelia species (Tests by Microscopic Observation in Blood)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.884", "name": "Tests by Microscopic Observation in Blood", "resultOid": "2.16.840.1.113762.1.4.1146.1823", "resultName": "Borrelia species (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LBRF-R4",
+      "description": "Optional logic: microscopic observation of spirochetes using a generic blood-microscopy test with a spirochete result on the same observation",
+      "logic": {
+        "predicate": "labTestWithResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.884",
+          "name": "Tests by Microscopic Observation in Blood",
+          "resultOid": "2.16.840.1.113762.1.4.1146.1824",
+          "resultName": "Spirochetes (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "LBRF-R5",
+      "description": "Optional logic: detection of Borrelia species using a blood-specific test with a coded positive, organism, or abnormal-interpretation result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1820", "name": "Louseborne relapsing fever (Tests for Borrelia species in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1820", "name": "Louseborne relapsing fever (Tests for Borrelia species in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.1823", "resultName": "Borrelia species (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1820", "name": "Louseborne relapsing fever (Tests for Borrelia species in Blood)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1821", "name": "Organisms (Tests for Nucleic Acid in Blood)", "resultOid": "2.16.840.1.113762.1.4.1146.1823", "resultName": "Borrelia species (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "General laboratory tests constrained to Blood specimen type",
+      "reason": "SEM_V1 does not preserve specimen evidence, and Blood (Specimen Type) (HL7) has no VSAC codes; general-test-plus-blood-specimen alternatives in source rules 2-5 are omitted while blood-specific test-name alternatives remain modeled"
+    },
+    {
+      "valueSet": "Spirochetes (Tests by Microscopic Observation in Blood)",
+      "reason": "the authoritative source reports no codes available; LBRF-R4 retains the generic blood-microscopy branch that requires a spirochete result"
+    }
+  ]
+}

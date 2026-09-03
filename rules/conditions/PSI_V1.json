@@ -1,0 +1,269 @@
+{
+  "mnemonic": "PSI_V1",
+  "conditionId": "PSI",
+  "name": "Psittacosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Psittacosis.v4.20260227.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Psittacosis.v4.20260227.docx on 2026-07-21 (authoritative RCKMS Content Release 16; latest revision 2025-11-04)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "PSI-R1",
+      "description": "Psittacosis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.195",
+                      "name": "Psittacosis (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.196",
+                      "name": "Psittacosis (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.195",
+                      "name": "Psittacosis (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.196",
+                      "name": "Psittacosis (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PSI-R2",
+      "description": "Chlamydophila psittaci identified by culture",
+      "logic": {
+        "any": [
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.440",
+                  "name": "Psittacosis (Tests for Chlamydophila psittaci by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.440",
+                  "name": "Psittacosis (Tests for Chlamydophila psittaci by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.444",
+                  "resultName": "Psittacosis (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.440",
+                  "name": "Psittacosis (Tests for Chlamydophila psittaci by Culture and Identification Method)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1041",
+              "name": "Organisms (Tests by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.444",
+              "resultName": "Psittacosis (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1040",
+              "name": "Organisms (Tests by Unspecified Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.444",
+              "resultName": "Psittacosis (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PSI-R3",
+      "description": "Chlamydophila psittaci nucleic acid detected",
+      "logic": {
+        "any": [
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.441",
+                  "name": "Psittacosis (Tests for Chlamydophila psittaci Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.441",
+                  "name": "Psittacosis (Tests for Chlamydophila psittaci Nucleic Acid)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.444",
+                  "resultName": "Psittacosis (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.441",
+                  "name": "Psittacosis (Tests for Chlamydophila psittaci Nucleic Acid)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.444",
+              "resultName": "Psittacosis (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PSI-R6",
+      "description": "Any result for a Chlamydophila psittaci IgM antibody test",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.442",
+          "name": "Psittacosis (Tests for Chlamydophila psittaci IgM Antibody)"
+        }
+      }
+    },
+    {
+      "id": "PSI-R7",
+      "description": "Chlamydophila psittaci IgG antibody detected",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.443",
+              "name": "Psittacosis (Tests for Chlamydophila psittaci IgG Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.443",
+              "name": "Psittacosis (Tests for Chlamydophila psittaci IgG Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.444",
+              "resultName": "Psittacosis (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.443",
+              "name": "Psittacosis (Tests for Chlamydophila psittaci IgG Antibody)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 4: Chlamydophila psittaci IgM antibody titer at least 1:32",
+      "reason": "the authoritative source marks this rule inoperable because eICR titer formatting cannot be evaluated; SEM_V1 has no numeric/titer comparison, so Rule 4 is omitted"
+    },
+    {
+      "valueSet": "Rule 5: four-fold or greater Chlamydophila psittaci IgG antibody titer rise in paired specimens",
+      "reason": "the authoritative source marks this rule not implemented; SEM_V1 cannot compare paired specimens, collection intervals of 14-180 days, fold changes, or the final 1:32 titer, so Rule 5 is omitted"
+    },
+    {
+      "valueSet": "Rule 6: completed IgM laboratory result versus test order",
+      "reason": "the source reports on any result for an IgM test, but SEM_V1 lab evidence does not distinguish a completed observation from an order; the coded test name is modeled with labTestInValueSet"
+    },
+    {
+      "valueSet": "Vital-records psittacosis reporting",
+      "reason": "the authoritative snapshot identifies this reporter type as not implemented in RCKMS, and SEM_V1 has no death-certificate cause/contributing-condition evidence"
+    }
+  ]
+}

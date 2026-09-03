@@ -1,0 +1,181 @@
+{
+  "mnemonic": "ANG_V1",
+  "conditionId": "ANG",
+  "name": "Angiostrongyliasis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Angiostrongyliasis.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Angiostrongyliasis.v2.20240202.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "ANG-R1",
+      "description": "Angiostrongyliasis (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1998",
+                      "name": "Angiostrongyliasis (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2006",
+                      "name": "Angiostrongyliasis (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1998",
+                      "name": "Angiostrongyliasis (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2006",
+                      "name": "Angiostrongyliasis (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ANG-R2",
+      "description": "Detection of Angiostrongylus species nucleic acid in a clinical specimen by any method",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2009",
+                  "name": "Angiostrongyliasis (Tests for Angiostrongylus Nucleic Acid)"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2068",
+                      "name": "Angiostrongyliasis (Organism or Substance in Lab Results)"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": ["A", "AA", "HH", "LL", "H", "L"]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.994",
+                  "name": "Organisms (Tests for Nucleic Acid)"
+                }
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2068",
+                  "name": "Angiostrongyliasis (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ANG-R6",
+      "description": "Optional logic: eosinophilic meningitis (diagnosis or active problem; SNOMED branch)",
+      "logic": {
+        "any": [
+          {
+            "predicate": "diagnosisInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2007",
+              "name": "Eosinophilic meningitis (SNOMED)"
+            }
+          },
+          {
+            "predicate": "problemInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2007",
+              "name": "Eosinophilic meningitis (SNOMED)",
+              "status": "active"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Angiostrongyliasis epidemiologic exposure, residence, or travel criteria",
+      "reason": "source rules 3-5 are explicitly inoperable because epidemiologic criteria are not available in eICR; SEM_V1 has no exposure, endemic-residence, or endemic-travel evidence, so those rule blocks are omitted"
+    },
+    {
+      "valueSet": "CSF eosinophil concentration > 10 cells/uL or percentage > 10%",
+      "reason": "SEM_V1 has no numeric laboratory result or unit comparison; source default rules 4-5 and optional rule 7 are omitted"
+    },
+    {
+      "valueSet": "Eosinophilic meningitis (ICD10CM)",
+      "reason": "not implemented - no ICD10CM codes available per source docx Table 3; ANG-R6 models the available SNOMED diagnosis and active-problem branches"
+    }
+  ]
+}

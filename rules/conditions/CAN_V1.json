@@ -1,0 +1,67 @@
+{
+  "mnemonic": "CAN_V1",
+  "conditionId": "CAN",
+  "name": "Cancer",
+  "evidenceModel": "SEM_V1",
+  "coverage": "complete",
+  "source": {
+    "document": "Cancer.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Cancer.v2.20240628.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CAN-R1",
+      "description": "Malignant or in situ neoplasm, or benign or borderline primary intracranial or central nervous system tumor (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1407", "name": "Cancer [Malignant Neoplasms] (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1402", "name": "Cancer [Malignant Neoplasms] (Disorders) (ICD10CM)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1406", "name": "Cancer [Benign or Borderline CNS Tumors] (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1403", "name": "Cancer [Benign or Borderline CNS Tumors] (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1407", "name": "Cancer [Malignant Neoplasms] (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1402", "name": "Cancer [Malignant Neoplasms] (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1406", "name": "Cancer [Benign or Borderline CNS Tumors] (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1403", "name": "Cancer [Benign or Borderline CNS Tumors] (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "CAN-R2",
+      "description": "Optional logic: specified skin cancer, benign carcinoid tumor, selected carcinoma in situ or intraepithelial neoplasia, or cancer/treatment complication (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1405", "name": "Cancer [Unspecified Skin Cancer, Benign Carcinoid Tumor, in situ Cervical Cancer, Intraepithelial Neoplasia, Complication of Cancer or Treatment] (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1404", "name": "Cancer [Unspecified Skin Cancer, Benign Carcinoid Tumor, in situ Cervical Cancer, Intraepithelial Neoplasia, Complication of Cancer or Treatment] (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1405", "name": "Cancer [Unspecified Skin Cancer, Benign Carcinoid Tumor, in situ Cervical Cancer, Intraepithelial Neoplasia, Complication of Cancer or Treatment] (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1404", "name": "Cancer [Unspecified Skin Cancer, Benign Carcinoid Tumor, in situ Cervical Cancer, Intraepithelial Neoplasia, Complication of Cancer or Treatment] (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    }
+  ],
+  "gaps": []
+}

@@ -1,0 +1,123 @@
+{
+  "mnemonic": "MEN_V1",
+  "conditionId": "MEN",
+  "name": "Meningitis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Meningitis.v4.20250228.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2025-02-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Meningitis.v4.20250228.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2025-06-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "MEN-R1",
+      "description": "Meningitis diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1551", "name": "Meningitis (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1557", "name": "Meningitis (Disorders) (ICD10CM)" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "any": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1551", "name": "Meningitis (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1557", "name": "Meningitis (Disorders) (ICD10CM)", "status": "active" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "MEN-R2",
+      "description": "Aseptic meningitis diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.765", "name": "Aseptic Meningitis (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.657", "name": "Aseptic Meningitis (Disorders) (ICD10CM)" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "any": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.765", "name": "Aseptic Meningitis (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.657", "name": "Aseptic Meningitis (Disorders) (ICD10CM)", "status": "active" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "MEN-R3",
+      "description": "Bacterial meningitis diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1552", "name": "Bacterial Meningitis (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1555", "name": "Bacterial Meningitis (Disorders) (ICD10CM)" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "any": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1552", "name": "Bacterial Meningitis (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1555", "name": "Bacterial Meningitis (Disorders) (ICD10CM)", "status": "active" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "MEN-R4",
+      "description": "Fungal meningitis diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1553", "name": "Fungal Meningitis (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1556", "name": "Fungal Meningitis (Disorders) (ICD10CM)" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "any": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1553", "name": "Fungal Meningitis (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1556", "name": "Fungal Meningitis (Disorders) (ICD10CM)", "status": "active" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "MEN-R5",
+      "description": "Parasitic meningitis diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1554", "name": "Parasitic Meningitis (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1558", "name": "Parasitic Meningitis (Disorders) (ICD10CM)" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "any": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1554", "name": "Parasitic Meningitis (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1558", "name": "Parasitic Meningitis (Disorders) (ICD10CM)", "status": "active" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "MEN-R6",
+      "description": "Meningitis-causing viral nucleic acid detected in cerebrospinal fluid on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1566", "name": "Viruses [Causing Meningitis] (Tests for Nucleic Acid in Cerebrospinal Fluid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1566", "name": "Viruses [Causing Meningitis] (Tests for Nucleic Acid in Cerebrospinal Fluid)", "resultOid": "2.16.840.1.113762.1.4.1146.1564", "resultName": "Viruses [Causing Meningitis] (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1566", "name": "Viruses [Causing Meningitis] (Tests for Nucleic Acid in Cerebrospinal Fluid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "MEN-R7",
+      "description": "Meningitis-causing bacterium identified by culture in cerebrospinal fluid on the same observation",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1568", "name": "Bacteria [Causing Meningitis] (Tests in Cerebrospinal Fluid by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1568", "name": "Bacteria [Causing Meningitis] (Tests in Cerebrospinal Fluid by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1562", "resultName": "Bacteria [Causing Meningitis] (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1568", "name": "Bacteria [Causing Meningitis] (Tests in Cerebrospinal Fluid by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2167", "name": "Organisms (Tests in Cerebrospinal Fluid by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1562", "resultName": "Bacteria [Causing Meningitis] (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "MEN-R8",
+      "description": "Meningitis-causing fungus identified by culture in cerebrospinal fluid on the same observation",
+      "logic": { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2167", "name": "Organisms (Tests in Cerebrospinal Fluid by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1563", "resultName": "Fungi [Causing Meningitis and Encephalitis] (Organism or Substance in Lab Results)" } }
+    }
+  ],
+  "gaps": [
+    { "valueSet": "Cerebrospinal-fluid specimen constraints in source rules 6-8", "reason": "SEM_V1 has no specimen-type evidence or predicate, so general-test branches requiring CSF SNOMED OID 2.16.840.1.113762.1.4.1146.1349 are omitted; specimen-specific test-name branches remain where coded" },
+    { "valueSet": "Cerebrospinal Fluid (Specimen Type) (HL7)", "reason": "the authoritative source marks HL7 table 0487 unavailable in VSAC" },
+    { "valueSet": "Organisms (Tests for Nucleic Acid in Cerebrospinal Fluid)", "reason": "the authoritative source lists no codes, so this generic CSF nucleic-acid branch in source rules 6 and 10 is omitted" },
+    { "valueSet": "Fungi [Causing Meningitis] (Tests in Cerebrospinal Fluid by Culture and Identification Method)", "reason": "the authoritative source lists no codes; source rule 8 retains the coded generic CSF-culture plus fungal-organism branch" },
+    { "valueSet": "Acute-onset qualifier and at-least-two clinical-findings cardinality", "reason": "SEM_V1 does not preserve diagnosis/problem qualifiers or support distinct-group cardinality; both are required by source rules 9 and 10, so those rules are omitted entirely rather than allowing isolated symptoms to report" },
+    { "valueSet": "Body Temperature at least 38 C or 100.4 F", "reason": "SEM_V1 has no unit-aware numeric vital-sign comparison predicate; this is one fever alternative within omitted source rules 9 and 10" },
+    { "valueSet": "CSF leukocytes greater than 10 cells/uL", "reason": "SEM_V1 has no unit-aware numeric laboratory comparison predicate; this branch occurs in omitted source rule 10" },
+    { "valueSet": "Stiff neck, photophobia, and CSF pleocytosis ICD10CM alternatives", "reason": "the authoritative source lists no codes; the corresponding SNOMED alternatives also occur only within omitted source rules 9 and 10" },
+    { "valueSet": "Vital-records and lab reporter types", "reason": "the authoritative source marks these reporter types unavailable in RCKMS; they are not modeled as condition-pack rules" }
+  ]
+}

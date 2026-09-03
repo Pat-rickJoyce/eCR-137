@@ -1,0 +1,46 @@
+{
+  "mnemonic": "BYS_V1",
+  "conditionId": "BYS",
+  "name": "Byssinosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Byssinosis.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Byssinosis.v2.20240628.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "BYS-R1",
+      "description": "Timeboxed byssinosis diagnosis or active problem",
+      "logic": {
+        "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1762", "name": "Byssinosis (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1763", "name": "Byssinosis (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1762", "name": "Byssinosis (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1763", "name": "Byssinosis (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Chest imaging with an interpretation consistent with byssinosis",
+      "reason": "the authoritative source marks rule 2 inoperable because imaging findings and impressions are narrative rather than coded; SEM_V1 has no imaging-result evidence or predicate, so the entire rule is omitted and chest X-ray/CT exam names alone cannot overtrigger"
+    }
+  ]
+}

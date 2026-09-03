@@ -1,0 +1,303 @@
+{
+  "mnemonic": "NIAVI_V1",
+  "conditionId": "NIAVI",
+  "name": "Novel Influenza A Virus Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Novel_Influenza_A_Virus_Infection.v10.20260227.docx",
+    "rckmsVersion": "v10",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Novel_Influenza_A_Virus_Infection.v10.20260227.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2026-01-07)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "NIAVI-R1",
+      "description": "Novel influenza A virus infection diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.793",
+                      "name": "Novel Influenza A Virus Infection (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.792",
+                      "name": "Novel Influenza A Virus Infection (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.793",
+                      "name": "Novel Influenza A Virus Infection (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.792",
+                      "name": "Novel Influenza A Virus Infection (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "NIAVI-R2",
+      "description": "Suspected novel influenza A virus infection diagnosis or active problem using the coded SNOMED value set (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1777",
+                  "name": "Novel Influenza A Virus Infection [Suspected] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1777",
+                  "name": "Novel Influenza A Virus Infection [Suspected] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "NIAVI-R3",
+      "description": "Identification of novel influenza A virus by culture, including organism-specific or generic culture tests with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.801",
+              "name": "Influenza (Tests for Novel influenza A virus by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.801",
+              "name": "Influenza (Tests for Novel influenza A virus by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.796",
+              "resultName": "Influenza (Novel influenza A virus in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.801",
+              "name": "Influenza (Tests for Novel influenza A virus by Culture and Identification Method)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2454",
+              "name": "Influenza (Tests for unspecified influenza virus by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.796",
+              "resultName": "Influenza (Novel influenza A virus in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1041",
+              "name": "Organisms (Tests by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.796",
+              "resultName": "Influenza (Novel influenza A virus in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1040",
+              "name": "Organisms (Tests by Unspecified Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.796",
+              "resultName": "Influenza (Novel influenza A virus in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "NIAVI-R4",
+      "description": "Detection of novel influenza A virus nucleic acid, including organism-specific or generic nucleic-acid tests with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.802",
+              "name": "Influenza (Tests for Novel influenza A virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.802",
+              "name": "Influenza (Tests for Novel influenza A virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.796",
+              "resultName": "Influenza (Novel influenza A virus in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.802",
+              "name": "Influenza (Tests for Novel influenza A virus Nucleic Acid)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2448",
+              "name": "Influenza (Tests for unspecified influenza virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.796",
+              "resultName": "Influenza (Novel influenza A virus in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2740",
+              "name": "Influenza (Combination Tests that include Influenza Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.796",
+              "resultName": "Influenza (Novel influenza A virus in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.796",
+              "resultName": "Influenza (Novel influenza A virus in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "NIAVI-R6",
+      "description": "Order for identification of novel influenza A virus by culture, including isolate-identification testing",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.801",
+          "name": "Influenza (Tests for Novel influenza A virus by Culture and Identification Method)"
+        }
+      }
+    },
+    {
+      "id": "NIAVI-R7",
+      "description": "Order for detection of novel influenza A virus nucleic acid",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.802",
+          "name": "Influenza (Tests for Novel influenza A virus Nucleic Acid)"
+        }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Novel Influenza A Virus Infection [Suspected] (Disorders) (ICD10CM)",
+      "reason": "the authoritative source provides no ICD-10-CM codes; NIAVI-R2 retains the coded SNOMED diagnosis and active-problem paths"
+    },
+    {
+      "valueSet": "Novel influenza A genomic-sequence tests and test panels",
+      "reason": "the authoritative source provides no codes for either value set; source rules 5 and 8 are explicitly inoperable and are omitted"
+    },
+    {
+      "valueSet": "Novel influenza A culture and nucleic-acid test panels",
+      "reason": "the authoritative source provides no codes for either panel; NIAVI-R6 and NIAVI-R7 retain their coded organism-specific test-order paths"
+    },
+    {
+      "valueSet": "Epidemiologic exposure criteria and quantitative body-temperature observations",
+      "reason": "the authoritative source marks source rules 9 and 10 inoperable because the epidemiologic criteria are unavailable; SEM_V1 also cannot evaluate the quantitative temperature alternative, so both rules are omitted"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-records reporter types",
+      "reason": "the authoritative source marks these reporter types unavailable in RCKMS; reporter-type routing and the death-certificate criterion are not represented in the condition pack"
+    }
+  ]
+}

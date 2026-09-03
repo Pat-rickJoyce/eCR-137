@@ -1,0 +1,131 @@
+{
+  "mnemonic": "DIHE_V1",
+  "conditionId": "DIHE",
+  "name": "Diaphragmatic Hernia",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Diaphragmatic_Hernia.v1.20250703.docx",
+    "rckmsVersion": "v1",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs live RCKMS Release 16 docx (2026-07-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "DIHE-R1",
+      "description": "Congenital diaphragmatic hernia diagnosis or active problem, age < 1 year (timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2539",
+                  "name": "Diaphragmatic hernia [Congenital] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2540",
+                  "name": "Diaphragmatic hernia [Congenital] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2539",
+                  "name": "Diaphragmatic hernia [Congenital] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2540",
+                  "name": "Diaphragmatic hernia [Congenital] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 1,
+              "unit": "years"
+            }
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DIHE-R2",
+      "description": "Fetal diaphragmatic hernia diagnosis or active problem (no codes available - not implemented)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Fetal Diaphragmatic hernia (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Fetal Diaphragmatic hernia (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Fetal Diaphragmatic hernia (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Fetal Diaphragmatic hernia (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Fetal Diaphragmatic hernia (Disorders) (SNOMED/ICD10CM)",
+      "reason": "no codes available; DIHE-R2 skips"
+    },
+    {
+      "valueSet": "Timebox windows",
+      "reason": "platform-unimplemented; does not reduce coverage"
+    }
+  ]
+}

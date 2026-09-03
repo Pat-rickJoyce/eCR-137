@@ -1,0 +1,109 @@
+{
+  "mnemonic": "RALIA_V1",
+  "conditionId": "RALIA",
+  "name": "Rectal and Large Intestinal Atresia and Stenosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Rectal_and_Large_Intestinal_Atresia_and_Stenosis.v1.20250703.docx",
+    "rckmsVersion": "v1",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Rectal_and_Large_Intestinal_Atresia_and_Stenosis.v1.20250703.docx on 2026-07-21 (authoritative RCKMS Content Release 16; latest revision 2025-04-11)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "RALIA-R1",
+      "description": "Rectal or large-intestinal atresia or stenosis diagnosis or active problem, timeboxed when configured, in a patient younger than one year",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2600",
+                          "name": "Rectal and Large Intestinal Atresia and Stenosis (Disorders) (SNOMED)"
+                        }
+                      },
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2601",
+                          "name": "Rectal and Large Intestinal Atresia and Stenosis (Disorders) (ICD10CM)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2600",
+                          "name": "Rectal and Large Intestinal Atresia and Stenosis (Disorders) (SNOMED)",
+                          "status": "active"
+                        }
+                      },
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2601",
+                          "name": "Rectal and Large Intestinal Atresia and Stenosis (Disorders) (ICD10CM)",
+                          "status": "active"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 1,
+              "unit": "years"
+            },
+            "gate": true
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 1: patient age less than one year [or user-defined]",
+      "reason": "SEM_V1 cannot represent a jurisdiction-defined threshold, so the authoritative default of less than one year is modeled"
+    },
+    {
+      "valueSet": "Rule 2: Fetal Rectal and Large Intestinal Atresia and Stenosis (Disorders) (SNOMED and ICD10CM)",
+      "reason": "both authoritative Table 3 value sets are not implemented and have no codes, so entirely inoperable Rule 2 is omitted with source numbering preserved"
+    },
+    {
+      "valueSet": "Birth- and death-certificate reporter types",
+      "reason": "the authoritative snapshot marks vital-record reporting not implemented in RCKMS; SEM_V1 does not carry reporter-source or certificate cause/contributing-condition evidence"
+    }
+  ]
+}

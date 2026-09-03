@@ -1,0 +1,175 @@
+{
+  "mnemonic": "IAH_V1",
+  "conditionId": "IAH",
+  "name": "Influenza Associated Hospitalizations",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Influenza_Associated_Hospitalizations.v7.20260626.docx",
+    "rckmsVersion": "v7",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Influenza_Associated_Hospitalizations.v7.20260626.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2026-05-05)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "IAH-R2",
+      "description": "Hospitalized during encounter with positive influenza A-or-B culture, nucleic-acid, or antigen evidence",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1323", "name": "Hospitalized [Inpatient] (EncounterTypeCode)" } },
+          { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1320", "name": "Hospitalized [Inpatient] (ActEncounterCode)" } },
+          { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1335", "name": "Hospitalized [Inpatient] (SNOMED)" } }
+        ] },
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.797", "name": "Influenza (Tests for influenza A or B virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.797", "name": "Influenza (Tests for influenza A or B virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.340", "resultName": "Influenza (influenza A or B virus in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.797", "name": "Influenza (Tests for influenza A or B virus by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.340", "resultName": "Influenza (influenza A or B virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.340", "resultName": "Influenza (influenza A or B virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2454", "name": "Influenza (Tests for unspecified influenza virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.340", "resultName": "Influenza (influenza A or B virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.336", "name": "Influenza (Tests for influenza A or B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.336", "name": "Influenza (Tests for influenza A or B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.340", "resultName": "Influenza (influenza A or B virus in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.336", "name": "Influenza (Tests for influenza A or B virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.340", "resultName": "Influenza (influenza A or B virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2448", "name": "Influenza (Tests for unspecified influenza virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.340", "resultName": "Influenza (influenza A or B virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.337", "name": "Influenza (Tests for influenza A or B virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.337", "name": "Influenza (Tests for influenza A or B virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.340", "resultName": "Influenza (influenza A or B virus in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.337", "name": "Influenza (Tests for influenza A or B virus Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2450", "name": "Influenza (Tests for unspecified influenza virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.340", "resultName": "Influenza (influenza A or B virus in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "IAH-R3",
+      "description": "Optional hospitalized encounter with subtype-specific or unspecified positive influenza culture, nucleic-acid, or antigen evidence",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1323", "name": "Hospitalized [Inpatient] (EncounterTypeCode)" } },
+          { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1320", "name": "Hospitalized [Inpatient] (ActEncounterCode)" } },
+          { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1335", "name": "Hospitalized [Inpatient] (SNOMED)" } }
+        ] },
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.335", "name": "Influenza (Tests for influenza A virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.335", "name": "Influenza (Tests for influenza A virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.795", "resultName": "Influenza (influenza A virus in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.335", "name": "Influenza (Tests for influenza A virus by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2455", "name": "Influenza (Tests for influenza B virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2455", "name": "Influenza (Tests for influenza B virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.2453", "resultName": "Influenza (influenza B virus in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2455", "name": "Influenza (Tests for influenza B virus by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2454", "name": "Influenza (Tests for unspecified influenza virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2454", "name": "Influenza (Tests for unspecified influenza virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.2452", "resultName": "Influenza (unspecified influenza virus in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2454", "name": "Influenza (Tests for unspecified influenza virus by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.798", "name": "Influenza (Tests for influenza A virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.798", "name": "Influenza (Tests for influenza A virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.795", "resultName": "Influenza (influenza A virus in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.798", "name": "Influenza (Tests for influenza A virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2449", "name": "Influenza (Tests for influenza B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2449", "name": "Influenza (Tests for influenza B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.2453", "resultName": "Influenza (influenza B virus in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2449", "name": "Influenza (Tests for influenza B virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2448", "name": "Influenza (Tests for unspecified influenza virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2448", "name": "Influenza (Tests for unspecified influenza virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.2452", "resultName": "Influenza (unspecified influenza virus in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2448", "name": "Influenza (Tests for unspecified influenza virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.799", "name": "Influenza (Tests for influenza A virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.799", "name": "Influenza (Tests for influenza A virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.795", "resultName": "Influenza (influenza A virus in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.799", "name": "Influenza (Tests for influenza A virus Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2451", "name": "Influenza (Tests for influenza B virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2451", "name": "Influenza (Tests for influenza B virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.2453", "resultName": "Influenza (influenza B virus in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2451", "name": "Influenza (Tests for influenza B virus Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2450", "name": "Influenza (Tests for unspecified influenza virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2450", "name": "Influenza (Tests for unspecified influenza virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.2452", "resultName": "Influenza (unspecified influenza virus in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2450", "name": "Influenza (Tests for unspecified influenza virus Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.795", "resultName": "Influenza (influenza A virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.795", "resultName": "Influenza (influenza A virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2454", "name": "Influenza (Tests for unspecified influenza virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.795", "resultName": "Influenza (influenza A virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.2453", "resultName": "Influenza (influenza B virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.2453", "resultName": "Influenza (influenza B virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2454", "name": "Influenza (Tests for unspecified influenza virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.2453", "resultName": "Influenza (influenza B virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.2452", "resultName": "Influenza (unspecified influenza virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.2452", "resultName": "Influenza (unspecified influenza virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.795", "resultName": "Influenza (influenza A virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2448", "name": "Influenza (Tests for unspecified influenza virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.795", "resultName": "Influenza (influenza A virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.2453", "resultName": "Influenza (influenza B virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2448", "name": "Influenza (Tests for unspecified influenza virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.2453", "resultName": "Influenza (influenza B virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.2452", "resultName": "Influenza (unspecified influenza virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2450", "name": "Influenza (Tests for unspecified influenza virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.795", "resultName": "Influenza (influenza A virus in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2450", "name": "Influenza (Tests for unspecified influenza virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.2453", "resultName": "Influenza (influenza B virus in Lab Results)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "IAH-R4",
+      "description": "Influenza diagnosis or active problem (timeboxed) with a hospitalized encounter",
+      "logic": { "all": [
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.130", "name": "Influenza (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.133", "name": "Influenza (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.130", "name": "Influenza (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.133", "name": "Influenza (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] },
+        { "any": [
+          { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1323", "name": "Hospitalized [Inpatient] (EncounterTypeCode)" } },
+          { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1320", "name": "Hospitalized [Inpatient] (ActEncounterCode)" } },
+          { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1335", "name": "Hospitalized [Inpatient] (SNOMED)" } }
+        ] }
+      ] }
+    },
+    {
+      "id": "IAH-R5",
+      "description": "Influenza A, influenza B, or unspecified influenza diagnosis or active problem (timeboxed) with a hospitalized encounter",
+      "logic": { "all": [
+        { "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2443", "name": "Influenza A (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2446", "name": "Influenza A (Disorders) (ICD10CM)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2444", "name": "Influenza B (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2445", "name": "Influenza [Unspecified] (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2447", "name": "Influenza [Unspecified] (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2443", "name": "Influenza A (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2446", "name": "Influenza A (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2444", "name": "Influenza B (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2445", "name": "Influenza [Unspecified] (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2447", "name": "Influenza [Unspecified] (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ] },
+        { "any": [
+          { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1323", "name": "Hospitalized [Inpatient] (EncounterTypeCode)" } },
+          { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1320", "name": "Hospitalized [Inpatient] (ActEncounterCode)" } },
+          { "predicate": "encounterType", "params": { "oid": "2.16.840.1.113762.1.4.1146.1335", "name": "Hospitalized [Inpatient] (SNOMED)" } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Hospitalization from 3 days before through 14 days after positive-influenza specimen collection",
+      "reason": "the source states that this interval calculation is not operational and marks rule 1 inoperable; IAH-R1 is omitted"
+    },
+    {
+      "valueSet": "Four-fold influenza antibody-titer rise between paired acute and convalescent specimens",
+      "reason": "SEM_V1 cannot correlate paired specimens, compare titers, or enforce the 10-to-180-day collection interval; these alternatives are omitted from IAH-R2 and IAH-R3"
+    },
+    {
+      "valueSet": "Influenza B (Disorders) (ICD10CM)",
+      "reason": "the source reports no codes available; the ICD-10-CM branch is omitted from IAH-R5 while the influenza B SNOMED branch remains modeled"
+    }
+  ]
+}

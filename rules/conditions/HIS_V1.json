@@ -1,0 +1,102 @@
+{
+  "mnemonic": "HIS_V1",
+  "conditionId": "HIS",
+  "name": "Histoplasmosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Histoplasmosis.v5.20260227.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Histoplasmosis.v5.20260227.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2025-12-10)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "HIS-R1",
+      "description": "Histoplasmosis diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1274", "name": "Histoplasmosis (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1275", "name": "Histoplasmosis (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1274", "name": "Histoplasmosis (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1275", "name": "Histoplasmosis (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HIS-R2",
+      "description": "Identification of Histoplasma capsulatum by culture or isolate-identification method",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1278", "name": "Histoplasmosis (Tests for Histoplasma capsulatum by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1278", "name": "Histoplasmosis (Tests for Histoplasma capsulatum by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1276", "resultName": "Histoplasmosis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1278", "name": "Histoplasmosis (Tests for Histoplasma capsulatum by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1276", "resultName": "Histoplasmosis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1276", "resultName": "Histoplasmosis (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "HIS-R3",
+      "description": "Histopathology or cytopathology interpretation consistent with histoplasmosis",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2210", "name": "Histopathology or Cytopathology Tests by Microscopic Observation", "resultOid": "2.16.840.1.113762.1.4.1146.1274", "resultName": "Histoplasmosis (Disorders) (SNOMED)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2210", "name": "Histopathology or Cytopathology Tests by Microscopic Observation", "resultOid": "2.16.840.1.113762.1.4.1146.1275", "resultName": "Histoplasmosis (Disorders) (ICD10CM)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2210", "name": "Histopathology or Cytopathology Tests by Microscopic Observation", "resultOid": "2.16.840.1.113762.1.4.1146.1276", "resultName": "Histoplasmosis (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "HIS-R5",
+      "description": "Detection of Histoplasma capsulatum H-band or M-band antibody",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1281", "name": "Histoplasmosis (Tests for Histoplasma capsulatum H band or M band Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1281", "name": "Histoplasmosis (Tests for Histoplasma capsulatum H band or M band Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1276", "resultName": "Histoplasmosis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1281", "name": "Histoplasmosis (Tests for Histoplasma capsulatum H band or M band Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HIS-R6",
+      "description": "Detection of Histoplasma capsulatum nucleic acid",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1277", "name": "Histoplasmosis (Tests for Histoplasma capsulatum Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1277", "name": "Histoplasmosis (Tests for Histoplasma capsulatum Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1276", "resultName": "Histoplasmosis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1277", "name": "Histoplasmosis (Tests for Histoplasma capsulatum Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1276", "resultName": "Histoplasmosis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3080", "name": "Histoplasmosis (Combination Tests that include Histoplasma capsulatum Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1276", "resultName": "Histoplasmosis (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "HIS-R7",
+      "description": "Detection of Histoplasma capsulatum antigen",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1279", "name": "Histoplasmosis (Tests for Histoplasma capsulatum Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1279", "name": "Histoplasmosis (Tests for Histoplasma capsulatum Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.1276", "resultName": "Histoplasmosis (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1279", "name": "Histoplasmosis (Tests for Histoplasma capsulatum Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2681", "name": "Histoplasmosis (Combination Tests that include Histoplasma capsulatum Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.1276", "resultName": "Histoplasmosis (Organism or Substance in Lab Results)" } }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Paired acute/convalescent Histoplasma antibody change in source rule 4",
+      "reason": "the source explicitly marks this rule inoperable; SEM_V1 cannot compare paired specimens, enforce a two-week collection interval, detect a four-fold titer rise, or detect negative-to-positive seroconversion, so the rule is omitted"
+    },
+    {
+      "valueSet": "Histoplasma complement-fixation antibody titer at least 1:32 in source rule 8",
+      "reason": "the source explicitly marks titer-result evaluation as not implemented and SEM_V1 has no titer comparison predicate, so the rule is omitted"
+    },
+    {
+      "valueSet": "Clinical findings plus epidemiologic link in source rule 9",
+      "reason": "SEM_V1 has no epidemiologic-link evidence and cannot evaluate the quantitative temperature alternative; because the epidemiologic link is required, the entire inoperable rule is omitted to prevent symptoms alone from reporting"
+    }
+  ]
+}

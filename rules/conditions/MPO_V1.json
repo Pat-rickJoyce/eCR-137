@@ -1,0 +1,722 @@
+{
+  "mnemonic": "MPO_V1",
+  "conditionId": "MPO",
+  "name": "Mpox",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Mpox.v8.20260626.docx",
+    "rckmsVersion": "v8",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Mpox.v8.20260626.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2026-04-28)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "MPO-R1",
+      "description": "Mpox diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1384",
+                      "name": "Mpox (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1385",
+                      "name": "Mpox (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1384",
+                      "name": "Mpox (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1385",
+                      "name": "Mpox (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "MPO-R2",
+      "description": "Suspected Mpox SNOMED diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2014",
+                      "name": "Mpox [Suspected] (Disorders) (SNOMED)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2014",
+                      "name": "Mpox [Suspected] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "MPO-R3",
+      "description": "Detection of mpox virus nucleic acid in a clinical specimen by any method",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1921",
+              "name": "Mpox (Tests for mpox virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1921",
+              "name": "Mpox (Tests for mpox virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1386",
+              "resultName": "Mpox (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1921",
+              "name": "Mpox (Tests for mpox virus Nucleic Acid)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1386",
+              "resultName": "Mpox (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2157",
+              "name": "Mpox (Combination Tests that include mpox virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1386",
+              "resultName": "Mpox (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "MPO-R4",
+      "description": "Detection of mpox virus in a clinical specimen by genomic sequencing",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2012",
+              "name": "Mpox (Tests for mpox virus by Genomic Sequencing)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2012",
+              "name": "Mpox (Tests for mpox virus by Genomic Sequencing)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1386",
+              "resultName": "Mpox (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2012",
+              "name": "Mpox (Tests for mpox virus by Genomic Sequencing)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "MPO-R5",
+      "description": "Detection of orthopoxvirus nucleic acid in a clinical specimen by any method",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1906",
+              "name": "Orthopox (Tests for Orthopoxvirus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1906",
+              "name": "Orthopox (Tests for Orthopoxvirus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1910",
+              "resultName": "Orthopox (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1906",
+              "name": "Orthopox (Tests for Orthopoxvirus Nucleic Acid)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1910",
+              "resultName": "Orthopox (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2158",
+              "name": "Orthopox (Combination Tests that include Orthopoxvirus virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1910",
+              "resultName": "Orthopox (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "MPO-R11",
+      "description": "Microscopic observation of orthopoxvirus in a clinical specimen by electron microscopy",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1907",
+              "name": "Orthopox (Tests for Orthopoxvirus by Electron Microscopic Observation)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1907",
+              "name": "Orthopox (Tests for Orthopoxvirus by Electron Microscopic Observation)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1910",
+              "resultName": "Orthopox (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1907",
+              "name": "Orthopox (Tests for Orthopoxvirus by Electron Microscopic Observation)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1908",
+              "name": "Organisms (Tests by Electron Microscopic Observation)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1910",
+              "resultName": "Orthopox (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "MPO-R12",
+      "description": "Detection of orthopoxvirus IgM antibody in a clinical specimen by any method",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1922",
+              "name": "Orthopox (Tests for orthopoxvirus IgM Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1922",
+              "name": "Orthopox (Tests for orthopoxvirus IgM Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1910",
+              "resultName": "Orthopox (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1922",
+              "name": "Orthopox (Tests for orthopoxvirus IgM Antibody)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "MPO-R13",
+      "description": "Detection of mpox IgM antibody in a clinical specimen by any method",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.3280",
+              "name": "Mpox (Tests for mpox IgM Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.3280",
+              "name": "Mpox (Tests for mpox IgM Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1386",
+              "resultName": "Mpox (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.3280",
+              "name": "Mpox (Tests for mpox IgM Antibody)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "MPO-R14",
+      "description": "Lab order for detection of mpox virus nucleic acid in a clinical specimen by any method",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1921",
+              "name": "Mpox (Tests for mpox virus Nucleic Acid)"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2157",
+              "name": "Mpox (Combination Tests that include mpox virus Nucleic Acid)"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2159",
+              "name": "Mpox (Test Panels for mpox virus Nucleic Acid)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "MPO-R15",
+      "description": "Lab order for detection of orthopoxvirus nucleic acid in a clinical specimen by any method",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1906",
+              "name": "Orthopox (Tests for Orthopoxvirus Nucleic Acid)"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2158",
+              "name": "Orthopox (Combination Tests that include Orthopoxvirus virus Nucleic Acid)"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2160",
+              "name": "Orthopox (Test Panels for orthopoxvirus Nucleic Acid)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "MPO-R16",
+      "description": "Lab order for genomic sequencing of mpox virus in a clinical specimen",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.2013",
+          "name": "Mpox (Test Panels for mpox virus by Genomic Sequencing)"
+        }
+      }
+    },
+    {
+      "id": "MPO-R17",
+      "description": "Characteristic rash diagnosis or active problem and coded Mpox exposure or increased exposure risk",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2017",
+                  "name": "Rash [Macular, Papular, Vesicular, Pustular, or Centrifugal] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2017",
+                  "name": "Rash [Macular, Papular, Vesicular, Pustular, or Centrifugal] (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2015",
+                  "name": "Exposure to Mpox (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2015",
+                  "name": "Exposure to Mpox (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2016",
+                  "name": "Increased Risk for Exposure to Mpox (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2016",
+                  "name": "Increased Risk for Exposure to Mpox (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "MPO-R18",
+      "description": "Fever or lymphadenopathy diagnosis or active problem and coded Mpox exposure or increased exposure risk",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.670",
+                  "name": "Fever (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.670",
+                  "name": "Fever (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.671",
+                  "name": "Fever (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.671",
+                  "name": "Fever (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1616",
+                  "name": "Lymphadenopathy [Unspecified Cause] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1616",
+                  "name": "Lymphadenopathy [Unspecified Cause] (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2022",
+                  "name": "Lymphadenopathy [Unspecified Cause] (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2022",
+                  "name": "Lymphadenopathy [Unspecified Cause] (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2020",
+                  "name": "Lymphadenopathy [Acute] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2020",
+                  "name": "Lymphadenopathy [Acute] (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2021",
+                  "name": "Lymphadenopathy [Acute] (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2021",
+                  "name": "Lymphadenopathy [Acute] (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2015",
+                  "name": "Exposure to Mpox (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2015",
+                  "name": "Exposure to Mpox (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2016",
+                  "name": "Increased Risk for Exposure to Mpox (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2016",
+                  "name": "Increased Risk for Exposure to Mpox (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Mpox [Suspected] (Disorders) (ICD10CM)",
+      "reason": "the authoritative source provides no ICD10CM codes; MPO-R2 retains the available SNOMED diagnosis and active-problem paths"
+    },
+    {
+      "valueSet": "Orthopox genomic-sequencing and immunohistochemistry test names",
+      "reason": "the authoritative source provides no test codes; source rules 6 and 7 are explicitly inoperable and are omitted"
+    },
+    {
+      "valueSet": "Mpox-specific rash and vaccination exclusion within 60 days",
+      "reason": "the source has no codes for either Mpox-specific rash value set, and SEM_V1 cannot establish absence of vaccination in a relative window; source rule 8 is explicitly inoperable and is omitted"
+    },
+    {
+      "valueSet": "Mpox-specific rash and detailed epidemiologic contact criteria",
+      "reason": "the source provides no codes for the required rash or epidemiologic criteria; source rule 9 is explicitly inoperable and is omitted"
+    },
+    {
+      "valueSet": "Detailed epidemiologic contact criteria within 21 days",
+      "reason": "the source provides no codes and SEM_V1 has no contact/cohort evidence; source rule 10 is explicitly inoperable and is omitted"
+    },
+    {
+      "valueSet": "Unavailable ICD10CM rash and exposure value sets",
+      "reason": "the authoritative source provides no codes for characteristic rash, Mpox exposure, or increased-risk ICD10CM alternatives; MPO-R17 and MPO-R18 retain the coded SNOMED paths"
+    },
+    {
+      "valueSet": "Body temperature at least 38 C or 100.4 F",
+      "reason": "SEM_V1 has no vital-sign measurement or unit-aware numeric comparison; MPO-R18 retains coded fever and lymphadenopathy diagnosis and active-problem alternatives"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-records reporter types",
+      "reason": "the authoritative source marks these reporter types unavailable in RCKMS; they are not modeled as condition-pack rules"
+    }
+  ]
+}

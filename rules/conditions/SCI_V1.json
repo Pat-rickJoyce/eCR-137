@@ -1,0 +1,114 @@
+{
+  "mnemonic": "SCI_V1",
+  "conditionId": "SCI",
+  "name": "Severe Combined Immunodeficiency",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Severe_Combined_Immunodeficiency.v1.20250703.docx",
+    "rckmsVersion": "v1",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Severe_Combined_Immunodeficiency.v1.20250703.docx on 2026-07-29 (authoritative RCKMS Content Release 16; latest revision 2025-04-24)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SCI-R1",
+      "description": "Severe combined immunodeficiency diagnosis or active problem, timeboxed when configured, in a patient younger than one year",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2596", "name": "Severe Combined Immunodeficiency (Disorders) (SNOMED)" } },
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2597", "name": "Severe Combined Immunodeficiency (Disorders) (ICD10CM)" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2596", "name": "Severe Combined Immunodeficiency (Disorders) (SNOMED)", "status": "active" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2597", "name": "Severe Combined Immunodeficiency (Disorders) (ICD10CM)", "status": "active" } }
+                    ]
+                  },
+                  { "predicate": "withinTimebox", "params": {}, "gate": true }
+                ]
+              }
+            ]
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+        ]
+      }
+    },
+    {
+      "id": "SCI-R2",
+      "description": "Fetal severe combined immunodeficiency SNOMED diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2598", "name": "Fetal Severe Combined Immunodeficiency (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2598", "name": "Fetal Severe Combined Immunodeficiency (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SCI-R3",
+      "description": "Newborn-screen interpretation consistent with severe combined immunodeficiency in a patient younger than one year",
+      "logic": {
+        "all": [
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2602", "name": "Severe Combined Immunodeficiency (Newborn Screening Interpretation Tests)", "resultOid": "2.16.840.1.113762.1.4.1146.2577", "resultName": "Interpretation Out of Range (LOINC Answer)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2602", "name": "Severe Combined Immunodeficiency (Newborn Screening Interpretation Tests)", "resultOid": "2.16.840.1.113762.1.4.1146.2596", "resultName": "Severe Combined Immunodeficiency (Disorders) (SNOMED)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2602", "name": "Severe Combined Immunodeficiency (Newborn Screening Interpretation Tests)", "resultOid": "2.16.840.1.113762.1.4.1146.2603", "resultName": "Severe Combined Immunodeficiency (LOINC Answer)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2602", "name": "Severe Combined Immunodeficiency (Newborn Screening Interpretation Tests)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2575", "name": "Newborn Screening Interpretation Tests", "resultOid": "2.16.840.1.113762.1.4.1146.2596", "resultName": "Severe Combined Immunodeficiency (Disorders) (SNOMED)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2575", "name": "Newborn Screening Interpretation Tests", "resultOid": "2.16.840.1.113762.1.4.1146.2603", "resultName": "Severe Combined Immunodeficiency (LOINC Answer)" } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2 fetal severe combined immunodeficiency ICD-10-CM disorders",
+      "reason": "the authoritative source marks the ICD-10-CM value set not implemented with no codes; SCI-R2 implements the available SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Rule 3 T-cell receptor excision circle result below 300 cells/uL",
+      "reason": "SEM_V1 has no numeric laboratory-result, unit, or specimen predicate; SCI-R3 implements the independently sufficient newborn-screen interpretation branch, while the quantitative TREC branch is omitted"
+    },
+    {
+      "valueSet": "Rule 3 TREC test in unspecified specimen",
+      "reason": "the authoritative source marks the unspecified-specimen TREC test value set not implemented with no codes"
+    },
+    {
+      "valueSet": "Rule 3 blood specimen represented by HL7 table 0487",
+      "reason": "the authoritative source marks this value set not implemented because HL7 table 0487 specimen type is unavailable in VSAC"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "SEM_V1 does not carry death-certificate cause or contributing-condition evidence"
+    }
+  ]
+}

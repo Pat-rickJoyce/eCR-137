@@ -1,0 +1,254 @@
+{
+  "mnemonic": "DOSY_V1",
+  "conditionId": "DOSY",
+  "name": "Down Syndrome",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Down_Syndrome.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs live RCKMS Release 16 docx (2026-07-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "DOSY-R1",
+      "description": "Down syndrome diagnosis or active problem, age < 1 year (timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2124",
+                  "name": "Down Syndrome (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2125",
+                  "name": "Down Syndrome (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2124",
+                  "name": "Down Syndrome (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2125",
+                  "name": "Down Syndrome (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 1,
+              "unit": "years"
+            }
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DOSY-R2",
+      "description": "Fetal Down syndrome diagnosis or active problem (timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2126",
+                  "name": "Fetal Down Syndrome (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2127",
+                  "name": "Fetal Down Syndrome (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2126",
+                  "name": "Fetal Down Syndrome (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2127",
+                  "name": "Fetal Down Syndrome (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DOSY-R3",
+      "description": "Pregnant patient with positive Trisomy 21 chromosomal anomaly test (prenatal detection)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "pregnancyStatus",
+                "params": {}
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.676",
+                  "name": "Pregnant (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1986",
+                  "name": "Pregnant (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.676",
+                  "name": "Pregnant (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1986",
+                  "name": "Pregnant (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2128",
+              "name": "Down Syndrome (Tests for Trisomy 21 Chromosomal Anomaly)"
+            }
+          },
+          {
+            "any": [
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.272",
+                  "name": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labInterpretationIn",
+                "params": {
+                  "name": "Abnormal Interpretation of an Observation",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "DOSY-R4",
+      "description": "Positive Trisomy 21 chromosomal anomaly test, age < 1 year",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2128",
+              "name": "Down Syndrome (Tests for Trisomy 21 Chromosomal Anomaly)"
+            }
+          },
+          {
+            "any": [
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.272",
+                  "name": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labInterpretationIn",
+                "params": {
+                  "name": "Abnormal Interpretation of an Observation",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 1,
+              "unit": "years"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Timebox windows",
+      "reason": "platform-unimplemented; does not reduce coverage"
+    }
+  ]
+}

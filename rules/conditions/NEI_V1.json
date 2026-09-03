@@ -1,0 +1,296 @@
+{
+  "mnemonic": "NEI_V1",
+  "conditionId": "NEI",
+  "name": "Non-Polio Enterovirus Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Non-Polio_Enterovirus_Infection.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Non-Polio_Enterovirus_Infection.v2.20240202.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2025-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "NEI-R1",
+      "description": "Non-Polio Enterovirus infection diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1720",
+                      "name": "Enterovirus Infection [Non polio] (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1721",
+                      "name": "Enterovirus Infection [Non polio] (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1720",
+                      "name": "Enterovirus Infection [Non polio] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1721",
+                      "name": "Enterovirus Infection [Non polio] (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "NEI-R2",
+      "description": "Identification of non-polio enterovirus in a clinical specimen by culture, including isolate-identification tests",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1723",
+              "name": "Enterovirus Infection [Non polio] (Tests for Non Polio Enterovirus by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1723",
+              "name": "Enterovirus Infection [Non polio] (Tests for Non Polio Enterovirus by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1722",
+              "resultName": "Enterovirus Infection [Non polio] (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1723",
+              "name": "Enterovirus Infection [Non polio] (Tests for Non Polio Enterovirus by Culture and Identification Method)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1041",
+              "name": "Organisms (Tests by Culture and Identification)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1722",
+              "resultName": "Enterovirus Infection [Non polio] (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1040",
+              "name": "Organisms (Tests by Unspecified Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1722",
+              "resultName": "Enterovirus Infection [Non polio] (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "NEI-R3",
+      "description": "Detection of non-polio enterovirus nucleic acid in a clinical specimen by any method",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1725",
+              "name": "Enterovirus Infection [Non polio] (Tests for Non Polio Enterovirus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1725",
+              "name": "Enterovirus Infection [Non polio] (Tests for Non Polio Enterovirus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1722",
+              "resultName": "Enterovirus Infection [Non polio] (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1725",
+              "name": "Enterovirus Infection [Non polio] (Tests for Non Polio Enterovirus Nucleic Acid)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1722",
+              "resultName": "Enterovirus Infection [Non polio] (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "NEI-R4",
+      "description": "Identification of non-polio enterovirus in cerebrospinal fluid by culture, using CSF-specific test-name branches",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1724",
+              "name": "Enterovirus Infection [Non polio] (Tests for Non Polio Enterovirus in Cerebrospinal Fluid by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1724",
+              "name": "Enterovirus Infection [Non polio] (Tests for Non Polio Enterovirus in Cerebrospinal Fluid by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1722",
+              "resultName": "Enterovirus Infection [Non polio] (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1724",
+              "name": "Enterovirus Infection [Non polio] (Tests for Non Polio Enterovirus in Cerebrospinal Fluid by Culture and Identification Method)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2167",
+              "name": "Organisms (Tests in Cerebrospinal Fluid by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1722",
+              "resultName": "Enterovirus Infection [Non polio] (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "NEI-R5",
+      "description": "Detection of non-polio enterovirus nucleic acid in cerebrospinal fluid, using the CSF-specific test-name branch",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1726",
+              "name": "Enterovirus Infection [Non polio] (Tests for Non Polio Enterovirus in Cerebrospinal Fluid Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1726",
+              "name": "Enterovirus Infection [Non polio] (Tests for Non Polio Enterovirus in Cerebrospinal Fluid Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1722",
+              "resultName": "Enterovirus Infection [Non polio] (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1726",
+              "name": "Enterovirus Infection [Non polio] (Tests for Non Polio Enterovirus in Cerebrospinal Fluid Nucleic Acid)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Cerebrospinal-fluid specimen-type constraints",
+      "reason": "SEM_V1 has no laboratory specimen-type evidence or predicate, and the source HL7 CSF specimen value set is unavailable; general culture and nucleic-acid test branches requiring separate CSF linkage are omitted from NEI-R4 and NEI-R5 while CSF-specific test-name branches remain modeled"
+    },
+    {
+      "valueSet": "Organisms (Tests for Nucleic Acid in Specimen from Cerebrospinal Fluid)",
+      "reason": "the authoritative source provides no codes; the generic CSF NAAT branch in NEI-R5 is omitted while the coded non-polio-enterovirus CSF-specific test branch remains modeled"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-records reporter types",
+      "reason": "the authoritative source marks these reporter types unavailable in RCKMS; the death-certificate criterion is not represented as a detailed condition-pack rule"
+    }
+  ]
+}

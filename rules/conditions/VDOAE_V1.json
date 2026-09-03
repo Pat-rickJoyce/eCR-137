@@ -1,0 +1,200 @@
+{
+  "mnemonic": "VDOAE_V1",
+  "conditionId": "VDOAE",
+  "name": "Vaccinia Disease or Adverse Event",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Vaccinia_Disease_or_Adverse_Event.v5.20260227.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Vaccinia_Disease_or_Adverse_Event.v5.20260227.docx on 2026-07-29 (authoritative RCKMS Content Release 20260227; latest revision 2026-02-11)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "VDOAE-R1",
+      "description": "Vaccinia disease or adverse event diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1606", "name": "Vaccinia disease or adverse event (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1607", "name": "Vaccinia disease or adverse event (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1606", "name": "Vaccinia disease or adverse event (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1607", "name": "Vaccinia disease or adverse event (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VDOAE-R2",
+      "description": "Identification of Vaccinia virus by a generic culture or organism test with a same-observation Vaccinia result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1608", "resultName": "Vaccinia (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1608", "resultName": "Vaccinia (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "VDOAE-R3",
+      "description": "Detection of Vaccinia virus nucleic acid by specific or generic testing",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1617", "name": "Vaccinia (Tests for Vaccinia virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1617", "name": "Vaccinia (Tests for Vaccinia virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1608", "resultName": "Vaccinia (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1617", "name": "Vaccinia (Tests for Vaccinia virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1608", "resultName": "Vaccinia (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "VDOAE-R5",
+      "description": "Smallpox-vaccine medication evidence plus qualifying Vaccinia culture or nucleic-acid evidence (source requires administration within 21 days before the encounter)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1619", "name": "Smallpox Vaccine (CVX)" } },
+              { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1618", "name": "Smallpox Vaccine (RXNORM)" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1608", "resultName": "Vaccinia (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1608", "resultName": "Vaccinia (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1617", "name": "Vaccinia (Tests for Vaccinia virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1617", "name": "Vaccinia (Tests for Vaccinia virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1608", "resultName": "Vaccinia (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1617", "name": "Vaccinia (Tests for Vaccinia virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1608", "resultName": "Vaccinia (Organism or Substance in Lab Results)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VDOAE-R6",
+      "description": "Rash plus a qualifying clinical observation or both injection-site swelling and pain, with smallpox-vaccine medication evidence (source requires administration within 21 days before the encounter)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.668", "name": "Rash (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.669", "name": "Rash (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.668", "name": "Rash (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.669", "name": "Rash (ICD10CM)", "status": "active" } }
+            ]
+          },
+          {
+            "any": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.686", "name": "Erythema multiforme (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.749", "name": "Erythema multiforme (ICD10CM)" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.686", "name": "Erythema multiforme (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.749", "name": "Erythema multiforme (ICD10CM)", "status": "active" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1611", "name": "Blepharitis [Unspecified Cause] (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1612", "name": "Blepharitis [Unspecified Cause] (ICD10CM)" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1611", "name": "Blepharitis [Unspecified Cause] (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1612", "name": "Blepharitis [Unspecified Cause] (ICD10CM)", "status": "active" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.674", "name": "Conjunctivitis (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.675", "name": "Conjunctivitis (ICD10CM)" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.674", "name": "Conjunctivitis (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.675", "name": "Conjunctivitis (ICD10CM)", "status": "active" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1613", "name": "Keratitis [Unspecified Cause] (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1614", "name": "Keratitis [Unspecified Cause] (ICD10CM)" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1613", "name": "Keratitis [Unspecified Cause] (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1614", "name": "Keratitis [Unspecified Cause] (ICD10CM)", "status": "active" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1615", "name": "Iritis [Unspecified Cause] (SNOMED)" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1615", "name": "Iritis [Unspecified Cause] (SNOMED)", "status": "active" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.670", "name": "Fever (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.671", "name": "Fever (ICD10CM)", "status": "active" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1616", "name": "Lymphadenopathy [Unspecified Cause] (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2022", "name": "Lymphadenopathy [Unspecified Cause] (ICD10CM)" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1616", "name": "Lymphadenopathy [Unspecified Cause] (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2022", "name": "Lymphadenopathy [Unspecified Cause] (ICD10CM)", "status": "active" } }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1609", "name": "Injection site swelling (SNOMED)" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1609", "name": "Injection site swelling (SNOMED)", "status": "active" } }
+                    ]
+                  },
+                  {
+                    "any": [
+                      { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1610", "name": "Injection site pain (SNOMED)" } },
+                      { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1610", "name": "Injection site pain (SNOMED)", "status": "active" } }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1619", "name": "Smallpox Vaccine (CVX)" } },
+              { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1618", "name": "Smallpox Vaccine (RXNORM)" } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2 organism-specific Vaccinia culture test",
+      "reason": "the source marks the Vaccinia-specific culture-test value set not implemented with no LOINC codes; VDOAE-R2 retains both implemented generic-test alternatives with same-observation Vaccinia results"
+    },
+    {
+      "valueSet": "Rule 4 Vaccinia antigen detection",
+      "reason": "the source marks the required antigen-test value set not implemented with no LOINC codes, so the wholly inoperable rule is omitted"
+    },
+    {
+      "valueSet": "Rules 5-6 smallpox-vaccine administration status and encounter-relative timing",
+      "reason": "SEM_V1 medication evidence identifies the CVX or RXNORM vaccine value set but cannot distinguish ordered or prescribed from administered status, and it has no medication-event dates with which to enforce administration within 21 days before the clinical encounter"
+    },
+    {
+      "valueSet": "Rule 5 antigen alternative",
+      "reason": "the source marks the Vaccinia antigen-test value set not implemented with no LOINC codes; VDOAE-R5 retains the implemented generic-culture and nucleic-acid alternatives"
+    },
+    {
+      "valueSet": "Rule 6 measured body temperature",
+      "reason": "SEM_V1 has no vital-sign numeric-threshold predicate; VDOAE-R6 retains the source's fever diagnosis and active-problem alternatives but cannot evaluate body temperature >=38 degC or >=100.4 degF"
+    },
+    {
+      "valueSet": "Rule 6 missing ICD10CM clinical branches",
+      "reason": "the source marks ICD10CM value sets for iritis, injection-site swelling, and injection-site pain not implemented with no codes; VDOAE-R6 retains their implemented SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Rule 7 epidemiologic linkage",
+      "reason": "the source marks both contact-with-Vaccinia and contact-with-recent-smallpox-vaccination criteria not implemented; SEM_V1 has no epidemiologic contact evidence, so the wholly inoperable rule is omitted"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate Vaccinia evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

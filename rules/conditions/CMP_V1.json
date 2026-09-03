@@ -1,0 +1,174 @@
+{
+  "mnemonic": "CMP_V1",
+  "conditionId": "CMP",
+  "name": "Carbon Monoxide Poisoning",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Carbon_Monoxide_Poisoning.v7.20260227.docx",
+    "rckmsVersion": "v7",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Carbon_Monoxide_Poisoning.v7.20260227.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CMP-R1",
+      "description": "Carbon monoxide poisoning or toxic effect (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.288", "name": "Carbon Monoxide Poisoning (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.289", "name": "Carbon Monoxide Poisoning (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.288", "name": "Carbon Monoxide Poisoning (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.289", "name": "Carbon Monoxide Poisoning (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CMP-R4",
+      "description": "High interpretation flag for quantitative carboxyhemoglobin in blood",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.417", "name": "Carbon Monoxide Poisoning (Tests for Carboxyhemoglobin in Blood [Quantitative])" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Interpretation of an Observation (High)", "codes": ["H", "HH"] } }
+        ]
+      }
+    },
+    {
+      "id": "CMP-R5",
+      "description": "High interpretation flag for carboxyhemoglobin by pulse CO-oximetry",
+      "logic": {
+        "all": [
+          { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.858", "name": "Carbon Monoxide Poisoning (Tests for Carboxyhemoglobin by Pulse CO Oximetry)" } },
+          { "predicate": "labInterpretationIn", "params": { "name": "Interpretation of an Observation (High)", "codes": ["H", "HH"] } }
+        ]
+      }
+    },
+    {
+      "id": "CMP-R6",
+      "description": "High pulse CO-oximetry interpretation with coded nonsmoker, former-smoker, or unknown smoking status",
+      "logic": {
+        "all": [
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.858", "name": "Carbon Monoxide Poisoning (Tests for Carboxyhemoglobin by Pulse CO Oximetry)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Interpretation of an Observation (High)", "codes": ["H", "HH"] } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1037", "name": "Smoking Status [Current Nonsmoker] (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1037", "name": "Smoking Status [Current Nonsmoker] (SNOMED)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1038", "name": "Smoking Status [Unknown] (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1038", "name": "Smoking Status [Unknown] (SNOMED)", "status": "active" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CMP-R7",
+      "description": "Compatible symptom diagnosis or active problem plus coded carbon monoxide exposure",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.864", "name": "Nausea (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.863", "name": "Nausea (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.864", "name": "Nausea (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.863", "name": "Nausea (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.647", "name": "Vomiting (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.648", "name": "Vomiting (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.647", "name": "Vomiting (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.648", "name": "Vomiting (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.865", "name": "Confusion (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.866", "name": "Confusion (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.865", "name": "Confusion (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.866", "name": "Confusion (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.867", "name": "Dyspnea (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.868", "name": "Dyspnea (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.867", "name": "Dyspnea (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.868", "name": "Dyspnea (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.750", "name": "Chest Pain (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.662", "name": "Chest Pain (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.750", "name": "Chest Pain (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.662", "name": "Chest Pain (ICD10CM)", "status": "active" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.869", "name": "Loss of Consciousness (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2258", "name": "Loss of Consciousness (ICD10CM)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.869", "name": "Loss of Consciousness (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2258", "name": "Loss of Consciousness (ICD10CM)", "status": "active" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.819", "name": "Carbon Monoxide Poisoning (Carbon Monoxide Exposure) (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.819", "name": "Carbon Monoxide Poisoning (Carbon Monoxide Exposure) (SNOMED)", "status": "active" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CMP-R8",
+      "description": "Optional logic: high pulse CO-oximetry interpretation with coded nonsmoker or former-smoker status",
+      "logic": {
+        "all": [
+          {
+            "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.858", "name": "Carbon Monoxide Poisoning (Tests for Carboxyhemoglobin by Pulse CO Oximetry)" } },
+              { "predicate": "labInterpretationIn", "params": { "name": "Interpretation of an Observation (High)", "codes": ["H", "HH"] } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1037", "name": "Smoking Status [Current Nonsmoker] (SNOMED)" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1037", "name": "Smoking Status [Current Nonsmoker] (SNOMED)", "status": "active" } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Numeric carboxyhemoglobin result comparisons and units",
+      "reason": "SEM_V1 has no numeric laboratory result value/unit comparison predicate; source rules 2, 3, and optional rule 9 are omitted, and the numeric alternatives in CMP-R6 and CMP-R8 are not modeled"
+    },
+    {
+      "valueSet": "Smoking and toxic-exposure social-history type/value pairs",
+      "reason": "SEM_V1 has no social-history evidence collection or paired type/value predicate; social-history alternatives in source rules 6, 7, and 8 are omitted"
+    },
+    {
+      "valueSet": "Smoking Status [Current Nonsmoker] and [Unknown] (ICD10CM)",
+      "reason": "not implemented - no codes available for either ICD10CM value set per source docx Table 3; CMP-R6 and CMP-R8 retain the coded SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Carbon Monoxide Poisoning (Carbon Monoxide Exposure) (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; CMP-R7 retains the coded SNOMED diagnosis and active-problem exposure branches"
+    },
+    {
+      "valueSet": "Toxic Exposure Status (Social History) (LOINC)",
+      "reason": "not implemented - no codes available per source docx Table 3; the broader social-history exposure branch is also unsupported by SEM_V1"
+    }
+  ]
+}

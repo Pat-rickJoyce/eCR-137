@@ -1,0 +1,142 @@
+{
+  "mnemonic": "CLU_V1",
+  "conditionId": "CLU",
+  "name": "Clubfoot",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Clubfoot.v1.20250703.docx",
+    "rckmsVersion": "v1",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Clubfoot.v1.20250703.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CLU-R1",
+      "description": "Clubfoot (diagnosis or active problem, timeboxed) in a patient younger than 1 year",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2541",
+                          "name": "Clubfoot (Disorders) (SNOMED)"
+                        }
+                      },
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2543",
+                          "name": "Clubfoot (Disorders) (ICD10CM)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2541",
+                          "name": "Clubfoot (Disorders) (SNOMED)",
+                          "status": "active"
+                        }
+                      },
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2543",
+                          "name": "Clubfoot (Disorders) (ICD10CM)",
+                          "status": "active"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 1,
+              "unit": "years"
+            },
+            "gate": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "CLU-R2",
+      "description": "Fetal Clubfoot (diagnosis or active problem, timeboxed; SNOMED branch)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2542",
+                  "name": "Fetal Clubfoot (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2542",
+                  "name": "Fetal Clubfoot (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Fetal Clubfoot (Disorders) (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; CLU-R2 retains the coded SNOMED diagnosis and active-problem branches"
+    }
+  ]
+}

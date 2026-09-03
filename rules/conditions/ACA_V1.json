@@ -1,0 +1,614 @@
+{
+  "mnemonic": "ACA_V1",
+  "conditionId": "ACA",
+  "name": "Acanthamoeba",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Acanthamoeba.v5.20260626.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Acanthamoeba.v5.20260626.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "ACA-R1",
+      "description": "Acanthamoeba disease excluding keratitis (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1259",
+                      "name": "Acanthamoeba Disease [Excluding Keratitis] (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1260",
+                      "name": "Acanthamoeba Disease [Excluding Keratitis] (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1259",
+                      "name": "Acanthamoeba Disease [Excluding Keratitis] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1260",
+                      "name": "Acanthamoeba Disease [Excluding Keratitis] (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ACA-R2",
+      "description": "Encephalitis, meningoencephalitis, or granulomatous amebic encephalitis plus qualifying Acanthamoeba culture, nucleic-acid, antigen, or CSF microscopy evidence",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1033",
+                  "name": "Encephalitis [Unspecified Cause] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1033",
+                  "name": "Encephalitis [Unspecified Cause] (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1032",
+                  "name": "Encephalitis [Unspecified Cause] (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1032",
+                  "name": "Encephalitis [Unspecified Cause] (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1702",
+                  "name": "Encephalitis [Parasitic] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1702",
+                  "name": "Encephalitis [Parasitic] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1708",
+                  "name": "Encephalitis [Parasitic] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1708",
+                  "name": "Encephalitis [Parasitic] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1097",
+                  "name": "Meningoencephalitis [Unspecified Cause] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1097",
+                  "name": "Meningoencephalitis [Unspecified Cause] (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1105",
+                  "name": "Meningoencephalitis [Unspecified Cause] (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1105",
+                  "name": "Meningoencephalitis [Unspecified Cause] (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1264",
+                  "name": "Granulomatous Amebic Encephalitis (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1264",
+                  "name": "Granulomatous Amebic Encephalitis (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Granulomatous Amebic Encephalitis (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Granulomatous Amebic Encephalitis (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+        {
+          "any": [
+            {
+              "all": [
+                {
+                  "predicate": "labTestInValueSet",
+                  "params": {
+                    "oid": null,
+                    "name": "Ameba [Motile] (Tests by Microscopic Observation using Wet Mount)"
+                  }
+                },
+                {
+                  "any": [
+                    {
+                      "predicate": "labResultInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.272",
+                        "name": "Present or Positive Lab Result Value"
+                      }
+                    },
+                    {
+                      "predicate": "labResultInValueSet",
+                      "params": {
+                        "oid": "2.16.840.1.113762.1.4.1146.1261",
+                        "name": "Acanthamoeba Disease [Excluding Keratitis] (Organism or Substance in Lab Results)"
+                      }
+                    },
+                    {
+                      "predicate": "labInterpretationIn",
+                      "params": {
+                        "name": "Abnormal Interpretation of an Observation",
+                        "codes": [
+                          "A",
+                          "AA",
+                          "HH",
+                          "LL",
+                          "H",
+                          "L"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "all": [
+                {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1262",
+                          "name": "Acanthamoeba Disease [Excluding Keratitis] (Tests for Acanthamoeba species by Culture and Identification Method)"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1261",
+                              "name": "Acanthamoeba Disease [Excluding Keratitis] (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "any": [
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1041",
+                              "name": "Organisms (Tests by Culture and Identification)"
+                            }
+                          },
+                          {
+                            "predicate": "labTestInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1040",
+                              "name": "Organisms (Tests by Unspecified Method)"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1261",
+                          "name": "Acanthamoeba Disease [Excluding Keratitis] (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1263",
+                          "name": "Acanthamoeba Disease [Excluding Keratitis] (Tests for Acanthamoeba species Nucleic Acid)"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1261",
+                              "name": "Acanthamoeba Disease [Excluding Keratitis] (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.994",
+                          "name": "Organisms (Tests for Nucleic Acid)"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1261",
+                          "name": "Acanthamoeba Disease [Excluding Keratitis] (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1417",
+                          "name": "Acanthamoeba Disease [Excluding Keratitis] (Tests for Acanthamoeba species Antigen)"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1261",
+                              "name": "Acanthamoeba Disease [Excluding Keratitis] (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.891",
+                          "name": "Organisms (Tests by Microscopic Observation by Immunofluorescence)"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1261",
+                          "name": "Acanthamoeba Disease [Excluding Keratitis] (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": null,
+                          "name": "Ameba [Motile] (Tests by Microscopic Observation in CSF using Wet Mount)"
+                        }
+                      },
+                      {
+                        "any": [
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.272",
+                              "name": "Present or Positive Lab Result Value"
+                            }
+                          },
+                          {
+                            "predicate": "labResultInValueSet",
+                            "params": {
+                              "oid": "2.16.840.1.113762.1.4.1146.1261",
+                              "name": "Acanthamoeba Disease [Excluding Keratitis] (Organism or Substance in Lab Results)"
+                            }
+                          },
+                          {
+                            "predicate": "labInterpretationIn",
+                            "params": {
+                              "name": "Abnormal Interpretation of an Observation",
+                              "codes": [
+                                "A",
+                                "AA",
+                                "HH",
+                                "LL",
+                                "H",
+                                "L"
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "all": [
+                      {
+                        "predicate": "labTestInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2181",
+                          "name": "Organisms (Tests by Microscopic Observation in Cerebrospinal Fluid)"
+                        }
+                      },
+                      {
+                        "predicate": "labResultInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.1261",
+                          "name": "Acanthamoeba Disease [Excluding Keratitis] (Organism or Substance in Lab Results)"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ACA-R3",
+      "description": "Acanthamoeba keratitis (diagnosis or active problem, timeboxed; optional RCKMS logic set)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1505",
+                      "name": "Acanthamoeba Disease [Keratitis] (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1506",
+                      "name": "Acanthamoeba Disease [Keratitis] (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1505",
+                      "name": "Acanthamoeba Disease [Keratitis] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1506",
+                      "name": "Acanthamoeba Disease [Keratitis] (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Granulomatous Amebic Encephalitis (Disorders) (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; null-OID diagnosis/problem alternatives auto-SKIP"
+    },
+    {
+      "valueSet": "Ameba [Motile] (Tests by Microscopic Observation using Wet Mount)",
+      "reason": "not implemented - no codes available per source docx Table 3"
+    },
+    {
+      "valueSet": "Ameba [Motile] (Tests by Microscopic Observation in CSF using Wet Mount)",
+      "reason": "not implemented - no codes available per source docx Table 3; null-OID node auto-SKIPs"
+    },
+    {
+      "valueSet": "Cerebrospinal Fluid specimen-type constraints",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate; general microscopy-test branches requiring CSF are omitted, while the CSF-specific test value set branch is modeled"
+    }
+  ]
+}

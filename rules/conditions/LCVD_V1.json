@@ -1,0 +1,105 @@
+{
+  "mnemonic": "LCVD_V1",
+  "conditionId": "LCVD",
+  "name": "La Crosse Virus Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "La Crosse_Virus_Disease.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs La Crosse_Virus_Disease.v2.20240202.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2025-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "LCVD-R1",
+      "description": "La Crosse virus disease or infection as a diagnosis or active problem (timeboxed when configured in RCKMS; ICD-10-CM alternative has no codes)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1949", "name": "La Crosse Virus Diseases (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1949", "name": "La Crosse Virus Diseases (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "LCVD-R2",
+      "description": "Identification of La Crosse virus by culture, including preliminary results, through a generic culture or unspecified-method test with a La Crosse virus result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.526", "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1960", "resultName": "La Crosse Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1960", "resultName": "La Crosse Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1960", "resultName": "La Crosse Virus Diseases (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LCVD-R4",
+      "description": "Detection of La Crosse virus nucleic acid by a specific or generic test with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1952", "name": "La Crosse Virus Diseases (Tests for La Crosse Virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1952", "name": "La Crosse Virus Diseases (Tests for La Crosse Virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1960", "resultName": "La Crosse Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1952", "name": "La Crosse Virus Diseases (Tests for La Crosse Virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1960", "resultName": "La Crosse Virus Diseases (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LCVD-R5",
+      "description": "Detection of La Crosse virus IgM antibody with a coded positive, organism, or abnormal-interpretation result on the same observation (numeric result greater than zero not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1954", "name": "La Crosse Virus Diseases (Tests for La Crosse Virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1954", "name": "La Crosse Virus Diseases (Tests for La Crosse Virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1960", "resultName": "La Crosse Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1954", "name": "La Crosse Virus Diseases (Tests for La Crosse Virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "LCVD-R7",
+      "description": "Optional logic: detection of La Crosse virus antibody with a coded positive, organism, or abnormal-interpretation result on the same observation (numeric result greater than zero not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1956", "name": "La Crosse Virus Diseases (Tests for La Crosse Virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1956", "name": "La Crosse Virus Diseases (Tests for La Crosse Virus Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1960", "resultName": "La Crosse Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1956", "name": "La Crosse Virus Diseases (Tests for La Crosse Virus Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "La Crosse Virus Diseases (Disorders) (ICD10CM)",
+      "reason": "the authoritative source reports no codes available; LCVD-R1 retains the coded SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "La Crosse Virus Diseases (Tests for La Crosse Virus by Culture and Identification Method)",
+      "reason": "the authoritative source reports no codes available; LCVD-R2 retains the generic culture and unspecified-method test branches that require a La Crosse virus result"
+    },
+    {
+      "valueSet": "La Crosse Virus Diseases (Tests for La Crosse Virus Antigen)",
+      "reason": "the authoritative source reports no codes available and marks source rule 3 inoperable; the rule is omitted"
+    },
+    {
+      "valueSet": "Paired La Crosse virus antibody comparison",
+      "reason": "source rule 6 is explicitly not operational; SEM_V1 cannot compare paired specimens, collection intervals, four-fold titer rises, or seroconversion, so the rule is omitted"
+    },
+    {
+      "valueSet": "Numeric laboratory result > 0",
+      "reason": "SEM_V1 has no numeric laboratory-result comparison; the numeric alternatives in LCVD-R5 and LCVD-R7 are omitted while coded-result and abnormal-interpretation alternatives remain modeled"
+    }
+  ]
+}

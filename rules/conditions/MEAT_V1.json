@@ -1,0 +1,48 @@
+{
+  "mnemonic": "MEAT_V1",
+  "conditionId": "MEAT",
+  "name": "Mercury Exposure and Toxicity",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Mercury_Exposure_and_Toxicity.v3.20240202.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Mercury_Exposure_and_Toxicity.v3.20240202.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2025-06-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "MEAT-R1",
+      "description": "Toxic effect of mercury and its compounds as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1514", "name": "Mercury Exposure and Toxicity (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1525", "name": "Mercury Exposure and Toxicity (Disorders) (ICD10CM)" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "any": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1514", "name": "Mercury Exposure and Toxicity (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1525", "name": "Mercury Exposure and Toxicity (Disorders) (ICD10CM)", "status": "active" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "MEAT-R4",
+      "description": "High interpretation flag on a quantitative mercury-in-blood test on the same observation",
+      "logic": { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1526", "name": "Mercury Exposure and Toxicity (Tests for Mercury [Quantitative] in Blood)", "codes": ["H", "HH"] } }
+    },
+    {
+      "id": "MEAT-R5",
+      "description": "High interpretation flag on a quantitative mercury-in-urine test on the same observation",
+      "logic": { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1527", "name": "Mercury Exposure and Toxicity (Tests for Mercury [Quantitative] in Urine)", "codes": ["H", "HH"] } }
+    }
+  ],
+  "gaps": [
+    { "valueSet": "Quantitative mercury concentration thresholds", "reason": "SEM_V1 has no unit-aware numeric laboratory comparison predicate; source rule 2 (blood >= 5 ug/L or >= 0.0249 umol/L) and source rule 3 (urine >= 20 ug/L or >= 0.0998 umol/L) are omitted entirely" },
+    { "valueSet": "Blood (Specimen Type) (HL7)", "reason": "the authoritative source marks HL7 table 0487 unavailable in VSAC" },
+    { "valueSet": "Urine (Specimen Type) (HL7)", "reason": "the authoritative source marks HL7 table 0487 unavailable in VSAC" },
+    { "valueSet": "Blood and urine specimen constraints", "reason": "SEM_V1 has no specimen-type evidence or predicate, so the unspecified-specimen test branches using Blood SNOMED OID 2.16.840.1.113762.1.4.1146.1348 or Urine SNOMED OID 2.16.840.1.113762.1.4.1146.1513 are omitted from MEAT-R4 and MEAT-R5; the specimen-specific test-name branches remain" }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "mnemonic": "OVD_V1",
+  "conditionId": "OVD",
+  "name": "Oropouche Virus Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Oropouche_Virus_Disease.v2.20260227.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Oropouche_Virus_Disease.v2.20260227.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2025-09-11)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "OVD-R1",
+      "description": "Oropouche Virus Disease diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2635",
+                      "name": "Oropouche Virus Disease (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2636",
+                      "name": "Oropouche Virus Disease (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2635",
+                      "name": "Oropouche Virus Disease (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2636",
+                      "name": "Oropouche Virus Disease (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "OVD-R2",
+      "description": "Oropouche virus culture or isolate-identification evidence using a coded generic test and an Oropouche result on the same observation",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.526",
+              "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.2637",
+              "resultName": "Oropouche Virus Disease (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1041",
+              "name": "Organisms (Tests by Culture and Identification)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.2637",
+              "resultName": "Oropouche Virus Disease (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1040",
+              "name": "Organisms (Tests by Unspecified Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.2637",
+              "resultName": "Oropouche Virus Disease (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "OVD-R3",
+      "description": "Oropouche virus nucleic-acid evidence on one laboratory observation",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2638",
+              "name": "Oropouche Virus Disease (Tests for Oropouche virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2638",
+              "name": "Oropouche Virus Disease (Tests for Oropouche virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.2637",
+              "resultName": "Oropouche Virus Disease (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2638",
+              "name": "Oropouche Virus Disease (Tests for Oropouche virus Nucleic Acid)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.2637",
+              "resultName": "Oropouche Virus Disease (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Oropouche Virus Disease (Tests for Oropouche virus by Culture and Identification Method)",
+      "reason": "the authoritative source provides no test codes for the organism-specific branch of source rule 2; OVD-R2 retains the three coded generic-culture/unspecified-test branches paired with an Oropouche result on the same observation"
+    },
+    {
+      "valueSet": "Oropouche Virus Disease (Tests for Oropouche virus Antigen)",
+      "reason": "the authoritative source marks this value set unimplemented because no codes are available; source rule 4 is inoperable and omitted while preserving source numbering"
+    },
+    {
+      "valueSet": "Source rules 5 and 6 Blood/CSF specimen constraints and specimen-specific antibody tests",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate, the source HL7 specimen value sets are unavailable, and both Blood-or-CSF-specific antibody test value sets have no codes; the IgM and neutralizing-antibody rules are omitted rather than dropping required specimen constraints"
+    },
+    {
+      "valueSet": "Source rules 7 through 11 epidemiologic and maternal-exposure criteria",
+      "reason": "the authoritative source explicitly marks all five optional clinical-epidemiologic logic sets inoperable because their required epidemiologic criteria cannot be implemented; these rules are omitted while preserving source numbering"
+    },
+    {
+      "valueSet": "Lab and vital-records reporter types and death-certificate criterion",
+      "reason": "the authoritative source marks lab and vital-records reporter types unavailable in RCKMS; reporter routing and death-certificate evidence are not represented in the pack"
+    }
+  ]
+}

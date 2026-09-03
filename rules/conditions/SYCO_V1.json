@@ -1,0 +1,149 @@
+{
+  "mnemonic": "SYCO_V1",
+  "conditionId": "SYCO",
+  "name": "Syphilis, Congenital",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Syphilis_Congenital.v8.20260227.docx",
+    "rckmsVersion": "v8",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Syphilis_Congenital.v8.20260227.docx on 2026-07-29 (authoritative RCKMS Content Release 20260227; latest revision 2025-10-08)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "SYCO-R1",
+      "description": "Congenital syphilis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1090", "name": "Syphilis [Congenital] (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1089", "name": "Syphilis [Congenital] (Disorders) (ICD10CM)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1090", "name": "Syphilis [Congenital] (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1089", "name": "Syphilis [Congenital] (Disorders) (ICD10CM)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SYCO-R2",
+      "description": "Patient younger than 28 days with qualifying syphilis nucleic-acid or microscopy evidence",
+      "logic": {
+        "all": [
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 28, "unit": "days" }, "gate": true },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.550", "name": "Syphilis (Tests for Treponema pallidum Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.550", "name": "Syphilis (Tests for Treponema pallidum Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.550", "name": "Syphilis (Tests for Treponema pallidum Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.746", "name": "Treponema pallidum (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.746", "name": "Treponema pallidum (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.746", "name": "Treponema pallidum (Tests by Microscopic Observation)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.900", "name": "Organisms (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SYCO-R5",
+      "description": "Patient younger than 28 days with a qualifying syphilis antibody result",
+      "logic": {
+        "all": [
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 28, "unit": "days" }, "gate": true },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.705", "name": "Syphilis (Tests for Treponemal or Non Treponemal Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.705", "name": "Syphilis (Tests for Treponemal or Non Treponemal Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.554", "resultName": "Syphilis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.705", "name": "Syphilis (Tests for Treponemal or Non Treponemal Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SYCO-R6",
+      "description": "Patient younger than two years with qualifying penicillin G medication evidence",
+      "logic": {
+        "all": [
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 2, "unit": "years" }, "gate": true },
+          {
+            "any": [
+              { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.747", "name": "Penicillin G [Benzathine] [Injectable] [Bicillin] (RXNORM)" } },
+              { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1912", "name": "Penicillin G [Aqueous Crystalline] [Injectable] (RXNORM)" } },
+              { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1913", "name": "Penicillin G [Procaine] [Injectable] (RXNORM)" } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "SYCO-R7",
+      "description": "Patient younger than two years with qualifying syphilis all-test-results evidence",
+      "logic": {
+        "all": [
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 2, "unit": "years" }, "gate": true },
+          {
+            "any": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.550", "name": "Syphilis (Tests for Treponema pallidum Nucleic Acid)" } },
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.746", "name": "Treponema pallidum (Tests by Microscopic Observation)" } },
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.705", "name": "Syphilis (Tests for Treponemal or Non Treponemal Antibody)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2462", "name": "Spirochetes (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2462", "name": "Spirochetes (Tests by Microscopic Observation)", "resultOid": "2.16.840.1.113762.1.4.1146.1824", "resultName": "Spirochetes (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2462", "name": "Spirochetes (Tests by Microscopic Observation)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 3 maternal syphilis treatment history",
+      "reason": "the source marks this rule not implementable because it requires the mother's medical record; SEM_V1 has no linked maternal treatment evidence"
+    },
+    {
+      "valueSet": "Rule 4 long-bone radiograph findings",
+      "reason": "the source marks the rule inoperable because the consistent-with-congenital-syphilis finding value set has no codes; SEM_V1 also has no imaging evidence"
+    },
+    {
+      "valueSet": "Rule 5 numeric antibody result greater than zero",
+      "reason": "SEM_V1 has no numeric laboratory threshold predicate; the source's coded-positive, organism-result, and abnormal-interpretation branches remain implemented"
+    },
+    {
+      "valueSet": "Rule 6 medication order versus administration status",
+      "reason": "SEM_V1 medication evidence identifies the medication value set but cannot distinguish ordered or prescribed from administered status"
+    },
+    {
+      "valueSet": "Rule 7 completed test results versus laboratory orders",
+      "reason": "SEM_V1 laboratory evidence cannot distinguish a completed observation from an order; the three source all-test-results branches are represented by test value-set membership"
+    },
+    {
+      "valueSet": "Vital-record reporter types",
+      "reason": "the source identifies birth-certificate maternal-syphilis and death-certificate syphilis evidence, but SEM_V1 has no birth- or death-certificate evidence"
+    }
+  ]
+}

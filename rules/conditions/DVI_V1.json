@@ -1,0 +1,677 @@
+{
+  "mnemonic": "DVI_V1",
+  "conditionId": "DVI",
+  "name": "Dengue Virus Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Dengue_Virus_Infection.v6.20260227.docx",
+    "rckmsVersion": "v6",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs live RCKMS Release 16 docx (2026-07-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "DVI-R1",
+      "description": "Dengue virus infection diagnosis or active problem (timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.187",
+                  "name": "Dengue Virus Infection (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.188",
+                  "name": "Dengue Virus Infection (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.187",
+                  "name": "Dengue Virus Infection (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.188",
+                  "name": "Dengue Virus Infection (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "DVI-R2",
+      "description": "Identification of dengue virus by culture",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Dengue Virus Infection (Tests for dengue virus by Culture and Identification Method)"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.528",
+                      "name": "Dengue Virus Infection (Organism or Substance in Lab Results)"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": [
+                        "A",
+                        "AA",
+                        "HH",
+                        "LL",
+                        "H",
+                        "L"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.526",
+                      "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)"
+                    }
+                  },
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1041",
+                      "name": "Organisms (Tests by Culture and Identification)"
+                    }
+                  },
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1040",
+                      "name": "Organisms (Tests by Unspecified Method)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.528",
+                  "name": "Dengue Virus Infection (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "DVI-R3",
+      "description": "Detection of dengue virus nucleic acid",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.519",
+                  "name": "Dengue Virus Infection (Tests for dengue virus Nucleic Acid)"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.528",
+                      "name": "Dengue Virus Infection (Organism or Substance in Lab Results)"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": [
+                        "A",
+                        "AA",
+                        "HH",
+                        "LL",
+                        "H",
+                        "L"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.994",
+                      "name": "Organisms (Tests for Nucleic Acid)"
+                    }
+                  },
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2722",
+                      "name": "Dengue Virus Infection (Combination Tests that include dengue virus Nucleic Acid)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.528",
+                  "name": "Dengue Virus Infection (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "DVI-R4",
+      "description": "Detection of dengue virus antigen",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.523",
+              "name": "Dengue Virus Infection (Tests for dengue virus Antigen)"
+            }
+          },
+          {
+            "any": [
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.272",
+                  "name": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.528",
+                  "name": "Dengue Virus Infection (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labInterpretationIn",
+                "params": {
+                  "name": "Abnormal Interpretation of an Observation",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "DVI-R5",
+      "description": "Dengue virus IgM antibody detection",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.525",
+              "name": "Dengue Virus Infection (Tests for dengue virus IgM Antibody)"
+            }
+          },
+          {
+            "any": [
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.272",
+                  "name": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.528",
+                  "name": "Dengue Virus Infection (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labInterpretationIn",
+                "params": {
+                  "name": "Abnormal Interpretation of an Observation",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "DVI-R6",
+      "description": "Fever/chills/thrombocytopenia AND travel/epidemiologic link (epidemiologic + numeric temp not implementable)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.670",
+                  "name": "Fever (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.671",
+                  "name": "Fever (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.670",
+                  "name": "Fever (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.671",
+                  "name": "Fever (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.813",
+                  "name": "Chills (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.812",
+                  "name": "Chills (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.813",
+                  "name": "Chills (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.812",
+                  "name": "Chills (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.952",
+                  "name": "Thrombocytopenia [Unspecified Cause] (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.927",
+                  "name": "Thrombocytopenia [Unspecified Cause] (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.952",
+                  "name": "Thrombocytopenia [Unspecified Cause] (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.927",
+                  "name": "Thrombocytopenia [Unspecified Cause] (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "epidemiologicalFact",
+            "params": {
+              "fact": "travel to dengue-risk area, contact with dengue case, lab exposure, or transfusion/transplant from at-risk donor"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "DVI-R7",
+      "description": "Dengue virus IgM or IgG antibody detection",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.525",
+                  "name": "Dengue Virus Infection (Tests for dengue virus IgM Antibody)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.527",
+                  "name": "Dengue Virus Infection (Tests for dengue virus IgG Total Antibody [Qualitative])"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.524",
+                  "name": "Dengue Virus Infection (Tests for dengue virus IgG Total Antibody [Quantitative])"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.272",
+                  "name": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.528",
+                  "name": "Dengue Virus Infection (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labInterpretationIn",
+                "params": {
+                  "name": "Abnormal Interpretation of an Observation",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "DVI-R8",
+      "description": "All results: dengue culture test ordered (no codes - not implemented)",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": null,
+              "name": "Dengue Virus Infection (Tests for dengue virus by Culture and Identification Method)"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": null,
+              "name": "Dengue Virus Infection (Test Panels for dengue virus by Culture and Identification Method)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "DVI-R9",
+      "description": "All results: dengue nucleic acid test ordered",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.519",
+              "name": "Dengue Virus Infection (Tests for dengue virus Nucleic Acid)"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.522",
+              "name": "Dengue Virus Infection (Test Panels for dengue virus Nucleic Acid)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "DVI-R10",
+      "description": "All results: dengue antigen test ordered",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.523",
+              "name": "Dengue Virus Infection (Tests for dengue virus Antigen)"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": null,
+              "name": "Dengue Virus Infection (Test Panels for dengue virus Antigen)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "DVI-R11",
+      "description": "All results: dengue IgM antibody test ordered",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.525",
+          "name": "Dengue Virus Infection (Tests for dengue virus IgM Antibody)"
+        }
+      }
+    },
+    {
+      "id": "DVI-R12",
+      "description": "All results: dengue IgM/IgG antibody test or panel ordered",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.525",
+              "name": "Dengue Virus Infection (Tests for dengue virus IgM Antibody)"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.527",
+              "name": "Dengue Virus Infection (Tests for dengue virus IgG Total Antibody [Qualitative])"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.524",
+              "name": "Dengue Virus Infection (Tests for dengue virus IgG Total Antibody [Quantitative])"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.897",
+              "name": "Dengue Virus Infection (Test Panels for dengue virus IgM IgG Antibody)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "DVI-R13",
+      "description": "Suspected dengue virus infection diagnosis or active problem (timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2163",
+                  "name": "Dengue Virus Infection [Suspected] (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Dengue Virus Infection [Suspected] (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2163",
+                  "name": "Dengue Virus Infection [Suspected] (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Dengue Virus Infection [Suspected] (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Culture test/panel; antigen panel; suspected ICD10CM",
+      "reason": "no codes; affected branches skip, coded branches functional"
+    },
+    {
+      "valueSet": "Travel/epidemiologic link and body-temperature numeric threshold",
+      "reason": "not implementable in SEM_V1; DVI-R6 indeterminate (coded fever/chills/thrombocytopenia captured, but require epi link)"
+    },
+    {
+      "valueSet": "Numeric antibody result > 0",
+      "reason": "SEM_V1 lacks numeric comparison; coded-positive alternative functional"
+    },
+    {
+      "valueSet": "Timebox windows",
+      "reason": "platform-unimplemented; does not reduce coverage"
+    }
+  ]
+}

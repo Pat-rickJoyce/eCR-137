@@ -1,0 +1,125 @@
+{
+  "mnemonic": "JEVD_V1",
+  "conditionId": "JEVD",
+  "name": "Japanese encephalitis virus disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Japanese_encephalitis_virus_disease.v3.20240628.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Japanese_encephalitis_virus_disease.v3.20240628.docx on 2026-07-18 (authoritative RCKMS Content Repository; latest rule revision 2025-06-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "JEVD-R1",
+      "description": "Japanese encephalitis virus disease as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1371", "name": "Japanese Encephalitis Virus Disease (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1370", "name": "Japanese Encephalitis Virus Disease (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1371", "name": "Japanese Encephalitis Virus Disease (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1370", "name": "Japanese Encephalitis Virus Disease (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "JEVD-R2",
+      "description": "Identification of Japanese encephalitis virus by culture, including preliminary results, through a generic culture or unspecified-method test with a Japanese encephalitis virus result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.526", "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1372", "resultName": "Japanese Encephalitis Virus Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1372", "resultName": "Japanese Encephalitis Virus Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1372", "resultName": "Japanese Encephalitis Virus Disease (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "JEVD-R3",
+      "description": "Detection of Japanese encephalitis virus antigen with a coded positive, organism, or abnormal-interpretation result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1375", "name": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1375", "name": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.1372", "resultName": "Japanese Encephalitis Virus Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1375", "name": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "JEVD-R4",
+      "description": "Detection of Japanese encephalitis virus nucleic acid by a specific or generic test with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1377", "name": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1377", "name": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1372", "resultName": "Japanese Encephalitis Virus Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1377", "name": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1372", "resultName": "Japanese Encephalitis Virus Disease (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "JEVD-R5",
+      "description": "Detection of Japanese encephalitis virus IgM antibody with a coded positive, organism, or abnormal-interpretation result on the same observation (numeric result greater than zero not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1376", "name": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1376", "name": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1372", "resultName": "Japanese Encephalitis Virus Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1376", "name": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "JEVD-R7",
+      "description": "Optional logic: detection of qualitative or quantitative Japanese encephalitis virus antibody with a coded positive, organism, or abnormal-interpretation result on the same observation (numeric result greater than zero not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1373", "name": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus Antibody [Qualitative])", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1373", "name": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus Antibody [Qualitative])", "resultOid": "2.16.840.1.113762.1.4.1146.1372", "resultName": "Japanese Encephalitis Virus Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1373", "name": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus Antibody [Qualitative])", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1374", "name": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus Antibody [Quantitative])", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1374", "name": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus Antibody [Quantitative])", "resultOid": "2.16.840.1.113762.1.4.1146.1372", "resultName": "Japanese Encephalitis Virus Disease (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1374", "name": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus Antibody [Quantitative])", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus by Culture and Identification Method)",
+      "reason": "the authoritative source reports no codes available; JEVD-R2 retains the generic culture and unspecified-method branches that require a Japanese encephalitis virus result"
+    },
+    {
+      "valueSet": "Paired Japanese encephalitis virus antibody comparison",
+      "reason": "source rule 6 is explicitly not operational; SEM_V1 cannot compare paired specimens, collection intervals, four-fold titer rises, or seroconversion, so the rule is omitted"
+    },
+    {
+      "valueSet": "Japanese Encephalitis Virus Disease (Tests for Japanese Encephalitis Virus Antibody [Ratio] in Serum)",
+      "reason": "the authoritative source reports no codes available; source rule 6 also requires a numeric ratio comparison of <= 1/4, which SEM_V1 cannot evaluate, so this alternative is omitted with the rest of the inoperable rule"
+    },
+    {
+      "valueSet": "Numeric laboratory result > 0",
+      "reason": "SEM_V1 has no numeric laboratory-result comparison; the numeric alternatives in JEVD-R5 and JEVD-R7 are omitted while coded-result and abnormal-interpretation alternatives remain modeled"
+    }
+  ]
+}

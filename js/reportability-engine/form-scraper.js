@@ -12,7 +12,8 @@ export class FormScraper {
             problems: this.getProblems(),
             labs: this.getLabs(),
             immunizations: this.getImmunizations(),
-            medications: this.getMedications()
+            medications: this.getMedications(),
+            encounters: this.getEncounters()
         };
     }
 
@@ -33,6 +34,8 @@ export class FormScraper {
             gender: document.getElementById('patientGender')?.value,
             dob: dobStr,
             age: age,
+            isDeceased: document.getElementById('patientDeathIndicator')?.value === 'true',
+            deathDate: document.getElementById('patientDeathDate')?.value || undefined,
             state: document.getElementById('patientState')?.value,
             zip: document.getElementById('patientZip')?.value,
         };
@@ -125,6 +128,19 @@ export class FormScraper {
         });
         console.log(`[FormScraper] Total labs scraped: ${list.length}`, list);
         return list;
+    }
+
+    getEncounters() {
+        const typeCode = document.getElementById('encounterType')?.value?.trim();
+        const dischargeDispositionCode = document.getElementById('encounterDisposition')?.value?.trim();
+        if (!typeCode && !dischargeDispositionCode) return [];
+        return [{
+            id: document.getElementById('encounterId')?.value,
+            typeCode: typeCode,
+            date: document.getElementById('encounterDate')?.value,
+            dischargeDispositionCode,
+            oids: [] // enriched by the evidence adapter's encounter lookup
+        }];
     }
 
     getImmunizations() {

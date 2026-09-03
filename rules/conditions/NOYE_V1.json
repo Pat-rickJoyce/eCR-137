@@ -1,0 +1,84 @@
+{
+  "mnemonic": "NOYE_V1",
+  "conditionId": "NOYE",
+  "name": "Non-pestis Yersiniosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Non-pestis_Yersiniosis.v4.20260626.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2026-06-26",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Non-pestis_Yersiniosis.v4.20260626.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2026-04-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "NOYE-R1",
+      "description": "Non-pestis yersiniosis diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1242", "name": "Non pestis Yersiniosis Infection (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1243", "name": "Non pestis Yersiniosis Infection (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1242", "name": "Non pestis Yersiniosis Infection (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1243", "name": "Non pestis Yersiniosis Infection (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "NOYE-R2",
+      "description": "Identification of a Yersinia non-pestis species by culture, with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1248", "name": "Non pestis Yersiniosis Infection (Tests Yersinia non pestis species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1248", "name": "Non pestis Yersiniosis Infection (Tests Yersinia non pestis species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1247", "resultName": "Non pestis Yersiniosis Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1248", "name": "Non pestis Yersiniosis Infection (Tests Yersinia non pestis species by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1247", "resultName": "Non pestis Yersiniosis Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1247", "resultName": "Non pestis Yersiniosis Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.3279", "name": "Non pestis Yersiniosis Infection (Combination Tests that include Yersinia non pestis species by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1247", "resultName": "Non pestis Yersiniosis Infection (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "NOYE-R3",
+      "description": "Detection of Yersinia non-pestis species nucleic acid, with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1250", "name": "Non pestis Yersiniosis Infection (Tests for Yersinia non pestis species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1250", "name": "Non pestis Yersiniosis Infection (Tests for Yersinia non pestis species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1247", "resultName": "Non pestis Yersiniosis Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1250", "name": "Non pestis Yersiniosis Infection (Tests for Yersinia non pestis species Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1247", "resultName": "Non pestis Yersiniosis Infection (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Non-pestis yersiniosis exposure criteria in source rules 4 and 5",
+      "reason": "the authoritative source explicitly marks both clinical-plus-epidemiologic logic sets inoperable because their confirmed/probable-case and outbreak-associated exposure criteria cannot be implemented; NOYE-R4 and NOYE-R5 are omitted while preserving source numbering"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-records reporter types",
+      "reason": "the authoritative source marks these reporter types unavailable in RCKMS; reporter-type routing and the death-certificate criterion are not represented in the condition pack"
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "mnemonic": "HDVI_V1",
+  "conditionId": "HDVI",
+  "name": "Hepatitis D Virus Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Hepatitis_D_Virus_Infection.v4.20250703.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Hepatitis_D_Virus_Infection.v4.20250703.docx on 2026-07-18 (authoritative RCKMS Content Repository)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "HDVI-R1",
+      "description": "Hepatitis D virus infection diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1968", "name": "Hepatitis D Virus Infection (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1969", "name": "Hepatitis D Virus Infection (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1968", "name": "Hepatitis D Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1969", "name": "Hepatitis D Virus Infection (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HDVI-R2",
+      "description": "Detection of hepatitis D virus nucleic acid",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1972", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1972", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1973", "resultName": "Hepatitis D Virus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1972", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1973", "resultName": "Hepatitis D Virus Infection (Organism or Substance in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "HDVI-R3",
+      "description": "Detection of hepatitis D virus total antibody",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2684", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus Total Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2684", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus Total Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1973", "resultName": "Hepatitis D Virus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2684", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus Total Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HDVI-R4",
+      "description": "Detection of hepatitis D virus IgM antibody",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1971", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1971", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1973", "resultName": "Hepatitis D Virus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1971", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HDVI-R5",
+      "description": "Detection of hepatitis D virus antigen",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2405", "name": "Hepatitis D Virus Infection (Test for hepatitis D virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2405", "name": "Hepatitis D Virus Infection (Test for hepatitis D virus Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.1973", "resultName": "Hepatitis D Virus Infection (Organism or Substance in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2405", "name": "Hepatitis D Virus Infection (Test for hepatitis D virus Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    },
+    {
+      "id": "HDVI-R6",
+      "description": "Hepatitis B virus infection diagnosis or active problem plus hepatitis D total- or IgM-antibody evidence",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.129", "name": "Acute Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.131", "name": "Acute Hepatitis B Virus Infection (Disorders) (ICD10CM)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.135", "name": "Chronic Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.141", "name": "Chronic Hepatitis B Virus Infection (Disorders) (ICD10CM)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.734", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.701", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (ICD10CM)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.733", "name": "Perinatal Hepatitis B Virus Infection (Disorders) (SNOMED)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.129", "name": "Acute Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.131", "name": "Acute Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.135", "name": "Chronic Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.141", "name": "Chronic Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.734", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.701", "name": "Unspecified Hepatitis B Virus Infection (Disorders) (ICD10CM)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.733", "name": "Perinatal Hepatitis B Virus Infection (Disorders) (SNOMED)", "status": "active" } }
+        ] },
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2684", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus Total Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2684", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus Total Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1973", "resultName": "Hepatitis D Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2684", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus Total Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1971", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1971", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1973", "resultName": "Hepatitis D Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1971", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "HDVI-R7",
+      "description": "Hepatitis D total-antibody evidence plus hepatitis D IgG or hepatitis B laboratory evidence",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2684", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus Total Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2684", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus Total Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1973", "resultName": "Hepatitis D Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2684", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus Total Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] },
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2404", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus IgG Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2404", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus IgG Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1973", "resultName": "Hepatitis D Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2404", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus IgG Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.400", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.400", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.400", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.401", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus surface Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.401", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus surface Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.401", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus surface Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.403", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.403", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.403", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2406", "name": "Hepatitis B Virus Infection (Combination Tests that include hepatitis B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.402", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus e Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.402", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus e Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.402", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus e Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    },
+    {
+      "id": "HDVI-R8",
+      "description": "Hepatitis D IgM-antibody evidence plus hepatitis D IgG or hepatitis B laboratory evidence",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1971", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1971", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1973", "resultName": "Hepatitis D Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1971", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] },
+        { "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2404", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus IgG Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2404", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus IgG Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1973", "resultName": "Hepatitis D Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2404", "name": "Hepatitis D Virus Infection (Tests for hepatitis D virus IgG Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.400", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.400", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus IgM Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.400", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus IgM Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.401", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus surface Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.401", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus surface Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.401", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus surface Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.403", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.403", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.403", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2406", "name": "Hepatitis B Virus Infection (Combination Tests that include hepatitis B virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.402", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus e Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.402", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus e Antigen)", "resultOid": "2.16.840.1.113762.1.4.1146.408", "resultName": "Hepatitis B Virus Infection (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.402", "name": "Hepatitis B Virus Infection (Tests for hepatitis B virus e Antigen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ] }
+      ] }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Numeric antibody result greater than zero in HDVI-R3, HDVI-R4, and antibody branches of HDVI-R6 through HDVI-R8",
+      "reason": "SEM_V1 has no numeric laboratory-result comparison; coded positive, condition-specific organism, and abnormal-interpretation alternatives remain implemented, but numeric-only positive antibody results cannot be evaluated"
+    }
+  ]
+}

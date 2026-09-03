@@ -1,0 +1,128 @@
+{
+  "mnemonic": "LIB_V1",
+  "conditionId": "LIB",
+  "name": "Lead in Blood",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Lead_in_Blood.v7.20260227.docx",
+    "rckmsVersion": "v7",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Lead_in_Blood.v7.20260227.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2025-08-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "LIB-R1",
+      "description": "Lead in blood as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.836", "name": "Lead in Blood (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.835", "name": "Lead in Blood (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.836", "name": "Lead in Blood (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.835", "name": "Lead in Blood (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "LIB-R2",
+      "description": "Toxic effect of lead as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.291", "name": "Toxic Effects of Lead (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.293", "name": "Toxic Effects of Lead (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.291", "name": "Toxic Effects of Lead (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.293", "name": "Toxic Effects of Lead (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "LIB-R4",
+      "description": "Abnormal interpretation for a venous-blood lead test on the same observation (generic-test-plus-specimen alternatives not modeled)",
+      "logic": {
+        "predicate": "labTestWithInterpretationIn",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.2345",
+          "name": "Lead in Blood (Tests for Lead in Venous Blood)",
+          "codes": ["A", "AA", "HH", "LL", "H", "L"]
+        }
+      }
+    },
+    {
+      "id": "LIB-R6",
+      "description": "Abnormal interpretation for a capillary-blood lead test on the same observation in a patient younger than 16 years (or user-defined age)",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2346",
+              "name": "Lead in Blood (Tests for Lead in Capillary Blood)",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 16, "unit": "years" }, "gate": true }
+        ]
+      }
+    },
+    {
+      "id": "LIB-R7",
+      "description": "Optional logic: any result for a laboratory test specific for detecting lead in blood by any method (unspecified-test-plus-blood-specimen alternative not modeled)",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.413",
+          "name": "Lead in Blood (Tests for Lead in Blood)"
+        }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Lead concentration thresholds with units",
+      "reason": "SEM_V1 does not preserve numeric laboratory result values or units and has no numeric comparison predicate; source rules 3 (venous >=3.5 ug/dL), 5 (capillary >=3.5 ug/dL plus age), 8 (pregnancy plus venous >=3.5 ug/dL), and 9 (venous or capillary >=10 ug/dL plus age >=18 years) are omitted entirely rather than weakened to test-name presence"
+    },
+    {
+      "valueSet": "Blood, venous-blood, and capillary-blood specimen constraints",
+      "reason": "SEM_V1 has no specimen-type evidence or predicate, and the source HL7 specimen value sets are unavailable; generic and unspecified test-name branches requiring specimen evidence in source rules 3 through 9 are omitted while specimen-specific test-name branches remain modeled where their other required criteria are executable"
+    }
+  ]
+}

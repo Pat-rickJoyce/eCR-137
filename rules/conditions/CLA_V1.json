@@ -1,0 +1,142 @@
+{
+  "mnemonic": "CLA_V1",
+  "conditionId": "CLA",
+  "name": "Cleft Lip Alone",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Cleft_Lip_Alone.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Cleft_Lip_Alone.v2.20240628.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CLA-R1",
+      "description": "Cleft Lip Alone (diagnosis or active problem, timeboxed) in a patient younger than 1 year",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2114",
+                          "name": "Cleft Lip Alone (Disorders) (SNOMED)"
+                        }
+                      },
+                      {
+                        "predicate": "diagnosisInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2115",
+                          "name": "Cleft Lip Alone (Disorders) (ICD10CM)"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              },
+              {
+                "all": [
+                  {
+                    "any": [
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2114",
+                          "name": "Cleft Lip Alone (Disorders) (SNOMED)",
+                          "status": "active"
+                        }
+                      },
+                      {
+                        "predicate": "problemInValueSet",
+                        "params": {
+                          "oid": "2.16.840.1.113762.1.4.1146.2115",
+                          "name": "Cleft Lip Alone (Disorders) (ICD10CM)",
+                          "status": "active"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "predicate": "withinTimebox",
+                    "params": {},
+                    "gate": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<",
+              "value": 1,
+              "unit": "years"
+            },
+            "gate": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "CLA-R2",
+      "description": "Fetal Cleft Lip (diagnosis or active problem, timeboxed; SNOMED branch)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2116",
+                  "name": "Fetal Cleft Lip (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.2116",
+                  "name": "Fetal Cleft Lip (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Fetal Cleft Lip (Disorders) (ICD10CM)",
+      "reason": "not implemented - no codes available per source docx Table 3; CLA-R2 retains the coded SNOMED diagnosis and active-problem branches"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "mnemonic": "MET_V1",
+  "conditionId": "MET",
+  "name": "Methemoglobinemia",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Methemoglobinemia.v2.20240628.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Methemoglobinemia.v2.20240628.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2026-02-10)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "MET-R1",
+      "description": "Methemoglobinemia diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2105", "name": "Methemoglobinemia (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2107", "name": "Methemoglobinemia (Disorders) (ICD10CM)" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "any": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2105", "name": "Methemoglobinemia (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2107", "name": "Methemoglobinemia (Disorders) (ICD10CM)", "status": "active" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "MET-R3",
+      "description": "Optional logic: non-congenital methemoglobinemia diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": { "any": [
+        { "all": [ { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2106", "name": "Methemoglobinemia [Non Congenital] (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2108", "name": "Methemoglobinemia [Non Congenital] (Disorders) (ICD10CM)" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] },
+        { "all": [ { "any": [
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2106", "name": "Methemoglobinemia [Non Congenital] (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2108", "name": "Methemoglobinemia [Non Congenital] (Disorders) (ICD10CM)", "status": "active" } }
+        ] }, { "predicate": "withinTimebox", "params": {}, "gate": true } ] }
+      ] }
+    },
+    {
+      "id": "MET-R4",
+      "description": "Optional logic: high interpretation flag on a quantitative methemoglobin-in-blood observation",
+      "logic": { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2109", "name": "Methemoglobinemia (Tests for Methemoglobin in Blood [Quantitative])", "codes": ["H", "HH"] } }
+    },
+    {
+      "id": "MET-R5",
+      "description": "Optional logic: methemoglobinemia diagnosis or active problem in a patient age 12 months or younger",
+      "logic": { "all": [
+        { "any": [
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2105", "name": "Methemoglobinemia (Disorders) (SNOMED)" } },
+          { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2107", "name": "Methemoglobinemia (Disorders) (ICD10CM)" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2105", "name": "Methemoglobinemia (Disorders) (SNOMED)", "status": "active" } },
+          { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2107", "name": "Methemoglobinemia (Disorders) (ICD10CM)", "status": "active" } }
+        ] },
+        { "predicate": "ageComparison", "params": { "op": "<=", "value": 12, "unit": "months" } }
+      ] }
+    }
+  ],
+  "gaps": [
+    { "valueSet": "Methemoglobin greater than 5 percent or 0.05 of total hemoglobin", "reason": "SEM_V1 has no unit-aware numeric laboratory comparison predicate; source rule 2 is omitted entirely rather than allowing the quantitative test name alone to report" },
+    { "valueSet": "Methemoglobin at least 1.5 percent or 0.015 of total hemoglobin", "reason": "SEM_V1 has no unit-aware numeric laboratory comparison predicate; the threshold is required by source rule 6 together with age <=12 months, so the rule is omitted entirely" },
+    { "valueSet": "RCTC trigger membership", "reason": "the authoritative source states that all condition-specific trigger codes were removed from RCTC in March 2026; this pack can still assess methemoglobinemia on an eICR triggered for another condition" },
+    { "valueSet": "Lab and vital-records reporter types", "reason": "the authoritative source marks these reporter types unavailable in RCKMS; they are not modeled as condition-pack rules" }
+  ]
+}

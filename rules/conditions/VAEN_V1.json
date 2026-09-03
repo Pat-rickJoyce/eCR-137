@@ -1,0 +1,149 @@
+{
+  "mnemonic": "VAEN_V1",
+  "conditionId": "VAEN",
+  "name": "Vancomycin-resistant Enterococci",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Vancomycin-resistant_Enterococci.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Vancomycin-resistant_Enterococci.v2.20240202.docx on 2026-07-29 (authoritative live RCKMS Content Repository document; revision history through 2026-06-02)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "VAEN-R1",
+      "description": "VRE diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1463", "name": "VRE (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1463", "name": "VRE (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VAEN-R2",
+      "description": "Identification of vancomycin-resistant Enterococci by VRE-specific or generic culture testing",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1465", "name": "VRE (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1465", "name": "VRE (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1464", "resultName": "VRE (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1465", "name": "VRE (Tests by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1464", "resultName": "VRE (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1464", "resultName": "VRE (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "VAEN-R3",
+      "description": "Detection of an Enterococcus vancomycin-resistance gene by a vancomycin-resistance-gene test",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1139", "name": "VISA/VRSA (Tests for Vancomycin Resistance Gene)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1139", "name": "VISA/VRSA (Tests for Vancomycin Resistance Gene)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "VAEN-R4",
+      "description": "Identification of Enterococcus species plus vancomycin resistance by coded susceptibility result or resistant interpretation",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1466", "name": "Enterococcus species (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1466", "name": "Enterococcus species (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.3296", "resultName": "Enterococcus species (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1466", "name": "Enterococcus species (Tests by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.3296", "resultName": "Enterococcus species (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.3296", "resultName": "Enterococcus species (Organism or Substance in Lab Results)" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1147", "name": "Tests for Vancomycin Susceptibility [OrdQn MIC]", "resultOid": "2.16.840.1.113762.1.4.1146.1145", "resultName": "Resistant Lab Result Value" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1147", "name": "Tests for Vancomycin Susceptibility [OrdQn MIC]", "codes": ["R"] } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VAEN-R5",
+      "description": "Optional identification of E. gallinarum or E. casseliflavus/E. flavescens plus vancomycin resistance by coded susceptibility result or resistant interpretation",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1468", "resultName": "Enterococcus gallinarum or E. casseliflavus/E. flavescens (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1468", "resultName": "Enterococcus gallinarum or E. casseliflavus/E. flavescens (Organism or Substance in Lab Results)" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1147", "name": "Tests for Vancomycin Susceptibility [OrdQn MIC]", "resultOid": "2.16.840.1.113762.1.4.1146.1145", "resultName": "Resistant Lab Result Value" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1147", "name": "Tests for Vancomycin Susceptibility [OrdQn MIC]", "codes": ["R"] } }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VAEN-R6",
+      "description": "Optional identification of E. faecium or E. faecalis plus vancomycin resistance by coded susceptibility result or resistant interpretation",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1467", "name": "Enterococcus faecium or E. faecalis (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1467", "name": "Enterococcus faecium or E. faecalis (Tests by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1469", "resultName": "Enterococcus faecium or E. faecalis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1467", "name": "Enterococcus faecium or E. faecalis (Tests by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1469", "resultName": "Enterococcus faecium or E. faecalis (Organism or Substance in Lab Results)" } },
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1469", "resultName": "Enterococcus faecium or E. faecalis (Organism or Substance in Lab Results)" } }
+            ]
+          },
+          {
+            "any": [
+              { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1147", "name": "Tests for Vancomycin Susceptibility [OrdQn MIC]", "resultOid": "2.16.840.1.113762.1.4.1146.1145", "resultName": "Resistant Lab Result Value" } },
+              { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1147", "name": "Tests for Vancomycin Susceptibility [OrdQn MIC]", "codes": ["R"] } }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 1 VRE disorders ICD10CM",
+      "reason": "the source marks the ICD10CM diagnosis and active-problem value set not implemented with no codes; VAEN-R1 retains the implemented SNOMED branches"
+    },
+    {
+      "valueSet": "Rule 3 vancomycin-resistance-gene organism result",
+      "reason": "the source marks the gene-result value set not implemented with no codes, which also makes the generic organism-nucleic-acid branch inoperable; VAEN-R3 retains the implemented test-specific coded-positive and abnormal-interpretation branches"
+    },
+    {
+      "valueSet": "Rules 4-6 numeric vancomycin MIC thresholds",
+      "reason": "SEM_V1 has no numeric laboratory-result threshold predicate; the rules retain the source's coded Resistant Lab Result Value and resistant interpretation alternatives but cannot independently enforce MIC >=16 ug/mL in rules 4 and 6 or MIC >=2 ug/mL in rule 5"
+    },
+    {
+      "valueSet": "Rule 5 organism-specific culture test",
+      "reason": "the source marks the E. gallinarum or E. casseliflavus/E. flavescens culture-test value set not implemented with no codes; VAEN-R5 retains both implemented generic-test alternatives with same-observation organism-specific results"
+    },
+    {
+      "valueSet": "Vital-record reporter type",
+      "reason": "the source identifies death-certificate VRE evidence, but SEM_V1 has no death-certificate evidence"
+    }
+  ]
+}

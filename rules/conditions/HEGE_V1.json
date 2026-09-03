@@ -1,0 +1,70 @@
+{
+  "mnemonic": "HEGE_V1",
+  "conditionId": "HEGE",
+  "name": "Herpes Genital",
+  "evidenceModel": "SEM_V1",
+  "coverage": "complete",
+  "source": {
+    "document": "Herpes_Genital.v3.20250703.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Herpes_Genital.v3.20250703.docx on 2026-07-18 (authoritative RCKMS Content Repository)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-18",
+  "rules": [
+    {
+      "id": "HEGE-R1",
+      "description": "Genital herpes diagnosis or active problem (timeboxed)",
+      "logic": { "any": [
+        { "all": [
+          { "any": [
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1778", "name": "Genital herpes (Disorders) (SNOMED)" } },
+            { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1779", "name": "Genital herpes (Disorders) (ICD10CM)" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] },
+        { "all": [
+          { "any": [
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1778", "name": "Genital herpes (Disorders) (SNOMED)", "status": "active" } },
+            { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1779", "name": "Genital herpes (Disorders) (ICD10CM)", "status": "active" } }
+          ] },
+          { "predicate": "withinTimebox", "params": {}, "gate": true }
+        ] }
+      ] }
+    },
+    {
+      "id": "HEGE-R2",
+      "description": "Identification of herpes simplex virus by culture or isolate-identification method",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1780", "name": "Herpes (Tests for Herpes simplex virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1780", "name": "Herpes (Tests for Herpes simplex virus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1783", "resultName": "Herpes (Herpes simplex virus in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1780", "name": "Herpes (Tests for Herpes simplex virus by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1783", "resultName": "Herpes (Herpes simplex virus in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Test by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1783", "resultName": "Herpes (Herpes simplex virus in Lab Results)" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2675", "name": "Herpes (Combination Tests that include Herpes simplex virus by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1783", "resultName": "Herpes (Herpes simplex virus in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "HEGE-R3",
+      "description": "Detection of herpes simplex virus nucleic acid",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1781", "name": "Herpes (Tests for Herpes simplex virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1781", "name": "Herpes (Tests for Herpes simplex virus Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1783", "resultName": "Herpes (Herpes simplex virus in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1781", "name": "Herpes (Tests for Herpes simplex virus Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1783", "resultName": "Herpes (Herpes simplex virus in Lab Results)" } }
+      ] }
+    },
+    {
+      "id": "HEGE-R4",
+      "description": "Detection of herpes simplex virus type 2 antibody",
+      "logic": { "any": [
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1782", "name": "Genital herpes (Tests for Herpes simplex virus type 2 Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+        { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1782", "name": "Genital herpes (Tests for Herpes simplex virus type 2 Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1784", "resultName": "Genital herpes (Herpes simplex virus type 2 in Lab Results)" } },
+        { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1782", "name": "Genital herpes (Tests for Herpes simplex virus type 2 Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+      ] }
+    }
+  ],
+  "gaps": []
+}

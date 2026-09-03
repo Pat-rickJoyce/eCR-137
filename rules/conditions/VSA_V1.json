@@ -1,0 +1,234 @@
+{
+  "mnemonic": "VSA_V1",
+  "conditionId": "VSA",
+  "name": "Vancomycin-intermediate Staphylococcus aureus",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Vancomycin-intermediate_Staphylococcus_aureus.v4.20240202.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Vancomycin-intermediate_Staphylococcus_aureus.v4.20240202.docx on 2026-07-29 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "VSA-R1",
+      "description": "VISA diagnosis or active problem (timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1136",
+                  "name": "VISA (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1136",
+                  "name": "VISA (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VSA-R2",
+      "description": "Identification of Staphylococcus aureus by culture plus coded evidence of intermediate vancomycin resistance (numeric MIC 4-8 ug/mL alternative not modeled)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1138",
+                  "name": "Staphylococcus aureus (Tests by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1138",
+                  "name": "Staphylococcus aureus (Tests by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1156",
+                  "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1138",
+                  "name": "Staphylococcus aureus (Tests by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1451",
+                  "resultName": "MRSA (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1138",
+                  "name": "Staphylococcus aureus (Tests by Culture and Identification Method)",
+                  "codes": ["A", "AA", "HH", "LL", "H", "L"]
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1041",
+                  "name": "Organisms (Tests by Culture and Identification)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1156",
+                  "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1041",
+                  "name": "Organisms (Tests by Culture and Identification)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1451",
+                  "resultName": "MRSA (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1040",
+                  "name": "Organisms (Tests by Unspecified Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1156",
+                  "resultName": "Staphylococcus aureus (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1040",
+                  "name": "Organisms (Tests by Unspecified Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1451",
+                  "resultName": "MRSA (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1147",
+                  "name": "Tests for Vancomycin Susceptibility [OrdQn MIC]",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1146",
+                  "resultName": "Moderately Resistant Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1147",
+                  "name": "Tests for Vancomycin Susceptibility [OrdQn MIC]",
+                  "codes": ["I"]
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1148",
+                  "name": "Tests for Vancomycin Susceptibility [Ord]",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.1146",
+                  "resultName": "Moderately Resistant Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1148",
+                  "name": "Tests for Vancomycin Susceptibility [Ord]",
+                  "codes": ["I"]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "VSA-R3",
+      "description": "Detection of Staphylococcus aureus with intermediate resistance to vancomycin or another glycopeptide antibiotic",
+      "logic": {
+        "predicate": "labResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.1137",
+          "name": "VISA (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "VSA-R4",
+      "description": "Optional logic: positive or abnormal result from a Staphylococcus aureus vancomycin-resistance-gene test",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1139",
+              "name": "VISA/VRSA (Tests for Vancomycin Resistance Gene)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1139",
+              "name": "VISA/VRSA (Tests for Vancomycin Resistance Gene)",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 1 VISA (Disorders) (ICD10CM)",
+      "reason": "the authoritative source marks the ICD10CM diagnosis and active-problem alternatives not implemented because no codes are available; the SNOMED alternatives remain executable"
+    },
+    {
+      "valueSet": "Rule 2 vancomycin MIC from 4 through 8 ug/mL",
+      "reason": "SEM_V1 has no numeric laboratory result value, unit, or range-comparison predicate; the source rule remains partially executable through same-observation moderately-resistant coded results or intermediate interpretations"
+    },
+    {
+      "valueSet": "Rule 4 VISA/VRSA Vancomycin Resistance Gene (Organism or Substance in Lab Results)",
+      "reason": "the authoritative source marks both organism-result branches not implemented because no codes are available; the test-specific positive-result and abnormal-interpretation alternatives remain executable"
+    },
+    {
+      "valueSet": "Rule 5 vancomycin MIC from 9 through 15 ug/mL",
+      "reason": "SEM_V1 has no numeric laboratory result value, unit, or range-comparison predicate, and rule 5 has no coded-result alternative; the rule is omitted entirely"
+    }
+  ]
+}

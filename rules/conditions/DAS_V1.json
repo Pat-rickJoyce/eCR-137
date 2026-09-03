@@ -1,0 +1,75 @@
+{
+  "mnemonic": "DAS_V1",
+  "conditionId": "DAS",
+  "name": "Drowning and Submersion",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Drowning_and_Submersion.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs live RCKMS Release 16 docx (2026-07-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "DAS-R1",
+      "description": "Drowning and submersion diagnosis or active problem (timeboxed). Source splits into fatal/non-fatal by discharge disposition, but BOTH dispositions report, so reportability reduces to the diagnosis.",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1716",
+                  "name": "Drowning and Submersion (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1717",
+                  "name": "Drowning and Submersion (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1716",
+                  "name": "Drowning and Submersion (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1717",
+                  "name": "Drowning and Submersion (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Discharge disposition / deceased status (Expired 1108 / Not Expired 1107)",
+      "reason": "discharge-disposition/deceased field not modeled in SEM_V1; used only to classify fatal vs non-fatal (both report), so does not restrict reportability"
+    },
+    {
+      "valueSet": "Timebox windows",
+      "reason": "platform-unimplemented; does not reduce coverage"
+    }
+  ]
+}

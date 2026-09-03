@@ -1,0 +1,293 @@
+{
+  "mnemonic": "POIN_V1",
+  "conditionId": "POIN",
+  "name": "Poliovirus Infection",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Poliovirus_Infection.v8.20260227.docx",
+    "rckmsVersion": "v8",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Poliovirus_Infection.v8.20260227.docx on 2026-07-21 (authoritative RCKMS Content Release 16; latest revision 2025-11-04)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "POIN-R1",
+      "description": "Poliomyelitis or poliovirus infection diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.124",
+                      "name": "Poliomyelitis (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.123",
+                      "name": "Poliomyelitis (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.124",
+                      "name": "Poliomyelitis (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.123",
+                      "name": "Poliomyelitis (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "POIN-R2",
+      "description": "Suspected poliomyelitis or poliovirus infection diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1438",
+                      "name": "Poliomyelitis [Suspected] (Disorders) (SNOMED)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1438",
+                      "name": "Poliomyelitis [Suspected] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "POIN-R3",
+      "description": "Poliovirus identified by culture, including preliminary results",
+      "logic": {
+        "any": [
+          {
+            "any": [
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.829",
+                  "name": "Poliovirus Infection (Tests for poliovirus by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.272",
+                  "resultName": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labTestWithResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.829",
+                  "name": "Poliovirus Infection (Tests for poliovirus by Culture and Identification Method)",
+                  "resultOid": "2.16.840.1.113762.1.4.1146.828",
+                  "resultName": "Poliovirus Infection (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labTestWithInterpretationIn",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.829",
+                  "name": "Poliovirus Infection (Tests for poliovirus by Culture and Identification Method)",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1041",
+              "name": "Organisms (Tests by Culture and Identification)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.828",
+              "resultName": "Poliovirus Infection (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1040",
+              "name": "Organisms (Tests by Unspecified Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.828",
+              "resultName": "Poliovirus Infection (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "POIN-R4",
+      "description": "Poliovirus nucleic acid detected using a generic organism nucleic-acid test",
+      "logic": {
+        "predicate": "labTestWithResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.994",
+          "name": "Organisms (Tests for Nucleic Acid)",
+          "resultOid": "2.16.840.1.113762.1.4.1146.828",
+          "resultName": "Poliovirus Infection (Organism or Substance in Lab Results)"
+        }
+      }
+    },
+    {
+      "id": "POIN-R5",
+      "description": "Lab test ordered for organism-specific poliovirus culture and identification",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.829",
+          "name": "Poliovirus Infection (Tests for poliovirus by Culture and Identification Method)"
+        }
+      }
+    },
+    {
+      "id": "POIN-R7",
+      "description": "Acute flaccid paralysis plus a poliovirus IgG antibody-titer test order",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.725",
+                  "name": "Acute Flaccid Paralysis (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.725",
+                  "name": "Acute Flaccid Paralysis (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.830",
+                  "name": "Poliovirus Infection (Tests for Poliovirus Antibody Titer in Serum Specimen)"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1112",
+                  "name": "Poliovirus infection (Test Panels for Poliovirus Antibody)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Rule 2: Poliomyelitis [Suspected] (Disorders) (ICD10CM)",
+      "reason": "the authoritative Table 3 row is not implemented and has no codes; the code-less ICD10CM alternatives are omitted while the coded SNOMED alternatives remain operational"
+    },
+    {
+      "valueSet": "Rule 4: Poliovirus infection (Tests for Poliovirus Nucleic Acid)",
+      "reason": "the organism-specific test-name value set has no LOINC codes; its branches are omitted while the coded generic Organisms (Tests for Nucleic Acid) plus poliovirus-result branch remains operational"
+    },
+    {
+      "valueSet": "Rule 5: Poliovirus infection (Test Panels for Poliovirus by Culture and Identification Method)",
+      "reason": "the authoritative Table 3 row has no codes, so the panel branch is omitted; SEM_V1 also does not distinguish laboratory orders from completed observations, so the coded test-order branch uses labTestInValueSet"
+    },
+    {
+      "valueSet": "Rule 6: poliovirus nucleic-acid test and panel orders",
+      "reason": "both required order-name value sets are explicitly code-less in Table 3, so the entirely inoperable Rule 6 is omitted with source numbering preserved"
+    },
+    {
+      "valueSet": "Rule 7: acute-onset-qualified flaccid limb paralysis branches",
+      "reason": "SEM_V1 cannot represent a qualifier attached to a diagnosis or problem, and the flaccid-paralysis ICD10CM value set has no codes; qualifier-dependent branches using OIDs 1327, 1427, 1328, and 1022 are omitted rather than allowing paralysis without acute onset to report"
+    },
+    {
+      "valueSet": "Rule 7: poliovirus IgG antibody-titer laboratory test orders",
+      "reason": "SEM_V1 lab evidence does not distinguish orders from completed observations; coded OIDs 830 and 1112 are modeled with labTestInValueSet"
+    },
+    {
+      "valueSet": "Vital-records poliovirus reporting",
+      "reason": "the authoritative snapshot identifies this reporter type as not implemented in RCKMS, and SEM_V1 has no death-certificate cause/contributing-condition evidence"
+    }
+  ]
+}

@@ -1,0 +1,701 @@
+{
+  "mnemonic": "PER_V1",
+  "conditionId": "PER",
+  "name": "Pertussis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Pertussis.v5.20240628.docx",
+    "rckmsVersion": "v5",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Pertussis.v5.20240628.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2025-06-18)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "PER-R1",
+      "description": "Pertussis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.35",
+                      "name": "Pertussis (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.36",
+                      "name": "Pertussis (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.35",
+                      "name": "Pertussis (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.36",
+                      "name": "Pertussis (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PER-R2",
+      "description": "Bordetella pertussis identified by culture using a specific or generic test with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.220",
+              "name": "Pertussis (Tests for Bordetella pertussis by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.220",
+              "name": "Pertussis (Tests for Bordetella pertussis by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.100",
+              "resultName": "Pertussis (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.220",
+              "name": "Pertussis (Tests for Bordetella pertussis by Culture and Identification Method)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1041",
+              "name": "Organisms (Tests by Culture and Identification)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.100",
+              "resultName": "Pertussis (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1040",
+              "name": "Organisms (Tests by Unspecified Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.100",
+              "resultName": "Pertussis (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PER-R3",
+      "description": "Bordetella pertussis nucleic acid detected using a specific or generic test with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.58",
+              "name": "Pertussis (Tests for Bordetella pertussis Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.58",
+              "name": "Pertussis (Tests for Bordetella pertussis Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.100",
+              "resultName": "Pertussis (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.58",
+              "name": "Pertussis (Tests for Bordetella pertussis Nucleic Acid)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.100",
+              "resultName": "Pertussis (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PER-R4",
+      "description": "Bordetella pertussis toxin antibody detected with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.614",
+              "name": "Pertussis (Tests for Bordetella pertussis Toxin Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.614",
+              "name": "Pertussis (Tests for Bordetella pertussis Toxin Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.100",
+              "resultName": "Pertussis (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.614",
+              "name": "Pertussis (Tests for Bordetella pertussis Toxin Antibody)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PER-R5",
+      "description": "Cough plus inspiratory whoop, paroxysmal cough, post-tussive vomiting, or apnea",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.91",
+                  "name": "Cough (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.91",
+                  "name": "Cough (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.90",
+                  "name": "Cough (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.90",
+                  "name": "Cough (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.620",
+                  "name": "Inspiratory Whoop (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.620",
+                  "name": "Inspiratory Whoop (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.621",
+                  "name": "Inspiratory Whoop (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.621",
+                  "name": "Inspiratory Whoop (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.352",
+                  "name": "Paroxysmal Cough (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.352",
+                  "name": "Paroxysmal Cough (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.658",
+                  "name": "Posttussive Vomiting (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.658",
+                  "name": "Posttussive Vomiting (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.329",
+                  "name": "Apnea (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.329",
+                  "name": "Apnea (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.330",
+                  "name": "Apnea (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.330",
+                  "name": "Apnea (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PER-R7",
+      "description": "Suspected pertussis diagnosis or active problem, timeboxed when configured",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2165",
+                      "name": "Pertussis [Suspected] (Disorders) (SNOMED)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.2165",
+                      "name": "Pertussis [Suspected] (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PER-R8",
+      "description": "Bordetella pertussis antigen detected with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.215",
+              "name": "Pertussis (Tests for Bordetella pertussis Antigen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.215",
+              "name": "Pertussis (Tests for Bordetella pertussis Antigen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.100",
+              "resultName": "Pertussis (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.215",
+              "name": "Pertussis (Tests for Bordetella pertussis Antigen)",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PER-R9",
+      "description": "Bordetella pertussis non-toxin antibody detected with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.216",
+              "name": "Pertussis (Tests for Bordetella pertussis Antibody [Excluding Pertussis Toxin Antibody])",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.216",
+              "name": "Pertussis (Tests for Bordetella pertussis Antibody [Excluding Pertussis Toxin Antibody])",
+              "resultOid": "2.16.840.1.113762.1.4.1146.100",
+              "resultName": "Pertussis (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.216",
+              "name": "Pertussis (Tests for Bordetella pertussis Antibody [Excluding Pertussis Toxin Antibody])",
+              "codes": [
+                "A",
+                "AA",
+                "HH",
+                "LL",
+                "H",
+                "L"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PER-R10",
+      "description": "Order for organism-specific pertussis culture or pertussis/parapertussis culture panel",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.220",
+              "name": "Pertussis (Tests for Bordetella pertussis by Culture and Identification Method)"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.2306",
+              "name": "Pertussis (Test Panels for Bordetella pertussis and Bordetella parapertussis Culture and Identification Method)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PER-R11",
+      "description": "Order for pertussis nucleic-acid test or pertussis/parapertussis nucleic-acid panel",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.58",
+              "name": "Pertussis (Tests for Bordetella pertussis Nucleic Acid)"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.645",
+              "name": "Pertussis (Test Panels for Bordetella pertussis and Bordetella parapertussis Nucleic Acid)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PER-R12",
+      "description": "Order for Bordetella pertussis antigen test",
+      "logic": {
+        "predicate": "labTestInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.215",
+          "name": "Pertussis (Tests for Bordetella pertussis Antigen)"
+        }
+      }
+    },
+    {
+      "id": "PER-R13",
+      "description": "Order for Bordetella pertussis non-toxin antibody test or antibody panel",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.216",
+              "name": "Pertussis (Tests for Bordetella pertussis Antibody [Excluding Pertussis Toxin Antibody])"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1001",
+              "name": "Pertussis (Test Panels for Bordetella pertussis Antibody)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PER-R14",
+      "description": "Order for Bordetella pertussis toxin-antibody test or toxin-antibody panel",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.614",
+              "name": "Pertussis (Tests for Bordetella pertussis Toxin Antibody)"
+            }
+          },
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.646",
+              "name": "Pertussis (Test Panels for Bordetella pertussis Toxin Antibody)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PER-R15",
+      "description": "Cough and apnea in a patient two years old or younger",
+      "logic": {
+        "all": [
+          {
+            "predicate": "ageComparison",
+            "params": {
+              "op": "<=",
+              "value": 2,
+              "unit": "years"
+            },
+            "gate": true
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.91",
+                  "name": "Cough (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.91",
+                  "name": "Cough (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.90",
+                  "name": "Cough (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.90",
+                  "name": "Cough (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.329",
+                  "name": "Apnea (SNOMED)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.329",
+                  "name": "Apnea (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.330",
+                  "name": "Apnea (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.330",
+                  "name": "Apnea (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Source rule 6 contact-with-case or outbreak-risk-group epidemiologic criteria",
+      "reason": "the authoritative source marks the clinical-plus-epidemiologic logic set inoperable because both epidemiologic criteria are not implementable; the rule is omitted while preserving source numbering"
+    },
+    {
+      "valueSet": "Suspected Pertussis, Paroxysmal Cough, and Posttussive Vomiting ICD10CM branches",
+      "reason": "the authoritative source marks these ICD-10-CM value sets unimplemented because no codes are available; PER-R5 and PER-R7 retain their coded SNOMED branches"
+    },
+    {
+      "valueSet": "Laboratory order versus completed-observation lifecycle",
+      "reason": "SEM_V1 carries laboratory test evidence but does not distinguish orders from completed observations; PER-R10 through PER-R14 model the source order test-name value sets with the available lab-test predicate"
+    },
+    {
+      "valueSet": "Lab and vital-records reporter types and death-certificate criterion",
+      "reason": "the authoritative source marks lab and vital-records reporter types unavailable in RCKMS; reporter routing and death-certificate evidence are not represented in the pack"
+    }
+  ]
+}

@@ -1,0 +1,243 @@
+{
+  "mnemonic": "BOIN_V1",
+  "conditionId": "BOIN",
+  "name": "Botulism Infant",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Botulism_Infant.v4.20260227.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2026-02-27",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Botulism_Infant.v4.20260227.docx on 2026-07-17 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "BOIN-R1",
+      "description": "Timeboxed infant botulism diagnosis or active problem",
+      "logic": {
+        "any": [
+          { "all": [
+            { "any": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1430", "name": "Infant Botulism (Disorders) (SNOMED)" } },
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1431", "name": "Infant Botulism (Disorders) (ICD10CM)" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] },
+          { "all": [
+            { "any": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1430", "name": "Infant Botulism (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1431", "name": "Infant Botulism (Disorders) (ICD10CM)", "status": "active" } }
+            ] },
+            { "predicate": "withinTimebox", "params": {}, "gate": true }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "BOIN-R3",
+      "description": "Botulism, suspected botulism, or at least three distinct compatible clinical finding groups in a patient younger than one year",
+      "logic": {
+        "all": [
+          { "any": [
+            { "all": [
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.359", "name": "Botulism (Disorders) (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.360", "name": "Botulism (Disorders) (ICD10CM)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1432", "name": "Botulism [Suspected] (Disorders) (SNOMED)" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ] },
+            { "all": [
+              { "any": [
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.359", "name": "Botulism (Disorders) (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.360", "name": "Botulism (Disorders) (ICD10CM)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1432", "name": "Botulism [Suspected] (Disorders) (SNOMED)", "status": "active" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ] },
+            { "atLeast": { "n": 3, "of": [
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1424", "name": "Constipation (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1425", "name": "Constipation (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1424", "name": "Constipation (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1425", "name": "Constipation (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1422", "name": "Ptosis (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1423", "name": "Ptosis (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1422", "name": "Ptosis (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1423", "name": "Ptosis (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.976", "name": "Dysphagia (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.977", "name": "Dysphagia (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.976", "name": "Dysphagia (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.977", "name": "Dysphagia (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.970", "name": "Bulbar Weakness (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.971", "name": "Bulbar Weakness (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.970", "name": "Bulbar Weakness (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.971", "name": "Bulbar Weakness (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.725", "name": "Acute Flaccid Paralysis (Disorders) (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1327", "name": "Flaccid Monoplegia and Diplegia (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1328", "name": "Paralysis of Limb [Monoplegia and Diplegia] (ICD10CM)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1427", "name": "Paralysis of Limb [Monoplegia and Diplegia] (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.725", "name": "Acute Flaccid Paralysis (Disorders) (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1327", "name": "Flaccid Monoplegia and Diplegia (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1328", "name": "Paralysis of Limb [Monoplegia and Diplegia] (ICD10CM)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1427", "name": "Paralysis of Limb [Monoplegia and Diplegia] (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.978", "name": "Impaired Respiration (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.978", "name": "Impaired Respiration (SNOMED)", "status": "active" } }
+              ] }
+            ] } }
+          ] },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+        ]
+      }
+    },
+    {
+      "id": "BOIN-R4",
+      "description": "Qualifying botulism culture or toxin result, or a botulism culture/toxin test order, in a patient younger than one year",
+      "logic": {
+        "all": [
+          { "any": [
+            { "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.697", "name": "Botulism (Tests for Clostridium botulinum by Culture and Identification Method)" } },
+              { "any": [
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.979", "name": "Botulism (Organism or Substance in Lab Results)" } },
+                { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+              ] }
+            ] },
+            { "all": [
+              { "any": [
+                { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)" } },
+                { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)" } }
+              ] },
+              { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.979", "name": "Botulism (Organism or Substance in Lab Results)" } }
+            ] },
+            { "all": [
+              { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.981", "name": "Botulism (Tests for Clostridium botulinum Toxin)" } },
+              { "any": [
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.272", "name": "Present or Positive Lab Result Value" } },
+                { "predicate": "labResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.979", "name": "Botulism (Organism or Substance in Lab Results)" } },
+                { "predicate": "labInterpretationIn", "params": { "name": "Abnormal Interpretation of an Observation", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+              ] }
+            ] },
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.697", "name": "Botulism Culture Test Order" } },
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.981", "name": "Botulism Toxin Test Order" } },
+            { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.982", "name": "Botulism Toxin Test Panel Order" } }
+          ] },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+        ]
+      }
+    },
+    {
+      "id": "BOIN-R5",
+      "description": "Botulism antitoxin medication in a patient younger than one year",
+      "logic": {
+        "all": [
+          { "predicate": "medicationInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.983", "name": "Botulism Antitoxin (RXNORM)" } },
+          { "predicate": "ageComparison", "params": { "op": "<", "value": 1, "unit": "years" }, "gate": true }
+        ]
+      }
+    },
+    {
+      "id": "BOIN-R6",
+      "description": "Optional botulism, suspected botulism, or at least three distinct compatible clinical finding groups in a patient 15 months old or younger",
+      "logic": {
+        "all": [
+          { "any": [
+            { "all": [
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.359", "name": "Botulism (Disorders) (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.360", "name": "Botulism (Disorders) (ICD10CM)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1432", "name": "Botulism [Suspected] (Disorders) (SNOMED)" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ] },
+            { "all": [
+              { "any": [
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.359", "name": "Botulism (Disorders) (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.360", "name": "Botulism (Disorders) (ICD10CM)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1432", "name": "Botulism [Suspected] (Disorders) (SNOMED)", "status": "active" } }
+              ] },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ] },
+            { "atLeast": { "n": 3, "of": [
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1424", "name": "Constipation (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1425", "name": "Constipation (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1424", "name": "Constipation (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1425", "name": "Constipation (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1422", "name": "Ptosis (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1423", "name": "Ptosis (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1422", "name": "Ptosis (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1423", "name": "Ptosis (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.976", "name": "Dysphagia (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.977", "name": "Dysphagia (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.976", "name": "Dysphagia (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.977", "name": "Dysphagia (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.970", "name": "Bulbar Weakness (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.971", "name": "Bulbar Weakness (ICD10CM)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.970", "name": "Bulbar Weakness (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.971", "name": "Bulbar Weakness (ICD10CM)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.725", "name": "Acute Flaccid Paralysis (Disorders) (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1327", "name": "Flaccid Monoplegia and Diplegia (SNOMED)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1328", "name": "Paralysis of Limb [Monoplegia and Diplegia] (ICD10CM)" } },
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1427", "name": "Paralysis of Limb [Monoplegia and Diplegia] (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.725", "name": "Acute Flaccid Paralysis (Disorders) (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1327", "name": "Flaccid Monoplegia and Diplegia (SNOMED)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1328", "name": "Paralysis of Limb [Monoplegia and Diplegia] (ICD10CM)", "status": "active" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1427", "name": "Paralysis of Limb [Monoplegia and Diplegia] (SNOMED)", "status": "active" } }
+              ] },
+              { "any": [
+                { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.978", "name": "Impaired Respiration (SNOMED)" } },
+                { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.978", "name": "Impaired Respiration (SNOMED)", "status": "active" } }
+              ] }
+            ] } }
+          ] },
+          { "predicate": "ageComparison", "params": { "op": "<=", "value": 15, "unit": "months" }, "gate": true }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Infant Botulism [Suspected] (Disorders) (SNOMED and ICD10CM)",
+      "reason": "the authoritative source says no codes are available for either value set; source rule 2 is explicitly inoperable and is omitted"
+    },
+    {
+      "valueSet": "Botulism [Suspected] (Disorders) (ICD10CM)",
+      "reason": "the authoritative source says no codes are available; BOIN-R3 and BOIN-R6 retain the available SNOMED diagnosis and active-problem alternatives"
+    },
+    {
+      "valueSet": "Progressive Weakness (SNOMED and ICD10CM)",
+      "reason": "the authoritative source says no codes are available for either value set; this clinical-finding group is omitted from the at-least-three alternatives"
+    },
+    {
+      "valueSet": "Unavailable clinical-finding value sets (Acute Flaccid Paralysis ICD10CM, Flaccid Monoplegia and Diplegia ICD10CM, and Impaired Respiration ICD10CM)",
+      "reason": "the authoritative source says no codes are available; BOIN-R3 and BOIN-R6 retain all available SNOMED and ICD10CM alternatives for the affected clinical groups"
+    },
+    {
+      "valueSet": "Botulism Culture Test Panel Order",
+      "reason": "the authoritative source says no codes are available; BOIN-R4 omits this order branch while retaining the available individual culture-test, toxin-test, and toxin-panel order alternatives"
+    }
+  ]
+}

@@ -1,0 +1,302 @@
+{
+  "mnemonic": "WEEVD_V1",
+  "conditionId": "WEEVD",
+  "name": "Western equine encephalitis virus disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Western_equine_encephalitis_virus_disease.v3.20240202.docx",
+    "rckmsVersion": "v3",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Western_equine_encephalitis_virus_disease.v3.20240202.docx on 2026-07-29 (authoritative RCKMS Content Release 16)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-29",
+  "rules": [
+    {
+      "id": "WEEVD-R1",
+      "description": "Western equine encephalitis virus disease or infection (diagnosis or active problem, timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1167",
+                      "name": "Western Equine Encephalitis Virus Disease (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1159",
+                      "name": "Western Equine Encephalitis Virus Disease (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1167",
+                      "name": "Western Equine Encephalitis Virus Disease (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1159",
+                      "name": "Western Equine Encephalitis Virus Disease (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "withinTimebox",
+                "params": {},
+                "gate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "WEEVD-R2",
+      "description": "Identification of western equine encephalitis virus by culture and identification method, including preliminary results",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.526",
+              "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1193",
+              "resultName": "Western Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1041",
+              "name": "Organisms (Tests by Culture and Identification)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1193",
+              "resultName": "Western Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1040",
+              "name": "Organisms (Tests by Unspecified Method)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1193",
+              "resultName": "Western Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "WEEVD-R3",
+      "description": "Detection of western equine encephalitis virus nucleic acid by any method",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1171",
+              "name": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1171",
+              "name": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1193",
+              "resultName": "Western Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1171",
+              "name": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus Nucleic Acid)",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.994",
+              "name": "Organisms (Tests for Nucleic Acid)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1193",
+              "resultName": "Western Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "WEEVD-R4",
+      "description": "Detection of western equine encephalitis virus antigen by any method",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1174",
+              "name": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus Antigen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1174",
+              "name": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus Antigen)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1193",
+              "resultName": "Western Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1174",
+              "name": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus Antigen)",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "WEEVD-R5",
+      "description": "Detection of western equine encephalitis virus IgM antibody (coded or abnormal results; numeric > 0 not modeled)",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1178",
+              "name": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus IgM Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1178",
+              "name": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus IgM Antibody)",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1193",
+              "resultName": "Western Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1178",
+              "name": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus IgM Antibody)",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "WEEVD-R7",
+      "description": "Optional logic: detection of qualitative or quantitative western equine encephalitis virus antibody (coded or abnormal results; numeric > 0 not modeled)",
+      "logic": {
+        "any": [
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1188",
+              "name": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus Antibody [Qualitative])",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1188",
+              "name": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus Antibody [Qualitative])",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1193",
+              "resultName": "Western Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1188",
+              "name": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus Antibody [Qualitative])",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1183",
+              "name": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus Antibody [Quantitative])",
+              "resultOid": "2.16.840.1.113762.1.4.1146.272",
+              "resultName": "Present or Positive Lab Result Value"
+            }
+          },
+          {
+            "predicate": "labTestWithResultInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1183",
+              "name": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus Antibody [Quantitative])",
+              "resultOid": "2.16.840.1.113762.1.4.1146.1193",
+              "resultName": "Western Equine Encephalitis Virus Disease (Organism or Substance in Lab Results)"
+            }
+          },
+          {
+            "predicate": "labTestWithInterpretationIn",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1183",
+              "name": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus Antibody [Quantitative])",
+              "codes": ["A", "AA", "HH", "LL", "H", "L"]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Western Equine Encephalitis Virus Disease (Tests for Western Equine Encephalitis Virus by Culture and Identification Method)",
+      "reason": "not implemented - no codes available per source docx Table 3; WEEVD-R2 retains the generic culture-test plus organism-result branches"
+    },
+    {
+      "valueSet": "Paired acute/convalescent western equine encephalitis virus antibody comparison",
+      "reason": "source rule 6 is explicitly not operational and SEM_V1 cannot compare paired specimens, collection intervals, four-fold titer rises, seroconversion, or antibody ratios; the rule is omitted"
+    },
+    {
+      "valueSet": "Numeric laboratory result > 0",
+      "reason": "SEM_V1 has no numeric laboratory result comparison; numeric alternatives in WEEVD-R5 and WEEVD-R7 are omitted"
+    }
+  ]
+}

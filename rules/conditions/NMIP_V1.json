@@ -1,0 +1,113 @@
+{
+  "mnemonic": "NMIP_V1",
+  "conditionId": "NMIP",
+  "name": "Nontuberculous Mycobacteria Infection Pulmonary",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Nontuberculous_Mycobacteria_Infection_Pulmonary.v4.20250703.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2025-07-03",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Nontuberculous_Mycobacteria_Infection_Pulmonary.v4.20250703.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest revision 2025-05-13)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "NMIP-R1",
+      "description": "Pulmonary nontuberculous mycobacteria infection diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1798", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1799", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1798", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1799", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "NMIP-R3",
+      "description": "Identification of qualifying Mycobacterium species in a lower-respiratory specimen excluding sputum by culture, with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2254", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Tests for Mycobacterium species in Lower Respiratory Specimen [Excluding Sputum] by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2254", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Tests for Mycobacterium species in Lower Respiratory Specimen [Excluding Sputum] by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1800", "resultName": "Nontuberculous Mycobacteria Infection, Pulmonary (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2254", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Tests for Mycobacterium species in Lower Respiratory Specimen [Excluding Sputum] by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2252", "name": "Organisms (Tests in Lower Respiratory Specimen [Excluding Sputum] by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1800", "resultName": "Nontuberculous Mycobacteria Infection, Pulmonary (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "NMIP-R4",
+      "description": "Optional identification of qualifying Mycobacterium species in a sputum specimen by culture, with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1802", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Tests for Mycobacterium species in Sputum Specimen by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1802", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Tests for Mycobacterium species in Sputum Specimen by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1800", "resultName": "Nontuberculous Mycobacteria Infection, Pulmonary (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1802", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Tests for Mycobacterium species in Sputum Specimen by Culture and Identification Method)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2251", "name": "Organisms (Tests in Sputum Specimen by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1800", "resultName": "Nontuberculous Mycobacteria Infection, Pulmonary (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "NMIP-R5",
+      "description": "Optional detection of qualifying Mycobacterium species nucleic acid in a pulmonary specimen, with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2067", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Tests for Mycobacterium species Nucleic Acid in a Pulmonary Specimen)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2067", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Tests for Mycobacterium species Nucleic Acid in a Pulmonary Specimen)", "resultOid": "2.16.840.1.113762.1.4.1146.1800", "resultName": "Nontuberculous Mycobacteria Infection, Pulmonary (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.2067", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Tests for Mycobacterium species Nucleic Acid in a Pulmonary Specimen)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2253", "name": "Organisms (Tests for Nucleic Acid in Lower Respiratory Specimen [Including Sputum])", "resultOid": "2.16.840.1.113762.1.4.1146.1800", "resultName": "Nontuberculous Mycobacteria Infection, Pulmonary (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "NMIP-R6",
+      "description": "Optional reporting of all result values from qualifying lower-respiratory, non-sputum Mycobacterium culture tests",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2254", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Tests for Mycobacterium species in Lower Respiratory Specimen [Excluding Sputum] by Culture and Identification Method)" } }
+    },
+    {
+      "id": "NMIP-R7",
+      "description": "Optional reporting of all result values from qualifying sputum Mycobacterium culture tests",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1802", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Tests for Mycobacterium species in Sputum Specimen by Culture and Identification Method)" } }
+    },
+    {
+      "id": "NMIP-R8",
+      "description": "Optional reporting of all result values from qualifying pulmonary Mycobacterium nucleic-acid tests",
+      "logic": { "predicate": "labTestInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.2067", "name": "Nontuberculous Mycobacteria Infection, Pulmonary (Tests for Mycobacterium species Nucleic Acid in a Pulmonary Specimen)" } }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Two separate sputum specimens with qualifying Mycobacterium culture results",
+      "reason": "the authoritative source explicitly marks source rule 2 inoperable because RCKMS cannot evaluate two separate specimens; SEM_V1 cannot compare or count distinct specimen observations, so the rule is omitted"
+    },
+    {
+      "valueSet": "Sputum and lower-respiratory specimen constraints on generic culture and nucleic-acid tests",
+      "reason": "SEM_V1 has no laboratory specimen-type evidence or predicate, and the source HL7 specimen value sets have no codes; unrestricted test branches requiring separate specimen linkage are omitted from NMIP-R3 through NMIP-R8 while specimen-specific test-name branches remain modeled"
+    },
+    {
+      "valueSet": "Lab-reporting and vital-records reporter types",
+      "reason": "the authoritative source marks these reporter types unavailable in RCKMS; reporter-type routing and the death-certificate criterion are not represented in the condition pack"
+    }
+  ]
+}

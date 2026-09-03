@@ -1,0 +1,409 @@
+{
+  "mnemonic": "CVD_V1",
+  "conditionId": "CVD",
+  "name": "Chikungunya Virus Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Chikungunya_Virus_Disease.v4.20240628.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs live RCKMS Release 16 docx (2026-07-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CVD-R1",
+      "description": "Chikungunya virus disease diagnosis or active problem (timeboxed)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1164",
+                  "name": "Chikungunya Virus Disease (Disorders) (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1161",
+                  "name": "Chikungunya Virus Disease (Disorders) (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1164",
+                  "name": "Chikungunya Virus Disease (Disorders) (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1161",
+                  "name": "Chikungunya Virus Disease (Disorders) (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "gate": true,
+            "predicate": "withinTimebox",
+            "params": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "CVD-R2",
+      "description": "Identification by culture and identification method",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Chikungunya Virus Disease (Tests for Chikungunya Virus by Culture and Identification Method)"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1190",
+                      "name": "Chikungunya Virus Disease (Organism or Substance in Lab Results)"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": [
+                        "A",
+                        "AA",
+                        "HH",
+                        "LL",
+                        "H",
+                        "L"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": null,
+                      "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)"
+                    }
+                  },
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1041",
+                      "name": "Organisms (Tests by Culture and Identification)"
+                    }
+                  },
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1040",
+                      "name": "Organisms (Tests by Unspecified Method)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1190",
+                  "name": "Chikungunya Virus Disease (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CVD-R3",
+      "description": "Detection of nucleic acid",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1169",
+                  "name": "Chikungunya Virus Disease (Tests for Chikungunya Virus Nucleic Acid)"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1190",
+                      "name": "Chikungunya Virus Disease (Organism or Substance in Lab Results)"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": [
+                        "A",
+                        "AA",
+                        "HH",
+                        "LL",
+                        "H",
+                        "L"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.994",
+                  "name": "Organisms (Tests for Nucleic Acid)"
+                }
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1190",
+                  "name": "Chikungunya Virus Disease (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CVD-R4",
+      "description": "Detection of antigen",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": null,
+              "name": "Chikungunya Virus Disease (Tests for Chikungunya Virus Antigen)"
+            }
+          },
+          {
+            "any": [
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.272",
+                  "name": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1190",
+                  "name": "Chikungunya Virus Disease (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labInterpretationIn",
+                "params": {
+                  "name": "Abnormal Interpretation of an Observation",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CVD-R5",
+      "description": "IgM antibody detection",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.1175",
+              "name": "Chikungunya Virus Disease (Tests for Chikungunya Virus IgM Antibody)"
+            }
+          },
+          {
+            "any": [
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.272",
+                  "name": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1190",
+                  "name": "Chikungunya Virus Disease (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labInterpretationIn",
+                "params": {
+                  "name": "Abnormal Interpretation of an Observation",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CVD-R6",
+      "description": "Four-fold titer rise or seroconversion, paired acute/convalescent sera (paired-specimen serology not modeled)",
+      "logic": {
+        "predicate": "epidemiologicalFact",
+        "params": {
+          "fact": "four-fold titer rise or seroconversion, chikungunya virus antibody, paired acute/convalescent sera"
+        }
+      }
+    },
+    {
+      "id": "CVD-R7",
+      "description": "Antibody [qualitative or quantitative] detection",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1185",
+                  "name": "Chikungunya Virus Disease (Tests for Chikungunya Virus Antibody [Qualitative])"
+                }
+              },
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1180",
+                  "name": "Chikungunya Virus Disease (Tests for Chikungunya Virus Antibody [Quantitative])"
+                }
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.272",
+                  "name": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.1190",
+                  "name": "Chikungunya Virus Disease (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labInterpretationIn",
+                "params": {
+                  "name": "Abnormal Interpretation of an Observation",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Chikungunya Virus Disease (Tests for Chikungunya Virus by Culture and Identification Method)",
+      "reason": "no codes in Table 3; CVD-R2 first branch skips, generic-organism branch functional"
+    },
+    {
+      "valueSet": "Chikungunya Virus Disease (Tests for Chikungunya Virus Antigen)",
+      "reason": "no codes; CVD-R4 skips"
+    },
+    {
+      "valueSet": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)",
+      "reason": "OID not in this doc's Table 3; generic Organisms culture/unspecified branch covers R2"
+    },
+    {
+      "valueSet": "Paired acute/convalescent serology (titer rise / seroconversion)",
+      "reason": "source R6 'NEED TO CREATE LOGIC RULE'; SEM_V1 lacks paired-specimen comparison"
+    },
+    {
+      "valueSet": "Numeric antibody result > 0",
+      "reason": "SEM_V1 lacks numeric lab comparison; coded-positive alternatives functional"
+    },
+    {
+      "valueSet": "Timebox windows",
+      "reason": "platform-unimplemented; does not reduce coverage"
+    }
+  ]
+}

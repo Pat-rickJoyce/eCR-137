@@ -1,0 +1,93 @@
+{
+  "mnemonic": "LEI_V1",
+  "conditionId": "LEI",
+  "name": "Leishmaniasis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Leishmaniasis.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Leishmaniasis.v2.20240202.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2025-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "LEI-R1",
+      "description": "Leishmaniasis as a diagnosis or active problem (timeboxed when configured in RCKMS)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1844", "name": "Leishmaniasis (Disorders) (SNOMED)" } },
+                  { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1845", "name": "Leishmaniasis (Disorders) (ICD10CM)" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1844", "name": "Leishmaniasis (Disorders) (SNOMED)", "status": "active" } },
+                  { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1845", "name": "Leishmaniasis (Disorders) (ICD10CM)", "status": "active" } }
+                ]
+              },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "LEI-R2",
+      "description": "Detection of Leishmania species nucleic acid by a specific or generic test with a qualifying result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1846", "name": "Leishmaniasis (Tests for Leishmania species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1846", "name": "Leishmaniasis (Tests for Leishmania species Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1849", "resultName": "Leishmaniasis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1846", "name": "Leishmaniasis (Tests for Leishmania species Nucleic Acid)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.994", "name": "Organisms (Tests for Nucleic Acid)", "resultOid": "2.16.840.1.113762.1.4.1146.1849", "resultName": "Leishmaniasis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "LEI-R3",
+      "description": "Detection of Leishmania species antibody with a coded positive, organism, or abnormal-interpretation result on the same observation (numeric result greater than zero not modeled)",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1847", "name": "Leishmaniasis (Tests for Leishmania species Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1847", "name": "Leishmaniasis (Tests for Leishmania species Antibody)", "resultOid": "2.16.840.1.113762.1.4.1146.1849", "resultName": "Leishmaniasis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1847", "name": "Leishmaniasis (Tests for Leishmania species Antibody)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } }
+        ]
+      }
+    },
+    {
+      "id": "LEI-R4",
+      "description": "Microscopic observation of Leishmania species using a tissue-specific test with a coded positive, organism, or abnormal-interpretation result on the same observation",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1848", "name": "Leishmania species (Tests by Microscopic Observation in Tissue)", "resultOid": "2.16.840.1.113762.1.4.1146.272", "resultName": "Present or Positive Lab Result Value" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1848", "name": "Leishmania species (Tests by Microscopic Observation in Tissue)", "resultOid": "2.16.840.1.113762.1.4.1146.1849", "resultName": "Leishmaniasis (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithInterpretationIn", "params": { "oid": "2.16.840.1.113762.1.4.1146.1848", "name": "Leishmania species (Tests by Microscopic Observation in Tissue)", "codes": ["A", "AA", "HH", "LL", "H", "L"] } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.842", "name": "Tests by Microscopic Observation in Tissue", "resultOid": "2.16.840.1.113762.1.4.1146.1849", "resultName": "Leishmaniasis (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "General microscopic-observation tests constrained to Tissue specimen type",
+      "reason": "SEM_V1 does not preserve specimen evidence, and Tissue (Specimen Type) (HL7) has no VSAC codes; general-test-plus-tissue-specimen alternatives in source rule 4 are omitted while tissue-specific test-name alternatives remain modeled"
+    },
+    {
+      "valueSet": "Numeric laboratory result > 0",
+      "reason": "SEM_V1 has no numeric laboratory-result comparison; the numeric alternative in LEI-R3 is omitted while coded-result and abnormal-interpretation alternatives remain modeled"
+    }
+  ]
+}

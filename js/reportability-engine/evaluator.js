@@ -42,20 +42,8 @@ export class ReportabilityEvaluator {
             hasPartialMatch: false
         };
 
-        // Debug: Log ABI evaluation
-        if (condition.id === 'ABI') {
-            console.log('Evaluating ABI:', condition);
-            console.log('ABI rules count:', condition.rules.length);
-            console.log('Form diagnoses:', formData.diagnoses);
-        }
-
         for (const rule of condition.rules) {
             const ruleResult = this.evaluateRule(rule, formData);
-
-            // Debug: Log ABI rule results
-            if (condition.id === 'ABI') {
-                console.log('ABI Rule result:', ruleResult);
-            }
 
             if (ruleResult.passed) {
                 result.matchedRules.push(ruleResult);
@@ -91,10 +79,6 @@ export class ReportabilityEvaluator {
             // A Group passes if ANY Criterion passes (OR logic)
             const groupResult = this.evaluateGroup(groupCriteria, formData);
             groupDetails.push(groupResult);
-
-            if (rule.conditionId === 'CAM') {
-                console.log(`CAM Group Result (Rule ${rule.id}):`, groupResult);
-            }
 
             if (groupResult.passed) {
                 passedGroups++;
@@ -195,18 +179,9 @@ export class ReportabilityEvaluator {
     checkProblemWithDetails(criterion, problems) {
         if (!problems) return { matched: false };
 
-        if (criterion.conditionId === 'CAM') {
-            console.log(`Checking CAM Problem: OID=${criterion.valueSetOid}, Value=${criterion.value}`, problems);
-        }
-
         const match = problems.find(p => {
             const oidMatch = p.oids && p.oids.includes(criterion.valueSetOid);
             const statusMatch = (!criterion.value || p.status === criterion.value);
-
-            if (criterion.conditionId === 'CAM' && oidMatch) {
-                console.log(`  - Potential CAM Match: Code=${p.code}, OIDs=${p.oids}, Status=${p.status}, statusMatch=${statusMatch}`);
-            }
-
             return oidMatch && statusMatch;
         });
 
@@ -269,10 +244,7 @@ export class ReportabilityEvaluator {
         if (!labs) return { matched: false };
         const match = labs.find(l => l.oids && l.oids.includes(criterion.valueSetOid));
         if (match) {
-            console.log(`[Evaluator] LAB TEST MATCHED for OID ${criterion.valueSetOid}:`, match);
-            console.log(`[Evaluator] Lab Test fields - display: "${match.display}", testName: "${match.testName}", code: "${match.code}", testCode: "${match.testCode}"`);
             const displayValue = match.display || match.testName || match.code;
-            console.log(`[Evaluator] *** FINAL DISPLAY VALUE: "${displayValue}" ***`);
             return {
                 matched: true,
                 matchedData: {
@@ -307,13 +279,8 @@ export class ReportabilityEvaluator {
 
     checkMedicationWithDetails(criterion, medications) {
         if (!medications) return { matched: false };
-        console.log(`[Evaluator] Checking medication criterion: OID=${criterion.valueSetOid}, medications count=${medications.length}`);
-        const match = medications.find(m => {
-            console.log(`[Evaluator] Checking medication code=${m.code}, oids=${m.oids?.join(', ')}`);
-            return m.oids && m.oids.includes(criterion.valueSetOid);
-        });
+        const match = medications.find(m => m.oids && m.oids.includes(criterion.valueSetOid));
         if (match) {
-            console.log(`[Evaluator] ✓ Medication matched! code=${match.code}, OID=${criterion.valueSetOid}`);
             return {
                 matched: true,
                 matchedData: {
@@ -324,7 +291,6 @@ export class ReportabilityEvaluator {
                 }
             };
         }
-        console.log(`[Evaluator] ✗ No medication match for OID=${criterion.valueSetOid}`);
         return { matched: false };
     }
 

@@ -1,0 +1,418 @@
+{
+  "mnemonic": "CAM_V1",
+  "conditionId": "CAM",
+  "name": "Campylobacteriosis",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Campylobacteriosis.v4.20240628.docx",
+    "rckmsVersion": "v4",
+    "rckmsDate": "2024-06-28",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "scripts/draft_pack.py draft, then hand-curated against docx Rules: detailed logic (2026-07-17)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-17",
+  "rules": [
+    {
+      "id": "CAM-R1",
+      "description": "Diagnosis or active problem of campylobacteriosis (timeboxed)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.79",
+                      "name": "Campylobacteriosis (Disorders) (SNOMED)"
+                    }
+                  },
+                  {
+                    "predicate": "diagnosisInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.80",
+                      "name": "Campylobacteriosis (Disorders) (ICD10CM)"
+                    }
+                  }
+                ]
+              },
+              {
+                "gate": true,
+                "predicate": "withinTimebox",
+                "params": {}
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.79",
+                      "name": "Campylobacteriosis (Disorders) (SNOMED)",
+                      "status": "active"
+                    }
+                  },
+                  {
+                    "predicate": "problemInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.80",
+                      "name": "Campylobacteriosis (Disorders) (ICD10CM)",
+                      "status": "active"
+                    }
+                  }
+                ]
+              },
+              {
+                "gate": true,
+                "predicate": "withinTimebox",
+                "params": {}
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CAM-R2",
+      "description": "Identification of Campylobacter species by culture and identification method",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.342",
+                  "name": "Campylobacteriosis (Tests for Campylobacter species by Culture and Identification Method)"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.341",
+                      "name": "Campylobacteriosis (Organism or Substance in Lab Results)"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": [
+                        "A",
+                        "AA",
+                        "HH",
+                        "LL",
+                        "H",
+                        "L"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1041",
+                      "name": "Organisms (Tests by Culture and Identification Method)"
+                    }
+                  },
+                  {
+                    "predicate": "labTestInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.1040",
+                      "name": "Organisms (Tests by Unspecified Method)"
+                    }
+                  }
+                ]
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.341",
+                  "name": "Campylobacteriosis (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CAM-R3",
+      "description": "Detection of Campylobacter species nucleic acid by any method",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.343",
+                  "name": "Campylobacteriosis (Tests for Campylobacter species Nucleic Acid)"
+                }
+              },
+              {
+                "any": [
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.272",
+                      "name": "Present or Positive Lab Result Value"
+                    }
+                  },
+                  {
+                    "predicate": "labResultInValueSet",
+                    "params": {
+                      "oid": "2.16.840.1.113762.1.4.1146.341",
+                      "name": "Campylobacteriosis (Organism or Substance in Lab Results)"
+                    }
+                  },
+                  {
+                    "predicate": "labInterpretationIn",
+                    "params": {
+                      "name": "Abnormal Interpretation of an Observation",
+                      "codes": [
+                        "A",
+                        "AA",
+                        "HH",
+                        "LL",
+                        "H",
+                        "L"
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "predicate": "labTestInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.994",
+                  "name": "Organisms (Tests for Nucleic Acid)"
+                }
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.341",
+                  "name": "Campylobacteriosis (Organism or Substance in Lab Results)"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CAM-R4",
+      "description": "Detection of Campylobacter species antigen by any method",
+      "logic": {
+        "all": [
+          {
+            "predicate": "labTestInValueSet",
+            "params": {
+              "oid": "2.16.840.1.113762.1.4.1146.344",
+              "name": "Campylobacteriosis (Tests for Campylobacter species Antigen)"
+            }
+          },
+          {
+            "any": [
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.272",
+                  "name": "Present or Positive Lab Result Value"
+                }
+              },
+              {
+                "predicate": "labResultInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.341",
+                  "name": "Campylobacteriosis (Organism or Substance in Lab Results)"
+                }
+              },
+              {
+                "predicate": "labInterpretationIn",
+                "params": {
+                  "name": "Abnormal Interpretation of an Observation",
+                  "codes": [
+                    "A",
+                    "AA",
+                    "HH",
+                    "LL",
+                    "H",
+                    "L"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CAM-R5",
+      "description": "(Diarrhea OR Vomiting) AND contact with a person with campylobacteriosis (docx blocks 5 & 6; epidemiologic criterion not implementable \u2014 rule stays indeterminate)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.353",
+                  "name": "Diarrhea (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.56",
+                  "name": "Diarrhea (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.353",
+                  "name": "Diarrhea (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.56",
+                  "name": "Diarrhea (ICD10CM)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.647",
+                  "name": "Vomiting (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.648",
+                  "name": "Vomiting (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.647",
+                  "name": "Vomiting (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.648",
+                  "name": "Vomiting (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "epidemiologicalFact",
+            "params": {
+              "fact": "contact-with-person-with-campylobacteriosis"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "CAM-R6",
+      "description": "Abdominal cramps AND epidemiologic contact/outbreak (docx block 7; symptom codes + epi criteria not available \u2014 indeterminate)",
+      "logic": {
+        "all": [
+          {
+            "any": [
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.649",
+                  "name": "Abdominal Cramps (SNOMED)"
+                }
+              },
+              {
+                "predicate": "diagnosisInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Abdominal Cramps (ICD10CM)"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": "2.16.840.1.113762.1.4.1146.649",
+                  "name": "Abdominal Cramps (SNOMED)",
+                  "status": "active"
+                }
+              },
+              {
+                "predicate": "problemInValueSet",
+                "params": {
+                  "oid": null,
+                  "name": "Abdominal Cramps (ICD10CM)",
+                  "status": "active"
+                }
+              }
+            ]
+          },
+          {
+            "predicate": "epidemiologicalFact",
+            "params": {
+              "fact": "contact-with-person-with-campylobacteriosis"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Epidemiologic criteria (contact with case, outbreak risk group)",
+      "reason": "not implemented in evidence model; CAM-R5/R6 remain indeterminate"
+    },
+    {
+      "valueSet": "Timebox windows (encounter/problem effective dates)",
+      "reason": "evidence model carries no event dates yet"
+    },
+    {
+      "valueSet": "Abdominal Cramps (ICD10CM)",
+      "reason": "no codes available per source docx Table 3"
+    }
+  ]
+}

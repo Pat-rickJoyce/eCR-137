@@ -1,0 +1,92 @@
+{
+  "mnemonic": "KVD_V1",
+  "conditionId": "KVD",
+  "name": "Keystone Virus Disease",
+  "evidenceModel": "SEM_V1",
+  "coverage": "partial",
+  "source": {
+    "document": "Keystone_Virus_Disease.v2.20240202.docx",
+    "rckmsVersion": "v2",
+    "rckmsDate": "2024-02-02",
+    "rctcRelease": "2025-03-18",
+    "curatedFrom": "rule-curation-agent vs Keystone_Virus_Disease.v2.20240202.docx on 2026-07-21 (authoritative RCKMS Content Repository; latest rule revision 2025-05-27)"
+  },
+  "created": "2026-07-17",
+  "modified": "2026-07-21",
+  "rules": [
+    {
+      "id": "KVD-R1",
+      "description": "Keystone virus disease or infection as a diagnosis or active problem (timeboxed when configured in RCKMS; ICD-10-CM alternative has no codes)",
+      "logic": {
+        "any": [
+          {
+            "all": [
+              { "predicate": "diagnosisInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1948", "name": "Keystone Virus Diseases (Disorders) (SNOMED)" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          },
+          {
+            "all": [
+              { "predicate": "problemInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1948", "name": "Keystone Virus Diseases (Disorders) (SNOMED)", "status": "active" } },
+              { "predicate": "withinTimebox", "params": {}, "gate": true }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "KVD-R2",
+      "description": "Identification of Keystone virus by culture, including preliminary results, through a generic culture or unspecified-method test with a Keystone virus result",
+      "logic": {
+        "any": [
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.526", "name": "Arboviral Disease (Tests for Arbovirus/Flavivirus by Culture and Identification Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1959", "resultName": "Keystone Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1041", "name": "Organisms (Tests by Culture and Identification)", "resultOid": "2.16.840.1.113762.1.4.1146.1959", "resultName": "Keystone Virus Diseases (Organism or Substance in Lab Results)" } },
+          { "predicate": "labTestWithResultInValueSet", "params": { "oid": "2.16.840.1.113762.1.4.1146.1040", "name": "Organisms (Tests by Unspecified Method)", "resultOid": "2.16.840.1.113762.1.4.1146.1959", "resultName": "Keystone Virus Diseases (Organism or Substance in Lab Results)" } }
+        ]
+      }
+    },
+    {
+      "id": "KVD-R3",
+      "description": "Detection of Keystone virus nucleic acid through a generic nucleic-acid test with a Keystone virus result",
+      "logic": {
+        "predicate": "labTestWithResultInValueSet",
+        "params": {
+          "oid": "2.16.840.1.113762.1.4.1146.994",
+          "name": "Organisms (Tests for Nucleic Acid)",
+          "resultOid": "2.16.840.1.113762.1.4.1146.1959",
+          "resultName": "Keystone Virus Diseases (Organism or Substance in Lab Results)"
+        }
+      }
+    }
+  ],
+  "gaps": [
+    {
+      "valueSet": "Keystone Virus Diseases (Disorders) (ICD10CM)",
+      "reason": "the authoritative source reports no codes available; KVD-R1 retains the coded SNOMED diagnosis and active-problem branches"
+    },
+    {
+      "valueSet": "Keystone Virus Diseases (Tests for Keystone Virus by Culture and Identification Method)",
+      "reason": "the authoritative source reports no codes available; KVD-R2 retains the generic culture and unspecified-method test branches that require a Keystone virus result"
+    },
+    {
+      "valueSet": "Keystone Virus Diseases (Tests for Keystone Virus Nucleic Acid)",
+      "reason": "the authoritative source reports no codes available; KVD-R3 retains the generic nucleic-acid test branch that requires a Keystone virus result"
+    },
+    {
+      "valueSet": "Keystone Virus Diseases (Tests for Keystone Virus Antigen)",
+      "reason": "the authoritative source reports no codes available and marks source rule 4 inoperable; the rule is omitted"
+    },
+    {
+      "valueSet": "Keystone Virus Diseases (Tests for Keystone Virus IgM Antibody)",
+      "reason": "the authoritative source reports no codes available and marks source rule 5 inoperable; its coded-result, interpretation, and numeric-result alternatives all require the missing test-name value set, so the rule is omitted"
+    },
+    {
+      "valueSet": "Paired Keystone virus antibody comparison",
+      "reason": "source rule 6 is explicitly not operational; SEM_V1 cannot compare paired specimens, collection intervals, four-fold titer rises, or seroconversion, so the rule is omitted"
+    },
+    {
+      "valueSet": "Keystone Virus Diseases (Tests for Keystone Virus Antibody)",
+      "reason": "the authoritative source reports no codes available and marks optional source rule 7 inoperable; its coded-result, interpretation, and numeric-result alternatives all require the missing test-name value set, so the rule is omitted"
+    }
+  ]
+}
