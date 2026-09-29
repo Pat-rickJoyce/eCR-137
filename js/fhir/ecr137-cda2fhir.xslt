@@ -17,7 +17,7 @@
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   exclude-result-prefixes="fhir cda uuid e137 math xs">
 
-  <xsl:import href="../../vendor/ecr-transforms/transforms/cda2fhir-r4/NativeUUIDGen-cda2fhir.xslt"/>
+  <xsl:import href="../cda2fhir-r4/NativeUUIDGen-cda2fhir.xslt"/>
 
   <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
 
@@ -45,48 +45,8 @@
     <xsl:variable name="vPrePre"><xsl:apply-templates select="$vNormalized" mode="add-uuids"/></xsl:variable>
     <xsl:variable name="vPre"><xsl:apply-templates select="$vPrePre" mode="update-referenced-actor-uuids"/></xsl:variable>
     <xsl:variable name="vFhir"><xsl:apply-templates select="$vPre" mode="convert"/></xsl:variable>
-    <xsl:variable name="vPost"><xsl:apply-templates select="$vFhir" mode="ecr137-post"/></xsl:variable>
-    <xsl:apply-templates select="$vPost" mode="ecr137-narrative"/>
+    <xsl:apply-templates select="$vFhir" mode="ecr137-post"/>
   </xsl:template>
-
-  <!-- ===== ecr137-narrative: generated narrative for resources without text (dom-6) ===== -->
-  <xsl:mode name="ecr137-narrative" on-no-match="shallow-copy"/>
-
-  <xsl:template match="fhir:entry/fhir:resource/*[not(fhir:text)][not(self::fhir:Bundle)]" mode="ecr137-narrative">
-    <xsl:variable name="vHead" select="fhir:id | fhir:meta | fhir:implicitRules | fhir:language"/>
-    <xsl:copy>
-      <xsl:apply-templates select="@*" mode="ecr137-narrative"/>
-      <xsl:apply-templates select="$vHead" mode="ecr137-narrative"/>
-      <text>
-        <status value="generated"/>
-        <div xmlns="http://www.w3.org/1999/xhtml">
-          <p><b><xsl:value-of select="local-name()"/></b></p>
-          <table>
-            <tbody>
-              <xsl:for-each-group select="* except ($vHead | fhir:contained | fhir:extension | fhir:modifierExtension)" group-adjacent="local-name()">
-                <xsl:variable name="vVals" select="for $e in current-group() return e137:summary($e)"/>
-                <xsl:if test="exists($vVals[normalize-space()])">
-                  <tr>
-                    <th><xsl:value-of select="current-grouping-key()"/></th>
-                    <td><xsl:value-of select="string-join(distinct-values($vVals[normalize-space()]), '; ')"/></td>
-                  </tr>
-                </xsl:if>
-              </xsl:for-each-group>
-            </tbody>
-          </table>
-        </div>
-      </text>
-      <xsl:apply-templates select="* except $vHead" mode="ecr137-narrative"/>
-    </xsl:copy>
-  </xsl:template>
-
-  <!-- human-readable summary of one element: displays and text first, then values; references and system URIs left out -->
-  <xsl:function name="e137:summary" as="xs:string">
-    <xsl:param name="e" as="element()"/>
-    <xsl:variable name="vDisplay" select="($e/descendant-or-self::fhir:display/@value, $e/descendant-or-self::fhir:text/@value)[normalize-space()]"/>
-    <xsl:variable name="vPlain" select="$e/descendant-or-self::*[not(self::fhir:system or self::fhir:reference or self::fhir:url or self::fhir:display or self::fhir:text)][not(ancestor-or-self::fhir:extension)]/@value[normalize-space()]"/>
-    <xsl:sequence select="string-join(distinct-values(if (exists($vDisplay)) then $vDisplay else $vPlain), ' ')"/>
-  </xsl:function>
 
   <!-- ===== ecr137-pre: CDA normalization (in-memory copy only) ===== -->
   <xsl:mode name="ecr137-pre" on-no-match="shallow-copy"/>
