@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet xmlns="http://hl7.org/fhir" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:cda="urn:hl7-org:v3" xmlns:fhir="http://hl7.org/fhir" xmlns:sdtc="urn:hl7-org:sdtc"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:lcg="http://www.lantanagroup.com"
+    exclude-result-prefixes="lcg xsl cda fhir xs xsi sdtc xhtml" version="2.0">
+
+    <!-- Create bundle entries for the Problem Observation (Condition) and any authors or performers -->
+    <xsl:template match="cda:observation[cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.4']]" mode="bundle-entry">
+        <xsl:call-template name="create-bundle-entry" />
+
+        <xsl:apply-templates select="cda:author" mode="bundle-entry" />
+        <xsl:apply-templates select="cda:informant" mode="bundle-entry" />
+        <xsl:apply-templates select="cda:performer" mode="bundle-entry" />
+        <!-- 20260824 Claude (per SG): companion org-only PractitionerRole for the asserter when
+             performer[1] is, or resolves to, an Organization (see cda2fhir-PractitionerRole.xslt) -->
+        <xsl:apply-templates select="cda:performer[1]" mode="org-practitionerrole-entry" />
+
+        <xsl:for-each select="cda:author | cda:informant | cda:performer[position() > 1]">
+            <xsl:apply-templates select="." mode="provenance" />
+        </xsl:for-each>
+
+        <xsl:apply-templates select="cda:entryRelationship/cda:*" mode="bundle-entry" />
+    </xsl:template>
+
+    <!-- TEMPLATE: Remove Concern/Admission Diagnosis wrappers -->
+    <xsl:template match="
+            cda:act[cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.132'] or
+            cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.3'] or
+            cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.30'] or
+            cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.136'] or
+            cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.34'] or
+            cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.33']]" mode="reference">
+        <xsl:param name="wrapping-elements" />
+        <!-- 20260803 Claude (item 41): consult the suppression list here, same rule as section entries
+             and hasMember (item 40). A suppressed template (e.g. Comment Activity 4.64 nested in a
+             Problem Concern Act) produces no resource - the bundle-entry side already skips it via the
+             suppression no-op in c-to-fhir-utility.xslt - so unwrapping a reference to it dangles. -->
+        <xsl:for-each select="cda:entryRelationship/cda:*[not(@nullFlavor)][not(cda:templateId[key('templates-to-suppress-key', @root)])]">
+            <xsl:apply-templates select="." mode="reference">
+                <xsl:with-param name="wrapping-elements" select="$wrapping-elements" />
+            </xsl:apply-templates>
+        </xsl:for-each>
+    </xsl:template>
+
+    <!-- TEMPLATE: Remove Concern/Adminssion Diagnosis wrappers -->
+    <xsl:template match="
+            cda:act[cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.132'] or
+            cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.3'] or 
+            cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.30'] or 
+            cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.136'] or 
+            cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.34'] or 
+            cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.33']]"
+        mode="bundle-entry">
+        <!-- Create bundle entries for any authors or performers -->
+        <xsl:apply-templates select="cda:author" mode="bundle-entry" />
+        <xsl:apply-templates select="cda:performer" mode="bundle-entry" />
+        <!-- Create provenance entries for any authors or performers -->
+        <xsl:apply-templates select="cda:author" mode="provenance" />
+        <xsl:apply-templates select="cda:performer" mode="provenance" />
+        <xsl:for-each select="cda:entryRelationship/cda:*[not(@nullFlavor)]">
+            <xsl:apply-templates select="." mode="bundle-entry" />
+        </xsl:for-each>
+    </xsl:template>
+
+    <!-- C-CDA Problem Observation -->
+    <xsl:template match="cda:observation[cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.4']]">
+        <Condition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://hl7.org/fhir">
+
+            <!-- Set profiles based on IG and Resource if it is needed -->
+            <xsl:choose>
+                <xsl:when test="$gvCurrentIg = 'NA'">
+                    <xsl:call-template name="add-meta" />
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:variable name="vProfileValue">
+                        <xsl:call-template name="get-profile-for-ig">
+                            <xsl:with-param name="pIg" select="$gvCurrentIg" />
+                            <xsl:with-param name="pResource" select="'Condition'" />
+                        </xsl:call-template>
+                    </xsl:variable>
+                    <xsl:choose>
+                        <xsl:when test="$vProfileValue ne 'NA'">
+                            <meta>
+                                <profile>
+                                    <xsl:attribute name="value">
+                                        <xsl:value-of select="$vProfileValue" />
+                                    </xsl:attribute>
+                                </profile>
+                            </meta>
+                        </xsl:when>
+                    </xsl:choose>
+                </xsl:otherwise>
+            </xsl:choose>
+
+            <xsl:apply-templates select="cda:id" />
+            <!-- clinicalStatus: check both effectiveTime and potentially a contained Problem Status Observation -->
+            <!-- 20260729 Claude: Fix - clinicalStatus was emitted unconditionally, but the negated eICR trigger case below
+                 sets verificationStatus=entered-in-error, and FHIR invariant con-5 forbids clinicalStatus when
+                 verificationStatus is entered-in-error - suppress it in that case -->
+            <xsl:if test="not(@negationInd = 'true' and cda:templateId[@root = '2.16.840.1.113883.10.20.15.2.3.3'])">
+            <clinicalStatus>
+                <coding>
+                    <system value="http://terminology.hl7.org/CodeSystem/condition-clinical" />
+                    <code>
+                        <xsl:choose>
+                            <!-- 20260803 Claude (item 44/CDAFHIR-011): was cda:effectiveTime/cda:high (existence) -
+                                 a <high nullFlavor="UNK"/> means the end is UNKNOWN, not that the problem is
+                                 resolved. Now requires an actual @value. -->
+                            <xsl:when test="cda:effectiveTime/cda:high/@value or cda:entryRelationship/cda:observation[cda:templateId/@root='2.16.840.1.113883.10.20.22.4.6']/cda:value/@code='413322009'">
+                                <xsl:attribute name="value">resolved</xsl:attribute>
+                            </xsl:when>
+                            <xsl:when test="cda:entryRelationship/cda:observation[cda:templateId/@root='2.16.840.1.113883.10.20.22.4.6']/cda:value/@code='246455001'">
+                                <xsl:attribute name="value">recurrence</xsl:attribute>
+                            </xsl:when>
+                            <xsl:when test="cda:entryRelationship/cda:observation[cda:templateId/@root='2.16.840.1.113883.10.20.22.4.6']/cda:value/@code='263855007'">
+                                <xsl:attribute name="value">relapse</xsl:attribute>
+                            </xsl:when>
+                            <xsl:when test="cda:entryRelationship/cda:observation[cda:templateId/@root='2.16.840.1.113883.10.20.22.4.6']/cda:value/@code='277022003'">
+                                <xsl:attribute name="value">remission</xsl:attribute>
+                            </xsl:when>
+                            <xsl:when test="cda:entryRelationship/cda:observation[cda:templateId/@root='2.16.840.1.113883.10.20.22.4.6']/cda:value/@code='55561003'">
+                                <xsl:attribute name="value">active</xsl:attribute>
+                            </xsl:when>
+                            <xsl:when test="cda:entryRelationship/cda:observation[cda:templateId/@root='2.16.840.1.113883.10.20.22.4.6']/cda:value/@code='73425007'">
+                                <xsl:attribute name="value">inactive</xsl:attribute>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="value">active</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </code>
+                </coding>
+            </clinicalStatus>
+            </xsl:if>
+            <!-- SG 2024-02-05: Updated negationInd processing for eCR -->
+            <xsl:choose>
+                <xsl:when test="@negationInd = 'true' and cda:templateId[@root = '2.16.840.1.113883.10.20.15.2.3.3']">
+                    <verificationStatus>
+                        <coding>
+                            <system value="http://terminology.hl7.org/CodeSystem/condition-ver-status" />
+                            <code value="entered-in-error" />
+                        </coding>
+                    </verificationStatus>
+                </xsl:when>
+                <xsl:when test="@negationInd = 'true' and not(cda:value/@code = '55607006')">
+                    <verificationStatus>
+                        <coding>
+                            <system value="http://terminology.hl7.org/CodeSystem/condition-ver-status" />
+                            <code value="refuted" />
+                        </coding>
+                    </verificationStatus>
+                </xsl:when>
+            </xsl:choose>
+
+            <xsl:choose>
+                <xsl:when test="ancestor::cda:act[cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.80']]">
+                    <category>
+                        <coding>
+                            <system value="http://terminology.hl7.org/CodeSystem/condition-category" />
+                            <code value="encounter-diagnosis" />
+                        </coding>
+                    </category>
+                </xsl:when>
+                <xsl:otherwise>
+                    <category>
+                        <coding>
+                            <system value="http://terminology.hl7.org/CodeSystem/condition-category" />
+                            <code value="problem-list-item" />
+                        </coding>
+                    </category>
+                </xsl:otherwise>
+
+            </xsl:choose>
+
+            <xsl:apply-templates select="cda:value" mode="condition" />
+
+            <xsl:call-template name="subject-reference" />
+            <xsl:apply-templates select="cda:effectiveTime" mode="condition" />
+
+            <!-- recordedDate (max 1) -->
+            <xsl:choose>
+                <xsl:when test="cda:author[1]/cda:time">
+                    <xsl:apply-templates select="cda:author[1]/cda:time" mode="instant">
+                        <xsl:with-param name="pElementName">recordedDate</xsl:with-param>
+                    </xsl:apply-templates>
+                </xsl:when>
+                <xsl:when test="ancestor::cda:act[cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.3']]/cda:effectiveTime/cda:low/@value">
+                    <xsl:apply-templates select="ancestor::cda:act[cda:templateId[@root = '2.16.840.1.113883.10.20.22.4.3']]/cda:effectiveTime" mode="instant">
+                        <xsl:with-param name="pElementName">recordedDate</xsl:with-param>
+                    </xsl:apply-templates>
+                </xsl:when>
+            </xsl:choose>
+
+            <!-- recorder (max 1) (can only be Practitioner, PractitionerRole, Patient, RelatedPerson -->
+            <!-- 20260729 Claude: Fix - the [1] predicate was on assignedPerson, so ALL authors with a person were
+                 selected and multiple recorder elements could be emitted (Condition.recorder is 0..1); now selects the
+                 first such author -->
+            <xsl:apply-templates select="cda:author[cda:assignedAuthor/cda:assignedPerson][1]" mode="rename-reference-participant">
+                <xsl:with-param name="pElementName">recorder</xsl:with-param>
+            </xsl:apply-templates>
+
+            <!-- asserter (max 1) - same target restriction as recorder: Practitioner|PractitionerRole|
+                 Patient|RelatedPerson. 20260824 Claude (per SG, with the Procedure.recorder fix): a
+                 person-less org performer becomes a reference to a companion org-only PractitionerRole
+                 (created in the bundle-entry template above); a device performer is omitted (0..1). -->
+            <xsl:apply-templates select="cda:performer[1]" mode="rename-reference-participant">
+                <xsl:with-param name="pElementName">asserter</xsl:with-param>
+                <xsl:with-param name="pPersonOnlyTargets" select="true()" />
+            </xsl:apply-templates>
+
+            <xsl:for-each select="cda:entryRelationship[@typeCode = 'REFR']/cda:act[cda:templateId/@root = '2.16.840.1.113883.10.20.22.4.122']">
+                <xsl:apply-templates select="." mode="reference">
+                    <xsl:with-param name="wrapping-elements">evidence/detail</xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:for-each>
+            
+            <!-- note -->
+            <!-- 20260729 Claude: Fix - test was the self-union "cda:text | cda:text" -->
+            <xsl:if test="cda:text">
+                <xsl:for-each select="cda:text">
+                    
+                    <xsl:variable name="vText">
+                        <xsl:call-template name="get-reference-text">
+                            <xsl:with-param name="pTextElement" select="." />
+                        </xsl:call-template>
+                    </xsl:variable>
+                    
+                    <xsl:if test="string-length($vText) > 0">
+                        <note>
+                            <text>
+                                <xsl:attribute name="value" select="$vText" />
+                            </text>
+                        </note>
+                    </xsl:if>
+                </xsl:for-each>
+            </xsl:if>
+            <xsl:if test="@negationInd = 'true' and not(cda:value/@code = '55607006')">
+                <note>
+                    <text value="This condition was converted from a C-CDA document. It was marked as negated in that file, so marked as refuted in FHIR" />
+                </note>
+            </xsl:if>
+        </Condition>
+    </xsl:template>
+
+    <!-- 20260729 Claude: removed dead template match="cda:observation[4.6 Problem Status]" mode="condition" - it was
+         never invoked (the Problem Status -> clinicalStatus logic is inlined in the main Condition template above) -->
+
+    <xsl:template match="cda:effectiveTime" mode="condition">
+        <xsl:if test="cda:low/@value">
+            <onsetDateTime value="{lcg:cdaTS2date(cda:low/@value)}" />
+        </xsl:if>
+        <xsl:if test="cda:high/@value">
+            <abatementDateTime value="{lcg:cdaTS2date(cda:high/@value)}" />
+        </xsl:if>
+    </xsl:template>
+
+    <!-- 20260729 Claude: removed dead template match="cda:code" mode="condition" - it was never invoked (category is
+         built inline in the main Condition template above) -->
+
+    <xsl:template match="cda:value" mode="condition">
+        <xsl:choose>
+            <xsl:when test="../@negationInd = 'true' and @code = '55607006'">
+                <code>
+                    <coding>
+                        <system value="http://snomed.info/sct" />
+                        <code value="160245001" />
+                        <display value="No known problems" />
+                    </coding>
+                </code>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="newCreateCodableConcept">
+                    <xsl:with-param name="pElementName">code</xsl:with-param>
+                </xsl:call-template>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+</xsl:stylesheet>
