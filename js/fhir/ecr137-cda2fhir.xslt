@@ -17,7 +17,7 @@
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   exclude-result-prefixes="fhir cda uuid e137 math xs">
 
-  <xsl:import href="../cda2fhir-r4/NativeUUIDGen-cda2fhir.xslt"/>
+  <xsl:import href="../../vendor/ecr-transforms/transforms/cda2fhir-r4/NativeUUIDGen-cda2fhir.xslt"/>
 
   <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
 
@@ -45,8 +45,49 @@
     <xsl:variable name="vPrePre"><xsl:apply-templates select="$vNormalized" mode="add-uuids"/></xsl:variable>
     <xsl:variable name="vPre"><xsl:apply-templates select="$vPrePre" mode="update-referenced-actor-uuids"/></xsl:variable>
     <xsl:variable name="vFhir"><xsl:apply-templates select="$vPre" mode="convert"/></xsl:variable>
-    <xsl:apply-templates select="$vFhir" mode="ecr137-post"/>
+    <xsl:variable name="vPost"><xsl:apply-templates select="$vFhir" mode="ecr137-post"/></xsl:variable>
+    <xsl:variable name="vPerf"><xsl:apply-templates select="$vPost" mode="ecr137-performer"/></xsl:variable>
+    <xsl:apply-templates select="$vPerf" mode="ecr137-narrative"/>
   </xsl:template>
+
+  <!-- ===== ecr137-narrative: generated narrative for resources without text (dom-6) ===== -->
+  <xsl:mode name="ecr137-narrative" on-no-match="shallow-copy"/>
+
+  <xsl:template match="fhir:entry/fhir:resource/*[not(fhir:text)][not(self::fhir:Bundle)]" mode="ecr137-narrative">
+    <xsl:variable name="vHead" select="fhir:id | fhir:meta | fhir:implicitRules | fhir:language"/>
+    <xsl:copy>
+      <xsl:apply-templates select="@*" mode="ecr137-narrative"/>
+      <xsl:apply-templates select="$vHead" mode="ecr137-narrative"/>
+      <text>
+        <status value="generated"/>
+        <div xmlns="http://www.w3.org/1999/xhtml">
+          <p><b><xsl:value-of select="local-name()"/></b></p>
+          <table>
+            <tbody>
+              <xsl:for-each-group select="* except ($vHead | fhir:contained | fhir:extension | fhir:modifierExtension)" group-adjacent="local-name()">
+                <xsl:variable name="vVals" select="for $e in current-group() return e137:summary($e)"/>
+                <xsl:if test="exists($vVals[normalize-space()])">
+                  <tr>
+                    <th><xsl:value-of select="current-grouping-key()"/></th>
+                    <td><xsl:value-of select="string-join(distinct-values($vVals[normalize-space()]), '; ')"/></td>
+                  </tr>
+                </xsl:if>
+              </xsl:for-each-group>
+            </tbody>
+          </table>
+        </div>
+      </text>
+      <xsl:apply-templates select="* except $vHead" mode="ecr137-narrative"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- human-readable summary of one element: displays and text first, then values; references and system URIs left out -->
+  <xsl:function name="e137:summary" as="xs:string">
+    <xsl:param name="e" as="element()"/>
+    <xsl:variable name="vDisplay" select="($e/descendant-or-self::fhir:display/@value, $e/descendant-or-self::fhir:text/@value)[normalize-space()]"/>
+    <xsl:variable name="vPlain" select="$e/descendant-or-self::*[not(self::fhir:system or self::fhir:reference or self::fhir:url or self::fhir:display or self::fhir:text)][not(ancestor-or-self::fhir:extension)]/@value[normalize-space()]"/>
+    <xsl:sequence select="string-join(distinct-values(if (exists($vDisplay)) then $vDisplay else $vPlain), ' ')"/>
+  </xsl:function>
 
   <!-- ===== ecr137-pre: CDA normalization (in-memory copy only) ===== -->
   <xsl:mode name="ecr137-pre" on-no-match="shallow-copy"/>
@@ -235,5 +276,81 @@
   <!-- us-ph-travel-history requires effective[x]: an empty source period is unknown -->
   <xsl:template match="fhir:Observation[fhir:meta/fhir:profile/@value = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-travel-history']/fhir:effectivePeriod[not(*/@value[normalize-space(.) != ''])]" mode="ecr137-post">
     <effectiveDateTime><extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason"><valueCode value="unknown"/></extension></effectiveDateTime>
+  </xsl:template>
+  <!-- ===== ecr137-performer: Observation.performer from the CDA entry author (carried by upstream as Provenance) ===== -->
+  <xsl:mode name="ecr137-performer" on-no-match="shallow-copy"/>
+  <xsl:key name="kProvenanceByTarget" match="fhir:Provenance" use="fhir:target/fhir:reference/@value"/>
+
+  <xsl:template match="fhir:entry/fhir:resource/fhir:Observation[not(fhir:performer)]" mode="ecr137-performer">
+    <xsl:variable name="vAuthors" select="key('kProvenanceByTarget', ../../fhir:fullUrl/@value)/fhir:agent[fhir:type/fhir:coding/fhir:code/@value = 'author']/fhir:who[fhir:reference]"/>
+    <xsl:choose>
+      <xsl:when test="$vAuthors">
+        <xsl:variable name="vBefore" select="fhir:id | fhir:meta | fhir:implicitRules | fhir:language | fhir:text | fhir:contained | fhir:extension | fhir:modifierExtension | fhir:identifier | fhir:basedOn | fhir:partOf | fhir:status | fhir:category | fhir:code | fhir:subject | fhir:focus | fhir:encounter | fhir:*[starts-with(local-name(), 'effective')] | fhir:issued"/>
+        <xsl:copy>
+          <xsl:apply-templates select="@* | $vBefore" mode="ecr137-performer"/>
+          <xsl:for-each-group select="$vAuthors" group-by="fhir:reference/@value">
+            <performer><reference value="{current-grouping-key()}"/></performer>
+          </xsl:for-each-group>
+          <xsl:apply-templates select="* except $vBefore" mode="ecr137-performer"/>
+        </xsl:copy>
+      </xsl:when>
+      <xsl:otherwise><xsl:next-match/></xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  <!-- ===== Coded values ===== -->
+  <!-- Verified displays (tools/fhir/build-display-table, checked in as display-table.xml, no runtime lookups) -->
+  <xsl:param name="pDisplayTable" select="'display-table.xml'"/>
+  <xsl:variable name="vDisplayDoc" select="if (doc-available(resolve-uri($pDisplayTable, static-base-uri()))) then doc(resolve-uri($pDisplayTable, static-base-uri())) else ()"/>
+  <xsl:key name="kDisplay" match="entry" use="concat(@system, '|', @code)"/>
+  <xsl:variable name="vValidatedSystems" select="('http://snomed.info/sct', 'http://loinc.org', 'http://www.nlm.nih.gov/research/umls/rxnorm', 'http://hl7.org/fhir/sid/cvx', 'http://hl7.org/fhir/sid/icd-10-cm', 'http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl', 'http://nucc.org/provider-taxonomy', 'http://www.ama-assn.org/go/cpt', 'urn:iso:std:iso:3166')"/>
+
+  <xsl:function name="e137:is-validated-system" as="xs:boolean">
+    <xsl:param name="pSystem" as="xs:string"/>
+    <xsl:sequence select="$pSystem = $vValidatedSystems or starts-with($pSystem, 'http://terminology.hl7.org/CodeSystem/')"/>
+  </xsl:function>
+
+  <!-- A code that cannot belong to its system: SNOMED and RxNorm codes are digits; any code 'undefined' -->
+  <xsl:function name="e137:invalid-code" as="xs:boolean">
+    <xsl:param name="c" as="element()"/>
+    <xsl:variable name="vSys" select="string($c/fhir:system/@value)"/>
+    <xsl:variable name="vCode" select="string($c/fhir:code/@value)"/>
+    <xsl:sequence select="$vCode = ('undefined', 'null') or ($vSys = ('http://snomed.info/sct', 'http://www.nlm.nih.gov/research/umls/rxnorm') and not(matches($vCode, '^\d+$')))"/>
+  </xsl:function>
+
+  <xsl:template match="fhir:coding[e137:invalid-code(.)][not(parent::*/parent::fhir:Observation and local-name(parent::*) = 'valueCodeableConcept')]" mode="ecr137-post" priority="2"/>
+
+  <!-- Observation value whose only codings are invalid: data-absent-reason (N/A: not-applicable) -->
+  <xsl:template match="fhir:Observation/fhir:valueCodeableConcept[fhir:coding][every $c in fhir:coding satisfies e137:invalid-code($c)]" mode="ecr137-post" priority="2">
+    <dataAbsentReason>
+      <coding>
+        <system value="http://terminology.hl7.org/CodeSystem/data-absent-reason"/>
+        <xsl:choose>
+          <xsl:when test="fhir:coding/fhir:code/@value = 'N/A'"><code value="not-applicable"/><display value="Not Applicable"/></xsl:when>
+          <xsl:otherwise><code value="unknown"/><display value="Unknown"/></xsl:otherwise>
+        </xsl:choose>
+      </coding>
+      <xsl:if test="fhir:text or fhir:coding/fhir:display">
+        <text value="{(fhir:text/@value, fhir:coding/fhir:display/@value)[1]}"/>
+      </xsl:if>
+    </dataAbsentReason>
+  </xsl:template>
+
+  <!-- coding.display: verified display from the table; an unverified source display moves to CodeableConcept.text -->
+  <xsl:template match="fhir:coding[e137:is-validated-system(string(fhir:system/@value))]/fhir:display" mode="ecr137-post" priority="1">
+    <xsl:variable name="vKey" select="concat(../fhir:system/@value, '|', ../fhir:code/@value)"/>
+    <xsl:variable name="vEntry" select="if ($vDisplayDoc) then key('kDisplay', $vKey, $vDisplayDoc)[1] else ()"/>
+    <xsl:choose>
+      <xsl:when test="$vEntry/@display"><display value="{$vEntry/@display}"/></xsl:when>
+      <xsl:when test="$vEntry and not($vEntry/@display)"/>
+      <xsl:otherwise/>
+    </xsl:choose>
+  </xsl:template>
+  <!-- CodeableConcept with no text keeps the first unverified source display as text -->
+  <xsl:template match="fhir:*[fhir:coding][not(fhir:text)][fhir:coding[e137:is-validated-system(string(fhir:system/@value))][fhir:display]]" mode="ecr137-post" priority="-0.1">
+    <xsl:variable name="vUnverified" select="fhir:coding[e137:is-validated-system(string(fhir:system/@value))][fhir:display][not($vDisplayDoc and key('kDisplay', concat(fhir:system/@value, '|', fhir:code/@value), $vDisplayDoc)/@display = fhir:display/@value)]"/>
+    <xsl:copy>
+      <xsl:apply-templates select="@* | node()" mode="ecr137-post"/>
+      <xsl:if test="$vUnverified"><text value="{$vUnverified[1]/fhir:display/@value}"/></xsl:if>
+    </xsl:copy>
   </xsl:template>
 </xsl:stylesheet>

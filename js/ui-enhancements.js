@@ -170,6 +170,9 @@ window.addEventListener('load', () => {
   const bCDA = mk('<i class="fas fa-file-code"></i> Generate eICR');
   const bRR = mk('<i class="fas fa-file-medical"></i> Generate RR', 'secondary');
   const bZIP = mk('<i class="fas fa-file-archive"></i> Package ZIP', 'ghost');
+  const bFHIR = mk('<i class="fas fa-fire"></i> Generate FHIR', 'secondary');
+  bFHIR.setAttribute('data-ecr137-fhir', '');
+  bFHIR.addEventListener('click', () => window.generateAndDownloadFHIR && window.generateAndDownloadFHIR());
 
   // Add template functionality
   templateSelect.addEventListener('change', async function () {
@@ -182,7 +185,7 @@ window.addEventListener('load', () => {
     }
   });
 
-  dock.append(templateSelect, bLoad, bSave, bCDA, bRR, bZIP);
+  dock.append(templateSelect, bLoad, bSave, bCDA, bRR, bFHIR, bZIP);
   document.body.appendChild(dock);
 
   const actionsQuery = () => $$('button, a, [role="button"], input[type="button"], input[type="submit"]');
