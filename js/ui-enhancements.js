@@ -1,3 +1,7 @@
+// Classic script wrapped in its own scope so it also runs when index.html is opened from disk
+// (Chrome blocks type="module" scripts on file://).
+(() => {
+'use strict';
 
 const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
 const $ = (s, el = document) => el.querySelector(s);
@@ -233,3 +237,4 @@ window.addEventListener('load', () => {
     if (hideLabels.some(rx => rx.test(txt))) el.style.display = 'none';
   });
 });
+})();
