@@ -102,6 +102,12 @@
     </xsl:copy>
   </xsl:template>
 
+  <!-- Specimen Collection Procedure (22.4.415), and any procedure whose participant is a Specimen (22.4.410):
+       specimen collection is code 17636008 Specimen collection (SNOMED CT) -->
+  <xsl:template match="cda:procedure[cda:templateId/@root = '2.16.840.1.113883.10.20.22.4.415' or cda:participant/cda:participantRole/cda:templateId/@root = '2.16.840.1.113883.10.20.22.4.410']/cda:code[not(@code = '17636008' and @codeSystem = '2.16.840.1.113883.6.96')]" mode="ecr137-pre">
+    <cda:code code="17636008" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Specimen collection"/>
+  </xsl:template>
+
   <!-- ===== ecr137-post: FHIR rules ===== -->
   <xsl:mode name="ecr137-post" on-no-match="shallow-copy"/>
 
@@ -268,7 +274,7 @@
       </xsl:if>
       <xsl:apply-templates select="$vAfterType except $vAfterLocation" mode="ecr137-post"/>
       <xsl:if test="not(fhir:location)">
-        <location><location><extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason"><valueCode value="unknown"/></extension></location></location>
+        <location><location><extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason"><valueCode value="unknown"/></extension><display value="Unknown"/></location></location>
       </xsl:if>
       <xsl:apply-templates select="$vAfterLocation" mode="ecr137-post"/>
     </xsl:copy>
@@ -319,21 +325,28 @@
 
   <xsl:template match="fhir:coding[e137:invalid-code(.)][not(parent::*/parent::fhir:Observation and local-name(parent::*) = 'valueCodeableConcept')]" mode="ecr137-post" priority="2"/>
 
-  <!-- Observation value whose only codings are invalid: data-absent-reason (N/A: not-applicable) -->
+  <!-- Observation value whose only codings are invalid: value[x] carries data-absent-reason (N/A: not-applicable),
+       which also satisfies profiles that require value[x] -->
   <xsl:template match="fhir:Observation/fhir:valueCodeableConcept[fhir:coding][every $c in fhir:coding satisfies e137:invalid-code($c)]" mode="ecr137-post" priority="2">
-    <dataAbsentReason>
-      <coding>
-        <system value="http://terminology.hl7.org/CodeSystem/data-absent-reason"/>
-        <xsl:choose>
-          <xsl:when test="fhir:coding/fhir:code/@value = 'N/A'"><code value="not-applicable"/><display value="Not Applicable"/></xsl:when>
-          <xsl:otherwise><code value="unknown"/><display value="Unknown"/></xsl:otherwise>
-        </xsl:choose>
-      </coding>
+    <valueCodeableConcept>
+      <extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason">
+        <valueCode value="{if (fhir:coding/fhir:code/@value = 'N/A') then 'not-applicable' else 'unknown'}"/>
+      </extension>
       <xsl:if test="fhir:text or fhir:coding/fhir:display">
         <text value="{(fhir:text/@value, fhir:coding/fhir:display/@value)[1]}"/>
       </xsl:if>
-    </dataAbsentReason>
+    </valueCodeableConcept>
   </xsl:template>
+
+  <!-- SNOMED CT US Edition concepts (namespaces 1000119, 1000124) carry the US Edition in coding.version -->
+  <xsl:template match="fhir:coding[fhir:system/@value = 'http://snomed.info/sct'][not(fhir:version)][e137:snomed-us(string(fhir:code/@value))]/fhir:system" mode="ecr137-post">
+    <xsl:next-match/>
+    <version value="http://snomed.info/sct/731000124108"/>
+  </xsl:template>
+  <xsl:function name="e137:snomed-us" as="xs:boolean">
+    <xsl:param name="c" as="xs:string"/>
+    <xsl:sequence select="matches($c, '^\d{10,18}$') and substring($c, string-length($c) - 2, 2) = ('10', '11', '12') and substring($c, string-length($c) - 9, 7) = ('1000119', '1000124')"/>
+  </xsl:function>
 
   <!-- coding.display: verified display from the table; an unverified source display moves to CodeableConcept.text -->
   <xsl:template match="fhir:coding[e137:is-validated-system(string(fhir:system/@value))]/fhir:display" mode="ecr137-post" priority="1">
@@ -353,4 +366,51 @@
       <xsl:if test="$vUnverified"><text value="{$vUnverified[1]/fhir:display/@value}"/></xsl:if>
     </xsl:copy>
   </xsl:template>
+  <!-- ===== Terminology and structure rules from the terminology-enabled corpus run ===== -->
+
+  <!-- coding.version copied from CDA codeSystemVersion is not a FHIR code system version (RxNorm '05062024'); keep only SNOMED CT edition URIs -->
+  <xsl:template match="fhir:coding/fhir:version[not(starts-with(@value, 'http://snomed.info/sct/'))]" mode="ecr137-post"/>
+
+  <!-- OIDs of HL7 terminology code systems that upstream leaves as urn:oid -->
+  <xsl:variable name="vOidUri" as="map(xs:string, xs:string)" select="map{
+      'urn:oid:2.16.840.1.113883.12.112' : 'http://terminology.hl7.org/CodeSystem/v2-0112',
+      'urn:oid:2.16.840.1.113883.12.292' : 'http://hl7.org/fhir/sid/cvx' }"/>
+  <xsl:template match="fhir:coding/fhir:system/@value[map:contains($vOidUri, string(.))]" mode="ecr137-post" priority="1" xmlns:map="http://www.w3.org/2005/xpath-functions/map">
+    <xsl:attribute name="value" select="$vOidUri(string(.))"/>
+  </xsl:template>
+
+  <!-- Route abbreviations sent under the FDA route (NCI Thesaurus) system map to their NCIt concept codes -->
+  <xsl:variable name="vNcitRoute" as="map(xs:string, xs:string)" select="map{
+      'IM':'C28161', 'IV':'C38276', 'PO':'C38288', 'SC':'C38299', 'SQ':'C38299', 'ID':'C38238',
+      'IN':'C38284', 'NAS':'C38284', 'TOP':'C38304', 'INH':'C38216', 'SL':'C38300', 'PR':'C38295', 'TD':'C38305' }"/>
+  <xsl:template match="fhir:coding[fhir:system/@value = 'http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl'][map:contains($vNcitRoute, upper-case(string(fhir:code/@value)))]/fhir:code" mode="ecr137-post" xmlns:map="http://www.w3.org/2005/xpath-functions/map">
+    <code value="{$vNcitRoute(upper-case(string(@value)))}"/>
+  </xsl:template>
+
+  <!-- Vital signs organizer: SNOMED 46680005 (inactive) becomes the FHIR vital signs panel code LOINC 85353-1 -->
+  <xsl:template match="fhir:Observation/fhir:code[fhir:coding[fhir:system/@value = 'http://snomed.info/sct'][fhir:code/@value = '46680005']]" mode="ecr137-post" priority="1">
+    <code>
+      <coding>
+        <system value="http://loinc.org"/>
+        <code value="85353-1"/>
+        <display value="Vital signs, weight, height, head circumference, oxygen saturation and BMI panel"/>
+      </coding>
+      <text value="Vital signs"/>
+    </code>
+  </xsl:template>
+
+  <!-- Location reference carrying only data-absent-reason gets a display -->
+  <xsl:template match="fhir:Encounter/fhir:location/fhir:location[not(fhir:reference) and not(fhir:identifier) and not(fhir:display)]" mode="ecr137-post" priority="1">
+    <xsl:copy>
+      <xsl:apply-templates select="@* | node()" mode="ecr137-post"/>
+      <display value="Unknown"/>
+    </xsl:copy>
+  </xsl:template>
+
+  <!-- Patient.communication whose language has no code -->
+  <xsl:template match="fhir:Patient/fhir:communication[not(fhir:language/fhir:coding/fhir:code/@value[normalize-space()])]" mode="ecr137-post" priority="1"/>
+
+  <!-- DocumentReference upstream adds for the source CDA document: referenced only by Composition.relatesTo (transforms)
+       targetIdentifier, which keeps that identifier; the entry itself is unreachable from the Composition -->
+  <xsl:template match="fhir:Bundle/fhir:entry[fhir:resource/fhir:DocumentReference[fhir:masterIdentifier/fhir:value/@value = //fhir:Composition/fhir:relatesTo[fhir:code/@value = 'transforms']/fhir:targetIdentifier/fhir:value/@value]]" mode="ecr137-post" priority="1"/>
 </xsl:stylesheet>
