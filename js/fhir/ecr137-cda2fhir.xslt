@@ -338,16 +338,6 @@
     </valueCodeableConcept>
   </xsl:template>
 
-  <!-- SNOMED CT US Edition concepts (namespaces 1000119, 1000124) carry the US Edition in coding.version -->
-  <xsl:template match="fhir:coding[fhir:system/@value = 'http://snomed.info/sct'][not(fhir:version)][e137:snomed-us(string(fhir:code/@value))]/fhir:system" mode="ecr137-post">
-    <xsl:next-match/>
-    <version value="http://snomed.info/sct/731000124108"/>
-  </xsl:template>
-  <xsl:function name="e137:snomed-us" as="xs:boolean">
-    <xsl:param name="c" as="xs:string"/>
-    <xsl:sequence select="matches($c, '^\d{10,18}$') and substring($c, string-length($c) - 2, 2) = ('10', '11', '12') and substring($c, string-length($c) - 9, 7) = ('1000119', '1000124')"/>
-  </xsl:function>
-
   <!-- coding.display: verified display from the table; an unverified source display moves to CodeableConcept.text -->
   <xsl:template match="fhir:coding[e137:is-validated-system(string(fhir:system/@value))]/fhir:display" mode="ecr137-post" priority="1">
     <xsl:variable name="vKey" select="concat(../fhir:system/@value, '|', ../fhir:code/@value)"/>
@@ -373,7 +363,6 @@
 
   <!-- OIDs of HL7 terminology code systems that upstream leaves as urn:oid -->
   <xsl:variable name="vOidUri" as="map(xs:string, xs:string)" select="map{
-      'urn:oid:2.16.840.1.113883.12.112' : 'http://terminology.hl7.org/CodeSystem/v2-0112',
       'urn:oid:2.16.840.1.113883.12.292' : 'http://hl7.org/fhir/sid/cvx' }"/>
   <xsl:template match="fhir:coding/fhir:system/@value[map:contains($vOidUri, string(.))]" mode="ecr137-post" priority="1" xmlns:map="http://www.w3.org/2005/xpath-functions/map">
     <xsl:attribute name="value" select="$vOidUri(string(.))"/>
@@ -407,10 +396,11 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- Patient.communication whose language has no code -->
-  <xsl:template match="fhir:Patient/fhir:communication[not(fhir:language/fhir:coding/fhir:code/@value[normalize-space()])]" mode="ecr137-post" priority="1"/>
 
   <!-- DocumentReference upstream adds for the source CDA document: referenced only by Composition.relatesTo (transforms)
        targetIdentifier, which keeps that identifier; the entry itself is unreachable from the Composition -->
   <xsl:template match="fhir:Bundle/fhir:entry[fhir:resource/fhir:DocumentReference[fhir:masterIdentifier/fhir:value/@value = //fhir:Composition/fhir:relatesTo[fhir:code/@value = 'transforms']/fhir:targetIdentifier/fhir:value/@value]]" mode="ecr137-post" priority="1"/>
+  <xsl:template match="fhir:Provenance/fhir:entity[fhir:what/fhir:reference/@value = /fhir:Bundle/fhir:entry[fhir:resource/fhir:DocumentReference[fhir:masterIdentifier/fhir:value/@value = //fhir:Composition/fhir:relatesTo[fhir:code/@value = 'transforms']/fhir:targetIdentifier/fhir:value/@value]]/fhir:fullUrl/@value]" mode="ecr137-post" priority="1"/>
+  <!-- Encounter.type repeating Encounter.class (ActCode AMB, IMP, EMER): class carries it -->
+  <xsl:template match="fhir:Encounter/fhir:type[fhir:coding/fhir:system/@value = 'http://terminology.hl7.org/CodeSystem/v3-ActCode'][fhir:coding/fhir:code/@value = ../fhir:class/fhir:code/@value][count(fhir:coding) = 1][count(../fhir:type) gt 1]" mode="ecr137-post" priority="1"/>
 </xsl:stylesheet>

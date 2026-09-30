@@ -328,7 +328,7 @@
   <entry system="http://snomed.info/sct" code="404240007" display="Meningitis caused by La Crosse virus"/>
   <entry system="http://snomed.info/sct" code="40610006" display="Arbovirus infection"/>
   <entry system="http://snomed.info/sct" code="406577000" display="Infection caused by vancomycin intermediate/resistant Staphylococcus aureus"/>
-  <entry system="http://snomed.info/sct" code="406596001" display="Naegleria infection of the central nervous system"/>
+  <entry system="http://snomed.info/sct" code="406596001" display="Infection of central nervous system caused by Naegleria"/>
   <entry system="http://snomed.info/sct" code="406597005" display="Infection caused by Nipah virus"/>
   <entry system="http://snomed.info/sct" code="409616009" display="Castor bean poisoning"/>
   <entry system="http://snomed.info/sct" code="409641002" display="Hemorrhagic smallpox"/>

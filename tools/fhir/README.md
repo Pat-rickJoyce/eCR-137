@@ -14,8 +14,8 @@ OUT=build/cda node tools/fhir/generate-cda.mjs __default__ tests/fhir/forms/*.js
 python3 tools/fhir/cda-to-fhir.py build/cda build/fhir
 
 # 4. validate and summarize
-java -jar validator_cli.jar build/fhir -version 4.0.1 -ig hl7.fhir.us.ecr#2.1.2 -output build/validation.xml
-python3 tools/fhir/summarize-validation.py build/validation.xml
+java -jar validator_cli.jar build/fhir -version 4.0.1 -ig hl7.fhir.us.ecr#2.1.2 -sct us -txCache build/txcache -output build/validation.xml
+python3 tools/fhir/check-validation.py build/validation.xml   # exits 1 on any unsuppressed error, warning, or information message
 ```
 
 ## Browser bundle
