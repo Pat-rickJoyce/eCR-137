@@ -6,7 +6,7 @@
  * engine result, and downloads eICR and RR FHIR Bundles (FHIR R4, eCR IG 2.1.2) as a ZIP, each in
  * XML and in JSON (js/fhir/fhir-json.js).
  * Dependencies: vendor/saxon-js/SaxonJS2.rt.js, js/fhir/ecr137-fhir-bundle.js, JSZip,
- * js/fhir/fhir-rr-builder.js, js/fhir/fhir-r4-json-types.js, js/fhir/fhir-json.js, validateFormData, generateCDA, getFormData, generateDynamicFilename.
+ * js/fhir/fhir-rr-builder.js, js/fhir/fhir-annotate.js (entry order, comments, reference displays), js/fhir/fhir-r4-json-types.js, js/fhir/fhir-json.js, validateFormData, generateCDA, getFormData, generateDynamicFilename.
  */
 (function () {
   let poolPromise = null;
@@ -50,8 +50,8 @@
     btns.forEach(b => { b.disabled = true; b.dataset.label = b.innerHTML; b.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Converting…'; });
     try {
       await new Promise(r => setTimeout(r, 30));
-      const eicrFhir = await cdaToFhir(generateCDA());
-      const rrFhir = window.ecr137BuildRRFhirBundle(eicrFhir, getFormData(), window.ecr137Reportability);
+      const eicrFhir = window.ecr137AnnotateFhirBundle(await cdaToFhir(generateCDA()), 'eICR');
+      const rrFhir = window.ecr137AnnotateFhirBundle(window.ecr137BuildRRFhirBundle(eicrFhir, getFormData(), window.ecr137Reportability), 'RR');
       const zip = new JSZip();
       zip.file(generateDynamicFilename('eICR_FHIR', 'xml'), eicrFhir);
       zip.file(generateDynamicFilename('RR_FHIR', 'xml'), rrFhir);

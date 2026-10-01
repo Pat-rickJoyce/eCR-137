@@ -119,6 +119,17 @@
     </xsl:copy>
   </xsl:template>
 
+  <!-- Narrative IDs repeated in two sections (the same content ID in Medications Administered and Medications):
+       each section's IDs and the originalText references inside that section are made unique, so a reference
+       resolves to the text of its own section only -->
+  <xsl:key name="kNarrativeId" match="cda:*[@ID]" use="@ID"/>
+  <xsl:template match="cda:section//cda:*/@ID[count(key('kNarrativeId', .)) gt 1]" mode="ecr137-pre">
+    <xsl:attribute name="ID" select="concat(., '-', generate-id(ancestor::cda:section[1]))"/>
+  </xsl:template>
+  <xsl:template match="cda:section//cda:reference/@value[starts-with(., '#')][count(key('kNarrativeId', substring(., 2))) gt 1]" mode="ecr137-pre">
+    <xsl:attribute name="value" select="concat(., '-', generate-id(ancestor::cda:section[1]))"/>
+  </xsl:template>
+
   <!-- ===== ecr137-post: FHIR rules ===== -->
   <xsl:mode name="ecr137-post" on-no-match="shallow-copy"/>
 
@@ -384,6 +395,15 @@
       <xsl:when test="$vEntry and not($vEntry/@display)"/>
       <xsl:otherwise/>
     </xsl:choose>
+  </xsl:template>
+  <!-- coding without a display: the verified display from the table -->
+  <xsl:template match="fhir:coding[fhir:system][fhir:code][not(fhir:display)][e137:is-validated-system(string(fhir:system/@value))]" mode="ecr137-post" priority="1">
+    <xsl:variable name="vEntry" select="if ($vDisplayDoc) then key('kDisplay', concat(fhir:system/@value, '|', fhir:code/@value), $vDisplayDoc)[1] else ()"/>
+    <xsl:copy>
+      <xsl:apply-templates select="@* | fhir:id | fhir:extension | fhir:system | fhir:version | fhir:code" mode="ecr137-post"/>
+      <xsl:if test="$vEntry/@display"><display value="{$vEntry/@display}"/></xsl:if>
+      <xsl:apply-templates select="fhir:userSelected" mode="ecr137-post"/>
+    </xsl:copy>
   </xsl:template>
   <!-- CodeableConcept with no text keeps the first unverified source display as text -->
   <xsl:template match="fhir:*[fhir:coding][not(fhir:text)][fhir:coding[e137:is-validated-system(string(fhir:system/@value))][fhir:display]]" mode="ecr137-post" priority="-0.1">

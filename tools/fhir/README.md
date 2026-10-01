@@ -57,6 +57,10 @@ python3 tools/fhir/build-json-typemap.py ~/.fhir/packages/hl7.fhir.r4.core#4.0.1
 python3 tools/fhir/build-rr-condition-codes.py
 ```
 
+## Reader layout
+
+`js/fhir/fhir-annotate.js` runs on both Bundles before download. It orders the entries the way the Composition sections use them (header resources, then each section's entries, then participants and Provenance), adds banner comments for the document and each section, one comment per entry naming the resource, its profile and the CDA construct it comes from, and a `display` on every reference whose target has a name or a coded meaning. Comments and entry order carry no meaning in FHIR; the JSON files have the same content without the comments.
+
 ## CDA-only tools
 
 `generate-cda.mjs` (Generate eICR / Generate RR downloads) and `cda-to-fhir.py` (Saxon-HE conversion of CDA files) run the eICR conversion outside the browser for debugging.
