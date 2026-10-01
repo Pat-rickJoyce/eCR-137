@@ -72,5 +72,17 @@
     "severity": "warning",
     "text": "US Core Condition Code",
     "reason": "Extensible binding. The only codes outside US Core Condition Code are RCTC trigger concepts that SNOMED CT has since inactivated; the RCTC code that triggered reporting is kept."
+  },
+  {
+    "messageId": "Terminology_TX_NoValid_2_CC",
+    "severity": "warning",
+    "text": "Medication Clinical Drug",
+    "reason": "The VSAC Medication Clinical Drug value set pins RxNorm 05062024, which the terminology server no longer carries, so membership cannot be confirmed; the terminology server confirms the code in the value set."
+  },
+  {
+    "messageId": "",
+    "severity": "warning",
+    "text": "urn:oid:2\\.16\\.840\\.1\\.113883\\.12\\.112",
+    "reason": "HL7 v2 table 0112 (Discharge Disposition) identified by OID as in the CDA, reported without a message id."
   }
 ]

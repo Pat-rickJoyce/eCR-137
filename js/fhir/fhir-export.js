@@ -2,9 +2,10 @@
  * eICR / RR FHIR export.
  * Generates the CDA exactly as Generate eICR / Generate RR do, converts it with
  * js/fhir/ecr137-cda2fhir.xslt (SaxonJS, compiled bundle in ecr137-fhir-bundle.js),
- * and downloads eICR and RR FHIR Bundles (FHIR R4, eCR IG 2.1.2) as a ZIP.
+ * builds the RR Bundle with js/fhir/fhir-rr-builder.js from that eICR, the form and the reportability
+ * engine result, and downloads eICR and RR FHIR Bundles (FHIR R4, eCR IG 2.1.2) as a ZIP.
  * Dependencies: vendor/saxon-js/SaxonJS2.rt.js, js/fhir/ecr137-fhir-bundle.js, JSZip,
- * validateFormData, generateCDA, generateRR, generateDynamicFilename.
+ * js/fhir/fhir-rr-builder.js, validateFormData, generateCDA, getFormData, generateDynamicFilename.
  */
 (function () {
   let poolPromise = null;
@@ -49,7 +50,7 @@
     try {
       await new Promise(r => setTimeout(r, 30));
       const eicrFhir = await cdaToFhir(generateCDA());
-      const rrFhir = await cdaToFhir(generateRR());
+      const rrFhir = window.ecr137BuildRRFhirBundle(eicrFhir, getFormData(), window.ecr137Reportability);
       const zip = new JSZip();
       zip.file(generateDynamicFilename('eICR_FHIR', 'xml'), eicrFhir);
       zip.file(generateDynamicFilename('RR_FHIR', 'xml'), rrFhir);

@@ -138,11 +138,11 @@
  "vaccineCardAvailable": "N",
  "quarantineStatus": "405178008",
  "isolationStatus": "385432009",
- "documentId": "ed32c8c5-1cc0-41e2-9289-06bb6ebccb4d",
+ "documentId": "10559055-2d2c-4506-91b1-58ea71bf08b5",
  "effectiveTime": "20250926180500",
  "documentRelationshipType": "NEW",
  "relatedDocumentId": "",
- "setId": "a4099d14-5788-4779-8336-56713e960000",
+ "setId": "eedcde64-326f-46a3-8ae4-152ca5678b92",
  "versionNumber": "1",
  "labEvidence": [
   {
@@ -189,7 +189,7 @@
    "medicationCode": "105292",
    "medicationName": "isoniazid 10 MG/ML Oral Solution",
    "administrationId": "",
-   "administrationTime": "20240615093000",
+   "administrationTime": "20240615094500",
    "status": "completed",
    "route": "IM",
    "doseValue": "0.5",
@@ -207,8 +207,8 @@
  "immunizations": [],
  "procedures": [
   {
-   "procedureCode": "80146002",
-   "procedureName": "Excision of spinal lesion",
+   "procedureCode": "42839003",
+   "procedureName": "Repair of myelomeningocele",
    "codeSystem": "2.16.840.1.113883.6.96",
    "procedureId": "",
    "procedureDate": "20240615090000",
@@ -226,8 +226,8 @@
    "performerPhone": ""
   },
   {
-   "procedureCode": "241615005",
-   "procedureName": "Magnetic resonance imaging of spine",
+   "procedureCode": "241645008",
+   "procedureName": "MRI of spine",
    "codeSystem": "2.16.840.1.113883.6.96",
    "procedureId": "",
    "procedureDate": "20240615100000",
@@ -245,8 +245,8 @@
    "performerPhone": ""
   },
   {
-   "procedureCode": "230690007",
-   "procedureName": "Stroke",
+   "procedureCode": "446190004",
+   "procedureName": "Ultrasonography of head by open fontanel acoustic window",
    "codeSystem": "2.16.840.1.113883.6.96",
    "procedureId": "",
    "procedureDate": "20240615110000",

@@ -2,7 +2,7 @@
     "patientGivenName": "Robert",
     "patientFamilyName": "Thompson",
     "patientBirthDate": "1975-03-15T00:00",
-    "patientGender": "male",
+    "patientGender": "M",
     "resultLabCLIA": "22D2038475",
     "resultLabName": "City General Hospital Lab",
     "resultPerformerNPI": "1234567891",

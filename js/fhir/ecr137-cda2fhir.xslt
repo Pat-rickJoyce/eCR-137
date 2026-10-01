@@ -339,7 +339,7 @@
   </xsl:template>
 
   <!-- coding.display: verified display from the table; an unverified source display moves to CodeableConcept.text -->
-  <xsl:template match="fhir:coding[e137:is-validated-system(string(fhir:system/@value))]/fhir:display" mode="ecr137-post" priority="1">
+  <xsl:template match="fhir:*[fhir:system][fhir:code][e137:is-validated-system(string(fhir:system/@value))]/fhir:display" mode="ecr137-post" priority="1">
     <xsl:variable name="vKey" select="concat(../fhir:system/@value, '|', ../fhir:code/@value)"/>
     <xsl:variable name="vEntry" select="if ($vDisplayDoc) then key('kDisplay', $vKey, $vDisplayDoc)[1] else ()"/>
     <xsl:choose>
@@ -403,4 +403,73 @@
   <xsl:template match="fhir:Provenance/fhir:entity[fhir:what/fhir:reference/@value = /fhir:Bundle/fhir:entry[fhir:resource/fhir:DocumentReference[fhir:masterIdentifier/fhir:value/@value = //fhir:Composition/fhir:relatesTo[fhir:code/@value = 'transforms']/fhir:targetIdentifier/fhir:value/@value]]/fhir:fullUrl/@value]" mode="ecr137-post" priority="1"/>
   <!-- Encounter.type repeating Encounter.class (ActCode AMB, IMP, EMER): class carries it -->
   <xsl:template match="fhir:Encounter/fhir:type[fhir:coding/fhir:system/@value = 'http://terminology.hl7.org/CodeSystem/v3-ActCode'][fhir:coding/fhir:code/@value = ../fhir:class/fhir:code/@value][count(fhir:coding) = 1][count(../fhir:type) gt 1]" mode="ecr137-post" priority="1"/>
+  <!-- Primitive values never start or end with whitespace -->
+  <xsl:template match="fhir:*/@value[matches(., '^\s|\s$')]" mode="ecr137-post" priority="-0.5">
+    <xsl:attribute name="value" select="replace(., '^\s+|\s+$', '')"/>
+  </xsl:template>
+  <!-- us-core-race / us-core-ethnicity: a code outside the OMB categories belongs in 'detailed' -->
+  <xsl:template match="fhir:extension[@url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-race']/fhir:extension[@url = 'ombCategory'][not(fhir:valueCoding/fhir:code/@value = ('1002-5', '2028-9', '2054-5', '2076-8', '2106-3', 'UNK', 'ASKU'))]/@url
+                     | fhir:extension[@url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity']/fhir:extension[@url = 'ombCategory'][not(fhir:valueCoding/fhir:code/@value = ('2135-2', '2186-5', 'UNK', 'ASKU'))]/@url" mode="ecr137-post" priority="1">
+    <xsl:attribute name="url">detailed</xsl:attribute>
+  </xsl:template>
+
+  <!-- Coding without a code carries nothing; a CodeableConcept left with no coded value and no text goes with it -->
+  <xsl:template match="fhir:coding[not(fhir:code/@value[normalize-space()])][not(.//fhir:extension)]" mode="ecr137-post" priority="1"/>
+  <xsl:template match="fhir:*[fhir:coding][not(fhir:coding[fhir:code/@value[normalize-space()] or .//fhir:extension])][not(fhir:text/@value[normalize-space()])][not(fhir:extension)]" mode="ecr137-post" priority="0.9"/>
+
+  <!-- eicr-procedure requires performed[x]: a procedure with no time in the source is unknown -->
+  <xsl:template match="fhir:Procedure[fhir:meta/fhir:profile/@value = 'http://hl7.org/fhir/us/ecr/StructureDefinition/eicr-procedure'][not(fhir:*[starts-with(local-name(), 'performed')][.//@value[normalize-space()] or .//fhir:extension])]" mode="ecr137-post" priority="1">
+    <xsl:variable name="vBefore" select="fhir:id | fhir:meta | fhir:implicitRules | fhir:language | fhir:text | fhir:contained | fhir:extension | fhir:modifierExtension | fhir:identifier | fhir:instantiatesCanonical | fhir:instantiatesUri | fhir:basedOn | fhir:partOf | fhir:status | fhir:statusReason | fhir:category | fhir:code | fhir:subject | fhir:encounter"/>
+    <xsl:copy>
+      <xsl:apply-templates select="@* | $vBefore" mode="ecr137-post"/>
+      <performedDateTime><extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason"><valueCode value="unknown"/></extension></performedDateTime>
+      <xsl:apply-templates select="* except ($vBefore | fhir:*[starts-with(local-name(), 'performed')])" mode="ecr137-post"/>
+    </xsl:copy>
+  </xsl:template>
+  <!-- Lab orders (ServiceRequest) that no resource references join the Results section entries -->
+  <xsl:template match="fhir:Composition/fhir:section[fhir:code/fhir:coding/fhir:code/@value = '30954-2'][1]" mode="ecr137-performer">
+    <xsl:variable name="vRefs" select="//fhir:reference/@value"/>
+    <xsl:copy>
+      <xsl:apply-templates select="@* | node()" mode="ecr137-performer"/>
+      <xsl:for-each select="/fhir:Bundle/fhir:entry[fhir:resource/fhir:ServiceRequest][not(fhir:fullUrl/@value = $vRefs)]">
+        <entry><reference value="{fhir:fullUrl/@value}"/></entry>
+      </xsl:for-each>
+    </xsl:copy>
+  </xsl:template>
+  <!-- Lab Observations that carry no information (data-absent code, no value, no members with information), as when the
+       form has no lab results: dropped together with every reference to them -->
+  <xsl:function name="e137:no-info-obs" as="xs:string*">
+    <xsl:param name="pBundle" as="element()"/>
+    <xsl:param name="pKnown" as="xs:string*"/>
+    <xsl:variable name="vNew" select="$pBundle/fhir:entry[fhir:resource/fhir:Observation[fhir:category/fhir:coding/fhir:code/@value = 'laboratory']
+        [not(fhir:code/fhir:coding/fhir:code/@value[normalize-space()])]
+        [not(fhir:*[starts-with(local-name(), 'value')][.//@value[normalize-space()]][not(fhir:extension/@url = 'http://hl7.org/fhir/StructureDefinition/data-absent-reason')])]
+        [every $m in fhir:hasMember/fhir:reference/@value satisfies $m = $pKnown]]/fhir:fullUrl/@value[not(. = $pKnown)]"/>
+    <xsl:sequence select="if (empty($vNew)) then $pKnown else e137:no-info-obs($pBundle, ($pKnown, $vNew))"/>
+  </xsl:function>
+  <xsl:template match="fhir:Bundle" mode="ecr137-performer" priority="2">
+    <xsl:variable name="vDrop" select="e137:no-info-obs(., ())"/>
+    <xsl:choose>
+      <xsl:when test="exists($vDrop)">
+        <xsl:variable name="vPruned">
+          <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:for-each select="node()">
+              <xsl:choose>
+                <xsl:when test="self::fhir:entry[fhir:fullUrl/@value = $vDrop]"/>
+                <xsl:otherwise><xsl:apply-templates select="." mode="e137-drop-refs"><xsl:with-param name="pDrop" select="$vDrop" tunnel="yes"/></xsl:apply-templates></xsl:otherwise>
+              </xsl:choose>
+            </xsl:for-each>
+          </xsl:copy>
+        </xsl:variable>
+        <xsl:apply-templates select="$vPruned/fhir:Bundle" mode="ecr137-performer"/>
+      </xsl:when>
+      <xsl:otherwise><xsl:next-match/></xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  <xsl:mode name="e137-drop-refs" on-no-match="shallow-copy"/>
+  <xsl:template match="fhir:*[fhir:reference/@value]" mode="e137-drop-refs">
+    <xsl:param name="pDrop" tunnel="yes"/>
+    <xsl:if test="not(fhir:reference/@value = $pDrop)"><xsl:next-match/></xsl:if>
+  </xsl:template>
 </xsl:stylesheet>

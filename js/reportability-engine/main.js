@@ -112,6 +112,8 @@ class ReportabilityEngineApp {
             }
 
             this.ui.updateUI(result);
+            // Latest determination, read by the FHIR RR builder (js/fhir/fhir-rr-builder.js)
+            window.ecr137Reportability = result;
             console.log("Evaluation Result:", result);
         } catch (e) {
             console.error("Evaluation Error:", e);

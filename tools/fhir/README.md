@@ -1,22 +1,32 @@
 # FHIR conversion tooling
 
-Run from the repository root.
+Run from the repository root. The app itself makes no terminology or network calls; tx.fhir.org is used here only to build the checked-in display table and to validate test output.
+
+## Validate the app's FHIR output
 
 ```bash
-# 1. condition form corpus (tests/fhir/forms/*.json)
+npm i playwright jszip
+# condition form corpus (tests/fhir/forms/*.json) from rules/conditions and the RCTC code lookup
 python3 tools/fhir/make-condition-forms.py .
-
-# 2. eICR and RR CDA through the UI (Load Form Data, Generate eICR, Generate RR)
-npm i playwright
-OUT=build/cda node tools/fhir/generate-cda.mjs __default__ tests/fhir/forms/*.json
-
-# 3. CDA to FHIR (pip install saxonche)
-python3 tools/fhir/cda-to-fhir.py build/cda build/fhir
-
-# 4. validate and summarize
+# Load Form Data + Generate FHIR in headless Chromium for the default case, saved templates and the corpus
+OUT=build/fhir node tools/fhir/generate-fhir.mjs __default__ assets/forms/*.json tests/fhir/forms/*.json
+# eCR FHIR IG 2.1.2 validation with terminology, SNOMED CT US Edition
 java -jar validator_cli.jar build/fhir -version 4.0.1 -ig hl7.fhir.us.ecr#2.1.2 -sct us -txCache build/txcache -output build/validation.xml
-python3 tools/fhir/check-validation.py build/validation.xml   # exits 1 on any unsuppressed error, warning, or information message
+# gate: exits 1 on any error, warning, or information message not in tools/fhir/validation-suppressions.json
+python3 tools/fhir/check-validation.py build/validation.xml
 ```
+
+## Display table
+
+`js/fhir/display-table.xml` holds verified coding displays. Regenerate it when new codes appear in the output:
+
+```bash
+python3 tools/fhir/collect-codes.py build/fhir > build/codes.json
+pwsh tools/fhir/lookup-displays.ps1 -In build/codes.json -Out build/tx-new.json   # merge into tools/fhir/terminology/tx-lookup.json
+python3 tools/fhir/build-display-table.py .
+```
+
+Sources: `tx-lookup.json` (tx.fhir.org `CodeSystem/$lookup`), `profile-pattern-displays.json` (displays fixed by eCR 2.1.2 and US Core 3.1.1 patterns), `manual-displays.json` (displays from validator valid-display lists).
 
 ## Browser bundle
 
@@ -27,4 +37,8 @@ npx xslt3 -xsl:js/fhir/ecr137-cda2fhir.xslt -export:build/ecr137-cda2fhir.sef.js
 node tools/fhir/build-browser-bundle.mjs
 ```
 
-This regenerates `js/fhir/ecr137-fhir-bundle.js`, which `index.html` loads with SaxonJS (`vendor/saxon-js/SaxonJS2.rt.js`, Saxonica license in that folder). Generate FHIR in the action dock converts the eICR and RR the form produces and downloads both Bundles as a ZIP.
+This regenerates `js/fhir/ecr137-fhir-bundle.js`, which `index.html` loads with SaxonJS (`vendor/saxon-js/SaxonJS2.rt.js`, Saxonica license in that folder). Generate FHIR in the action dock converts the form's eICR with `js/fhir/ecr137-cda2fhir.xslt`, builds the RR with `js/fhir/fhir-rr-builder.js` from that eICR, the form and the reportability engine result, and downloads both Bundles as a ZIP.
+
+## CDA-only tools
+
+`generate-cda.mjs` (Generate eICR / Generate RR downloads) and `cda-to-fhir.py` (Saxon-HE conversion of CDA files) run the eICR conversion outside the browser for debugging.

@@ -219,28 +219,14 @@ document.addEventListener('DOMContentLoaded', function() {
             manufacturer: 'Merck Co, Inc.',
             negated: false
         });
-
-        addImmunization({
-            vaccineCode: '87567',
-            vaccineName: 'Vitamin K1 injection (phytonadione)',
-            immunizationId: 'VitK-NB-001',
-            immunizationDate: '2024-06-15T09:45',
-            status: 'completed',
-            route: 'IM',
-            doseValue: '1',
-            doseUnit: 'mg',
-            lotNumber: 'XYZ98765',
-            manufacturer: 'Hospira Inc.',
-            negated: false
-        });
     }
 
     // Initialize administered medications with default entry
     if (!document.querySelector('.medication-administered-evidence-row')) {
         addAdministeredMedication({
-            medicationCode: '308971',
-            medicationName: 'Hep B pediatric vaccine (Engerix-B)',
-            administrationTime: '2024-06-15T09:30',
+            medicationCode: '312424',
+            medicationName: '0.5 ML vitamin K1 2 MG/ML Injection',
+            administrationTime: '2024-06-15T09:45',
             doseValue: '0.5',
             doseUnit: 'mL',
             route: 'IM',
@@ -252,8 +238,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize procedures with default entries
     if (!document.querySelector('.procedure-row')) {
         addProcedure({
-            procedureCode: '80146002',
-            procedureName: 'Excision of spinal lesion',
+            procedureCode: '42839003',
+            procedureName: 'Repair of myelomeningocele',
             procedureDate: '2024-06-15T09:00',
             statusCode: 'completed',
             codeSystem: '2.16.840.1.113883.6.96',
@@ -264,8 +250,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         addProcedure({
-            procedureCode: '241615005',
-            procedureName: 'Magnetic resonance imaging of spine',
+            procedureCode: '241645008',
+            procedureName: 'MRI of spine',
             procedureDate: '2024-06-15T10:00',
             statusCode: 'completed',
             codeSystem: '2.16.840.1.113883.6.96',
@@ -274,8 +260,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         addProcedure({
-            procedureCode: '230690007',
-            procedureName: 'Stroke',
+            procedureCode: '446190004',
+            procedureName: 'Ultrasonography of head by open fontanel acoustic window',
             procedureDate: '2024-06-15T11:00',
             statusCode: 'completed',
             codeSystem: '2.16.840.1.113883.6.96',

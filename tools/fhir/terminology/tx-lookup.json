@@ -1,2258 +1,2414 @@
-﻿[
-    {
-        "system":  "http://hl7.org/fhir/sid/cvx",
-        "code":  "08",
-        "display":  "Hep B, adolescent or pediatric",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://hl7.org/fhir/sid/cvx",
-        "code":  "87567",
-        "display":  null,
-        "status":  "err 404"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "100383-9",
-        "display":  "Monkeypox virus DNA [Presence] in Specimen by NAA with probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "100675-8",
-        "display":  "Cytomegalovirus DNA [Units/volume] (viral load) in Blood by NAA with probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "100899-4",
-        "display":  "Enterobacteriaceae.extended spectrum beta lactamase resistance phenotype [Identifier] in Specimen by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "100908-3",
-        "display":  "Pseudomonas aeruginosa [Presence] in Lower respiratory specimen by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "100909-1",
-        "display":  "Cronobacter sakazakii [Presence] by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "100911-7",
-        "display":  "Campylobacter sp [Presence] in Stool by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "101289-7",
-        "display":  "SARS-CoV-2 (COVID-19) RNA [Presence] in Throat by NAA with non-probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "101303-6",
-        "display":  "Chikungunya virus RNA [Presence] in Blood by NAA with non-probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "101366-3",
-        "display":  "Ebola virus RNA [Presence] in Blood by NAA with non-probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "101368-9",
-        "display":  "Bacillus anthracis DNA [Presence] by NAA with non-probe detection in Positive blood culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "10154-3",
-        "display":  "Chief complaint Narrative - Reported",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "10160-0",
-        "display":  "History of Medication use Narrative",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "10164-2",
-        "display":  "History of Present illness Narrative",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "101662-5",
-        "display":  "Abnormal Prion Protein [Presence] in Cerebral spinal fluid by RT-QuIC",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "10187-3",
-        "display":  "Review of systems Narrative - Reported",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "102120-3",
-        "display":  "Carbapenemase [Type] in Isolate by Immunoassay",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "103199-6",
-        "display":  "Treponema pallidum DNA [Presence] in Urine by Probe with amplification",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "10347-3",
-        "display":  "Babesia microti identified in Blood by Light microscopy",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "10351-5",
-        "display":  "HIV 1 RNA [Units/volume] (viral load) in Serum or Plasma by Probe with amplification",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "10368-9",
-        "display":  "Lead [Mass/volume] in Capillary blood",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "103722-5",
-        "display":  "Yellow fever virus RNA [Presence] in Blood by NAA with non-probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "104412-2",
-        "display":  "Hepatitis A virus IgM Ab [Titer] in Serum",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "104429-6",
-        "display":  "Measles virus IgM Ab [Ratio] in Serum by Immunoassay",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "105224-0",
-        "display":  "Mycobacterium sp identified in Pericardial fluid by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "105806-4",
-        "display":  "Candida auris DNA [Cycle Threshold #] in Positive blood culture by NAA with probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "105905-4",
-        "display":  "Entamoeba histolytica DNA [Presence] in Stool",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "10635-1",
-        "display":  "Acanthamoeba sp identified in Eye by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "10659-1",
-        "display":  "Cyclospora sp identified in Stool by Acid fast stain",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "10676-5",
-        "display":  "Hepatitis C virus RNA [Units/volume] (viral load) in Serum or Plasma by Probe with amplification",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "10694-8",
-        "display":  "Naegleria sp identified in Tissue by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "10785-4",
-        "display":  "Microscopic observation [Identifier] in Tissue by Fite-Faraco stain",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "11091-6",
-        "display":  "Alpha chlordane [Mass/volume] in Serum or Plasma",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "11255-7",
-        "display":  "Haemophilus ducreyi [Presence] in Specimen by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "11348-0",
-        "display":  "History of Past illness note",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "11369-6",
-        "display":  "History of Immunization note",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "11450-4",
-        "display":  "Problem list - Reported",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "11535-2",
-        "display":  "Hospital discharge diagnosis note",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "11550-1",
-        "display":  "Borrelia burgdorferi [Presence] in Specimen by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "11778-8",
-        "display":  "Delivery date Estimated",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "12505-4",
-        "display":  "Cadmium [Mass/volume] in Red Blood Cells",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "13921-2",
-        "display":  "Mumps virus [Presence] in Specimen by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "14082-2",
-        "display":  "Echinococcus sp IgG Ab [Units/volume] in Serum by Immunoblot",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "14127-5",
-        "display":  "Neisseria gonorrhoeae [Presence] in Anal by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "14197-8",
-        "display":  "Blastomyces dermatitidis exoantigen [Identifier] in Isolate",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "14461-8",
-        "display":  "Chlamydia trachomatis [Presence] in Blood by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "14479-0",
-        "display":  "Diphtheria identified in Throat by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "15114-2",
-        "display":  "Arsenic [Moles/volume] in Blood",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "16588-6",
-        "display":  "Chlamydophila psittaci IgM Ab [Units/volume] in Cerebral spinal fluid",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "18185-9",
-        "display":  "Gestational age",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "2030-5",
-        "display":  "Carboxyhemoglobin/Hemoglobin.total in Arterial blood",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "20734-0",
-        "display":  "Brucella sp identified in Tissue by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "21771-1",
-        "display":  "Chromosome 21 trisomy [Presence] in Blood or Tissue by Cytogenetics",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "22319-8",
-        "display":  "Hepatitis B virus core IgM Ab [Units/volume] in Serum",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "2708-6",
-        "display":  "Oxygen saturation in Arterial blood",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "29299-5",
-        "display":  "Reason for visit Narrative",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "29463-7",
-        "display":  "Body weight",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "29549-3",
-        "display":  "Medication administered Narrative",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "29762-2",
-        "display":  "Social history note",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "30954-2",
-        "display":  "Relevant diagnostic tests/laboratory data note",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "3141-9",
-        "display":  "Body weight Measured",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "33676-8",
-        "display":  "Francisella tularensis [Presence] in Specimen by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "33685-9",
-        "display":  "Yersinia pestis [Presence] in Specimen by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "33694-1",
-        "display":  "Clostridium botulinum [Presence] in Specimen by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "33747-0",
-        "display":  null,
-        "status":  "err 404"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "3376-1",
-        "display":  "Barbiturates [Presence] in Serum, Plasma or Blood",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "35352-4",
-        "display":  "Mycobacterium tuberculosis genotype [Identifier] in Isolate",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "35419-1",
-        "display":  "Herpes simplex virus identified in Cerebral spinal fluid by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "38354-7",
-        "display":  "Bartonella sp identified in Specimen by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "38377-8",
-        "display":  "Cryptococcus neoformans [Presence] in Specimen by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "39017-9",
-        "display":  "Mycobacterium tuberculosis tuberculin stimulated gamma interferon/Mitogen stimulated gamma interferon in Blood",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "39156-5",
-        "display":  "Body mass index (BMI) [Ratio]",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "41430-0",
-        "display":  "Angiostrongylus cantonensis DNA [Presence] in Specimen by NAA with probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "41432-6",
-        "display":  "Balamuthia mandrillaris DNA [Presence] in Specimen by NAA with probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "41856-6",
-        "display":  "Variola virus DNA [Presence] in Specimen by NAA with probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "42346-7",
-        "display":  null,
-        "status":  "err 500"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "42347-5",
-        "display":  null,
-        "status":  "err 500"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "42368-1",
-        "display":  "Neisseria meningitidis serogroup w135 Ag [Presence] in Isolate by Agglutination",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "43890-3",
-        "display":  "Bordetella pertussis [Presence] in Sputum by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "44799-5",
-        "display":  "Coxiella burnetii [Presence] in Specimen by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "46131-9",
-        "display":  "Clostridioides difficile toxin B [Presence] in Stool by Cytotoxin tissue culture assay",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "46241-6",
-        "display":  "Hospital admission diagnosis Narrative - Reported",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "47519-4",
-        "display":  "History of Procedures Document",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "48765-2",
-        "display":  "Allergies and adverse reactions Document",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "48804-9",
-        "display":  "Taenia solium Ag [Presence] in Stool",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "48872-6",
-        "display":  "Anaplasma phagocytophilum [Presence] in Specimen by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "48873-4",
-        "display":  "Ehrlichia sp identified in Specimen by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "49526-7",
-        "display":  "Influenza virus A H5 RNA [Presence] in Isolate by NAA with probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "49801-4",
-        "display":  "Trypanosoma cruzi DNA [Presence] in Blood by NAA with probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "53645-8",
-        "display":  "Polio virus identified in Stool by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "53909-8",
-        "display":  "Mycobacterium sp identified in Pleural fluid by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "53941-1",
-        "display":  "Vibrio cholerae toxin Ag [Presence] in Isolate",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "55751-2",
-        "display":  "Public health Case report",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "57309-7",
-        "display":  "PRNP gene mutations found [Identifier] in Blood or Tissue by Molecular genetics method Nominal",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "59408-5",
-        "display":  "Oxygen saturation in Arterial blood by Pulse oximetry",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "60270-6",
-        "display":  "Rabies virus RNA [Presence] in Isolate by NAA with probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "60275-5",
-        "display":  "SARS coronavirus RNA [Presence] in Isolate by NAA with probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "6309-9",
-        "display":  "Arbovirus identified in Blood by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "6548-2",
-        "display":  "Rubella virus identified in Serum by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "70851-1",
-        "display":  "Burkholderia pseudomallei [Presence] in Specimen by Organism specific culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "72166-2",
-        "display":  "Tobacco smoking status",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "74843-4",
-        "display":  "Baylisascaris sp IgG Ab [Presence] in Cerebral spinal fluid by Immunoassay",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "76691-5",
-        "display":  "Gender identity",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "78375-3",
-        "display":  "Discharge diagnosis Narrative",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "7899-8",
-        "display":  "Hantavirus RNA [Presence] in Serum by NAA with probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "79190-5",
-        "display":  "Zika virus RNA [Presence] in Specimen by NAA with probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "82810-3",
-        "display":  "Pregnancy status",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "8302-2",
-        "display":  "Body height",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "8310-5",
-        "display":  "Body temperature",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "83910-0",
-        "display":  "Public health Note",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "8462-4",
-        "display":  "Diastolic blood pressure",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "8480-6",
-        "display":  "Systolic blood pressure",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "85354-9",
-        "display":  "Blood pressure panel with all children optional",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "85770-6",
-        "display":  "Acinetobacter baumannii DNA [Presence] by NAA with non-probe detection in Positive blood culture",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "8716-3",
-        "display":  "Vital signs note",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "87729-0",
-        "display":  "History of Occupational hazard",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "88082-3",
-        "display":  "Initial case report processing information Document",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "88083-1",
-        "display":  "Reportable condition response brief description Narrative",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "88084-9",
-        "display":  "Reportable condition response information and summary Document",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "88085-6",
-        "display":  "Reportability response report Document Public health",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "8867-4",
-        "display":  "Heart rate",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "9279-1",
-        "display":  "Respiratory rate",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://loinc.org",
-        "code":  "97932-8",
-        "display":  "Colorado tick fever virus RNA [Presence] in Specimen by NAA with probe detection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl",
-        "code":  "C28161",
-        "display":  "INTRAMUSCULAR",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl",
-        "code":  "IM",
-        "display":  null,
-        "status":  "err 404"
-    },
-    {
-        "system":  "http://nucc.org/provider-taxonomy",
-        "code":  "207Q00000X",
-        "display":  "Family Medicine Physician",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1003369001",
-        "display":  "Microphthalmos due to Delleman syndrome",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1003416001",
-        "display":  "Medial duplication of chromosome 13",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1003445004",
-        "display":  "Lumbosacral spina bifida aperta with hydrocephalus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1003584006",
-        "display":  "Hind brain laceration with open intracranial wound and loss of consciousness",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1003679009",
-        "display":  "Human immunodeficiency virus Centers for Disease Control and Prevention dual infection with HIV-1 and HIV-2",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1003938005",
-        "display":  "Phenylketonuria due to tetrahydrobiopterin deficiency",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "100721000119109",
-        "display":  "High grade astrocytoma of brain",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10082001",
-        "display":  "Progressive rubella panencephalitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1010606009",
-        "display":  "Waardenburg syndrome type 1",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1010615002",
-        "display":  "Late syphilis of lung",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1010620002",
-        "display":  "Infection of lung caused by Mycobacterium malmoense",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1011000124101",
-        "display":  null,
-        "status":  "err 404"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "101421000119107",
-        "display":  "Dementia due to Parkinson\u0027s disease",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1017214008",
-        "display":  "SARS-CoV-2 viremia",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "102455002",
-        "display":  "Hemorrhagic nephroso-nephritis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "104011000119109",
-        "display":  "Genital herpes simplex in mother complicating pregnancy",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "105628008",
-        "display":  "Human typhoid AND/OR paratyphoid fever",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10624911000119107",
-        "display":  "Otitis media caused by Influenza A virus subtype H1N1",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10625151000119107",
-        "display":  "Bronchopneumonia caused by Group A Streptococcus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10625191000119102",
-        "display":  "Bronchopneumonia caused by Group B Streptococcus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10625231000119106",
-        "display":  "Bronchopneumonia caused by Haemophilus influenzae",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10625351000119105",
-        "display":  "Bronchopneumonia caused by methicillin resistant Staphylococcus aureus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10625551000119103",
-        "display":  "Bronchopneumonia caused by respiratory syncytial virus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10625831000119107",
-        "display":  "Chemical pneumonitis caused by anesthesia",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10665004",
-        "display":  "Mumps pancreatitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10679007",
-        "display":  "Infection by Giardia lamblia",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10706006",
-        "display":  "Tuberculosis of central nervous system",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10751311000119100",
-        "display":  "Salpingitis due to ectopic pregnancy",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10809061000119106",
-        "display":  "Malaria in mother complicating childbirth",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10847261000119103",
-        "display":  "Open wound of left foot due to dog bite",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1084741000119103",
-        "display":  "Meningoencephalitis due to Blastomyces dermatitidis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1085291000119101",
-        "display":  "Cleft hard and soft palate with cleft lip",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10853021000119107",
-        "display":  null,
-        "status":  "err 404"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1086051000119107",
-        "display":  "Cardiomyopathy due to diphtheria",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1086721000119102",
-        "display":  "Echinococcus granulosus infection of multiple sites",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1087021000119101",
-        "display":  null,
-        "status":  "err 404"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1089781000119109",
-        "display":  "Meningitis due to Chagas disease",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1089801000119108",
-        "display":  "Meningococcal retrobulbar neuritis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1089811000119106",
-        "display":  "Meningoencephalitis caused by Acanthamoeba",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "10899004",
-        "display":  "Classical galactosemia, homozygous Duarte-type",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1092371000119103",
-        "display":  "Salmonella pyelonephritis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1092821000119106",
-        "display":  "Toxoplasma myositis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "109427000",
-        "display":  "Supracristal ventricular septal defect",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "109436001",
-        "display":  "Moon\u0027s molar teeth",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "109546001",
-        "display":  "Cleft of primary palate",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "109902004",
-        "display":  "Acute purulent meningitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "110041000119104",
-        "display":  "Reactive arthritis co-occurrent and due to nonspecific urethritis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1102005",
-        "display":  "Intraerythrocytic parasitosis by Nuttallia",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "11086007",
-        "display":  "Microcystis poisoning",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "111319002",
-        "display":  "Truncus arteriosus, Edwards\u0027 type IV",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "111323005",
-        "display":  "Total anomalous pulmonary venous return",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "111407006",
-        "display":  "Hemolytic uremic syndrome",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "111798006",
-        "display":  "Gastrointestinal anthrax",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "111817006",
-        "display":  "Infection by Shigella",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "111835002",
-        "display":  "Infection by Campylobacter fetus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "111852003",
-        "display":  "Vaccinia",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "111864006",
-        "display":  "Chikungunya fever",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "111865007",
-        "display":  "Disease caused by Flavivirus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "111872008",
-        "display":  "Post measles encephalitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "111878007",
-        "display":  "Coxsackie meningitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "111879004",
-        "display":  "Viral hepatitis A without hepatic coma",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "111910009",
-        "display":  "Amebic infection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1119306006",
-        "display":  "Multisystem inflammatory syndrome in adults",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "11371006",
-        "display":  "Mercury pigmentation of skin",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1137357005",
-        "display":  "Hepatic coma due to viral hepatitis D",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1141788003",
-        "display":  "Bacillary peliosis caused by Bartonella quintana",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1142085005",
-        "display":  "Disseminated perinatal varicella",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1142106007",
-        "display":  "Transient congenital hypothyroidism due to dual oxidase 2 mutation",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1142181004",
-        "display":  "Adverse reaction to COVID-19 mRNA vaccine",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1142227009",
-        "display":  "Lyme arthritis of knee joint",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1145155005",
-        "display":  "Lead and/or lead compound poisoning",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1145543005",
-        "display":  "Complete left cleft lip and incomplete right cleft lip",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1148585008",
-        "display":  "Infection of intestine caused by Vibrio parahaemolyticus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1148763004",
-        "display":  "Acute rheumatic carditis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1149093006",
-        "display":  "Pneumonia caused by vancomycin resistant Enterococcus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1149327007",
-        "display":  "Poisoning caused by Clostridium botulinum toxin",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1163055001",
-        "display":  "Machupo virus encephalitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1163058004",
-        "display":  "Lymphocytic choriomeningitis virus encephalitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1163078007",
-        "display":  "Orthopoxvirus encephalitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1163101003",
-        "display":  "Dengue virus encephalitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1163114002",
-        "display":  "Enterohemorrhagic Escherichia coli colitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1163119007",
-        "display":  "Creutzfeldt Jakob disease following graft of dura",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1163121002",
-        "display":  "Yersinia enterocolitica colitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1163151008",
-        "display":  "Cerebral cryptococcoma",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1163462003",
-        "display":  "Infection of stomach caused by Histoplasma",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1163484003",
-        "display":  "Glomerular disorder due to Strongyloides infection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1163497001",
-        "display":  "Dacryoadenitis caused by Mycobacterium leprae",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1163524004",
-        "display":  "Clostridium difficile food poisoning",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1163537001",
-        "display":  "Cysticercosis myelitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1163553003",
-        "display":  "Kunjin virus encephalitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "11641008",
-        "display":  "Millers\u0027 asthma",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1169358003",
-        "display":  "MARCH syndrome",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1172697000",
-        "display":  "X-linked female restricted facial dysmorphism, short stature, choanal atresia, intellectual disability",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1172701002",
-        "display":  "Facial diplegia with paresthesia",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1177046004",
-        "display":  "Infection caused by larvae of Trichinella pseudospiralis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1177063000",
-        "display":  "Brucella suis spondylitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1186838001",
-        "display":  "Peripheral neuropathy caused by ciguatoxin",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1186872009",
-        "display":  "Arsenic encephalopathy",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1193749009",
-        "display":  "Vibrio cholerae enteritis of small intestine",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "11999007",
-        "display":  "Inactive tuberculosis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "120241000119100",
-        "display":  "Glomerulonephritis due to hepatitis C",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1217628008",
-        "display":  "Congenital anophthalmos with orbital implant",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1237074000",
-        "display":  "Congenital atrioventricular septal defect",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1237470001",
-        "display":  "Lethal fetal brain malformation, duodenal atresia, bilateral renal hypoplasia syndrome",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "123775005",
-        "display":  "Carboxyhemoglobinemia",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1264130004",
-        "display":  "Tetanus following ectopic pregnancy",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "127037003",
-        "display":  "Toxic methemoglobinemia with cyanosis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "127121000119101",
-        "display":  null,
-        "status":  "err 404"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "127348004",
-        "display":  "Motor vehicle accident victim",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "127411000119102",
-        "display":  "Toxic shock syndrome caused by methicillin susceptible Staphylococcus aureus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "128869009",
-        "display":  "Infestation by Sarcoptes scabiei var hominis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "1290801000000102",
-        "display":  "Encephalopathy caused by monkeypox virus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "130071000119104",
-        "display":  "Trisomy 18 detected by multiple marker screening",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "13151001",
-        "display":  "Flax-dressers\u0027 disease",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "13225007",
-        "display":  "Meningoencephalitis caused by Rubella virus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "13265006",
-        "display":  "Acute fulminating type B viral hepatitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "13867009",
-        "display":  "Preductal coarctation of aorta",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "13906002",
-        "display":  "Anaplasmosis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "14168008",
-        "display":  "Rabies",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "14535005",
-        "display":  "Acute nonparalytic poliomyelitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "14683004",
-        "display":  "Relapsing fever caused by Borrelia recurrentis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "15207003",
-        "display":  "Zoonotic form of cutaneous leishmaniasis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "15654006",
-        "display":  "Drowning in liquid other than water",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "15679841000119107",
-        "display":  "Bilateral neonatal conjunctivitis of eyes",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "16025471000119107",
-        "display":  "Aneurysm of coronary artery due to and following acute febrile mucocutaneous lymph node syndrome",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "16541001",
-        "display":  "Yellow fever",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "17394001",
-        "display":  "Ebstein\u0027s anomaly with atrial septal defect",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "179101003",
-        "display":  "Urethritis caused by Chlamydia trachomatis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "18546004",
-        "display":  "Congenital stenosis of aortic valve",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "186150001",
-        "display":  "Enteritis caused by rotavirus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "186284005",
-        "display":  "Plague meningitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "186311005",
-        "display":  "Acute and fulminating melioidosis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "186317009",
-        "display":  "Listerial cerebral arteritis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "186431008",
-        "display":  "Clostridioides difficile infection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "186771002",
-        "display":  "Spotted fevers",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "186788009",
-        "display":  "Q fever",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "18690003",
-        "display":  "Farmers\u0027 lung",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "186956008",
-        "display":  "Leptospiral meningitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "187149005",
-        "display":  "Cysticercosis of eye",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "187160001",
-        "display":  "Filariasis caused by Brugia timori",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "187187002",
-        "display":  "Intestinal angiostrongyliasis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "192650000",
-        "display":  "Meningitis caused by Bordetella pertussis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "19265001",
-        "display":  "Tularemia",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "195889001",
-        "display":  "Legionella pneumonia",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "204008003",
-        "display":  "Spina bifida without hydrocephalus - closed",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "204300001",
-        "display":  "Incomplete great vessel transposition",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "204306007",
-        "display":  "Pentalogy of Fallot",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "204342004",
-        "display":  "Congenital atresia of pulmonary valve",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "204354004",
-        "display":  "Congenital tricuspid atresia and stenosis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "205615000",
-        "display":  "Trisomy 21- meiotic nondisjunction",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "20815007",
-        "display":  "Exstrophy of cloaca sequence",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "216725003",
-        "display":  "Accidental poisoning by mixtures of herbicides with plant foods and fertilizers",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "216800002",
-        "display":  "Accidental poisoning caused by cadmium and/or cadmium compound",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "218081007",
-        "display":  "Accident caused by firearm missile",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "218728005",
-        "display":  "Interrupted aortic arch",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "219125007",
-        "display":  "Suicide and selfinflicted poisoning by gases in domestic use",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "22607003",
-        "display":  "Asbestosis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "230690007",
-        "display":  "Cerebrovascular accident",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "233760007",
-        "display":  "Acute silicosis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "235867002",
-        "display":  "Acute hepatitis E",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "237109002",
-        "display":  "Vulval warts",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "240372001",
-        "display":  "Cyclosporiasis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "240451000",
-        "display":  "Streptococcal toxic shock syndrome",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "240507007",
-        "display":  "Trivittatus fever",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "240585002",
-        "display":  "Chancroid - anogenital ulcer",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "240589008",
-        "display":  "Chlamydia trachomatis infection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "240613006",
-        "display":  "Typhus group rickettsial disease",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "240626005",
-        "display":  "Human ehrlichiosis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "241615005",
-        "display":  "MRI of breast",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "24789006",
-        "display":  "Viral gastroenteritis caused by Norwalk-like agent",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "253281003",
-        "display":  "Double inlet ventricle",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "253298003",
-        "display":  "Double outlet right ventricle with subaortic ventricular septal defect",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "253900005",
-        "display":  "Congenital posterior urethral valves",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "258580003",
-        "display":  "Whole blood specimen",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "266919005",
-        "display":  "Never smoked tobacco",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "276197005",
-        "display":  "Infection caused by Corynebacterium diphtheriae",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "276701009",
-        "display":  "Fetal cytomegalovirus syndrome",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "29422001",
-        "display":  "Coal workers\u0027 pneumoconiosis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "309051001",
-        "display":  "Body fluid specimen",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "315642008",
-        "display":  "Influenza-like symptoms",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "34521000087103",
-        "display":  "Infection caused by carbapenemase-producing Enterobacteriaceae",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "36921006",
-        "display":  "Vesicular stomatitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "371061003",
-        "display":  "Infection of urinary bladder catheter",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "3928002",
-        "display":  "Zika virus disease",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "397575003",
-        "display":  "Viral hepatitis, type G",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "398384001",
-        "display":  "Staphylococcus aureus food poisoning",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "398447004",
-        "display":  "Severe acute respiratory syndrome",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "404234000",
-        "display":  "Meningitis caused by Saint Louis encephalitis virus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "404235004",
-        "display":  "Jamestown Canyon virus encephalitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "404236003",
-        "display":  "Snowshoe hare virus encephalitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "404237007",
-        "display":  "Keystone virus encephalitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "404239005",
-        "display":  "California Orthobunyavirus viral meningitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "404240007",
-        "display":  "Meningitis caused by La Crosse virus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "40610006",
-        "display":  "Arbovirus infection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "406577000",
-        "display":  "Infection caused by vancomycin intermediate/resistant Staphylococcus aureus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "406596001",
-        "display":  "Naegleria infection of the central nervous system",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "406597005",
-        "display":  "Infection caused by Nipah virus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "409616009",
-        "display":  "Castor bean poisoning",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "409641002",
-        "display":  "Hemorrhagic smallpox",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "410507001",
-        "display":  "Neonatal herpes simplex virus conjunctivitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "414488002",
-        "display":  "Infantile botulism",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "414819007",
-        "display":  "Neonatal abstinence syndrome",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "416543004",
-        "display":  "Neuroinvasive Powassan encephalitis virus infection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "416925005",
-        "display":  "Eastern equine encephalitis virus infection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "418182000",
-        "display":  "Disease caused by California serogroup virus",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "418815008",
-        "display":  "Allergy to red meat",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "420008001",
-        "display":  "Travel",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "421060004",
-        "display":  "Structure of vertebral column",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "422498005",
-        "display":  "Neuroinvasive Western equine encephalitis virus infection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "429586004",
-        "display":  "Chlamydophila psittaci infection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "429681000124103",
-        "display":  null,
-        "status":  "err 404"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "445780006",
-        "display":  "Infection caused by carbapenem resistant Acinetobacter",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "446151000124109",
-        "display":  "Identifies as male gender",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "46045005",
-        "display":  "Infection by Baylisascaris columnaris",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "46680005",
-        "display":  "Vital signs",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "52947006",
-        "display":  "Japanese encephalitis virus disease",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "551621000124109",
-        "display":  null,
-        "status":  "err 404"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "6452009",
-        "display":  "Colorado tick fever",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "651000146102",
-        "display":  "Middle East respiratory syndrome",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "67531005",
-        "display":  "Spina bifida",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "70014009",
-        "display":  "Food poisoning caused by Clostridium perfringens",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "712830002",
-        "display":  "Infection due to carbapenem resistant Enterobacteriaceae",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "72951007",
-        "display":  "Gastroschisis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "736152001",
-        "display":  "CLABSI - central line associated bloodstream infection",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "74225001",
-        "display":  "Tick paralysis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "74351001",
-        "display":  "Reye\u0027s syndrome",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "77386006",
-        "display":  "Pregnancy",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "78421000",
-        "display":  "Intramuscular route",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "80146002",
-        "display":  "Appendectomy",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "840539006",
-        "display":  "COVID-19",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "865929003",
-        "display":  "Infection caused by Candida auris",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "897031002",
-        "display":  "Acute flaccid myelitis",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "N/A",
-        "display":  null,
-        "status":  "err 404"
-    },
-    {
-        "system":  "http://snomed.info/sct",
-        "code":  "undefined",
-        "display":  null,
-        "status":  "err 404"
-    },
-    {
-        "system":  "http://terminology.hl7.org/CodeSystem/condition-category",
-        "code":  "problem-list-item",
-        "display":  "Problem List Item",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
-        "code":  "active",
-        "display":  "Active",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://terminology.hl7.org/CodeSystem/data-absent-reason",
-        "code":  "unknown",
-        "display":  "Unknown",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://terminology.hl7.org/CodeSystem/observation-category",
-        "code":  "laboratory",
-        "display":  "Laboratory",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://terminology.hl7.org/CodeSystem/observation-category",
-        "code":  "social-history",
-        "display":  "Social History",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://terminology.hl7.org/CodeSystem/observation-category",
-        "code":  "vital-signs",
-        "display":  "Vital Signs",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
-        "code":  "author",
-        "display":  "Author",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
-        "code":  "AMB",
-        "display":  "ambulatory",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus",
-        "code":  "S",
-        "display":  "Never Married",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
-        "code":  "ATND",
-        "display":  "attender",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
-        "code":  "LOC",
-        "display":  "location",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://terminology.hl7.org/CodeSystem/v3-RoleClass",
-        "code":  "GUARD",
-        "display":  "guardian",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
-        "code":  "OF",
-        "display":  "Outpatient facility",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://www.ama-assn.org/go/cpt",
-        "code":  "99213",
-        "display":  "Office or other outpatient visit for the evaluation and management of an established patient, which requires a medically appropriate history and/or examination and low level of medical decision making. When using time for code selection, 20-29 minutes of total time is spent on the date of the encounter.",
-        "status":  "ok"
-    },
-    {
-        "system":  "http://www.nlm.nih.gov/research/umls/rxnorm",
-        "code":  "308971",
-        "display":  "carbamazepine 20 MG/ML Oral Suspension [Tegretol]",
-        "status":  "ok"
-    }
+[
+ {
+  "system": "http://hl7.org/fhir/sid/cvx",
+  "code": "08",
+  "display": "Hep B, adolescent or pediatric",
+  "status": "ok"
+ },
+ {
+  "system": "http://hl7.org/fhir/sid/cvx",
+  "code": "87567",
+  "display": null,
+  "status": "err 404"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "100383-9",
+  "display": "Monkeypox virus DNA [Presence] in Specimen by NAA with probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "100675-8",
+  "display": "Cytomegalovirus DNA [Units/volume] (viral load) in Blood by NAA with probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "100899-4",
+  "display": "Enterobacteriaceae.extended spectrum beta lactamase resistance phenotype [Identifier] in Specimen by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "100908-3",
+  "display": "Pseudomonas aeruginosa [Presence] in Lower respiratory specimen by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "100909-1",
+  "display": "Cronobacter sakazakii [Presence] by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "100911-7",
+  "display": "Campylobacter sp [Presence] in Stool by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "101289-7",
+  "display": "SARS-CoV-2 (COVID-19) RNA [Presence] in Throat by NAA with non-probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "101303-6",
+  "display": "Chikungunya virus RNA [Presence] in Blood by NAA with non-probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "101366-3",
+  "display": "Ebola virus RNA [Presence] in Blood by NAA with non-probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "101368-9",
+  "display": "Bacillus anthracis DNA [Presence] by NAA with non-probe detection in Positive blood culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "10154-3",
+  "display": "Chief complaint Narrative - Reported",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "10160-0",
+  "display": "History of Medication use Narrative",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "10164-2",
+  "display": "History of Present illness Narrative",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "101662-5",
+  "display": "Abnormal Prion Protein [Presence] in Cerebral spinal fluid by RT-QuIC",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "10187-3",
+  "display": "Review of systems Narrative - Reported",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "102120-3",
+  "display": "Carbapenemase [Type] in Isolate by Immunoassay",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "103199-6",
+  "display": "Treponema pallidum DNA [Presence] in Urine by Probe with amplification",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "10347-3",
+  "display": "Babesia microti identified in Blood by Light microscopy",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "10351-5",
+  "display": "HIV 1 RNA [Units/volume] (viral load) in Serum or Plasma by Probe with amplification",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "103661-5",
+  "display": "Campylobacter and Salmonella and Shigella sp identified in Stool by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "10368-9",
+  "display": "Lead [Mass/volume] in Capillary blood",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "103722-5",
+  "display": "Yellow fever virus RNA [Presence] in Blood by NAA with non-probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "104412-2",
+  "display": "Hepatitis A virus IgM Ab [Titer] in Serum",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "104429-6",
+  "display": "Measles virus IgM Ab [Ratio] in Serum by Immunoassay",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "105224-0",
+  "display": "Mycobacterium sp identified in Pericardial fluid by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "105806-4",
+  "display": "Candida auris DNA [Cycle Threshold #] in Positive blood culture by NAA with probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "105905-4",
+  "display": "Entamoeba histolytica DNA [Presence] in Stool",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "10635-1",
+  "display": "Acanthamoeba sp identified in Eye by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "10659-1",
+  "display": "Cyclospora sp identified in Stool by Acid fast stain",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "10676-5",
+  "display": "Hepatitis C virus RNA [Units/volume] (viral load) in Serum or Plasma by Probe with amplification",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "10694-8",
+  "display": "Naegleria sp identified in Tissue by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "10785-4",
+  "display": "Microscopic observation [Identifier] in Tissue by Fite-Faraco stain",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "11091-6",
+  "display": "Alpha chlordane [Mass/volume] in Serum or Plasma",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "11255-7",
+  "display": "Haemophilus ducreyi [Presence] in Specimen by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "11348-0",
+  "display": "History of Past illness note",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "11369-6",
+  "display": "History of Immunization note",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "11450-4",
+  "display": "Problem list - Reported",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "11535-2",
+  "display": "Hospital discharge diagnosis note",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "11550-1",
+  "display": "Borrelia burgdorferi [Presence] in Specimen by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "11778-8",
+  "display": "Delivery date Estimated",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "12505-4",
+  "display": "Cadmium [Mass/volume] in Red Blood Cells",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "13921-2",
+  "display": "Mumps virus [Presence] in Specimen by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "14082-2",
+  "display": "Echinococcus sp IgG Ab [Units/volume] in Serum by Immunoblot",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "14127-5",
+  "display": "Neisseria gonorrhoeae [Presence] in Anal by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "14197-8",
+  "display": "Blastomyces dermatitidis exoantigen [Identifier] in Isolate",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "14461-8",
+  "display": "Chlamydia trachomatis [Presence] in Blood by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "14479-0",
+  "display": "Diphtheria identified in Throat by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "15114-2",
+  "display": "Arsenic [Moles/volume] in Blood",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "16588-6",
+  "display": "Chlamydophila psittaci IgM Ab [Units/volume] in Cerebral spinal fluid",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "18185-9",
+  "display": "Gestational age",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "2030-5",
+  "display": "Carboxyhemoglobin/Hemoglobin.total in Arterial blood",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "20563-3",
+  "display": "Carboxyhemoglobin/Hemoglobin.total in Blood",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "20734-0",
+  "display": "Brucella sp identified in Tissue by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "2160-0",
+  "display": "Creatinine [Mass/volume] in Serum or Plasma",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "21771-1",
+  "display": "Chromosome 21 trisomy [Presence] in Blood or Tissue by Cytogenetics",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "22319-8",
+  "display": "Hepatitis B virus core IgM Ab [Units/volume] in Serum",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "2708-6",
+  "display": "Oxygen saturation in Arterial blood",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "29299-5",
+  "display": "Reason for visit Narrative",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "29463-7",
+  "display": "Body weight",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "29549-3",
+  "display": "Medication administered Narrative",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "29762-2",
+  "display": "Social history note",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "30954-2",
+  "display": "Relevant diagnostic tests/laboratory data note",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "3141-9",
+  "display": "Body weight Measured",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "33676-8",
+  "display": "Francisella tularensis [Presence] in Specimen by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "33685-9",
+  "display": "Yersinia pestis [Presence] in Specimen by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "33694-1",
+  "display": "Clostridium botulinum [Presence] in Specimen by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "33747-0",
+  "display": null,
+  "status": "err 404"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "3376-1",
+  "display": "Barbiturates [Presence] in Serum, Plasma or Blood",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "35352-4",
+  "display": "Mycobacterium tuberculosis genotype [Identifier] in Isolate",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "35419-1",
+  "display": "Herpes simplex virus identified in Cerebral spinal fluid by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "38354-7",
+  "display": "Bartonella sp identified in Specimen by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "38377-8",
+  "display": "Cryptococcus neoformans [Presence] in Specimen by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "39017-9",
+  "display": "Mycobacterium tuberculosis tuberculin stimulated gamma interferon/Mitogen stimulated gamma interferon in Blood",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "39156-5",
+  "display": "Body mass index (BMI) [Ratio]",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "41430-0",
+  "display": "Angiostrongylus cantonensis DNA [Presence] in Specimen by NAA with probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "41432-6",
+  "display": "Balamuthia mandrillaris DNA [Presence] in Specimen by NAA with probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "41856-6",
+  "display": "Variola virus DNA [Presence] in Specimen by NAA with probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "42346-7",
+  "display": null,
+  "status": "err 500"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "42347-5",
+  "display": null,
+  "status": "err 500"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "42368-1",
+  "display": "Neisseria meningitidis serogroup w135 Ag [Presence] in Isolate by Agglutination",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "43890-3",
+  "display": "Bordetella pertussis [Presence] in Sputum by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "44799-5",
+  "display": "Coxiella burnetii [Presence] in Specimen by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "46131-9",
+  "display": "Clostridioides difficile toxin B [Presence] in Stool by Cytotoxin tissue culture assay",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "46241-6",
+  "display": "Hospital admission diagnosis Narrative - Reported",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "47519-4",
+  "display": "History of Procedures Document",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "48765-2",
+  "display": "Allergies and adverse reactions Document",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "48804-9",
+  "display": "Taenia solium Ag [Presence] in Stool",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "48872-6",
+  "display": "Anaplasma phagocytophilum [Presence] in Specimen by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "48873-4",
+  "display": "Ehrlichia sp identified in Specimen by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "49526-7",
+  "display": "Influenza virus A H5 RNA [Presence] in Isolate by NAA with probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "49801-4",
+  "display": "Trypanosoma cruzi DNA [Presence] in Blood by NAA with probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "51990-0",
+  "display": "Basic metabolic panel - Blood",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "53645-8",
+  "display": "Polio virus identified in Stool by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "53909-8",
+  "display": "Mycobacterium sp identified in Pleural fluid by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "53941-1",
+  "display": "Vibrio cholerae toxin Ag [Presence] in Isolate",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "55751-2",
+  "display": "Public health Case report",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "57309-7",
+  "display": "PRNP gene mutations found [Identifier] in Blood or Tissue by Molecular genetics method Nominal",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "58410-2",
+  "display": "CBC panel - Blood by Automated count",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "59408-5",
+  "display": "Oxygen saturation in Arterial blood by Pulse oximetry",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "60270-6",
+  "display": "Rabies virus RNA [Presence] in Isolate by NAA with probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "60275-5",
+  "display": "SARS coronavirus RNA [Presence] in Isolate by NAA with probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "62238-1",
+  "display": "Glomerular filtration rate [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI)/1.73 sq M",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "6309-9",
+  "display": "Arbovirus identified in Blood by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "6548-2",
+  "display": "Rubella virus identified in Serum by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "70851-1",
+  "display": "Burkholderia pseudomallei [Presence] in Specimen by Organism specific culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "72166-2",
+  "display": "Tobacco smoking status",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "74843-4",
+  "display": "Baylisascaris sp IgG Ab [Presence] in Cerebral spinal fluid by Immunoassay",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "76691-5",
+  "display": "Gender identity",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "78375-3",
+  "display": "Discharge diagnosis Narrative",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "7899-8",
+  "display": "Hantavirus RNA [Presence] in Serum by NAA with probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "79190-5",
+  "display": "Zika virus RNA [Presence] in Specimen by NAA with probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "82810-3",
+  "display": "Pregnancy status",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "8302-2",
+  "display": "Body height",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "8310-5",
+  "display": "Body temperature",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "83910-0",
+  "display": "Public health Note",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "8462-4",
+  "display": "Diastolic blood pressure",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "8480-6",
+  "display": "Systolic blood pressure",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "85353-1",
+  "display": "Vital signs, weight, height, head circumference, oxygen saturation and BMI panel",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "85354-9",
+  "display": "Blood pressure panel with all children optional",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "85770-6",
+  "display": "Acinetobacter baumannii DNA [Presence] by NAA with non-probe detection in Positive blood culture",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "8716-3",
+  "display": "Vital signs note",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "87729-0",
+  "display": "History of Occupational hazard",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "88082-3",
+  "display": "Initial case report processing information Document",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "88083-1",
+  "display": "Reportable condition response brief description Narrative",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "88084-9",
+  "display": "Reportable condition response information and summary Document",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "88085-6",
+  "display": "Reportability response report Document Public health",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "8867-4",
+  "display": "Heart rate",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "9279-1",
+  "display": "Respiratory rate",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "94309-2",
+  "display": "SARS-CoV-2 (COVID-19) RNA [Presence] in Specimen by NAA with probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "94310-0",
+  "display": "SARS-related coronavirus N gene [Presence] in Specimen by Nucleic acid amplification using CDC primer-probe set N3",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "97249-7",
+  "display": "fentaNYL [Presence] in Cord tissue by Confirmatory method",
+  "status": "ok"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "97932-8",
+  "display": "Colorado tick fever virus RNA [Presence] in Specimen by NAA with probe detection",
+  "status": "ok"
+ },
+ {
+  "system": "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl",
+  "code": "C28161",
+  "display": "INTRAMUSCULAR",
+  "status": "ok"
+ },
+ {
+  "system": "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl",
+  "code": "IM",
+  "display": null,
+  "status": "err 404"
+ },
+ {
+  "system": "http://nucc.org/provider-taxonomy",
+  "code": "207Q00000X",
+  "display": "Family Medicine Physician",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1003369001",
+  "display": "Microphthalmos due to Delleman syndrome",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1003416001",
+  "display": "Medial duplication of chromosome 13",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1003445004",
+  "display": "Lumbosacral spina bifida aperta with hydrocephalus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1003584006",
+  "display": "Hind brain laceration with open intracranial wound and loss of consciousness",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1003679009",
+  "display": "Human immunodeficiency virus Centers for Disease Control and Prevention dual infection with HIV-1 and HIV-2",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1003938005",
+  "display": "Phenylketonuria due to tetrahydrobiopterin deficiency",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "100721000119109",
+  "display": "High grade astrocytoma of brain",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10082001",
+  "display": "Progressive rubella panencephalitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1010606009",
+  "display": "Waardenburg syndrome type 1",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1010615002",
+  "display": "Late syphilis of lung",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1010620002",
+  "display": "Infection of lung caused by Mycobacterium malmoense",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1011000124101",
+  "display": null,
+  "status": "err 404"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "101421000119107",
+  "display": "Dementia due to Parkinson's disease",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1017214008",
+  "display": "SARS-CoV-2 viremia",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "102455002",
+  "display": "Hemorrhagic nephroso-nephritis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "104011000119109",
+  "display": "Genital herpes simplex in mother complicating pregnancy",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "105628008",
+  "display": "Human typhoid AND/OR paratyphoid fever",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10624911000119107",
+  "display": "Otitis media caused by Influenza A virus subtype H1N1",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10625151000119107",
+  "display": "Bronchopneumonia caused by Group A Streptococcus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10625191000119102",
+  "display": "Bronchopneumonia caused by Group B Streptococcus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10625231000119106",
+  "display": "Bronchopneumonia caused by Haemophilus influenzae",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10625351000119105",
+  "display": "Bronchopneumonia caused by methicillin resistant Staphylococcus aureus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10625551000119103",
+  "display": "Bronchopneumonia caused by respiratory syncytial virus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10625831000119107",
+  "display": "Chemical pneumonitis caused by anesthesia",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10665004",
+  "display": "Mumps pancreatitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10679007",
+  "display": "Infection by Giardia lamblia",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10706006",
+  "display": "Tuberculosis of central nervous system",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10751311000119100",
+  "display": "Salpingitis due to ectopic pregnancy",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10809061000119106",
+  "display": "Malaria in mother complicating childbirth",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10847261000119103",
+  "display": "Open wound of left foot due to dog bite",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1084741000119103",
+  "display": "Meningoencephalitis due to Blastomyces dermatitidis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1085291000119101",
+  "display": "Cleft hard and soft palate with cleft lip",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10853021000119107",
+  "display": null,
+  "status": "err 404"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1086051000119107",
+  "display": "Cardiomyopathy due to diphtheria",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1086721000119102",
+  "display": "Echinococcus granulosus infection of multiple sites",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1087021000119101",
+  "display": null,
+  "status": "err 404"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1089781000119109",
+  "display": "Meningitis due to Chagas disease",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1089801000119108",
+  "display": "Meningococcal retrobulbar neuritis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1089811000119106",
+  "display": "Meningoencephalitis caused by Acanthamoeba",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10899004",
+  "display": "Classical galactosemia, homozygous Duarte-type",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1092371000119103",
+  "display": "Salmonella pyelonephritis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1092821000119106",
+  "display": "Toxoplasma myositis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "109427000",
+  "display": "Supracristal ventricular septal defect",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "109436001",
+  "display": "Moon's molar teeth",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "109546001",
+  "display": "Cleft of primary palate",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "109902004",
+  "display": "Acute purulent meningitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "110041000119104",
+  "display": "Reactive arthritis co-occurrent and due to nonspecific urethritis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1102005",
+  "display": "Intraerythrocytic parasitosis by Nuttallia",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "11086007",
+  "display": "Microcystis poisoning",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "111319002",
+  "display": "Truncus arteriosus, Edwards' type IV",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "111323005",
+  "display": "Total anomalous pulmonary venous return",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "111407006",
+  "display": "Hemolytic uremic syndrome",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "111798006",
+  "display": "Gastrointestinal anthrax",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "111817006",
+  "display": "Infection by Shigella",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "111835002",
+  "display": "Infection by Campylobacter fetus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "111852003",
+  "display": "Vaccinia",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "111864006",
+  "display": "Chikungunya fever",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "111865007",
+  "display": "Disease caused by Flavivirus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "111872008",
+  "display": "Post measles encephalitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "111878007",
+  "display": "Coxsackie meningitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "111879004",
+  "display": "Viral hepatitis A without hepatic coma",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "111910009",
+  "display": "Amebic infection",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1119306006",
+  "display": "Multisystem inflammatory syndrome in adults",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "11371006",
+  "display": "Mercury pigmentation of skin",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1137357005",
+  "display": "Hepatic coma due to viral hepatitis D",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1141788003",
+  "display": "Bacillary peliosis caused by Bartonella quintana",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1142085005",
+  "display": "Disseminated perinatal varicella",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1142106007",
+  "display": "Transient congenital hypothyroidism due to dual oxidase 2 mutation",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1142181004",
+  "display": "Adverse reaction to COVID-19 mRNA vaccine",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1142227009",
+  "display": "Lyme arthritis of knee joint",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1145155005",
+  "display": "Lead and/or lead compound poisoning",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1145543005",
+  "display": "Complete left cleft lip and incomplete right cleft lip",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1148585008",
+  "display": "Infection of intestine caused by Vibrio parahaemolyticus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1148763004",
+  "display": "Acute rheumatic carditis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1149093006",
+  "display": "Pneumonia caused by vancomycin resistant Enterococcus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1149327007",
+  "display": "Poisoning caused by Clostridium botulinum toxin",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1163055001",
+  "display": "Machupo virus encephalitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1163058004",
+  "display": "Lymphocytic choriomeningitis virus encephalitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1163078007",
+  "display": "Orthopoxvirus encephalitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1163101003",
+  "display": "Dengue virus encephalitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1163114002",
+  "display": "Enterohemorrhagic Escherichia coli colitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1163119007",
+  "display": "Creutzfeldt Jakob disease following graft of dura",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1163121002",
+  "display": "Yersinia enterocolitica colitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1163151008",
+  "display": "Cerebral cryptococcoma",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1163462003",
+  "display": "Infection of stomach caused by Histoplasma",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1163484003",
+  "display": "Glomerular disorder due to Strongyloides infection",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1163497001",
+  "display": "Dacryoadenitis caused by Mycobacterium leprae",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1163524004",
+  "display": "Clostridium difficile food poisoning",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1163537001",
+  "display": "Cysticercosis myelitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1163553003",
+  "display": "Kunjin virus encephalitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "11641008",
+  "display": "Millers' asthma",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1169358003",
+  "display": "MARCH syndrome",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1172697000",
+  "display": "X-linked female restricted facial dysmorphism, short stature, choanal atresia, intellectual disability",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1172701002",
+  "display": "Facial diplegia with paresthesia",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1177046004",
+  "display": "Infection caused by larvae of Trichinella pseudospiralis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1177063000",
+  "display": "Brucella suis spondylitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1186838001",
+  "display": "Peripheral neuropathy caused by ciguatoxin",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1186872009",
+  "display": "Arsenic encephalopathy",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1193749009",
+  "display": "Vibrio cholerae enteritis of small intestine",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "11999007",
+  "display": "Inactive tuberculosis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "120241000119100",
+  "display": "Glomerulonephritis due to hepatitis C",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1217628008",
+  "display": "Congenital anophthalmos with orbital implant",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "122555007",
+  "display": "Venous blood specimen",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1237074000",
+  "display": "Congenital atrioventricular septal defect",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1237470001",
+  "display": "Lethal fetal brain malformation, duodenal atresia, bilateral renal hypoplasia syndrome",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "123775005",
+  "display": "Carboxyhemoglobinemia",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1264130004",
+  "display": "Tetanus following ectopic pregnancy",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "127037003",
+  "display": "Toxic methemoglobinemia with cyanosis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "127121000119101",
+  "display": null,
+  "status": "err 404"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "127348004",
+  "display": "Motor vehicle accident victim",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "127411000119102",
+  "display": "Toxic shock syndrome caused by methicillin susceptible Staphylococcus aureus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "128869009",
+  "display": "Infestation by Sarcoptes scabiei var hominis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1290801000000102",
+  "display": "Encephalopathy caused by monkeypox virus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "130071000119104",
+  "display": "Trisomy 18 detected by multiple marker screening",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "13151001",
+  "display": "Flax-dressers' disease",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "13225007",
+  "display": "Meningoencephalitis caused by Rubella virus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "13265006",
+  "display": "Acute fulminating type B viral hepatitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "13867009",
+  "display": "Preductal coarctation of aorta",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "13906002",
+  "display": "Anaplasmosis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "14168008",
+  "display": "Rabies",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "14535005",
+  "display": "Acute nonparalytic poliomyelitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "14683004",
+  "display": "Relapsing fever caused by Borrelia recurrentis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "15207003",
+  "display": "Zoonotic form of cutaneous leishmaniasis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "15654006",
+  "display": "Drowning in liquid other than water",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "15679841000119107",
+  "display": "Bilateral neonatal conjunctivitis of eyes",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "16025471000119107",
+  "display": "Aneurysm of coronary artery due to and following acute febrile mucocutaneous lymph node syndrome",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "16541001",
+  "display": "Yellow fever",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "17394001",
+  "display": "Ebstein's anomaly with atrial septal defect",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "179101003",
+  "display": "Urethritis caused by Chlamydia trachomatis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "18546004",
+  "display": "Congenital stenosis of aortic valve",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "186150001",
+  "display": "Enteritis caused by rotavirus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "186284005",
+  "display": "Plague meningitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "186311005",
+  "display": "Acute and fulminating melioidosis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "186317009",
+  "display": "Listerial cerebral arteritis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "186431008",
+  "display": "Clostridioides difficile infection",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "186771002",
+  "display": "Spotted fevers",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "186788009",
+  "display": "Q fever",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "18690003",
+  "display": "Farmers' lung",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "186956008",
+  "display": "Leptospiral meningitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "187149005",
+  "display": "Cysticercosis of eye",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "187160001",
+  "display": "Filariasis caused by Brugia timori",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "187187002",
+  "display": "Intestinal angiostrongyliasis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "192650000",
+  "display": "Meningitis caused by Bordetella pertussis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "19265001",
+  "display": "Tularemia",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "195889001",
+  "display": "Legionella pneumonia",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "204008003",
+  "display": "Spina bifida without hydrocephalus - closed",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "204300001",
+  "display": "Incomplete great vessel transposition",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "204306007",
+  "display": "Pentalogy of Fallot",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "204342004",
+  "display": "Congenital atresia of pulmonary valve",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "204354004",
+  "display": "Congenital tricuspid atresia and stenosis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "205615000",
+  "display": "Trisomy 21- meiotic nondisjunction",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "20815007",
+  "display": "Exstrophy of cloaca sequence",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "216725003",
+  "display": "Accidental poisoning by mixtures of herbicides with plant foods and fertilizers",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "216800002",
+  "display": "Accidental poisoning caused by cadmium and/or cadmium compound",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "218081007",
+  "display": "Accident caused by firearm missile",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "218728005",
+  "display": "Interrupted aortic arch",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "219125007",
+  "display": "Suicide and selfinflicted poisoning by gases in domestic use",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "22607003",
+  "display": "Asbestosis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "230690007",
+  "display": "Cerebrovascular accident",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "233760007",
+  "display": "Acute silicosis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "235867002",
+  "display": "Acute hepatitis E",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "237109002",
+  "display": "Vulval warts",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "240372001",
+  "display": "Cyclosporiasis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "240451000",
+  "display": "Streptococcal toxic shock syndrome",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "240507007",
+  "display": "Trivittatus fever",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "240585002",
+  "display": "Chancroid - anogenital ulcer",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "240589008",
+  "display": "Chlamydia trachomatis infection",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "240613006",
+  "display": "Typhus group rickettsial disease",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "240626005",
+  "display": "Human ehrlichiosis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "241615005",
+  "display": "MRI of breast",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "241645008",
+  "display": "MRI of spine",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "24789006",
+  "display": "Viral gastroenteritis caused by Norwalk-like agent",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "253281003",
+  "display": "Double inlet ventricle",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "253298003",
+  "display": "Double outlet right ventricle with subaortic ventricular septal defect",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "253512000",
+  "display": "Tetralogy of Fallot with pulmonary stenosis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "253900005",
+  "display": "Congenital posterior urethral valves",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "258580003",
+  "display": "Whole blood specimen",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "266919005",
+  "display": "Never smoked tobacco",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "276197005",
+  "display": "Infection caused by Corynebacterium diphtheriae",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "276701009",
+  "display": "Fetal cytomegalovirus syndrome",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "283752005",
+  "display": "Dog bite of forearm",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "29422001",
+  "display": "Coal workers' pneumoconiosis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "309051001",
+  "display": "Body fluid specimen",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "315642008",
+  "display": "Influenza-like symptoms",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "34521000087103",
+  "display": "Infection caused by carbapenemase-producing Enterobacteriaceae",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "36921006",
+  "display": "Vesicular stomatitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "371061003",
+  "display": "Infection of urinary bladder catheter",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "3928002",
+  "display": "Zika virus disease",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "397575003",
+  "display": "Viral hepatitis, type G",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "398384001",
+  "display": "Staphylococcus aureus food poisoning",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "398447004",
+  "display": "Severe acute respiratory syndrome",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "404234000",
+  "display": "Meningitis caused by Saint Louis encephalitis virus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "404235004",
+  "display": "Jamestown Canyon virus encephalitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "404236003",
+  "display": "Snowshoe hare virus encephalitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "404237007",
+  "display": "Keystone virus encephalitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "404239005",
+  "display": "California Orthobunyavirus viral meningitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "404240007",
+  "display": "Meningitis caused by La Crosse virus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "40610006",
+  "display": "Arbovirus infection",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "406577000",
+  "display": "Infection caused by vancomycin intermediate/resistant Staphylococcus aureus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "406596001",
+  "display": "Naegleria infection of the central nervous system",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "406597005",
+  "display": "Infection caused by Nipah virus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "40907007",
+  "display": null,
+  "status": "unknown"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "409616009",
+  "display": "Castor bean poisoning",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "409641002",
+  "display": "Hemorrhagic smallpox",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "410507001",
+  "display": "Neonatal herpes simplex virus conjunctivitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "414488002",
+  "display": "Infantile botulism",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "414819007",
+  "display": "Neonatal abstinence syndrome",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "416543004",
+  "display": "Neuroinvasive Powassan encephalitis virus infection",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "416925005",
+  "display": "Eastern equine encephalitis virus infection",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "418182000",
+  "display": "Disease caused by California serogroup virus",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "418815008",
+  "display": "Allergy to red meat",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "420008001",
+  "display": "Travel",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "421060004",
+  "display": "Structure of vertebral column",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "422498005",
+  "display": "Neuroinvasive Western equine encephalitis virus infection",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "42839003",
+  "display": "Repair of myelomeningocele",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "429586004",
+  "display": "Chlamydophila psittaci infection",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "429681000124103",
+  "display": null,
+  "status": "err 404"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "445780006",
+  "display": "Infection caused by carbapenem resistant Acinetobacter",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "446151000124109",
+  "display": "Identifies as male gender",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "446190004",
+  "display": "Ultrasonography of head by open fontanel acoustic window",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "46045005",
+  "display": "Infection by Baylisascaris columnaris",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "46680005",
+  "display": "Vital signs",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "52947006",
+  "display": "Japanese encephalitis virus disease",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "551621000124109",
+  "display": null,
+  "status": "err 404"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "60001007",
+  "display": "Not pregnant",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "6452009",
+  "display": "Colorado tick fever",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "651000146102",
+  "display": "Middle East respiratory syndrome",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "67531005",
+  "display": "Spina bifida",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "70014009",
+  "display": "Food poisoning caused by Clostridium perfringens",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "712830002",
+  "display": "Infection due to carbapenem resistant Enterobacteriaceae",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "72951007",
+  "display": "Gastroschisis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "736152001",
+  "display": "CLABSI - central line associated bloodstream infection",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "74225001",
+  "display": "Tick paralysis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "74351001",
+  "display": "Reye's syndrome",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "77386006",
+  "display": "Pregnancy",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "78421000",
+  "display": "Intramuscular route",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "80146002",
+  "display": "Appendectomy",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "840539006",
+  "display": "COVID-19",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "86500004",
+  "display": "Campylobacteriosis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "865929003",
+  "display": "Infection caused by Candida auris",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "897031002",
+  "display": "Acute flaccid myelitis",
+  "status": "ok"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "N/A",
+  "display": null,
+  "status": "err 404"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "undefined",
+  "display": null,
+  "status": "err 404"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/condition-category",
+  "code": "problem-list-item",
+  "display": "Problem List Item",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+  "code": "active",
+  "display": "Active",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/data-absent-reason",
+  "code": "unknown",
+  "display": "Unknown",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+  "code": "laboratory",
+  "display": "Laboratory",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+  "code": "social-history",
+  "display": "Social History",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+  "code": "vital-signs",
+  "display": "Vital Signs",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/provenance-participant-type",
+  "code": "author",
+  "display": "Author",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+  "code": "AMB",
+  "display": "ambulatory",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/v3-MaritalStatus",
+  "code": "S",
+  "display": "Never Married",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+  "code": "A",
+  "display": "Abnormal",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+  "code": "H",
+  "display": "High",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+  "code": "N",
+  "display": "Normal",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+  "code": "ATND",
+  "display": "attender",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+  "code": "LOC",
+  "display": "location",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/v3-RoleClass",
+  "code": "GUARD",
+  "display": "guardian",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+  "code": "COMM",
+  "display": "Community Location",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+  "code": "HOSP",
+  "display": "Hospital",
+  "status": "ok"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+  "code": "OF",
+  "display": "Outpatient facility",
+  "status": "ok"
+ },
+ {
+  "system": "http://www.ama-assn.org/go/cpt",
+  "code": "99213",
+  "display": "Office or other outpatient visit for the evaluation and management of an established patient, which requires a medically appropriate history and/or examination and low level of medical decision making. When using time for code selection, 20-29 minutes of total time is spent on the date of the encounter.",
+  "status": "ok"
+ },
+ {
+  "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+  "code": "308971",
+  "display": "carbamazepine 20 MG/ML Oral Suspension [Tegretol]",
+  "status": "ok"
+ },
+ {
+  "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+  "code": "312424",
+  "display": "0.5 ML vitamin K1 2 MG/ML Injection",
+  "status": "ok"
+ },
+ {
+  "system": "urn:iso:std:iso:3166",
+  "code": "US",
+  "display": "United States of America",
+  "status": "ok"
+ }
 ]

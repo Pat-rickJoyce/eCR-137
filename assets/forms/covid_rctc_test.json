@@ -2,7 +2,7 @@
     "patientGivenName": "Emma Rose",
     "patientFamilyName": "Johnson",
     "patientBirthDate": "1985-04-12T00:00",
-    "patientGender": "female",
+    "patientGender": "F",
     "resultLabCLIA": "26D1234567",
     "resultLabName": "Springfield Public Health Laboratory",
     "resultPerformerNPI": "1568493720",
