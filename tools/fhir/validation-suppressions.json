@@ -11,16 +11,6 @@
     "reason": "Validator notice that FHIR core vital-sign profiles apply to the LOINC codes present; the Observations are validated against those profiles."
   },
   {
-    "messageId": "All_observations_should_have_a_performer",
-    "severity": "warning",
-    "reason": "Best practice only. Observation.performer is populated from the CDA entry author or performer; the eICR carries neither for social history, pregnancy, travel, occupational and emergency outbreak observations."
-  },
-  {
-    "messageId": "All_observations_should_have_an_effectiveDateTime_or_an_effectivePeriod",
-    "severity": "warning",
-    "reason": "Best practice only. The CDA entry carries no effectiveTime for these observations."
-  },
-  {
     "messageId": "UNKNOWN_CODESYSTEM",
     "severity": "warning",
     "text": "urn:oid:2\\.16\\.840\\.1\\.114222\\.4\\.5\\.(274|232)",

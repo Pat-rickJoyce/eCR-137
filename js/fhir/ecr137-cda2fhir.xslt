@@ -108,6 +108,17 @@
     <cda:code code="17636008" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" displayName="Specimen collection"/>
   </xsl:template>
 
+  <!-- Observation in an entryRelationship of an observation, without its own effectiveTime (Estimated Date of
+       Delivery, Gestational Age): the effectiveTime of the observation it belongs to. -->
+  <xsl:template match="cda:observation/cda:entryRelationship/cda:observation[not(cda:effectiveTime)][../../cda:effectiveTime]" mode="ecr137-pre">
+    <xsl:variable name="vHead" select="cda:realmCode | cda:typeId | cda:templateId | cda:id | cda:code | cda:derivationExpr | cda:text | cda:statusCode"/>
+    <xsl:copy>
+      <xsl:apply-templates select="@* | $vHead" mode="ecr137-pre"/>
+      <xsl:apply-templates select="../../cda:effectiveTime" mode="ecr137-pre"/>
+      <xsl:apply-templates select="* except $vHead" mode="ecr137-pre"/>
+    </xsl:copy>
+  </xsl:template>
+
   <!-- ===== ecr137-post: FHIR rules ===== -->
   <xsl:mode name="ecr137-post" on-no-match="shallow-copy"/>
 
@@ -283,20 +294,46 @@
   <xsl:template match="fhir:Observation[fhir:meta/fhir:profile/@value = 'http://hl7.org/fhir/us/ecr/StructureDefinition/us-ph-travel-history']/fhir:effectivePeriod[not(*/@value[normalize-space(.) != ''])]" mode="ecr137-post">
     <effectiveDateTime><extension url="http://hl7.org/fhir/StructureDefinition/data-absent-reason"><valueCode value="unknown"/></extension></effectiveDateTime>
   </xsl:template>
-  <!-- ===== ecr137-performer: Observation.performer from the CDA entry author (carried by upstream as Provenance) ===== -->
+  <!-- ===== ecr137-performer: Observation.performer =====
+       In order: the CDA entry author (carried by upstream as Provenance); for a panel (Result Organizer), the
+       performers of its members; otherwise the document author, which CDA context conduction makes the author
+       of every entry that does not name its own (an authoring device: the organization it represents, Device.owner).
+       Only references to resource types Observation.performer allows. -->
   <xsl:mode name="ecr137-performer" on-no-match="shallow-copy"/>
   <xsl:key name="kProvenanceByTarget" match="fhir:Provenance" use="fhir:target/fhir:reference/@value"/>
+  <xsl:key name="kEntryByUrl" match="fhir:Bundle/fhir:entry" use="fhir:fullUrl/@value"/>
+  <xsl:variable name="vPerformerTypes" select="('Practitioner', 'PractitionerRole', 'Organization', 'CareTeam', 'Patient', 'RelatedPerson')"/>
+
+  <xsl:function name="e137:performer-refs" as="xs:string*">
+    <xsl:param name="refs" as="xs:string*"/>
+    <xsl:param name="root" as="node()"/>
+    <xsl:sequence select="distinct-values($refs[key('kEntryByUrl', ., $root)/fhir:resource/*/local-name() = $vPerformerTypes])"/>
+  </xsl:function>
+
+  <xsl:function name="e137:obs-performers" as="xs:string*">
+    <xsl:param name="obs" as="element()"/>
+    <xsl:param name="depth" as="xs:integer"/>
+    <xsl:variable name="vRoot" select="root($obs)"/>
+    <xsl:variable name="vOwn" select="e137:performer-refs($obs/fhir:performer/fhir:reference/@value, $vRoot)"/>
+    <xsl:variable name="vProv" select="e137:performer-refs(key('kProvenanceByTarget', $obs/../../fhir:fullUrl/@value, $vRoot)/fhir:agent[fhir:type/fhir:coding/fhir:code/@value = 'author']/fhir:who/fhir:reference/@value, $vRoot)"/>
+    <xsl:variable name="vMembers" select="if ($depth lt 5) then key('kEntryByUrl', $obs/fhir:hasMember/fhir:reference/@value, $vRoot)/fhir:resource/fhir:Observation else ()"/>
+    <xsl:sequence select="if (exists($vOwn)) then $vOwn else if (exists($vProv)) then $vProv
+                          else distinct-values(for $m in $vMembers return e137:obs-performers($m, $depth + 1))"/>
+  </xsl:function>
 
   <xsl:template match="fhir:entry/fhir:resource/fhir:Observation[not(fhir:performer)]" mode="ecr137-performer">
-    <xsl:variable name="vAuthors" select="key('kProvenanceByTarget', ../../fhir:fullUrl/@value)/fhir:agent[fhir:type/fhir:coding/fhir:code/@value = 'author']/fhir:who[fhir:reference]"/>
+    <xsl:variable name="vFound" select="e137:obs-performers(., 0)"/>
+    <xsl:variable name="vDocAuthors" select="/fhir:Bundle/fhir:entry/fhir:resource/fhir:Composition/fhir:author/fhir:reference/@value"/>
+    <xsl:variable name="vRefs" select="if (exists($vFound)) then $vFound
+      else e137:performer-refs(($vDocAuthors, key('kEntryByUrl', $vDocAuthors)/fhir:resource/fhir:Device/fhir:owner/fhir:reference/@value), root(.))"/>
     <xsl:choose>
-      <xsl:when test="$vAuthors">
+      <xsl:when test="exists($vRefs)">
         <xsl:variable name="vBefore" select="fhir:id | fhir:meta | fhir:implicitRules | fhir:language | fhir:text | fhir:contained | fhir:extension | fhir:modifierExtension | fhir:identifier | fhir:basedOn | fhir:partOf | fhir:status | fhir:category | fhir:code | fhir:subject | fhir:focus | fhir:encounter | fhir:*[starts-with(local-name(), 'effective')] | fhir:issued"/>
         <xsl:copy>
           <xsl:apply-templates select="@* | $vBefore" mode="ecr137-performer"/>
-          <xsl:for-each-group select="$vAuthors" group-by="fhir:reference/@value">
-            <performer><reference value="{current-grouping-key()}"/></performer>
-          </xsl:for-each-group>
+          <xsl:for-each select="$vRefs">
+            <performer><reference value="{.}"/></performer>
+          </xsl:for-each>
           <xsl:apply-templates select="* except $vBefore" mode="ecr137-performer"/>
         </xsl:copy>
       </xsl:when>

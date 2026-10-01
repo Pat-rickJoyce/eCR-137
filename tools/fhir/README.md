@@ -49,6 +49,14 @@ python3 tools/fhir/build-json-typemap.py ~/.fhir/packages/hl7.fhir.r4.core#4.0.1
 
 `node tools/fhir/xml-to-json.mjs <xml dir> <json dir>` (needs `@xmldom/xmldom`) runs the same serializer over saved XML.
 
+## RR condition codes
+
+`js/fhir/rr-condition-codes.js` holds the SNOMED CT reportable condition code for each condition pack, from the RCTC release in `assets/data`. The RR builder uses it as the Relevant Reportable Condition Observation value. Regenerate after a new RCTC release or new condition packs:
+
+```bash
+python3 tools/fhir/build-rr-condition-codes.py
+```
+
 ## CDA-only tools
 
 `generate-cda.mjs` (Generate eICR / Generate RR downloads) and `cda-to-fhir.py` (Saxon-HE conversion of CDA files) run the eICR conversion outside the browser for debugging.

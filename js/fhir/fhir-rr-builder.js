@@ -95,8 +95,11 @@
       `<active value="true"/><type>${coding(PHIN_232, typeCode, typeDisplay)}</type>${v('name', name)}${dataAbsentTelecom}${addr}</Organization>` };
   }
 
-  // SNOMED CT code for the condition: the diagnosis or problem code that matched the condition's rules.
+  // SNOMED CT code for the condition: the RCTC reportable condition code of the condition pack
+  // (js/fhir/rr-condition-codes.js); else the diagnosis or problem code that matched the condition's rules.
   function conditionCoding(cond) {
+    const rctc = (window.ECR137_RR_CONDITION_CODES || {})[cond.conditionId];
+    if (rctc) return coding('http://snomed.info/sct', rctc.code, rctc.display);
     const ev = ((cond.v2 && cond.v2.rules) || []).flatMap(r => r.matchedEvidence || [])
       .find(m => (m.type === 'diagnosis' || m.type === 'problem') && /^\d{6,18}$/.test(String(m.code || '')));
     return ev ? coding('http://snomed.info/sct', ev.code, null) : '';
@@ -109,6 +112,7 @@
     const out = [...src.entries];
     const add = (xml) => { const u = urn(); out.push({ fullUrl: u, xml }); return u; };
     const subj = src.patientUrl ? `<subject>${ref(src.patientUrl)}</subject>` : '';
+    const eff = `<effectiveDateTime value="${now}"/>`;
 
     // Author and custodian, as in the CDA RR (AIMS / APHL)
     const deviceUrl = add(`<Device>${narrative('<p>AIMS</p>')}<deviceName><name value="AIMS"/><type value="manufacturer-name"/></deviceName></Device>`);
@@ -116,18 +120,20 @@
       `<identifier><system value="urn:ietf:rfc:3986"/><value value="urn:oid:2.16.840.1.114222.4.1.217446"/></identifier>` +
       `<active value="true"/><name value="APHL | Association of Public Health Laboratories"/>${dataAbsentTelecom}` +
       `<address><extension url="${DAR}"><valueCode value="unknown"/></extension></address></Organization>`);
+    // APHL operates AIMS and the decision support that produced the processing status and determinations
+    const aphl = `<performer>${ref(custodianUrl, 'APHL | Association of Public Health Laboratories')}</performer>`;
 
     // eICR processing status (mirrors the CDA RR)
     const reasonUrl = add(`<Observation><meta><profile value="${ECR}rr-eicr-processing-status-reason-observation"/></meta>` +
       narrative('<p>The eICR was processed with the warning of: outdated eRSD (RCTC) version.</p>') +
-      `<status value="final"/><code>${coding(PHIN_232, 'RR6', 'eICR Processing Status Reason')}</code>${subj}` +
+      `<status value="final"/><code>${coding(PHIN_232, 'RR6', 'eICR Processing Status Reason')}</code>${subj}${eff}${aphl}` +
       `<valueCodeableConcept>${coding(PHIN_274, 'RRVS29', 'eICR was processed with the warning of: outdated RCTC version')}</valueCodeableConcept>` +
       `<component><code>${coding(PHIN_274, 'RRVS31', 'Outdated RCTC version detail')}</code><valueString value="2.0.1"/></component>` +
       `<component><code>${coding(PHIN_274, 'RRVS33', 'Expected RCTC version detail')}</code><valueString value="The expected eRSD (RCTC) version should be one of the following: [&quot;2025-02-28&quot;,&quot;2.0.0&quot;,&quot;3.0.1&quot;]"/></component>` +
       `</Observation>`);
     const statusUrl = add(`<Observation><meta><profile value="${ECR}rr-eicr-processing-status-observation"/></meta>` +
       narrative('<p>eICR was processed - with a warning</p>') +
-      `<status value="final"/><code>${coding(PHIN_274, 'RRVS20', 'eICR was processed - with a warning')}</code>${subj}` +
+      `<status value="final"/><code>${coding(PHIN_274, 'RRVS20', 'eICR was processed - with a warning')}</code>${subj}${eff}${aphl}` +
       `<hasMember>${ref(reasonUrl)}</hasMember></Observation>`);
 
     // Conditions
@@ -158,7 +164,7 @@
           `<extension url="${ECR}us-ph-determination-of-reportability-extension"><valueCodeableConcept>${coding(PHIN_274, code, display)}</valueCodeableConcept></extension>` +
           `<extension url="${ECR}us-ph-determination-of-reportability-reason-extension"><valueString value="${esc(reason)}"/></extension>` +
           (ruleText ? `<extension url="${ECR}us-ph-determination-of-reportability-rule-extension"><valueString value="${esc(ruleText)}"/></extension>` : '') +
-          `<status value="final"/><code>${coding(PHIN_274, 'RRVS5', 'Patient home address')}</code>${subj}` +
+          `<status value="final"/><code>${coding(PHIN_274, 'RRVS5', 'Patient home address')}</code>${subj}${eff}` +
           `<performer>${ref(rules.fullUrl, jurisdiction)}</performer><performer>${ref(routing.fullUrl, jurisdiction)}</performer><performer>${ref(responsible.fullUrl, jurisdiction)}</performer>` +
           `<component><code>${coding(PHIN_232, 'RR4', 'Timeframe to report (urgency)')}</code>` +
           `<valueQuantity><value value="${REPORTING_TIMEFRAME_HOURS}"/><unit value="h"/><system value="http://unitsofmeasure.org"/><code value="h"/></valueQuantity></component>` +
@@ -166,7 +172,7 @@
         conditionUrls.push({ url: add(`<Observation><meta><profile value="${ECR}rr-relevant-reportable-condition-observation"/></meta>` +
           narrative(`<p>${esc(c.conditionName)}: ${esc(display)}</p>`) +
           `<status value="final"/><code>${coding('http://snomed.info/sct', '64572001', 'Disease (disorder)')}${coding('http://loinc.org', '75323-6', 'Condition')}</code>` +
-          subj +
+          subj + eff + aphl +
           `<valueCodeableConcept>${conditionCoding(c)}<text value="${esc(c.conditionName)}"/></valueCodeableConcept>` +
           `<hasMember>${ref(infoUrl)}</hasMember></Observation>`), name: c.conditionName, display });
       }
@@ -176,7 +182,7 @@
         conds.map(x => `'${x.c.conditionName}' is ${x.code === 'RRVS1' ? 'reportable' : 'possibly reportable'} to '${jurisdiction}'.`).join(' ')
       : '';
     const summaryUrl = conds.length ? add(`<Observation><meta><profile value="${ECR}rr-summary"/></meta>${narrative(`<p>${esc(summaryText)}</p>`)}` +
-      `<status value="final"/><code>${coding('http://snomed.info/sct', '304561000', 'Informing health care professional')}</code>${subj}` +
+      `<status value="final"/><code>${coding('http://snomed.info/sct', '304561000', 'Informing health care professional')}</code>${subj}${eff}${aphl}` +
       `<valueString value="${esc(summaryText)}"/></Observation>`) : null;
 
     // Composition
