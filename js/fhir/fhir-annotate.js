@@ -187,7 +187,7 @@
     const p = m && kid(m, 'profile');
     return p ? p.getAttribute('value').split('/').pop() : '';
   }
-  function entryNote(r, describe, url, kind) {
+  function entryNote(r, describe, url, kind, seen) {
     const prof = profileOf(r);
     const code = (() => { const c = kid(r, 'code'); const cd = c && kid(c, 'coding'); return cd ? val(cd, 'code') : ''; })();
     const what = describe(url);
@@ -199,7 +199,46 @@
       else if (!prof.startsWith('rr-')) src = `the eICR Bundle${src ? ` (there: ${src})` : ''}`;
     }
     const head = clean(`${r.localName}${prof ? ` (${prof})` : ''}${what ? `: ${what}` : ''}`);
-    return src ? ` ${head}\n       From: ${clean(src)} ` : head;
+    const lines = [head, ...fhirLines(r, prof, seen)];
+    if (src) lines.push(`${kind === 'RR' ? 'Source' : 'CDA'}: ${clean(src)}`);
+    return ' ' + lines.join('\n       ') + ' ';
+  }
+
+  // What the implementation guide says about the profile (js/fhir/ig-notes.js); the full notes on the
+  // first entry with that profile, a pointer to them on the others
+  const igNotes = () => root.ECR137_IG_NOTES || { profiles: {}, sections: {} };
+  function fhirLines(r, prof, seen) {
+    const n = prof && igNotes().profiles[prof];
+    if (!n) return prof ? [] : [`FHIR: base FHIR R4 ${r.localName}, no profile: https://hl7.org/fhir/R4/${r.localName.toLowerCase()}.html`];
+    if (seen.has(prof)) return [`FHIR: ${n.title} (${n.guide}); conformance notes on the first ${prof} entry`];
+    seen.add(prof);
+    const out = [`FHIR: ${n.title} (${n.guide}). ${n.summary}`];
+    const keep = l => (l.startsWith('  ') ? '  ' : '') + clean(l);
+    const res = [keep(out[0])];
+    if (n.required.length) res.push(...wrapList('  Required: ', n.required));
+    if (n.mustSupport.length) res.push(...wrapList('  Must Support: ', n.mustSupport));
+    res.push(`  ${n.url}`);
+    return res;
+  }
+  // "  Required: a, b, c" wrapped at about 110 characters, continuation lines aligned under the first item
+  function wrapList(label, items) {
+    const lines = []; let cur = label; const ind = ' '.repeat(label.length);
+    items.forEach((it, i) => {
+      const piece = it + (i < items.length - 1 ? ',' : '');
+      if (cur.length + piece.length + 1 > 110 && cur.trim() !== label.trim()) { lines.push(cur.trimEnd()); cur = ind; }
+      cur += (cur.endsWith(' ') ? '' : ' ') + piece;
+    });
+    lines.push(cur);
+    return lines;
+  }
+  function sectionLines(kind, code) {
+    const comp = kind === 'RR' ? 'rr-composition' : 'eicr-composition';
+    const sec = (igNotes().sections[comp] || {})[code];
+    if (!sec) return [`FHIR: not one of the ${comp} named section slices (section slicing is open)`];
+    const out = [`FHIR: ${comp} section slice ${sec.slice} (${sec.card}). ${sec.summary}`];
+    const res = [clean(out[0])];
+    for (const e of sec.entries) res.push('  Entries: ' + clean([e.slice, e.card, e.targets.join(' or ')].filter(Boolean).join(' ')));
+    return res;
   }
 
   // ---- serializer: two-space indentation, narrative XHTML as generated ----
@@ -289,8 +328,10 @@
         const list = [];
         for (const en of kids(s, 'entry')) place(val(en, 'reference'), list);
         const n = kids(s, 'entry').length;
-        s.parentNode.insertBefore(doc.createComment(clean(`Section: ${title} (LOINC ${code}), ${n ? `${n} ${n === 1 ? 'entry' : 'entries'}` : 'narrative only'}${sectionMap[code] ? `. ${kind === 'RR' ? '' : 'CDA: '}${sectionMap[code]}` : ''}`)), s);
-        if (list.length) groups.push({ title: [`Section: ${title} (LOINC ${code})`, kind === 'RR' ? sectionMap[code] || '' : `CDA: ${sectionMap[code] || 'section with LOINC ' + code}`].filter(Boolean), urls: list });
+        const sl = sectionLines(kind, code);
+        const cdaLine = kind === 'RR' ? (sectionMap[code] || '') : `CDA: ${sectionMap[code] || 'section with LOINC ' + code}`;
+        s.parentNode.insertBefore(doc.createComment(' ' + [clean(`Section: ${title} (LOINC ${code}), ${n ? `${n} ${n === 1 ? 'entry' : 'entries'}` : 'narrative only'}`), ...sl, cdaLine].filter(Boolean).join('\n             ') + ' '), s);
+        if (list.length) groups.push({ title: [`Section: ${title} (LOINC ${code})`, ...sl, cdaLine].filter(Boolean), urls: list });
       }
     }
     // anything else clinical, then supporting participants, then provenance
@@ -319,11 +360,12 @@
         'Bundle.entry order: Composition first, then the resources in the order the sections use them;',
         'every reference points to an entry fullUrl in this Bundle'];
     bundle.insertBefore(banner(doc, head, 8), bundle.firstChild);
+    const seen = new Set();
     const append = (urls, title) => {
       bundle.appendChild(banner(doc, title, 8));
       for (const u of urls) {
         const e = entryByUrl.get(u);
-        bundle.appendChild(doc.createComment(entryNote(byUrl.get(u), describe, u, kind)));
+        bundle.appendChild(doc.createComment(entryNote(byUrl.get(u), describe, u, kind, seen)));
         bundle.appendChild(e);
       }
     };

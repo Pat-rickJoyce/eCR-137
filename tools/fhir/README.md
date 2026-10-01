@@ -61,6 +61,12 @@ python3 tools/fhir/build-rr-condition-codes.py
 
 `js/fhir/fhir-annotate.js` runs on both Bundles before download. It orders the entries the way the Composition sections use them (header resources, then each section's entries, then participants and Provenance), adds banner comments for the document and each section, one comment per entry naming the resource, its profile and the CDA construct it comes from, and a `display` on every reference whose target has a name or a coded meaning. Comments and entry order carry no meaning in FHIR; the JSON files have the same content without the comments.
 
+Each entry comment also carries what the guide says about the profile (title, guide, first sentence of the description, required and Must Support elements, page link), and each section banner the eicr-composition or rr-composition section slice with its cardinality and entry slices. `js/fhir/ig-notes.js` holds that text, generated from the guide packages:
+
+```bash
+python3 tools/fhir/build-ig-notes.py ~/.fhir/packages/hl7.fhir.us.ecr#2.1.2/package ~/.fhir/packages/hl7.fhir.us.core#3.1.1/package ~/.fhir/packages/hl7.fhir.us.core#4.0.0/package
+```
+
 ## CDA-only tools
 
 `generate-cda.mjs` (Generate eICR / Generate RR downloads) and `cda-to-fhir.py` (Saxon-HE conversion of CDA files) run the eICR conversion outside the browser for debugging.
