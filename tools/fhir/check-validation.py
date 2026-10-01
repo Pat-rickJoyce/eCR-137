@@ -1,18 +1,20 @@
 """Gate for FHIR validator output (zero errors, warnings, and information messages).
 
-Usage: python3 tools/fhir/check-validation.py build/validation.xml [tools/fhir/validation-suppressions.json]
+Usage: python3 tools/fhir/check-validation.py build/validation.xml [tools/fhir/validation-suppressions.json] [--unused]
 
 Every issue in the validator's OperationOutcome output fails the gate unless it matches an entry in the
 suppression file. Each suppression names the validator message id, optional regular expressions for the
 message text and FHIRPath expression, and the reason it is accepted. Suppressions that match nothing are
-reported so the file only shrinks. Exit code 0 when clean, 1 otherwise.
+listed with --unused (run it on the full corpus) so the file only shrinks. Exit code 0 when clean, 1 otherwise.
 """
 import collections, json, re, sys
 from lxml import etree
 NS = '{http://hl7.org/fhir}'
 MSGID = 'http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id'
-src = sys.argv[1]
-sup_path = sys.argv[2] if len(sys.argv) > 2 else 'tools/fhir/validation-suppressions.json'
+args = [a for a in sys.argv[1:] if a != '--unused']
+show_unused = '--unused' in sys.argv[1:]
+src = args[0]
+sup_path = args[1] if len(args) > 1 else 'tools/fhir/validation-suppressions.json'
 sups = json.load(open(sup_path, encoding='utf-8'))
 for s in sups:
     s['_text'] = re.compile(s['text']) if s.get('text') else None
@@ -34,9 +36,10 @@ for _, oo in etree.iterparse(src, tag=NS + 'OperationOutcome'):
             key = re.sub(r'urn:uuid:[0-9a-f-]+', '<uuid>', text)
             open_issues[(sev, mid, key[:200], re.sub(r'\[\d+\]', '[n]', expr)[:90])] += 1
     oo.clear()
-print(f'{files} resources validated; issues {dict(totals)}; suppressed {sum(s["_hits"] for s in sups)}')
+print(f'{files} files validated; {sum(open_issues.values())} open issues')
+print(f'  validator issues {dict(totals)}; suppressed {sum(s["_hits"] for s in sups)}')
 for (sev, mid, text, expr), n in sorted(open_issues.items(), key=lambda x: (-x[1], x[0])):
     print(f'  OPEN {sev} x{n} [{mid}] {expr} :: {text}')
-for s in sups:
+for s in sups if show_unused else []:
     if not s['_hits']: print(f'  UNUSED suppression {s["messageId"]}: {s.get("reason", "")}')
 sys.exit(1 if open_issues else 0)

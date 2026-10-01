@@ -13,7 +13,7 @@ OUT=build/fhir node tools/fhir/generate-fhir.mjs __default__ assets/forms/*.json
 # eCR FHIR IG 2.1.2 validation with terminology, SNOMED CT US Edition
 java -jar validator_cli.jar build/fhir -version 4.0.1 -ig hl7.fhir.us.ecr#2.1.2 -sct us -txCache build/txcache -output build/validation.xml
 # gate: exits 1 on any error, warning, or information message not in tools/fhir/validation-suppressions.json
-python3 tools/fhir/check-validation.py build/validation.xml
+python3 tools/fhir/check-validation.py build/validation.xml   # add --unused on the full corpus to list suppressions that matched nothing
 ```
 
 ## Display table
