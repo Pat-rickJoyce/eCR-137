@@ -1,5 +1,5 @@
 // Drives index.html in headless Chromium the way a user does: Load Form Data, then Generate FHIR,
-// and writes <name>-eICR.xml and <name>-RR.xml from each downloaded ZIP.
+// and writes <name>-eICR and <name>-RR, .xml and .json, from each downloaded ZIP.
 // Usage (repo root): npm i playwright jszip && OUT=build/fhir node tools/fhir/generate-fhir.mjs __default__ tests/fhir/forms/*.json
 // CDN scripts (JSZip, SheetJS) are served from node_modules when CDN=local is set.
 import { chromium } from 'playwright';
@@ -31,7 +31,7 @@ for (const form of process.argv.slice(2)) {
     const zip = await JSZip.loadAsync(fs.readFileSync(await dl.path()));
     for (const [fn, f] of Object.entries(zip.files)) {
       const kind = fn.startsWith('RR_') ? 'RR' : 'eICR';
-      fs.writeFileSync(path.join(out, `${name}-${kind}.xml`), await f.async('string'));
+      fs.writeFileSync(path.join(out, `${name}-${kind}${path.extname(fn)}`), await f.async('string'));
     }
     console.log(name, 'ok');
   } catch (e) { failed++; console.log(name, 'FAILED', msgs.filter(m => !/loaded successfully/.test(m)).join(' | ')); }

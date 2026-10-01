@@ -8,7 +8,7 @@ Run from the repository root. The app itself makes no terminology or network cal
 npm i playwright jszip
 # condition form corpus (tests/fhir/forms/*.json) from rules/conditions and the RCTC code lookup
 python3 tools/fhir/make-condition-forms.py .
-# Load Form Data + Generate FHIR in headless Chromium for the default case, saved templates and the corpus
+# Load Form Data + Generate FHIR in headless Chromium for the default case, saved templates and the corpus (XML and JSON)
 OUT=build/fhir node tools/fhir/generate-fhir.mjs __default__ assets/forms/*.json tests/fhir/forms/*.json
 # eCR FHIR IG 2.1.2 validation with terminology, SNOMED CT US Edition
 java -jar validator_cli.jar build/fhir -version 4.0.1 -ig hl7.fhir.us.ecr#2.1.2 -sct us -txCache build/txcache -output build/validation.xml
@@ -37,7 +37,17 @@ npx xslt3 -xsl:js/fhir/ecr137-cda2fhir.xslt -export:build/ecr137-cda2fhir.sef.js
 node tools/fhir/build-browser-bundle.mjs
 ```
 
-This regenerates `js/fhir/ecr137-fhir-bundle.js`, which `index.html` loads with SaxonJS (`vendor/saxon-js/SaxonJS2.rt.js`, Saxonica license in that folder). Generate FHIR in the action dock converts the form's eICR with `js/fhir/ecr137-cda2fhir.xslt`, builds the RR with `js/fhir/fhir-rr-builder.js` from that eICR, the form and the reportability engine result, and downloads both Bundles as a ZIP.
+This regenerates `js/fhir/ecr137-fhir-bundle.js`, which `index.html` loads with SaxonJS (`vendor/saxon-js/SaxonJS2.rt.js`, Saxonica license in that folder). Generate FHIR in the action dock converts the form's eICR with `js/fhir/ecr137-cda2fhir.xslt`, builds the RR with `js/fhir/fhir-rr-builder.js` from that eICR, the form and the reportability engine result, and downloads both Bundles as a ZIP in XML and JSON.
+
+## JSON serializer
+
+`js/fhir/fhir-json.js` converts each FHIR XML Bundle to FHIR JSON in the browser, driven by `js/fhir/fhir-r4-json-types.js` (element names, types and cardinality for every R4 resource, data type and backbone element). Regenerate the type map from the `hl7.fhir.r4.core#4.0.1` package:
+
+```bash
+python3 tools/fhir/build-json-typemap.py ~/.fhir/packages/hl7.fhir.r4.core#4.0.1/package
+```
+
+`node tools/fhir/xml-to-json.mjs <xml dir> <json dir>` (needs `@xmldom/xmldom`) runs the same serializer over saved XML.
 
 ## CDA-only tools
 

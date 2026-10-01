@@ -3,9 +3,10 @@
  * Generates the CDA exactly as Generate eICR / Generate RR do, converts it with
  * js/fhir/ecr137-cda2fhir.xslt (SaxonJS, compiled bundle in ecr137-fhir-bundle.js),
  * builds the RR Bundle with js/fhir/fhir-rr-builder.js from that eICR, the form and the reportability
- * engine result, and downloads eICR and RR FHIR Bundles (FHIR R4, eCR IG 2.1.2) as a ZIP.
+ * engine result, and downloads eICR and RR FHIR Bundles (FHIR R4, eCR IG 2.1.2) as a ZIP, each in
+ * XML and in JSON (js/fhir/fhir-json.js).
  * Dependencies: vendor/saxon-js/SaxonJS2.rt.js, js/fhir/ecr137-fhir-bundle.js, JSZip,
- * js/fhir/fhir-rr-builder.js, validateFormData, generateCDA, getFormData, generateDynamicFilename.
+ * js/fhir/fhir-rr-builder.js, js/fhir/fhir-r4-json-types.js, js/fhir/fhir-json.js, validateFormData, generateCDA, getFormData, generateDynamicFilename.
  */
 (function () {
   let poolPromise = null;
@@ -54,6 +55,8 @@
       const zip = new JSZip();
       zip.file(generateDynamicFilename('eICR_FHIR', 'xml'), eicrFhir);
       zip.file(generateDynamicFilename('RR_FHIR', 'xml'), rrFhir);
+      zip.file(generateDynamicFilename('eICR_FHIR', 'json'), window.ecr137FhirXmlToJson(eicrFhir));
+      zip.file(generateDynamicFilename('RR_FHIR', 'json'), window.ecr137FhirXmlToJson(rrFhir));
       const blob = await zip.generateAsync({ type: 'blob' });
       const name = generateDynamicFilename('FHIR', 'zip');
       const a = document.createElement('a');
