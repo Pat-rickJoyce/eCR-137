@@ -386,7 +386,7 @@ async function loadMedicationsFromRCTC() {
 // Fallback hardcoded medications
 function getHardcodedMedications() {
     return [
-        { code: "308971", name: "Hep B pediatric vaccine (Engerix-B)", description: "RxNorm" },
+        { code: "312424", name: "0.5 ML vitamin K1 2 MG/ML Injection", description: "RxNorm" },
         { code: "1659929", name: "Azithromycin 250 MG Oral Tablet", description: "RxNorm" },
         { code: "209459", name: "Amoxicillin 500 MG Oral Capsule", description: "RxNorm" }
     ];

@@ -2,7 +2,7 @@
     "patientGivenName": "Alex",
     "patientFamilyName": "Reed",
     "patientBirthDate": "1978-11-05T00:00",
-    "patientGender": "other",
+    "patientGender": "UN",
     "resultLabCLIA": "14D0987654",
     "resultLabName": "Emergency Diagnostics Unit",
     "resultPerformerNPI": "1675849302",

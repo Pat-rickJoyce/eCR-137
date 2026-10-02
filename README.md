@@ -1,6 +1,6 @@
 # eCeleRate (eCR-137)
 
-> A standalone, browser-based tool for authoring and generating HL7 CDA R2 electronic Case Reporting (eCR) documents for testing purposes.
+> A standalone, browser-based tool for authoring and generating HL7 CDA R2 and HL7 FHIR R4 electronic Case Reporting (eCR) documents for testing purposes.
 
 ---
 
@@ -14,6 +14,7 @@
 6. [RCTC Code Search](#6-rctc-code-search)
 7. [Document Versioning](#7-document-versioning)
 8. [Tips & Known Considerations](#8-tips--known-considerations)
+9. [FHIR Output](#9-fhir-output)
 
 ---
 
@@ -33,7 +34,9 @@ The tool is aimed at:
 |--------|--------|-------------|
 | eICR | CDA R2 XML | The electronic Initial Case Report |
 | RR | CDA R2 XML | The Reportability Response |
-| ZIP package | `.zip` | Both documents as XML + XSLT-rendered HTML, plus a metadata file |
+| FHIR eICR | FHIR R4 XML and JSON | The eICR as an eCR FHIR IG 2.1.2 document Bundle, converted from the CDA eICR |
+| FHIR RR | FHIR R4 XML and JSON | The Reportability Response as an eCR FHIR IG 2.1.2 document Bundle |
+| ZIP package | `.zip` | The documents for the selected output format, the CDA ones also rendered to HTML, plus a metadata file |
 
 ### Patient Snapshot Card
 
@@ -61,7 +64,13 @@ cd eCR-137
 # Open index.html in Chrome or Edge
 ```
 
-> **No build step or local server is required.** Simply open `index.html` in a Chromium-based browser. Firefox may have limitations with the `file://` protocol and XSLT rendering; Chrome or Edge is preferred for local use.
+> **No build step is required.** Opening `index.html` from disk works for filling in the form and generating documents. The **Load Template** dropdown and the RCTC code lists read files from `assets/`, which browsers block for pages opened from disk, so serve the folder locally for those:
+>
+> ```bash
+> python -m http.server 8137 --bind 127.0.0.1
+> ```
+>
+> then open [http://localhost:8137/](http://localhost:8137/). Chrome or Edge is preferred.
 
 ---
 
@@ -158,6 +167,18 @@ Click **Save Form Data** in the floating action dock. This serializes the entire
 
 All generation actions are accessible from the **floating action dock** at the bottom of the screen. Required field validation runs before any document is generated; if validation fails, the form will highlight the missing fields.
 
+### Output format
+
+The **Format** selector in the dock sets what **Generate eICR**, **Generate RR** and **Package ZIP** produce. The choice is remembered in the browser.
+
+| Format | Generate eICR | Generate RR | Package ZIP |
+|---|---|---|---|
+| CDA | CDA eICR | CDA RR | CDA eICR and RR, their HTML renderings, `metadata.xml` |
+| FHIR | FHIR eICR (XML) | FHIR RR (XML) | FHIR eICR and RR in XML and JSON, `metadata.xml` |
+| CDA + FHIR | CDA eICR and FHIR eICR | CDA RR and FHIR RR | everything above |
+
+In CDA + FHIR, the FHIR eICR is converted from the same CDA eICR that is downloaded with it. See [Section 9](#9-fhir-output) for how the FHIR documents are made.
+
 ### Generate eICR
 
 Click **Generate eICR** to build a CDA R2-compliant electronic Initial Case Report XML document and download it to your machine. The filename is generated dynamically based on patient and document metadata.
@@ -170,9 +191,9 @@ Click **Generate RR** to build a CDA R2-compliant Reportability Response XML doc
 
 As with the eICR, Chromium-based browsers offer a save-location dialog; other browsers download directly.
 
-### Generate Both (ZIP)
+### Package ZIP
 
-Click **Generate Both (ZIP)** to package the eICR and RR together in a single archive. The ZIP contains five files:
+Click **Package ZIP** to package the eICR and RR together in a single archive. In the CDA format the ZIP contains five files:
 
 | File | Description |
 |------|-------------|
@@ -181,6 +202,13 @@ Click **Generate Both (ZIP)** to package the eICR and RR together in a single ar
 | `eICR_<patient>_<setId>_<date>.html` | eICR rendered to HTML via XSLT (CDAR2_eCR_eICR-2.xsl) |
 | `RR_<patient>_<setId>_<date>.html` | RR rendered to HTML via XSLT (CDAR2_eCR_RR.xsl) |
 | `metadata.xml` | Package metadata: facility name and ID, organization, sender, ZIP filename |
+
+The FHIR and CDA + FHIR formats add (FHIR replaces the CDA and HTML files; CDA + FHIR keeps them):
+
+| File | Description |
+|------|-------------|
+| `eICR_FHIR_<patient>_<setId>_<date>.xml` / `.json` | FHIR eICR document Bundle |
+| `RR_FHIR_<patient>_<setId>_<date>.xml` / `.json` | FHIR RR document Bundle |
 
 The base filename for all files is constructed from the patient name, Set ID, and today's date (`<PatientName>_<SetId>_<YYYY-MM-DD>`). The outer ZIP filename is generated dynamically using the same facility/patient metadata.
 
@@ -308,6 +336,43 @@ The eICR will include a `relatedDocument` element referencing the prior document
 - **Sample data:** The form ships pre-populated with data for the fictional patient **Emma Rose Johnson**. Always review all fields and replace sample data with real case data before generating documents for any actual reporting workflow.
 
 - **External dependencies** (JSZip, SheetJS/XLSX) are loaded via CDN. An active internet connection is required when using the hosted version at [https://pat-rickjoyce.github.io/eCR-137/](https://pat-rickjoyce.github.io/eCR-137/). If you are running locally from a clone, these libraries will still be fetched from CDN unless you serve them locally.
+
+---
+
+## 9. FHIR Output
+
+The FHIR documents conform to the [HL7 FHIR Implementation Guide: Electronic Case Reporting (eCR) 2.1.2](https://hl7.org/fhir/us/ecr/2.1.2/) (FHIR R4, US Core 3.1.1). Everything runs in the browser; nothing is sent anywhere.
+
+### How the FHIR eICR is made
+
+The CDA eICR the form generates is converted with the [lantanagroup/eCRTransforms](https://github.com/lantanagroup/eCRTransforms) `cda2fhir-r4` XSLT (pinned in `vendor/ecr-transforms/UPSTREAM`), run in the browser by SaxonJS. eCR-137 conversion rules in `js/fhir/ecr137-cda2fhir.xslt` handle the constructs the FHIR profiles constrain differently from CDA, for example:
+
+- merging CDA sections that share a LOINC code into one FHIR section
+- making a blood pressure panel complete
+- mapping code system OIDs to FHIR URIs
+- giving every Observation a performer and an effective time
+- using verified displays
+
+The CDA itself is not changed.
+
+### How the FHIR RR is made
+
+The FHIR RR is built from the FHIR eICR, the form and the in-app reportability determination ([Section 5](#5-understanding-the-reportability-determination-)). For each reportable or possibly reportable condition it carries a Relevant Reportable Condition coded with the condition's RCTC reportable condition code, and a Reportability Information Observation with the determination, the matched rule, the jurisdiction agencies and the reporting timeframe.
+
+### Reading the XML
+
+The XML files are laid out to be read alongside the CDA:
+
+- **Entry order:** the Composition comes first, then the patient and encounter, then the entries of each section in section order, then the participants and Provenance.
+- **Banner comments** for the document and each section give the section's CDA template and its slice in the FHIR Composition profile, with cardinality and allowed entries.
+- **A comment on every entry** names the resource, its profile and what the guide says about that profile (required and Must Support elements, link to the profile page), and the CDA template it came from.
+- **References** carry a `display` with the name or meaning of what they point to.
+
+Comments carry no meaning in FHIR. The JSON files have the same content without comments, which JSON does not allow.
+
+### Validation
+
+The FHIR output is validated with the HL7 FHIR Validator against eCR 2.1.2 with full terminology, for the default case, the templates and one test form per condition pack, in XML and JSON. Every validator message is either fixed in the conversion or listed with its reason in `tools/fhir/validation-suppressions.json`. Developer notes, regeneration steps and the validation commands are in [tools/fhir/README.md](tools/fhir/README.md).
 
 ---
 

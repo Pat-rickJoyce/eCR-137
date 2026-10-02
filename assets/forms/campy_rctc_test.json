@@ -2,7 +2,7 @@
     "patientGivenName": "Jordan",
     "patientFamilyName": "Smith",
     "patientBirthDate": "1992-07-22T00:00",
-    "patientGender": "male",
+    "patientGender": "M",
     "resultLabCLIA": "11D1029384",
     "resultLabName": "Regional Medical Center Lab",
     "resultPerformerNPI": "1092837465",

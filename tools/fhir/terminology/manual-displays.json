@@ -1,0 +1,52 @@
+[
+ {
+  "system": "http://loinc.org",
+  "code": "42346-7",
+  "display": "Medications on admission (narrative)"
+ },
+ {
+  "system": "http://loinc.org",
+  "code": "42347-5",
+  "display": "Admission diagnosis (narrative)"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1011000124101",
+  "display": "Influenza A virus subtype H5 Asian strain detected"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "10853021000119107",
+  "display": "Overdose of methylphenidate"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "1087021000119101",
+  "display": "Periurethral abscess caused by Neisseria gonorrhoeae"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "127121000119101",
+  "display": "Sepsis without acute organ dysfunction caused by Streptococcus pneumoniae"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "429681000124103",
+  "display": "Covered exstrophy of bladder"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "551621000124109",
+  "display": "Perinatal hepatitis B"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "17636008",
+  "display": "Specimen collection"
+ },
+ {
+  "system": "http://snomed.info/sct",
+  "code": "406596001",
+  "display": "Infection of central nervous system caused by Naegleria"
+ }
+]

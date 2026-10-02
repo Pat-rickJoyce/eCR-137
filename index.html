@@ -1087,7 +1087,7 @@
                         <div class="input-group">
                             <label>Order Code (LOINC) <span class="trigger-indicator">RCTC TRIGGER</span></label>
                             <div class="code-search">
-                                <input type="text" class="le-order-code" value="">
+                                <input type="text" class="le-order-code" value="94310-0">
                                 <button class="btn btn-secondary" type="button"
                                     onclick="searchRCTCForLabOrder(this)">🔍</button>
                             </div>
@@ -1115,7 +1115,7 @@
                         <div class="input-group">
                             <label>Test Code (LOINC) <span class="trigger-indicator">RCTC TRIGGER</span></label>
                             <div class="code-search">
-                                <input type="text" class="le-test-code" value="">
+                                <input type="text" class="le-test-code" value="94310-0">
                                 <button class="btn btn-secondary" type="button"
                                     onclick="searchRCTCForTest(this)">🔍</button>
                             </div>
@@ -2091,10 +2091,19 @@ Procedure: Use for therapeutic interventions that alter the patient's physical c
     <script src="js/ui-interactions.js"></script>
     <script src="js/patient-overview.js"></script>
     <script src="js/initialization.js"></script>
+    <script src="vendor/saxon-js/SaxonJS2.rt.js"></script>
+    <script src="js/fhir/ecr137-fhir-bundle.js"></script>
+    <script src="js/fhir/rr-condition-codes.js"></script>
+    <script src="js/fhir/fhir-rr-builder.js"></script>
+    <script src="js/fhir/ig-notes.js"></script>
+    <script src="js/fhir/fhir-annotate.js"></script>
+    <script src="js/fhir/fhir-r4-json-types.js"></script>
+    <script src="js/fhir/fhir-json.js"></script>
+    <script src="js/fhir/fhir-export.js"></script>
 
 
     <!-- UI Enhancements - Visual overlay module -->
-    <script type="module" src="js/ui-enhancements.js" defer></script>
+    <script src="js/ui-enhancements.js" defer></script>
 
     <!-- Reportability Engine Integration (Bundled for local file:// usage) -->
     <script src="js/reportability-engine/bundle.js"></script>

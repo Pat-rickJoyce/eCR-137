@@ -404,6 +404,9 @@ async function downloadZipOfEICRandRR() {
     const metadata = buildMetadataXml(data, `${base}.zip`);
     zip.file('metadata.xml', metadata);
 
+    // FHIR output format (js/fhir/fhir-export.js): adds the FHIR eICR and RR; no change in the CDA format
+    if (window.ecr137ExtendPackage) await window.ecr137ExtendPackage(zip, { eicrXml, rrXml, base });
+
     console.log('Generating ZIP file...');
     const blob = await zip.generateAsync({ type: 'blob' });
     const filename = generateDynamicFilename('eCR', 'zip');

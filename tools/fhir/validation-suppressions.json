@@ -1,0 +1,78 @@
+[
+  {
+    "messageId": "Details_for__matching_against_Profile_",
+    "severity": "information",
+    "text": "does not match any known slice defined in the profile",
+    "reason": "Open slicing: Bundle entries, Composition sections and entries, Organization identifiers, the birthDate birthTime extension and travel history components that are not one of the profile's named slices are allowed by the profile."
+  },
+  {
+    "messageId": "VALIDATION_VAL_PROFILE_SIGNPOST_OBS",
+    "severity": "information",
+    "reason": "Validator notice that FHIR core vital-sign profiles apply to the LOINC codes present; the Observations are validated against those profiles."
+  },
+  {
+    "messageId": "UNKNOWN_CODESYSTEM",
+    "severity": "warning",
+    "text": "urn:oid:2\\.16\\.840\\.1\\.114222\\.4\\.5\\.(274|232)",
+    "reason": "PHIN code systems used by the eCR IG (RR value set codes). The IG identifies them by OID; no FHIR CodeSystem resource is published."
+  },
+  {
+    "messageId": "",
+    "severity": "warning",
+    "text": "urn:oid:2\\.16\\.840\\.1\\.114222\\.4\\.5\\.(274|232)",
+    "reason": "Same PHIN code systems, reported without a message id."
+  },
+  {
+    "messageId": "UNKNOWN_CODESYSTEM",
+    "severity": "warning",
+    "text": "urn:oid:2\\.16\\.840\\.1\\.113883\\.12\\.112",
+    "reason": "HL7 v2 table 0112 (Discharge Disposition) identified by OID as in the CDA; the terminology server publishes no R4 CodeSystem for it."
+  },
+  {
+    "messageId": "UNKNOWN_CODESYSTEM_VERSION",
+    "severity": "warning",
+    "text": "urn:iso:std:iso:3166' version '20191201'",
+    "reason": "The IG's travel history value set pins ISO 3166 version 20191201, which the terminology server does not carry."
+  },
+  {
+    "messageId": "Terminology_TX_Confirm_5",
+    "severity": "warning",
+    "text": "Geographical location history",
+    "reason": "Extensible binding. Travel destinations are coded in ISO 3166 as in the eCR IG examples."
+  },
+  {
+    "messageId": "Terminology_TX_NoValid_2_CC",
+    "severity": "warning",
+    "text": "Patient Contact Relationship",
+    "reason": "Extensible binding. The guardian relationship is HL7 v3 RoleClass GUARD; HL7 v2 table 0131 has no guardian code."
+  },
+  {
+    "messageId": "UNKNOWN_CODESYSTEM_VERSION",
+    "severity": "warning",
+    "text": "umls/rxnorm' version '05062024'",
+    "reason": "The VSAC Medication Clinical Drug value set pins RxNorm 05062024, which the terminology server no longer carries."
+  },
+  {
+    "messageId": "INACTIVE_CONCEPT_FOUND",
+    "severity": "warning",
+    "reason": "RCTC trigger value sets list SNOMED CT concepts that are now inactive; the condition keeps the RCTC code that triggered reporting."
+  },
+  {
+    "messageId": "Terminology_TX_NoValid_2_CC",
+    "severity": "warning",
+    "text": "US Core Condition Code",
+    "reason": "Extensible binding. The only codes outside US Core Condition Code are RCTC trigger concepts that SNOMED CT has since inactivated; the RCTC code that triggered reporting is kept."
+  },
+  {
+    "messageId": "Terminology_TX_NoValid_2_CC",
+    "severity": "warning",
+    "text": "Medication Clinical Drug",
+    "reason": "The VSAC Medication Clinical Drug value set pins RxNorm 05062024, which the terminology server no longer carries, so membership cannot be confirmed; the terminology server confirms the code in the value set."
+  },
+  {
+    "messageId": "",
+    "severity": "warning",
+    "text": "urn:oid:2\\.16\\.840\\.1\\.113883\\.12\\.112",
+    "reason": "HL7 v2 table 0112 (Discharge Disposition) identified by OID as in the CDA, reported without a message id."
+  }
+]
