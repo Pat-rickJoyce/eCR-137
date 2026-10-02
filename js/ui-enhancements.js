@@ -174,9 +174,16 @@ window.addEventListener('load', () => {
   const bCDA = mk('<i class="fas fa-file-code"></i> Generate eICR');
   const bRR = mk('<i class="fas fa-file-medical"></i> Generate RR', 'secondary');
   const bZIP = mk('<i class="fas fa-file-archive"></i> Package ZIP', 'ghost');
-  const bFHIR = mk('<i class="fas fa-fire"></i> Generate FHIR', 'secondary');
-  bFHIR.setAttribute('data-ecr137-fhir', '');
-  bFHIR.addEventListener('click', () => window.generateAndDownloadFHIR && window.generateAndDownloadFHIR());
+
+  // Output format for Generate eICR, Generate RR and Package ZIP (js/fhir/fhir-export.js)
+  const formatSelect = create('select', { class: 'ui81-template-select ui81-format-select', title: 'Output format for Generate eICR, Generate RR and Package ZIP' });
+  formatSelect.innerHTML = `
+  <option value="cda">Format: CDA</option>
+  <option value="fhir">Format: FHIR</option>
+  <option value="both">Format: CDA + FHIR</option>
+`;
+  formatSelect.value = window.ecr137OutputFormat ? window.ecr137OutputFormat() : 'cda';
+  formatSelect.addEventListener('change', () => window.ecr137OutputFormat && window.ecr137OutputFormat(formatSelect.value));
 
   // Add template functionality
   templateSelect.addEventListener('change', async function () {
@@ -189,7 +196,7 @@ window.addEventListener('load', () => {
     }
   });
 
-  dock.append(templateSelect, bLoad, bSave, bCDA, bRR, bFHIR, bZIP);
+  dock.append(templateSelect, bLoad, bSave, formatSelect, bCDA, bRR, bZIP);
   document.body.appendChild(dock);
 
   const actionsQuery = () => $$('button, a, [role="button"], input[type="button"], input[type="submit"]');
@@ -204,10 +211,12 @@ window.addEventListener('load', () => {
     s3: () => (byText(/generate\s*&?\s*post.*s3/i))
   };
 
-  const wire = (btn, getter) => {
+  const fmt = () => (window.ecr137OutputFormat ? window.ecr137OutputFormat() : 'cda');
+  const wire = (btn, getter, fhirAction) => {
     let target = getter();
     const tryBind = () => { target = getter(); return !!target; };
     btn.addEventListener('click', () => {
+      if (fhirAction && fmt() !== 'cda') return fhirAction(btn);
       if (!target && !tryBind()) return console.warn('Action target not found for', btn.textContent);
       if (typeof target.click === 'function') target.click();
       else if (target.dispatchEvent) target.dispatchEvent(new Event('click', { bubbles: true }));
@@ -217,9 +226,9 @@ window.addEventListener('load', () => {
   };
   wire(bLoad, targets.load);
   wire(bSave, targets.save);
-  wire(bCDA, targets.cda);
-  wire(bRR, targets.rr);
-  wire(bZIP, targets.zip);
+  wire(bCDA, targets.cda, btn => window.ecr137GenerateDocument('eICR', btn));
+  wire(bRR, targets.rr, btn => window.ecr137GenerateDocument('RR', btn));
+  wire(bZIP, targets.zip, btn => window.ecr137Busy(btn, () => window.downloadZipOfEICRandRR()));
 
   // Hide original toolbar buttons by label, but NEVER hide anything inside our dock
   const hideLabels = [
