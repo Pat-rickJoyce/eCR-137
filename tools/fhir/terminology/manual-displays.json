@@ -48,5 +48,25 @@
   "system": "http://snomed.info/sct",
   "code": "406596001",
   "display": "Infection of central nervous system caused by Naegleria"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+  "code": "FTH",
+  "display": "father"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+  "code": "GRFTH",
+  "display": "grandfather"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+  "code": "GRMTH",
+  "display": "grandmother"
+ },
+ {
+  "system": "http://terminology.hl7.org/CodeSystem/v3-RoleCode",
+  "code": "MTH",
+  "display": "mother"
  }
 ]

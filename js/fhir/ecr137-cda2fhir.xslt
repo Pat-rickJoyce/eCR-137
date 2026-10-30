@@ -131,6 +131,47 @@
   </xsl:template>
 
   <!-- ===== ecr137-post: FHIR rules ===== -->
+
+  <!-- Guardian contact: upstream codes it GUARD (v3-RoleClass) only, which is not in the extensible Patient
+       Contact Relationship value set (v2-0131). Following the FHIR R4 infant examples, the relationship also carries
+       the CDA guardian/code as v3-RoleCode and a v2-0131 code: N (Next-of-Kin) for a family member (descendants of
+       FAMMEMB in v3-RoleCode 3.0.0), CP (Contact person) for anyone else; the value set excludes O (Other). The i-th GUARD contact is the i-th CDA guardian. -->
+  <xsl:variable name="vGuardianCodes" select="/cda:ClinicalDocument/cda:recordTarget/cda:patientRole/cda:patient/cda:guardian/cda:code/@code/string()"/>
+  <xsl:variable name="vFamilyRoleCodes" as="xs:string*" select="(
+      'ADOPTF', 'ADOPTM', 'ADOPTP', 'AUNT', 'BRO', 'BROINLAW', 'CHILD', 'CHLDADOPT', 'CHLDFOST',
+      'CHLDINLAW', 'COUSN', 'DAU', 'DAUADOPT', 'DAUC', 'DAUFOST', 'DAUINLAW', 'DOMPART', 'EXT', 'FMRSPS',
+      'FTH', 'FTHFOST', 'FTHINLAW', 'FTWIN', 'FTWINBRO', 'FTWINSIS', 'GESTM', 'GGRFTH', 'GGRMTH',
+      'GGRPRN', 'GRFTH', 'GRMTH', 'GRNDCHILD', 'GRNDDAU', 'GRNDSON', 'GRPRN', 'HBRO', 'HSIB', 'HSIS',
+      'HUSB', 'INLAW', 'ITWIN', 'ITWINBRO', 'ITWINSIS', 'MAUNT', 'MCOUSN', 'MGGRFTH', 'MGGRMTH',
+      'MGGRPRN', 'MGRFTH', 'MGRMTH', 'MGRPRN', 'MTH', 'MTHFOST', 'MTHINLAW', 'MTHINLOAW', 'MUNCLE',
+      'NBRO', 'NCHILD', 'NEPHEW', 'NFTH', 'NFTHF', 'NIECE', 'NIENEPH', 'NMTH', 'NMTHF', 'NPRN', 'NSIB',
+      'NSIS', 'PAUNT', 'PCOUSN', 'PGGRFTH', 'PGGRMTH', 'PGGRPRN', 'PGRFTH', 'PGRMTH', 'PGRPRN', 'PRN',
+      'PRNFOST', 'PRNINLAW', 'PUNCLE', 'SIB', 'SIBINLAW', 'SIGOTHR', 'SIS', 'SISINLAW', 'SISLINLAW',
+      'SON', 'SONADOPT', 'SONC', 'SONFOST', 'SONINLAW', 'SPS', 'STPBRO', 'STPCHLD', 'STPDAU', 'STPFTH',
+      'STPMTH', 'STPPRN', 'STPSIB', 'STPSIS', 'STPSON', 'TWIN', 'TWINBRO', 'TWINSIS', 'UNCLE', 'WIFE')"/>
+  <xsl:template match="fhir:Patient/fhir:contact/fhir:relationship[fhir:coding[fhir:system/@value = 'http://terminology.hl7.org/CodeSystem/v3-RoleClass'][fhir:code/@value = 'GUARD']]" mode="ecr137-post">
+    <xsl:variable name="vIndex" select="count(../preceding-sibling::fhir:contact[fhir:relationship/fhir:coding[fhir:system/@value = 'http://terminology.hl7.org/CodeSystem/v3-RoleClass'][fhir:code/@value = 'GUARD']]) + 1"/>
+    <xsl:variable name="vCode" select="($vGuardianCodes[$vIndex])[. != 'GUARD']"/>
+    <xsl:variable name="vFamily" select="$vCode = $vFamilyRoleCodes"/>
+    <xsl:copy>
+      <xsl:apply-templates select="@* | node()" mode="ecr137-post"/>
+      <xsl:if test="$vFamily">
+        <xsl:variable name="vEntry" select="if ($vDisplayDoc) then key('kDisplay', concat('http://terminology.hl7.org/CodeSystem/v3-RoleCode|', $vCode), $vDisplayDoc)[1] else ()"/>
+        <coding>
+          <system value="http://terminology.hl7.org/CodeSystem/v3-RoleCode"/>
+          <code value="{$vCode}"/>
+          <xsl:if test="$vEntry/@display"><display value="{$vEntry/@display}"/></xsl:if>
+        </coding>
+      </xsl:if>
+      <coding>
+        <system value="http://terminology.hl7.org/CodeSystem/v2-0131"/>
+        <code value="{if ($vFamily) then 'N' else 'CP'}"/>
+        <display value="{if ($vFamily) then 'Next-of-Kin' else 'Contact person'}"/>
+      </coding>
+    </xsl:copy>
+  </xsl:template>
+
+
   <xsl:mode name="ecr137-post" on-no-match="shallow-copy"/>
 
   <xsl:variable name="vRoleCodeDisplay" as="map(xs:string, xs:string)"

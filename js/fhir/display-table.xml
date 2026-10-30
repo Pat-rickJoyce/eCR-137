@@ -403,7 +403,11 @@
   <entry system="http://terminology.hl7.org/CodeSystem/v3-ParticipationType" code="LOC" display="Location"/>
   <entry system="http://terminology.hl7.org/CodeSystem/v3-RoleClass" code="GUARD" display="guardian"/>
   <entry system="http://terminology.hl7.org/CodeSystem/v3-RoleCode" code="COMM" display="Community Location"/>
+  <entry system="http://terminology.hl7.org/CodeSystem/v3-RoleCode" code="FTH" display="father"/>
+  <entry system="http://terminology.hl7.org/CodeSystem/v3-RoleCode" code="GRFTH" display="grandfather"/>
+  <entry system="http://terminology.hl7.org/CodeSystem/v3-RoleCode" code="GRMTH" display="grandmother"/>
   <entry system="http://terminology.hl7.org/CodeSystem/v3-RoleCode" code="HOSP" display="Hospital"/>
+  <entry system="http://terminology.hl7.org/CodeSystem/v3-RoleCode" code="MTH" display="mother"/>
   <entry system="http://terminology.hl7.org/CodeSystem/v3-RoleCode" code="OF" display="Outpatient facility"/>
   <entry system="http://www.ama-assn.org/go/cpt" code="99213" display="Office or other outpatient visit for the evaluation and management of an established patient, which requires a medically appropriate history and/or examination and low level of medical decision making. When using time for code selection, 20-29 minutes of total time is spent on the date of the encounter."/>
   <entry system="http://www.nlm.nih.gov/research/umls/rxnorm" code="308971" display="carbamazepine 20 MG/ML Oral Suspension [Tegretol]"/>

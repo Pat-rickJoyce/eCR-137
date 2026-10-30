@@ -41,12 +41,6 @@
     "reason": "Extensible binding. Travel destinations are coded in ISO 3166 as in the eCR IG examples."
   },
   {
-    "messageId": "Terminology_TX_NoValid_2_CC",
-    "severity": "warning",
-    "text": "Patient Contact Relationship",
-    "reason": "Extensible binding. The guardian relationship is HL7 v3 RoleClass GUARD; HL7 v2 table 0131 has no guardian code."
-  },
-  {
     "messageId": "UNKNOWN_CODESYSTEM_VERSION",
     "severity": "warning",
     "text": "umls/rxnorm' version '05062024'",
